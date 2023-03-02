@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.ccr4ft3r.actionsofstamina.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "actionsofstamina.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
