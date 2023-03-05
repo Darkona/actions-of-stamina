@@ -5,10 +5,10 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "actionsofstamina.refmap.json",
   "mixins": [
+    "FeathersCommonEventsMixin"
   ],
   "client": [
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "KeyboardInputMixin",
+    "LocalPlayerMixin"
+  ]
 }
