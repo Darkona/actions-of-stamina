@@ -31,8 +31,8 @@
 <p style="text-align: left;"><span style="font-weight: 400;">You can either edit these profiles&nbsp;<strong>or you can create your own one</strong> by editing the custom profile. </span></p>
 <p style="text-align: left;">&nbsp;</p>
 <h4 class="LC20lb MBeuO DKV0Md">👮<strong>Measures against cheating</strong></h4>
-<p style="text-align: left;">By default sprinting lowers the feathers bar by value 2 (1 visible feather) after 10 seconds. If you only run 8 seconds to prevent using stamina and start running again, the</p>
-<p style="text-align: left;">feathers bar will be reduced by one after two further seconds of running. This is achieved by caching the time for which a player performs an action.</p>
+<p style="text-align: left;">By default sprinting lowers the feathers bar by 1 visible feather after 5 seconds. If you only run 4 seconds to prevent using stamina and start running again, the</p>
+<p style="text-align: left;">feathers bar will be reduced by one after one further second of running. This is achieved by caching the time for which a player performs an action.</p>
 <p style="text-align: left;">Furthermore you can configure the initial costs of an action in order to make it more challenging when players start, interrupting and resume actions over and over again.</p>
 <p style="text-align: left;">&nbsp;</p>
 <h4 class="LC20lb MBeuO DKV0Md" style="text-align: left;">🔌<strong>Compatibilities</strong></h4>
@@ -43,7 +43,7 @@
 <p style="text-align: left;">&nbsp;&nbsp;</p>
 <h4 style="text-align: left;"><b>❗<strong>Important Notes</strong></b></h4>
 <ul style="text-align: left;">
-<li>I recommend to reduce or disable the impact of armor in the feathers-common.toml (armor weight). Otherwise player will not be able to run when wearing diamond or netherite amor.</li>
+<li>I recommend to reduce or disable the impact of armor in the feathers-common.toml (armor weight). Otherwise players will not be able to run when wearing diamond or netherite amor.</li>
 <li>Time-based actions (like sprinting) are stopping the regeneration of feathers to be able to set higher values for the time of feathers decrease than the regeneration speed of it.</li>
 <li>It's necessary to download the <a href="https://www.curseforge.com/minecraft/mc-mods/feathers/files">Feathers</a> mod when you want to use AoS, because it's a required dependency.</li>
 </ul>
