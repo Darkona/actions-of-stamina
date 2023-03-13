@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "actionsofstamina.refmap.json",
   "mixins": [
-    "FeathersCommonEventsMixin"
+    "FeathersCommonEventsMixin",
+    "MultiPlayerGameModeMixin"
   ],
   "client": [
     "KeyboardInputMixin",

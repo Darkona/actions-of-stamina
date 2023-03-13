@@ -12,9 +12,11 @@ public class ServerPlayerData {
     private boolean startedMoving;
     private boolean isCrawling;
     private boolean isSprinting;
+    private boolean isBlocking;
 
     private int crawlingTicks;
     private int sprintingTicks;
+    private int blockingTicks;
     private int jumps;
 
     ServerPlayerData() {
@@ -53,6 +55,13 @@ public class ServerPlayerData {
             this.crawlingTicks++;
     }
 
+    public void setBlocking(boolean blocking) {
+        checkStarting(isBlocking, blocking);
+        isBlocking = blocking;
+        if (isBlocking)
+            this.blockingTicks++;
+    }
+
     private void checkStarting(boolean currentValue, boolean newValue) {
         if (!currentValue && newValue)
             FeathersHelper.spendFeathers(getProfile().initialCosts.get());
@@ -60,6 +69,10 @@ public class ServerPlayerData {
 
     public boolean isSprinting() {
         return isSprinting;
+    }
+
+    public boolean isBlocking() {
+        return isBlocking;
     }
 
     public void setSprinting(boolean sprinting) {
@@ -85,6 +98,10 @@ public class ServerPlayerData {
         this.crawlingTicks = 0;
     }
 
+    public void resetBlockingTicks() {
+        this.blockingTicks = 0;
+    }
+
     public void jump() {
         jumps++;
     }
@@ -95,5 +112,9 @@ public class ServerPlayerData {
 
     public int getJumps() {
         return jumps;
+    }
+
+    public int getBlockingTicks() {
+        return blockingTicks;
     }
 }

@@ -54,15 +54,19 @@ public class ProfileConfig {
         public ForgeConfigSpec.BooleanValue forSprinting;
         public ForgeConfigSpec.BooleanValue forJumping;
         public ForgeConfigSpec.BooleanValue forCrawling;
+        public ForgeConfigSpec.BooleanValue forBlocking;
         public ForgeConfigSpec.IntValue afterSprinting;
         public ForgeConfigSpec.IntValue afterJumping;
         public ForgeConfigSpec.IntValue afterCrawling;
+        public ForgeConfigSpec.IntValue afterBlocking;
         public ForgeConfigSpec.IntValue costsForSprinting;
         public ForgeConfigSpec.IntValue costsForJumping;
         public ForgeConfigSpec.IntValue costsForCrawling;
+        public ForgeConfigSpec.IntValue costsForBlocking;
         public ForgeConfigSpec.IntValue minForSprinting;
         public ForgeConfigSpec.IntValue minForJumping;
         public ForgeConfigSpec.IntValue minForCrawling;
+        public ForgeConfigSpec.IntValue minForBlocking;
 
         public Data(ForgeConfigSpec.Builder builder, AoSProfile profile) {
             this.builder = builder;
@@ -76,18 +80,22 @@ public class ProfileConfig {
             forSprinting = define(ENABLE_FOR + "sprinting", "enableForSprinting", true, true, true);
             forJumping = define(ENABLE_FOR + "jumping", "enableForJumping", false, true, true);
             forCrawling = define(ENABLE_FOR + "crawling (for vanilla, GoProne & Personality Mod)", "enableForCrawling", true, true, true);
+            forBlocking = define(ENABLE_FOR + "holding the shield", "enableForHoldingShield", true, true, true);
 
             costsForSprinting = defineRange(COSTS + "sprinting", "costsForSprinting", 1, 20, 1, 1, 1);
             costsForJumping = defineRange(COSTS + "jumping", "costsForJumping", 1, 20, 1, 1, 1);
             costsForCrawling = defineRange(COSTS + "crawling (for vanilla, GoProne & Personality Mod)", "costsForCrawling", 1, 20, 1, 1, 1);
+            costsForBlocking = defineRange(COSTS + "holding the shield", "costsForHoldingShield", 1, 20, 1, 1, 1);
 
             minForSprinting = defineRange(MIN_FOR + "sprint", "minimumForSprinting", 0, 20, 2, 3, 4);
             minForJumping = defineRange(MIN_FOR + "jump", "minimumForJumping", 0, 20, 0, 0, 1);
             minForCrawling = defineRange(MIN_FOR + "crawl (for vanilla, GoProne & Personality Mod)", "minimumForCrawling", 0, 20, 1, 2, 3);
+            minForBlocking = defineRange(MIN_FOR + "holding the shield", "minimumForHoldingShield", 0, 20, 1, 2, 3);
 
             afterSprinting = defineRange(AFTER_TIME.formatted("sprinting"), "afterSprinting", 1, 1200, 75, 50, 25);
             afterJumping = defineRange(AFTER_ACTION + "jumping X times", "afterJumping", 1, 10, 1, 1, 1);
             afterCrawling = defineRange(AFTER_TIME.formatted("crawling (for vanilla, GoProne & Personality Mod)"), "afterCrawling", 1, 1200, 65, 35, 20);
+            afterBlocking = defineRange(AFTER_TIME.formatted("holding the shield"), "afterHoldingShield", 1, 1200, 65, 35, 20);
             builder.pop();
         }
 

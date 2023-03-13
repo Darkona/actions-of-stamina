@@ -3,7 +3,9 @@ package com.ccr4ft3r.actionsofstamina.events;
 import com.ccr4ft3r.actionsofstamina.ModConstants;
 import com.ccr4ft3r.actionsofstamina.data.ServerPlayerData;
 import com.ccr4ft3r.actionsofstamina.util.PlayerUtil;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,6 +46,13 @@ public class ExhaustionHandler {
         boolean isSprinting = player.isSprinting() && !isSwimming && !isInVehicle && !isSneaking && !isClimbing;
         playerData.setSprinting(isSprinting);
         playerData.setCrawling(isCrawling);
+        playerData.setBlocking(player.isBlocking());
+
+        if (getProfile().forBlocking.get() && !PlayerUtil.hasEnoughFeathers(getProfile().costsForBlocking, getProfile().minForBlocking, (ServerPlayer) player)
+            && player.getMainHandItem().is(Tags.Items.TOOLS_SHIELDS))
+            player.stopUsingItem();
+        exhaust(player, getProfile().forBlocking, player.isBlocking() && playerData.getBlockingTicks()
+            >= getProfile().afterBlocking.get(), getProfile().costsForBlocking, playerData::resetBlockingTicks);
 
         if (!isMoving)
             return;
