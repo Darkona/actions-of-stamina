@@ -14,7 +14,7 @@ public class FeathersCommonEventsMixin {
     @Inject(method = "regenerateFeathers", at = @At("HEAD"), cancellable = true, remap = false)
     private static void regenerateFeathersHeadInjected(TickEvent.PlayerTickEvent event, CallbackInfo ci) {
         ServerPlayerData playerData = ServerData.getPlayerData(event.player);
-        if (playerData.isCrawling() || playerData.isSprinting())
+        if (playerData.isCrawling() || playerData.isSprinting() || playerData.isFlying() || playerData.isParagliding())
             ci.cancel();
     }
 }

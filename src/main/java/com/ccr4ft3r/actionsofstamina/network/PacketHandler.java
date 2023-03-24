@@ -2,6 +2,7 @@ package com.ccr4ft3r.actionsofstamina.network;
 
 import com.ccr4ft3r.actionsofstamina.ModConstants;
 import com.ccr4ft3r.actionsofstamina.data.ServerData;
+import com.ccr4ft3r.actionsofstamina.events.ExhaustionHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -9,6 +10,8 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.function.Supplier;
+
+import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
 
 public class PacketHandler {
 
@@ -34,6 +37,7 @@ public class PacketHandler {
             switch (packet.getAction()) {
                 case PLAYER_MOVING -> ServerData.getPlayerData(sender).setMoving(true);
                 case PLAYER_STOP_MOVING -> ServerData.getPlayerData(sender).setMoving(false);
+                case WEAPON_SWING -> ExhaustionHandler.exhaustForWeaponSwing(getProfile().onlyForHits.get(), sender);
             }
             context.setPacketHandled(true);
         });

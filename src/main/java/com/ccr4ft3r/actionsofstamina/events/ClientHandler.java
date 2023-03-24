@@ -10,6 +10,7 @@ import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
@@ -21,7 +22,7 @@ import static com.ccr4ft3r.actionsofstamina.network.ServerboundPacket.Action.*;
 
 @Mod.EventBusSubscriber(modid = ModConstants.MOD_ID, value = Dist.CLIENT)
 public class ClientHandler {
-    
+
     public static final ClientPlayerData PLAYER_DATA = new ClientPlayerData();
 
     private static final Predicate<LocalPlayer> NOT_JUMPABLE = (player) -> player.isInWater() || player.onClimbable();
@@ -56,5 +57,10 @@ public class ClientHandler {
                 PacketHandler.sendToServer(new ServerboundPacket(isActivelyMoving ? PLAYER_MOVING : PLAYER_STOP_MOVING));
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerAttack(PlayerInteractEvent.LeftClickEmpty event) {
+        PacketHandler.sendToServer(new ServerboundPacket(WEAPON_SWING));
     }
 }

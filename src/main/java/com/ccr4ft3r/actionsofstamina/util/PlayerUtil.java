@@ -3,6 +3,7 @@ package com.ccr4ft3r.actionsofstamina.util;
 import com.ccr4ft3r.actionsofstamina.data.ServerPlayerData;
 import com.elenai.feathers.api.FeathersHelper;
 import com.elenai.feathers.client.ClientFeathersData;
+import com.mojang.logging.LogUtils;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Pose;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.util.FakePlayer;
 
+import static com.ccr4ft3r.actionsofstamina.config.MainConfig.*;
 import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
 import static com.ccr4ft3r.actionsofstamina.events.ClientHandler.*;
 import static com.elenai.feathers.api.FeathersHelper.*;
@@ -26,6 +28,9 @@ public class PlayerUtil {
         if (cannotBeExhausted(player))
             return;
         if (optionEnabled.get() && onlyIf) {
+            if (CONFIG_DATA.enableExtendedLogging.get())
+                LogUtils.getLogger().info("Spending {} feathers for player '{}' due to rule '{}'", feathersToSpend.get(), player.getScoreboardName(),
+                    String.join(".", optionEnabled.getPath()));
             FeathersHelper.spendFeathers((ServerPlayer) player, feathersToSpend.get());
             resetter.run();
         }

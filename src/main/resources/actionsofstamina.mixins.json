@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "actionsofstamina.refmap.json",
   "mixins": [
+    "ElytraItemMixin",
     "FeathersCommonEventsMixin",
+    "MinecraftMixin",
     "MultiPlayerGameModeMixin"
   ],
   "client": [

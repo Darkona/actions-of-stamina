@@ -159,6 +159,9 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:cloth-config-api-348521:${cloth_config_id}")
     runtimeOnly fg.deobf("curse.maven:configured-457570:${mod_configured_file_id}")
     implementation fg.deobf("curse.maven:feathers-699933:${mod_feathers_file_id}")
+    implementation fg.deobf("curse.maven:angel-ring-333396:${mod_angel_ring_file_id}")
+    implementation fg.deobf("curse.maven:paragliders-289240:${mod_paragliders_file_id}")
+    implementation fg.deobf("curse.maven:curios-309927:${curios_file_id}")
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency

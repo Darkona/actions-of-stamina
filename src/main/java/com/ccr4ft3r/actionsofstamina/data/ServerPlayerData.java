@@ -9,15 +9,20 @@ public class ServerPlayerData {
 
     private Vec3 lastPosition;
     private boolean isMoving;
+    private boolean isFlying;
+    private boolean isParagliding;
     private boolean startedMoving;
     private boolean isCrawling;
     private boolean isSprinting;
     private boolean isBlocking;
 
     private int crawlingTicks;
+    private int flyingTicks;
     private int sprintingTicks;
     private int blockingTicks;
+    private int paraglidingTicks;
     private int jumps;
+    private double attacks;
 
     ServerPlayerData() {
     }
@@ -55,6 +60,17 @@ public class ServerPlayerData {
             this.crawlingTicks++;
     }
 
+    public boolean isFlying() {
+        return isFlying;
+    }
+
+    public void setFlying(boolean flying) {
+        checkStarting(isFlying, flying);
+        isFlying = flying;
+        if (isFlying)
+            this.flyingTicks++;
+    }
+
     public void setBlocking(boolean blocking) {
         checkStarting(isBlocking, blocking);
         isBlocking = blocking;
@@ -82,6 +98,13 @@ public class ServerPlayerData {
             this.sprintingTicks++;
     }
 
+    public void setParagliding(boolean paragliding) {
+        checkStarting(isParagliding, paragliding);
+        isParagliding = paragliding;
+        if (isParagliding)
+            this.paraglidingTicks++;
+    }
+
     public int getSprintingTicks() {
         return sprintingTicks;
     }
@@ -98,12 +121,20 @@ public class ServerPlayerData {
         this.crawlingTicks = 0;
     }
 
+    public void resetFlyingTicks() {
+        this.flyingTicks = 0;
+    }
+
     public void resetBlockingTicks() {
         this.blockingTicks = 0;
     }
 
     public void jump() {
         jumps++;
+    }
+
+    public void attack(double multiplier) {
+        attacks += multiplier;
     }
 
     public void resetJumps() {
@@ -114,7 +145,31 @@ public class ServerPlayerData {
         return jumps;
     }
 
+    public double getAttacks() {
+        return attacks;
+    }
+
+    public void resetAttacks() {
+        attacks -= getProfile().afterAttacking.get();
+    }
+
+    public void resetParaglidingTicks() {
+        paraglidingTicks = 0;
+    }
+
     public int getBlockingTicks() {
         return blockingTicks;
+    }
+
+    public int getFlyingTicks() {
+        return flyingTicks;
+    }
+
+    public int getParaglidingTicks() {
+        return paraglidingTicks;
+    }
+
+    public boolean isParagliding() {
+        return isParagliding;
     }
 }

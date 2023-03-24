@@ -55,18 +55,32 @@ public class ProfileConfig {
         public ForgeConfigSpec.BooleanValue forJumping;
         public ForgeConfigSpec.BooleanValue forCrawling;
         public ForgeConfigSpec.BooleanValue forBlocking;
+        public ForgeConfigSpec.BooleanValue forAttacking;
+        public ForgeConfigSpec.BooleanValue forFlying;
+        public ForgeConfigSpec.BooleanValue forParagliding;
         public ForgeConfigSpec.IntValue afterSprinting;
         public ForgeConfigSpec.IntValue afterJumping;
         public ForgeConfigSpec.IntValue afterCrawling;
         public ForgeConfigSpec.IntValue afterBlocking;
+        public ForgeConfigSpec.IntValue afterAttacking;
+        public ForgeConfigSpec.IntValue afterFlying;
+        public ForgeConfigSpec.IntValue afterParagliding;
         public ForgeConfigSpec.IntValue costsForSprinting;
         public ForgeConfigSpec.IntValue costsForJumping;
         public ForgeConfigSpec.IntValue costsForCrawling;
         public ForgeConfigSpec.IntValue costsForBlocking;
+        public ForgeConfigSpec.IntValue costsForAttacking;
+        public ForgeConfigSpec.IntValue costsForFlying;
+        public ForgeConfigSpec.IntValue costsForParagliding;
         public ForgeConfigSpec.IntValue minForSprinting;
         public ForgeConfigSpec.IntValue minForJumping;
         public ForgeConfigSpec.IntValue minForCrawling;
         public ForgeConfigSpec.IntValue minForBlocking;
+        public ForgeConfigSpec.IntValue minForAttacking;
+        public ForgeConfigSpec.IntValue minForParagliding;
+        public ForgeConfigSpec.IntValue minForFlying;
+        public ForgeConfigSpec.DoubleValue attackSpeedMultiplier;
+        public ForgeConfigSpec.BooleanValue onlyForHits;
 
         public Data(ForgeConfigSpec.Builder builder, AoSProfile profile) {
             this.builder = builder;
@@ -81,21 +95,36 @@ public class ProfileConfig {
             forJumping = define(ENABLE_FOR + "jumping", "enableForJumping", false, true, true);
             forCrawling = define(ENABLE_FOR + "crawling (for vanilla, GoProne & Personality Mod)", "enableForCrawling", true, true, true);
             forBlocking = define(ENABLE_FOR + "holding the shield", "enableForHoldingShield", true, true, true);
+            forAttacking = define(ENABLE_FOR + "attacking", "enableForAttacking", false, true, true);
+            forFlying = define(ENABLE_FOR + "flying (elytra and Golden ring)", "enableForFlying", true, true, true);
+            onlyForHits = define(ENABLE_FOR + "attacking only when hitting entities", "onlyForHits", true, false, false);
+            forParagliding = define(ENABLE_FOR + "paragliding", "enableForParagliding", true, true, true);
 
             costsForSprinting = defineRange(COSTS + "sprinting", "costsForSprinting", 1, 20, 1, 1, 1);
             costsForJumping = defineRange(COSTS + "jumping", "costsForJumping", 1, 20, 1, 1, 1);
             costsForCrawling = defineRange(COSTS + "crawling (for vanilla, GoProne & Personality Mod)", "costsForCrawling", 1, 20, 1, 1, 1);
             costsForBlocking = defineRange(COSTS + "holding the shield", "costsForHoldingShield", 1, 20, 1, 1, 1);
+            costsForAttacking = defineRange(COSTS + "attacking", "costsForAttacking", 1, 20, 1, 1, 1);
+            costsForFlying = defineRange(COSTS + "flying", "costsForFlying", 1, 20, 1, 1, 1);
+            costsForParagliding = defineRange(COSTS + "paragliding", "costsForParagliding", 1, 20, 1, 1, 1);
 
             minForSprinting = defineRange(MIN_FOR + "sprint", "minimumForSprinting", 0, 20, 2, 3, 4);
             minForJumping = defineRange(MIN_FOR + "jump", "minimumForJumping", 0, 20, 0, 0, 1);
             minForCrawling = defineRange(MIN_FOR + "crawl (for vanilla, GoProne & Personality Mod)", "minimumForCrawling", 0, 20, 1, 2, 3);
             minForBlocking = defineRange(MIN_FOR + "holding the shield", "minimumForHoldingShield", 0, 20, 1, 2, 3);
+            minForAttacking = defineRange(MIN_FOR + "attack", "minimumForAttacking", 0, 20, 2, 4, 6);
+            minForFlying = defineRange(MIN_FOR + "fly", "minimumForFlying", 0, 20, 2, 3, 4);
+            minForParagliding = defineRange(MIN_FOR + "paraglide", "minimumForParagliding", 0, 20, 2, 3, 4);
 
             afterSprinting = defineRange(AFTER_TIME.formatted("sprinting"), "afterSprinting", 1, 1200, 75, 50, 25);
             afterJumping = defineRange(AFTER_ACTION + "jumping X times", "afterJumping", 1, 10, 1, 1, 1);
             afterCrawling = defineRange(AFTER_TIME.formatted("crawling (for vanilla, GoProne & Personality Mod)"), "afterCrawling", 1, 1200, 65, 35, 20);
-            afterBlocking = defineRange(AFTER_TIME.formatted("holding the shield"), "afterHoldingShield", 1, 1200, 65, 35, 20);
+            afterBlocking = defineRange(AFTER_TIME.formatted("holding the shield"), "afterHoldingShield", 1, 1200, 45, 20, 12);
+            afterAttacking = defineRange(AFTER_ACTION + "attacking X times", "afterAttacking", 1, 10, 3, 2, 1);
+            afterFlying = defineRange(AFTER_TIME.formatted("flying"), "afterFlying", 1, 1200, 50, 30, 20);
+            afterParagliding = defineRange(AFTER_TIME.formatted("paragliding"), "afterParargliding", 1, 1200, 50, 30, 20);
+
+            attackSpeedMultiplier = defineRange("Determines how much additional stamina is spent when attacking entities with weapons depending on the attack speed", "attackSpeedMultiplier", 0d, 10d, 1.5d, 2d, 3d);
             builder.pop();
         }
 
@@ -104,6 +133,10 @@ public class ProfileConfig {
         }
 
         private ForgeConfigSpec.IntValue defineRange(String comment, String property, Integer min, Integer max, Integer... profileValues) {
+            return builder.comment(comment).defineInRange(property, get(profileValues), min, max);
+        }
+
+        private ForgeConfigSpec.DoubleValue defineRange(String comment, String property, Double min, Double max, Double... profileValues) {
             return builder.comment(comment).defineInRange(property, get(profileValues), min, max);
         }
 
