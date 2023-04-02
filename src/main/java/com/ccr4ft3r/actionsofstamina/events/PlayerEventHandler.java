@@ -11,8 +11,8 @@ public class PlayerEventHandler {
 
     @SubscribeEvent
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (event.getEntity().getLevel().isClientSide())
+        if (event.getPlayer().getLevel().isClientSide())
             return;
-        ServerData.forgetAbout(event.getEntity());
+        ServerData.forgetAbout(event.getPlayer());
     }
 }

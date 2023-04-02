@@ -16,7 +16,7 @@ import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.*;
 public abstract class KeyboardInputMixin extends Input {
 
     @Inject(method = "tick", at = @At(value = "RETURN"))
-    public void tickInjected(boolean p_234118_, float p_234119_, CallbackInfo ci) {
+    public void tickInjected(boolean p_108582_, CallbackInfo ci) {
         if (!hasEnoughFeathers(getProfile().costsForJumping, getProfile().minForJumping))
             jumping = false;
         boolean isCrawling = PlayerUtil.isCrawling(Minecraft.getInstance().player);
