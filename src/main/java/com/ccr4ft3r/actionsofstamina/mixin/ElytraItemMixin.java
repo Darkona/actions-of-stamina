@@ -25,7 +25,7 @@ public class ElytraItemMixin {
         ServerPlayerData playerData = ServerData.getPlayerData((Player) entity);
         if (!playerData.isFlying())
             return;
-        if (hasEnoughFeathers(getProfile().costsForJumping, getProfile().minForJumping))
+        if (!getProfile().forFlying.get() || hasEnoughFeathers(getProfile().costsForFlying, getProfile().minForFlying))
             return;
         cir.setReturnValue(false);
     }

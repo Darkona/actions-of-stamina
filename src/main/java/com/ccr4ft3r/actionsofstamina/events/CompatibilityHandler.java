@@ -23,7 +23,7 @@ public class CompatibilityHandler {
         LazyOptional<PlayerMovement> movement = player.getCapability(Caps.playerMovement);
         boolean isParagliding = movement.map(PlayerMovement::isParagliding).orElse(false);
 
-        if (!hasEnoughFeathers(getProfile().costsForParagliding, getProfile().minForParagliding) && isParagliding) {
+        if (getProfile().forParagliding.get() && !hasEnoughFeathers(getProfile().costsForParagliding, getProfile().minForParagliding) && isParagliding) {
             movement.ifPresent(m -> m.setDepleted(true));
             isParagliding = false;
         }

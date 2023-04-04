@@ -17,10 +17,10 @@ public abstract class KeyboardInputMixin extends Input {
 
     @Inject(method = "tick", at = @At(value = "RETURN"))
     public void tickInjected(boolean p_234118_, float p_234119_, CallbackInfo ci) {
-        if (!hasEnoughFeathers(getProfile().costsForJumping, getProfile().minForJumping))
+        if (getProfile().forJumping.get() && !hasEnoughFeathers(getProfile().costsForJumping, getProfile().minForJumping))
             jumping = false;
         boolean isCrawling = PlayerUtil.isCrawling(Minecraft.getInstance().player);
-        if (!hasEnoughFeathers(getProfile().costsForCrawling, getProfile().minForCrawling) && isCrawling) {
+        if (getProfile().forCrawling.get() && !hasEnoughFeathers(getProfile().costsForCrawling, getProfile().minForCrawling) && isCrawling) {
             this.forwardImpulse = 0;
             this.leftImpulse = 0;
         }
