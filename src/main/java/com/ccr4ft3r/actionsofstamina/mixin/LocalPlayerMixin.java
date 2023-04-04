@@ -22,9 +22,9 @@ public abstract class LocalPlayerMixin {
 
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSprinting()Z", ordinal = 2))
     public void aiStepInjected(CallbackInfo ci) {
-        if (!hasEnoughFeathers(getProfile().costsForSprinting, getProfile().minForSprinting))
+        if (getProfile().forSprinting.get() && !hasEnoughFeathers(getProfile().costsForSprinting, getProfile().minForSprinting))
             setSprinting(false);
-        if (!hasEnoughFeathers(getProfile().costsForJumping, getProfile().minForJumping)) {
+        if (getProfile().forJumping.get() && !hasEnoughFeathers(getProfile().costsForJumping, getProfile().minForJumping)) {
             input.jumping = false;
         }
     }

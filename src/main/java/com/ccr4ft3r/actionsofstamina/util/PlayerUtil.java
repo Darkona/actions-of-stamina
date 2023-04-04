@@ -48,11 +48,15 @@ public class PlayerUtil {
     }
 
     public static boolean hasEnoughFeathers(ForgeConfigSpec.IntValue costs, ForgeConfigSpec.IntValue min) {
+        if (min.get() == 0)
+            return true;
         int feathersMin = Math.max(costs.get(), min.get());
         return getFeathers() + getEndurance() - ClientFeathersData.getWeight() >= feathersMin;
     }
 
     public static boolean hasEnoughFeathers(ForgeConfigSpec.IntValue costs, ForgeConfigSpec.IntValue min, ServerPlayer player) {
+        if (min.get() == 0)
+            return true;
         int feathersMin = Math.max(costs.get(), min.get());
         return getFeathers(player) + getEndurance(player) - getPlayerWeight(player) >= feathersMin;
     }
