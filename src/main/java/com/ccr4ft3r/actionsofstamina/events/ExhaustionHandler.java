@@ -66,10 +66,9 @@ public class ExhaustionHandler {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        Player player = event.player;
-        if (cannotBeExhausted(player) || event.phase != TickEvent.Phase.END)
+        if (cannotBeExhausted(event.player) || event.phase != TickEvent.Phase.END)
             return;
-
+        ServerPlayer player = (ServerPlayer) event.player;
         ServerPlayerData playerData = getPlayerData(player);
         boolean isCrawling = PlayerUtil.isCrawling(player);
         boolean isMoving = playerData.isMoving() && !player.position().equals(playerData.getLastPosition());
@@ -81,16 +80,16 @@ public class ExhaustionHandler {
         boolean isSneaking = player.isCrouching() && !isClimbing;
         boolean isSprinting = player.isSprinting() && !isSwimming && !isInVehicle && !isSneaking && !isClimbing;
         boolean isFlying = player.getPose() == Pose.FALL_FLYING || player.getAbilities().flying;
-        playerData.setSprinting(isSprinting);
-        playerData.setCrawling(isCrawling);
-        playerData.setBlocking(player.isBlocking());
+        playerData.setSprinting(isSprinting, player);
+        playerData.setCrawling(isCrawling, player);
+        playerData.setBlocking(player.isBlocking(), player);
         if (getProfile().forFlying.get() && !PlayerUtil.hasEnoughFeathers(getProfile().costsForFlying, getProfile().minForFlying, (ServerPlayer) player)
             && playerData.isFlying()) {
             player.getAbilities().flying = false;
             player.getAbilities().mayfly = false;
             player.onUpdateAbilities();
         }
-        playerData.setFlying(isFlying);
+        playerData.setFlying(isFlying, player);
 
         if (getProfile().forBlocking.get() && !PlayerUtil.hasEnoughFeathers(getProfile().costsForBlocking, getProfile().minForBlocking, (ServerPlayer) player)
             && player.getMainHandItem().getItem() instanceof ShieldItem)

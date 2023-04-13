@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.data;
 
 import com.elenai.feathers.api.FeathersHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
 import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
@@ -53,8 +54,8 @@ public class ServerPlayerData {
         return isCrawling;
     }
 
-    public void setCrawling(boolean crawling) {
-        checkStarting(isCrawling, crawling);
+    public void setCrawling(boolean crawling, ServerPlayer player) {
+        checkStarting(isCrawling, crawling, player);
         isCrawling = crawling;
         if (isCrawling)
             this.crawlingTicks++;
@@ -64,23 +65,23 @@ public class ServerPlayerData {
         return isFlying;
     }
 
-    public void setFlying(boolean flying) {
-        checkStarting(isFlying, flying);
+    public void setFlying(boolean flying, ServerPlayer player) {
+        checkStarting(isFlying, flying, player);
         isFlying = flying;
         if (isFlying)
             this.flyingTicks++;
     }
 
-    public void setBlocking(boolean blocking) {
-        checkStarting(isBlocking, blocking);
+    public void setBlocking(boolean blocking, ServerPlayer player) {
+        checkStarting(isBlocking, blocking, player);
         isBlocking = blocking;
         if (isBlocking)
             this.blockingTicks++;
     }
 
-    private void checkStarting(boolean currentValue, boolean newValue) {
+    private void checkStarting(boolean currentValue, boolean newValue, ServerPlayer player) {
         if (!currentValue && newValue)
-            FeathersHelper.spendFeathers(getProfile().initialCosts.get());
+            FeathersHelper.spendFeathers(player, getProfile().initialCosts.get());
     }
 
     public boolean isSprinting() {
@@ -91,15 +92,15 @@ public class ServerPlayerData {
         return isBlocking;
     }
 
-    public void setSprinting(boolean sprinting) {
-        checkStarting(isSprinting, sprinting);
+    public void setSprinting(boolean sprinting, ServerPlayer player) {
+        checkStarting(isSprinting, sprinting, player);
         isSprinting = sprinting;
         if (isSprinting)
             this.sprintingTicks++;
     }
 
-    public void setParagliding(boolean paragliding) {
-        checkStarting(isParagliding, paragliding);
+    public void setParagliding(boolean paragliding, ServerPlayer player) {
+        checkStarting(isParagliding, paragliding, player);
         isParagliding = paragliding;
         if (isParagliding)
             this.paraglidingTicks++;

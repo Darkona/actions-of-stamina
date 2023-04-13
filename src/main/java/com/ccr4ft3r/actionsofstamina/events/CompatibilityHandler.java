@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.events;
 
 import com.ccr4ft3r.actionsofstamina.data.ServerPlayerData;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,9 +16,9 @@ public class CompatibilityHandler {
 
     @SubscribeEvent
     public static void onParagliding(TickEvent.PlayerTickEvent event) {
-        Player player = event.player;
-        if (cannotBeExhausted(player))
+        if (cannotBeExhausted(event.player))
             return;
+        ServerPlayer player = (ServerPlayer) event.player;
 
         LazyOptional<PlayerMovement> movement = player.getCapability(Caps.playerMovement);
         boolean isParagliding = movement.map(PlayerMovement::isParagliding).orElse(false);
@@ -29,7 +29,7 @@ public class CompatibilityHandler {
         }
 
         ServerPlayerData playerData = getPlayerData(player);
-        playerData.setParagliding(isParagliding);
+        playerData.setParagliding(isParagliding, player);
         exhaust(player, getProfile().forParagliding, isParagliding && playerData.getParaglidingTicks()
             >= getProfile().afterParagliding.get(), getProfile().costsForParagliding, playerData::resetParaglidingTicks);
     }
