@@ -28,7 +28,7 @@ public class ClientHandler {
     private static final Predicate<LocalPlayer> NOT_JUMPABLE = (player) -> player.isInWater() || player.onClimbable();
 
     @SubscribeEvent
-    public static void onKeyInput(InputEvent.KeyInputEvent event) {
+    public static void onKeyInput(InputEvent.Key event) {
         boolean isPressed = event.getAction() == GLFW.GLFW_PRESS;
         if (isPressed || event.getAction() == GLFW.GLFW_RELEASE) {
             LocalPlayer player = Minecraft.getInstance().player;

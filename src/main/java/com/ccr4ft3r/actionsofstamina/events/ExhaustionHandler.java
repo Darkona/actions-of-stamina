@@ -42,7 +42,7 @@ public class ExhaustionHandler {
 
     @SubscribeEvent
     public static void onPlayerAttack(AttackEntityEvent event) {
-        exhaustForWeaponSwing(event.isCanceled(), event.getPlayer());
+        exhaustForWeaponSwing(event.isCanceled(), event.getEntity());
     }
 
     public static void exhaustForWeaponSwing(boolean execption, Player player) {
