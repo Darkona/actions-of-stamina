@@ -13,7 +13,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.Tags;
+import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.TieredItem;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -41,7 +42,7 @@ public class ExhaustionHandler {
 
     @SubscribeEvent
     public static void onPlayerAttack(AttackEntityEvent event) {
-        exhaustForWeaponSwing(event.isCanceled(), event.getEntity());
+        exhaustForWeaponSwing(event.isCanceled(), event.getPlayer());
     }
 
     public static void exhaustForWeaponSwing(boolean execption, Player player) {
@@ -49,7 +50,7 @@ public class ExhaustionHandler {
             return;
         ServerPlayerData playerData = getPlayerData(player);
         ItemStack itemstack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (!itemstack.is(Tags.Items.TOOLS))
+        if (!(itemstack.getItem() instanceof TieredItem))
             return;
         Multimap<Attribute, AttributeModifier> modifiers = itemstack.getItem().getDefaultAttributeModifiers(EquipmentSlot.MAINHAND);
         double multiplier = 1d;
@@ -65,10 +66,9 @@ public class ExhaustionHandler {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        Player player = event.player;
-        if (cannotBeExhausted(player) || event.phase != TickEvent.Phase.END)
+        if (cannotBeExhausted(event.player) || event.phase != TickEvent.Phase.END)
             return;
-
+        ServerPlayer player = (ServerPlayer) event.player;
         ServerPlayerData playerData = getPlayerData(player);
         boolean isCrawling = PlayerUtil.isCrawling(player);
         boolean isMoving = playerData.isMoving() && !player.position().equals(playerData.getLastPosition());
@@ -79,20 +79,20 @@ public class ExhaustionHandler {
         boolean isSwimming = player.isInWater() && !isInVehicle && !isClimbing;
         boolean isSneaking = player.isCrouching() && !isClimbing;
         boolean isSprinting = player.isSprinting() && !isSwimming && !isInVehicle && !isSneaking && !isClimbing;
-        boolean isFlying = player.hasPose(Pose.FALL_FLYING) || player.getAbilities().flying;
-        playerData.setSprinting(isSprinting);
-        playerData.setCrawling(isCrawling);
-        playerData.setBlocking(player.isBlocking());
+        boolean isFlying = player.getPose() == Pose.FALL_FLYING || player.getAbilities().flying;
+        playerData.setSprinting(isSprinting, player);
+        playerData.setCrawling(isCrawling, player);
+        playerData.setBlocking(player.isBlocking(), player);
         if (getProfile().forFlying.get() && !PlayerUtil.hasEnoughFeathers(getProfile().costsForFlying, getProfile().minForFlying, (ServerPlayer) player)
             && playerData.isFlying()) {
             player.getAbilities().flying = false;
             player.getAbilities().mayfly = false;
             player.onUpdateAbilities();
         }
-        playerData.setFlying(isFlying);
+        playerData.setFlying(isFlying, player);
 
         if (getProfile().forBlocking.get() && !PlayerUtil.hasEnoughFeathers(getProfile().costsForBlocking, getProfile().minForBlocking, (ServerPlayer) player)
-            && player.getMainHandItem().is(Tags.Items.TOOLS_SHIELDS))
+            && player.getMainHandItem().getItem() instanceof ShieldItem)
             player.stopUsingItem();
         exhaust(player, getProfile().forBlocking, player.isBlocking() && playerData.getBlockingTicks()
             >= getProfile().afterBlocking.get(), getProfile().costsForBlocking, playerData::resetBlockingTicks);
