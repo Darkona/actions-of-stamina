@@ -1,31 +1,34 @@
 package com.ccr4ft3r.actionsofstamina.data;
 
+import com.ccr4ft3r.actionsofstamina.config.ActionType;
+import com.ccr4ft3r.actionsofstamina.config.AoSAction;
 import com.elenai.feathers.api.FeathersHelper;
+import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
 import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
+import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.*;
 
 public class ServerPlayerData {
 
     private Vec3 lastPosition;
     private boolean isMoving;
-    private boolean isFlying;
-    private boolean isParagliding;
     private boolean startedMoving;
-    private boolean isCrawling;
-    private boolean isSprinting;
-    private boolean isBlocking;
 
-    private int crawlingTicks;
-    private int flyingTicks;
-    private int sprintingTicks;
-    private int blockingTicks;
-    private int paraglidingTicks;
-    private int jumps;
-    private double attacks;
+    private final Map<AoSAction, AtomicBoolean> stateByAction = Maps.newConcurrentMap();
+    private final Map<AoSAction, AtomicDouble> amountByAction = Maps.newConcurrentMap();
 
     ServerPlayerData() {
+        for (AoSAction action : AoSAction.values()) {
+            stateByAction.put(action, new AtomicBoolean());
+            amountByAction.put(action, new AtomicDouble());
+        }
     }
 
     public Vec3 getLastPosition() {
@@ -50,127 +53,45 @@ public class ServerPlayerData {
         isMoving = moving;
     }
 
-    public boolean isCrawling() {
-        return isCrawling;
+    public void set(AoSAction action, boolean newState, double increment, ServerPlayer player) {
+        AtomicBoolean currentState = stateByAction.get(action);
+        checkStarting(action, currentState.get(), newState, player);
+        currentState.set(newState);
+        if (currentState.get()) {
+            amountByAction.get(action).addAndGet(increment);
+            exhaust(player, action);
+        }
+
+        if (ActionType.TIME_ACTIONS.contains(action) && action.getStopper() != null) {
+            stopIfExhausted(player, action, () -> action.getStopper().accept(player));
+        }
     }
 
-    public void setCrawling(boolean crawling, ServerPlayer player) {
-        checkStarting(isCrawling, crawling, player);
-        isCrawling = crawling;
-        if (isCrawling)
-            this.crawlingTicks++;
+    public void set(AoSAction action, double amount, ServerPlayer player) {
+        set(action, true, amount, player);
     }
 
-    public boolean isFlying() {
-        return isFlying;
+    public void set(AoSAction action, boolean newState, ServerPlayer player) {
+        set(action, newState, 1d, player);
     }
 
-    public void setFlying(boolean flying, ServerPlayer player) {
-        checkStarting(isFlying, flying, player);
-        isFlying = flying;
-        if (isFlying)
-            this.flyingTicks++;
+    private void checkStarting(AoSAction action, boolean currentValue, boolean newValue, ServerPlayer player) {
+        if (!currentValue && newValue) {
+            if (action.getType() == ActionType.TICKS)
+                FeathersHelper.spendFeathers(player, getProfile().initialCostsByAction.get(action).get());
+            exhaust(player, ATTACKING);
+        }
     }
 
-    public void setBlocking(boolean blocking, ServerPlayer player) {
-        checkStarting(isBlocking, blocking, player);
-        isBlocking = blocking;
-        if (isBlocking)
-            this.blockingTicks++;
+    public boolean is(AoSAction action) {
+        return stateByAction.get(action).get();
     }
 
-    private void checkStarting(boolean currentValue, boolean newValue, ServerPlayer player) {
-        if (!currentValue && newValue)
-            FeathersHelper.spendFeathers(player, getProfile().initialCosts.get());
+    public double get(AoSAction action) {
+        return amountByAction.get(action).get();
     }
 
-    public boolean isSprinting() {
-        return isSprinting;
-    }
-
-    public boolean isBlocking() {
-        return isBlocking;
-    }
-
-    public void setSprinting(boolean sprinting, ServerPlayer player) {
-        checkStarting(isSprinting, sprinting, player);
-        isSprinting = sprinting;
-        if (isSprinting)
-            this.sprintingTicks++;
-    }
-
-    public void setParagliding(boolean paragliding, ServerPlayer player) {
-        checkStarting(isParagliding, paragliding, player);
-        isParagliding = paragliding;
-        if (isParagliding)
-            this.paraglidingTicks++;
-    }
-
-    public int getSprintingTicks() {
-        return sprintingTicks;
-    }
-
-    public void resetSprintingTicks() {
-        this.sprintingTicks = 0;
-    }
-
-    public int getCrawlingTicks() {
-        return crawlingTicks;
-    }
-
-    public void resetCrawlingTicks() {
-        this.crawlingTicks = 0;
-    }
-
-    public void resetFlyingTicks() {
-        this.flyingTicks = 0;
-    }
-
-    public void resetBlockingTicks() {
-        this.blockingTicks = 0;
-    }
-
-    public void jump() {
-        jumps++;
-    }
-
-    public void attack(double multiplier) {
-        attacks += multiplier;
-    }
-
-    public void resetJumps() {
-        jumps = 0;
-    }
-
-    public int getJumps() {
-        return jumps;
-    }
-
-    public double getAttacks() {
-        return attacks;
-    }
-
-    public void resetAttacks() {
-        attacks -= getProfile().afterAttacking.get();
-    }
-
-    public void resetParaglidingTicks() {
-        paraglidingTicks = 0;
-    }
-
-    public int getBlockingTicks() {
-        return blockingTicks;
-    }
-
-    public int getFlyingTicks() {
-        return flyingTicks;
-    }
-
-    public int getParaglidingTicks() {
-        return paraglidingTicks;
-    }
-
-    public boolean isParagliding() {
-        return isParagliding;
+    public void reset(AoSAction action) {
+        amountByAction.get(action).set(0);
     }
 }

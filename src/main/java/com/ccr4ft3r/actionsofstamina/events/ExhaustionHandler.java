@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Iterator;
 
+import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
 import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
 import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
 import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.*;
@@ -32,12 +33,9 @@ public class ExhaustionHandler {
 
     @SubscribeEvent
     public static void onPlayerJump(LivingEvent.LivingJumpEvent event) {
-        if (!(event.getEntity() instanceof Player player) || event.isCanceled() || cannotBeExhausted(player))
+        if (!(event.getEntity() instanceof ServerPlayer player) || event.isCanceled() || cannotBeExhausted(player))
             return;
-        ServerPlayerData playerData = getPlayerData(player);
-        playerData.jump();
-        exhaust(player, getProfile().forJumping, !player.isInWater() && !player.onClimbable() &&
-            playerData.getJumps() >= getProfile().afterJumping.get(), getProfile().costsForJumping, playerData::resetJumps);
+        getPlayerData(player).set(JUMPING, !player.isInWater() && !player.onClimbable(), player);
     }
 
     @SubscribeEvent
@@ -45,8 +43,8 @@ public class ExhaustionHandler {
         exhaustForWeaponSwing(event.isCanceled(), event.getEntity());
     }
 
-    public static void exhaustForWeaponSwing(boolean execption, Player player) {
-        if (execption || cannotBeExhausted(player))
+    public static void exhaustForWeaponSwing(boolean execption, Player p) {
+        if (!(p instanceof ServerPlayer player) || execption || cannotBeExhausted(player))
             return;
         ServerPlayerData playerData = getPlayerData(player);
         ItemStack itemstack = player.getItemInHand(InteractionHand.MAIN_HAND);
@@ -59,52 +57,31 @@ public class ExhaustionHandler {
             AttributeModifier attackSpeed = attackSpeeds.next();
             multiplier = getProfile().attackSpeedMultiplier.get() * (1.6 - (attackSpeed.getAmount() + 4));
         }
-        playerData.attack(Math.max(0, 1 + multiplier));
-        exhaust(player, getProfile().forAttacking,
-            playerData.getAttacks() >= getProfile().afterAttacking.get(), getProfile().costsForAttacking, playerData::resetAttacks);
+        playerData.set(ATTACKING, Math.max(0, 1 + multiplier), player);
     }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (cannotBeExhausted(event.player) || event.phase != TickEvent.Phase.END)
             return;
+
         ServerPlayer player = (ServerPlayer) event.player;
         ServerPlayerData playerData = getPlayerData(player);
         boolean isCrawling = PlayerUtil.isCrawling(player);
         boolean isMoving = playerData.isMoving() && !player.position().equals(playerData.getLastPosition());
         playerData.setLastPosition(player.position());
-
         boolean isInVehicle = player.getVehicle() != null;
-        boolean isClimbing = player.onClimbable();
-        boolean isSwimming = player.isInWater() && !isInVehicle && !isClimbing;
-        boolean isSneaking = player.isCrouching() && !isClimbing;
-        boolean isSprinting = player.isSprinting() && !isSwimming && !isInVehicle && !isSneaking && !isClimbing;
+        boolean isClimbing = player.onClimbable() && isMoving;
+        boolean isSwimming = player.isInWater() && !isInVehicle && !isClimbing && isMoving;
+        boolean isSneaking = player.isCrouching() && !isClimbing && isMoving;
+        boolean isSprinting = player.isSprinting() && !isSwimming && !isInVehicle && !isSneaking && !isClimbing && isMoving;
         boolean isFlying = player.getPose() == Pose.FALL_FLYING || player.getAbilities().flying;
-        playerData.setSprinting(isSprinting, player);
-        playerData.setCrawling(isCrawling, player);
-        playerData.setBlocking(player.isBlocking(), player);
-        if (getProfile().forFlying.get() && !PlayerUtil.hasEnoughFeathers(getProfile().costsForFlying, getProfile().minForFlying, (ServerPlayer) player)
-            && playerData.isFlying()) {
-            player.getAbilities().flying = false;
-            player.getAbilities().mayfly = false;
-            player.onUpdateAbilities();
-        }
-        playerData.setFlying(isFlying, player);
 
-        if (getProfile().forBlocking.get() && !PlayerUtil.hasEnoughFeathers(getProfile().costsForBlocking, getProfile().minForBlocking, (ServerPlayer) player)
-            && player.getMainHandItem().getItem() instanceof ShieldItem)
-            player.stopUsingItem();
-        exhaust(player, getProfile().forBlocking, player.isBlocking() && playerData.getBlockingTicks()
-            >= getProfile().afterBlocking.get(), getProfile().costsForBlocking, playerData::resetBlockingTicks);
-        exhaust(player, getProfile().forFlying, isFlying && playerData.getFlyingTicks()
-            >= getProfile().afterFlying.get(), getProfile().costsForFlying, playerData::resetFlyingTicks);
-
-        if (!isMoving)
-            return;
-
-        exhaust(player, getProfile().forSprinting, isSprinting && playerData.getSprintingTicks()
-            >= getProfile().afterSprinting.get(), getProfile().costsForSprinting, playerData::resetSprintingTicks);
-        exhaust(player, getProfile().forCrawling, isCrawling && playerData.getCrawlingTicks()
-            >= getProfile().afterCrawling.get(), getProfile().costsForCrawling, playerData::resetCrawlingTicks);
+        playerData.set(SPRINTING, isSprinting, player);
+        playerData.set(CRAWLING, isCrawling, player);
+        playerData.set(HOLDING_THE_SHIELD, player.isBlocking() && player.getMainHandItem().getItem() instanceof ShieldItem, player);
+        playerData.set(FLYING, isFlying, player);
+        playerData.set(SWIMMING, isSwimming, player);
+        playerData.set(CRANKING, false, player);
     }
 }

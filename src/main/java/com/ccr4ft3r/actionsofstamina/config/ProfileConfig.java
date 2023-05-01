@@ -1,9 +1,15 @@
 package com.ccr4ft3r.actionsofstamina.config;
 
+import com.google.common.collect.Maps;
 import com.mojang.logging.LogUtils;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-import static java.lang.Integer.*;
+import java.util.Map;
+
+import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
+import static com.ccr4ft3r.actionsofstamina.util.ArrayUtil.*;
+import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.*;
 
 public class ProfileConfig {
 
@@ -30,6 +36,24 @@ public class ProfileConfig {
         return CURRENT_PROFILE;
     }
 
+    public static void stopIfExhausted(ServerPlayer player, AoSAction action, Runnable stopper) {
+        if (shouldStop(player, action) && getPlayerData(player).is(action)) {
+            stopper.run();
+            getPlayerData(player).set(action, false, player);
+        }
+    }
+
+    public static boolean shouldStop(AoSAction action) {
+        return getProfile().enabledByAction.get(action).get()
+            && !hasEnoughFeathers(getProfile().costsByAction.get(action), getProfile().minByAction.get(action));
+    }
+
+    public static boolean shouldStop(ServerPlayer player, AoSAction action) {
+        return getProfile().enabledByAction.get(action).get()
+            && (getPlayerData(player).is(action)
+            || !hasEnoughFeathers(getProfile().costsByAction.get(action), getProfile().minByAction.get(action), player));
+    }
+
     public static void updateChoosedProfile() {
         AoSProfile profile = MainConfig.CONFIG_DATA.profileToUse.get();
         switch (profile) {
@@ -41,46 +65,27 @@ public class ProfileConfig {
         LogUtils.getLogger().info("Stamina profile {} will be used for adding exhaustion.", profile);
     }
 
+    @SuppressWarnings({"TextBlockMigration", "SameParameterValue"})
     public static class Data {
 
-        public static final String MIN_FOR = "Defines how many remaining feathers (value 1 is equals to half a feather) the player must have to being able to ";
-        public static final String COSTS = "Defines how many feathers (value 1 is equals to half a feather) the players will loose for";
+        public static final String MIN_FOR = "Defines how many remaining feathers (value 1 is equals to half a feather) the player must have for ";
+        public static final String COSTS = "Defines how many feathers (value 1 is equals to half a feather) the players will loose for ";
         public static final String ENABLE_FOR = "Using stamina for ";
-        public static final String AFTER_ACTION = "Decrease feathers bar value by the defined costs after ";
-        public static final String AFTER_TIME = "Decrease feathers bar value by the defined costs after %s for X ticks";
+        public static final String AFTER = "Decrease feathers bar value by the defined costs after %s for X %s%s";
+        public static final String STOPS_REGEN = "Defines whether %s%s should stop the regeneration of feathers";
         private final AoSProfile profile;
+
         private final ForgeConfigSpec.Builder builder;
-        public ForgeConfigSpec.IntValue initialCosts;
-        public ForgeConfigSpec.BooleanValue forSprinting;
-        public ForgeConfigSpec.BooleanValue forJumping;
-        public ForgeConfigSpec.BooleanValue forCrawling;
-        public ForgeConfigSpec.BooleanValue forBlocking;
-        public ForgeConfigSpec.BooleanValue forAttacking;
-        public ForgeConfigSpec.BooleanValue forFlying;
-        public ForgeConfigSpec.BooleanValue forParagliding;
-        public ForgeConfigSpec.IntValue afterSprinting;
-        public ForgeConfigSpec.IntValue afterJumping;
-        public ForgeConfigSpec.IntValue afterCrawling;
-        public ForgeConfigSpec.IntValue afterBlocking;
-        public ForgeConfigSpec.IntValue afterAttacking;
-        public ForgeConfigSpec.IntValue afterFlying;
-        public ForgeConfigSpec.IntValue afterParagliding;
-        public ForgeConfigSpec.IntValue costsForSprinting;
-        public ForgeConfigSpec.IntValue costsForJumping;
-        public ForgeConfigSpec.IntValue costsForCrawling;
-        public ForgeConfigSpec.IntValue costsForBlocking;
-        public ForgeConfigSpec.IntValue costsForAttacking;
-        public ForgeConfigSpec.IntValue costsForFlying;
-        public ForgeConfigSpec.IntValue costsForParagliding;
-        public ForgeConfigSpec.IntValue minForSprinting;
-        public ForgeConfigSpec.IntValue minForJumping;
-        public ForgeConfigSpec.IntValue minForCrawling;
-        public ForgeConfigSpec.IntValue minForBlocking;
-        public ForgeConfigSpec.IntValue minForAttacking;
-        public ForgeConfigSpec.IntValue minForParagliding;
-        public ForgeConfigSpec.IntValue minForFlying;
+
         public ForgeConfigSpec.DoubleValue attackSpeedMultiplier;
         public ForgeConfigSpec.BooleanValue onlyForHits;
+
+        public Map<AoSAction, ForgeConfigSpec.IntValue> initialCostsByAction = Maps.newConcurrentMap();
+        public Map<AoSAction, ForgeConfigSpec.BooleanValue> enabledByAction = Maps.newConcurrentMap();
+        public Map<AoSAction, ForgeConfigSpec.IntValue> costsByAction = Maps.newConcurrentMap();
+        public Map<AoSAction, ForgeConfigSpec.IntValue> minByAction = Maps.newConcurrentMap();
+        public Map<AoSAction, ForgeConfigSpec.BooleanValue> regenerationByAction = Maps.newConcurrentMap();
+        public Map<AoSAction, ForgeConfigSpec.IntValue> delayByAction = Maps.newConcurrentMap();
 
         public Data(ForgeConfigSpec.Builder builder, AoSProfile profile) {
             this.builder = builder;
@@ -89,68 +94,55 @@ public class ProfileConfig {
                 + "\n So if you want to drop the feathers bar by 1 (half a feather) after 2.5 seconds of sprinting, you have to specify 50 (2.5 seconds * 20 ticks/second = 50 ticks)."
                 + "\n To slow down feathers regeneration you can edit the feathers-common.toml of the Feathers mod.");
 
-            initialCosts = defineRange(COSTS + "starting an action", "initialCosts", 0, 6, 0, 1, 2);
-            builder.push("Movement actions");
-            forSprinting = define(ENABLE_FOR + "sprinting", "enableForSprinting", true, true, true);
-            forJumping = define(ENABLE_FOR + "jumping", "enableForJumping", false, true, true);
-            forCrawling = define(ENABLE_FOR + "crawling (for vanilla, GoProne & Personality Mod)", "enableForCrawling", true, true, true);
-            forBlocking = define(ENABLE_FOR + "holding the shield", "enableForHoldingShield", true, true, true);
-            forAttacking = define(ENABLE_FOR + "attacking", "enableForAttacking", false, true, true);
-            forFlying = define(ENABLE_FOR + "flying (elytra and Golden ring)", "enableForFlying", true, true, true);
+            builder.push("1 - General");
             onlyForHits = define(ENABLE_FOR + "attacking only when hitting entities", "onlyForHits", true, false, false);
-            forParagliding = define(ENABLE_FOR + "paragliding", "enableForParagliding", true, true, true);
-
-            costsForSprinting = defineRange(COSTS + "sprinting", "costsForSprinting", 1, 20, 1, 1, 1);
-            costsForJumping = defineRange(COSTS + "jumping", "costsForJumping", 1, 20, 1, 1, 1);
-            costsForCrawling = defineRange(COSTS + "crawling (for vanilla, GoProne & Personality Mod)", "costsForCrawling", 1, 20, 1, 1, 1);
-            costsForBlocking = defineRange(COSTS + "holding the shield", "costsForHoldingShield", 1, 20, 1, 1, 1);
-            costsForAttacking = defineRange(COSTS + "attacking", "costsForAttacking", 1, 20, 1, 1, 1);
-            costsForFlying = defineRange(COSTS + "flying", "costsForFlying", 1, 20, 1, 1, 1);
-            costsForParagliding = defineRange(COSTS + "paragliding", "costsForParagliding", 1, 20, 1, 1, 1);
-
-            minForSprinting = defineRange(MIN_FOR + "sprint", "minimumForSprinting", 0, 20, 2, 3, 4);
-            minForJumping = defineRange(MIN_FOR + "jump", "minimumForJumping", 0, 20, 0, 0, 1);
-            minForCrawling = defineRange(MIN_FOR + "crawl (for vanilla, GoProne & Personality Mod)", "minimumForCrawling", 0, 20, 1, 2, 3);
-            minForBlocking = defineRange(MIN_FOR + "holding the shield", "minimumForHoldingShield", 0, 20, 1, 2, 3);
-            minForAttacking = defineRange(MIN_FOR + "attack", "minimumForAttacking", 0, 20, 2, 4, 6);
-            minForFlying = defineRange(MIN_FOR + "fly", "minimumForFlying", 0, 20, 2, 3, 4);
-            minForParagliding = defineRange(MIN_FOR + "paraglide", "minimumForParagliding", 0, 20, 2, 3, 4);
-
-            afterSprinting = defineRange(AFTER_TIME.formatted("sprinting"), "afterSprinting", 1, 1200, 75, 50, 25);
-            afterJumping = defineRange(AFTER_ACTION + "jumping X times", "afterJumping", 1, 10, 1, 1, 1);
-            afterCrawling = defineRange(AFTER_TIME.formatted("crawling (for vanilla, GoProne & Personality Mod)"), "afterCrawling", 1, 1200, 65, 35, 20);
-            afterBlocking = defineRange(AFTER_TIME.formatted("holding the shield"), "afterHoldingShield", 1, 1200, 45, 20, 12);
-            afterAttacking = defineRange(AFTER_ACTION + "attacking X times", "afterAttacking", 1, 10, 3, 2, 1);
-            afterFlying = defineRange(AFTER_TIME.formatted("flying"), "afterFlying", 1, 1200, 50, 30, 20);
-            afterParagliding = defineRange(AFTER_TIME.formatted("paragliding"), "afterParargliding", 1, 1200, 50, 30, 20);
-
             attackSpeedMultiplier = defineRange("Determines how much additional stamina is spent when attacking entities with weapons depending on the attack speed", "attackSpeedMultiplier", 0d, 10d, 1.5d, 2d, 3d);
             builder.pop();
+
+            for (AoSAction action : AoSAction.values()) {
+                builder.push(action.getText(false));
+                enabledByAction.put(action, define(ENABLE_FOR + action.getText(true)
+                        + action.getDescription(), "enableFor" + action.getText(false),
+                    action.isEnabled(profile)));
+                costsByAction.put(action, defineRange(COSTS + action.getText(true)
+                        + action.getDescription(), "costsFor" + action.getText(false),
+                    1, 20, action.getCosts(profile)));
+                minByAction.put(action, defineRange(MIN_FOR + action.getText(true) + action.getDescription(),
+                    "minimumFor" + action.getText(false), 0, 20, action.getMin(profile)));
+
+                if (action.getType() == ActionType.TICKS) {
+                    initialCostsByAction.put(action, defineRange(COSTS + "starting  " + action.getText(true)
+                            + action.getDescription(), "initialCostsFor" + action.getText(false),
+                        0, 10, 0, 1, 2));
+                    regenerationByAction.put(action, define(STOPS_REGEN.formatted(action.getText(true), action.getDescription()),
+                        "stopRegenerationWhile" + action.getText(false), true));
+                }
+
+                ForgeConfigSpec.IntValue delayConfig;
+                if (action.getType() == ActionType.TICKS) {
+                    delayConfig = defineRange(AFTER.formatted(action.getText(true), "ticks",
+                            action.getDescription()), "ExhaustAfter" + action.getText(false) + "For",
+                        1, 1200, action.getDelay(profile));
+                } else {
+                    delayConfig = defineRange(AFTER.formatted(action.getText(true), "times",
+                            action.getDescription()), "ExhaustAfter" + action.getText(false) + "For",
+                        1, 10, action.getDelay(profile));
+                }
+                delayByAction.put(action, delayConfig);
+                builder.pop();
+            }
         }
 
-        private ForgeConfigSpec.BooleanValue define(String comment, String property, boolean... profileValues) {
-            return builder.comment(comment).define(property, get(profileValues));
+        private ForgeConfigSpec.BooleanValue define(String comment, String property, Boolean... profileValues) {
+            return builder.comment(comment).define(property, get(profile, profileValues).booleanValue());
         }
 
         private ForgeConfigSpec.IntValue defineRange(String comment, String property, Integer min, Integer max, Integer... profileValues) {
-            return builder.comment(comment).defineInRange(property, get(profileValues), min, max);
+            return builder.comment(comment).defineInRange(property, get(profile, profileValues), min, max);
         }
 
         private ForgeConfigSpec.DoubleValue defineRange(String comment, String property, Double min, Double max, Double... profileValues) {
-            return builder.comment(comment).defineInRange(property, get(profileValues), min, max);
-        }
-
-        private ForgeConfigSpec.IntValue defineTime(String comment, String property, Integer... seconds) {
-            return builder.comment(comment).defineInRange(property, get(seconds) * 20, 20, MAX_VALUE);
-        }
-
-        private boolean get(boolean... profileValues) {
-            return profileValues.length <= profile.ordinal() ? profileValues[1] : profileValues[profile.ordinal()];
-        }
-
-        @SafeVarargs
-        private <T> T get(T... profileValues) {
-            return profileValues.length <= profile.ordinal() ? profileValues[1] : profileValues[profile.ordinal()];
+            return builder.comment(comment).defineInRange(property, get(profile, profileValues), min, max);
         }
     }
 }
