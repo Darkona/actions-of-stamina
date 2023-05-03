@@ -14,7 +14,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
-import net.minecraft.world.item.TieredItem;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -43,20 +42,20 @@ public class ExhaustionHandler {
         exhaustForWeaponSwing(event.isCanceled(), event.getEntity());
     }
 
-    public static void exhaustForWeaponSwing(boolean execption, Player p) {
-        if (!(p instanceof ServerPlayer player) || execption || cannotBeExhausted(player))
+    public static void exhaustForWeaponSwing(boolean preConditionNotFulfilled, Player p) {
+        if (!(p instanceof ServerPlayer player) || preConditionNotFulfilled || cannotBeExhausted(player))
             return;
         ServerPlayerData playerData = getPlayerData(player);
         ItemStack itemstack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (!(itemstack.getItem() instanceof TieredItem))
-            return;
         Multimap<Attribute, AttributeModifier> modifiers = itemstack.getItem().getDefaultAttributeModifiers(EquipmentSlot.MAINHAND);
-        double multiplier = 1d;
-        Iterator<AttributeModifier> attackSpeeds = modifiers.get(Attributes.ATTACK_SPEED).iterator();
-        if (attackSpeeds.hasNext()) {
-            AttributeModifier attackSpeed = attackSpeeds.next();
-            multiplier = getProfile().attackSpeedMultiplier.get() * (1.6 - (attackSpeed.getAmount() + 4));
-        }
+        Iterator<AttributeModifier> attackDamages = modifiers.get(Attributes.ATTACK_DAMAGE).iterator();
+
+        double multiplier = 0d;
+        if (attackDamages.hasNext()) {
+            AttributeModifier attackDamage = attackDamages.next();
+            multiplier = getProfile().attackDamageMultiplier.get() * (attackDamage.getAmount() + 1);
+        } else if (!getProfile().alsoForNonWeapons.get())
+            return;
         playerData.set(ATTACKING, Math.max(0, 1 + multiplier), player);
     }
 

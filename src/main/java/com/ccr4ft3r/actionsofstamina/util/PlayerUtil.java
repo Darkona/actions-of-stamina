@@ -2,6 +2,7 @@ package com.ccr4ft3r.actionsofstamina.util;
 
 import com.alrex.parcool.common.action.impl.Crawl;
 import com.alrex.parcool.common.capability.impl.Parkourability;
+import com.ccr4ft3r.actionsofstamina.config.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSAction;
 import com.ccr4ft3r.actionsofstamina.data.ServerPlayerData;
 import com.elenai.feathers.api.FeathersHelper;
@@ -14,6 +15,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.ModList;
+
+import java.util.function.Supplier;
 
 import static com.ccr4ft3r.actionsofstamina.ModConstants.*;
 import static com.ccr4ft3r.actionsofstamina.config.MainConfig.*;
@@ -34,7 +37,8 @@ public class PlayerUtil {
             return;
         ForgeConfigSpec.BooleanValue optionEnabled = getProfile().enabledByAction.get(action);
         ServerPlayerData playerData = getPlayerData(player);
-        if (optionEnabled.get() && playerData.get(action) >= getProfile().delayByAction.get(action).get()) {
+        Supplier<Boolean> shouldExhaust = () -> optionEnabled.get() && playerData.get(action) >= getProfile().delayByAction.get(action).get();
+        if (shouldExhaust.get()) {
             int feathersToSpend = getProfile().costsByAction.get(action).get();
             if (CONFIG_DATA.enableExtendedLogging.get())
                 LogUtils.getLogger().info("Spending {} feathers for player '{}' due to rule '{}'", feathersToSpend, player.getScoreboardName(),
@@ -42,6 +46,8 @@ public class PlayerUtil {
             FeathersHelper.spendFeathers(player, feathersToSpend);
             playerData.reset(action);
         }
+        if (action.getType() == ActionType.TIMES && shouldExhaust.get())
+            exhaust(player, action);
     }
 
     public static boolean isCrawling(Player player) {

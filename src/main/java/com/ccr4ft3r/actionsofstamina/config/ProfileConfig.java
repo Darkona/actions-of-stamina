@@ -77,8 +77,9 @@ public class ProfileConfig {
 
         private final ForgeConfigSpec.Builder builder;
 
-        public ForgeConfigSpec.DoubleValue attackSpeedMultiplier;
+        public ForgeConfigSpec.DoubleValue attackDamageMultiplier;
         public ForgeConfigSpec.BooleanValue onlyForHits;
+        public ForgeConfigSpec.BooleanValue alsoForNonWeapons;
 
         public Map<AoSAction, ForgeConfigSpec.IntValue> initialCostsByAction = Maps.newConcurrentMap();
         public Map<AoSAction, ForgeConfigSpec.BooleanValue> enabledByAction = Maps.newConcurrentMap();
@@ -95,8 +96,6 @@ public class ProfileConfig {
                 + "\n To slow down feathers regeneration you can edit the feathers-common.toml of the Feathers mod.");
 
             builder.push("1 - General");
-            onlyForHits = define(ENABLE_FOR + "attacking only when hitting entities", "onlyForHits", true, false, false);
-            attackSpeedMultiplier = defineRange("Determines how much additional stamina is spent when attacking entities with weapons depending on the attack speed", "attackSpeedMultiplier", 0d, 10d, 1.5d, 2d, 3d);
             builder.pop();
 
             for (AoSAction action : AoSAction.values()) {
@@ -128,6 +127,13 @@ public class ProfileConfig {
                             action.getDescription()), "ExhaustAfter" + action.getText(false) + "For",
                         1, 10, action.getDelay(profile));
                 }
+
+                if (action == AoSAction.ATTACKING) {
+                    onlyForHits = define(ENABLE_FOR + "attacking only when hitting entities", "onlyForHits", true, false, false);
+                    alsoForNonWeapons = define(ENABLE_FOR + "attacking for any items in the main hand (even without any)", "alsoForNonWeapons", false, false, true);
+                    attackDamageMultiplier = defineRange("Determines how much additional stamina is spent when attacking entities with weapons depending on the attack weapons attack damage", "attackDamageMultiplier", 0d, 1d, 0.0d, 0.2d, 0.4d);
+                }
+
                 delayByAction.put(action, delayConfig);
                 builder.pop();
             }

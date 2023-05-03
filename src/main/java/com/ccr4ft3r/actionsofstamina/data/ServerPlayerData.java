@@ -92,6 +92,6 @@ public class ServerPlayerData {
     }
 
     public void reset(AoSAction action) {
-        amountByAction.get(action).set(0);
+        amountByAction.get(action).set(amountByAction.get(action).get() - getProfile().delayByAction.get(action).get());
     }
 }

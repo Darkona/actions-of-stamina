@@ -164,6 +164,8 @@ dependencies {
     implementation fg.deobf("curse.maven:curios-309927:${curios_file_id}")
     implementation fg.deobf("curse.maven:parcool-482378:${parcool_file_id}")
     implementation fg.deobf("curse.maven:create-328085:${create_file_id}")
+    implementation fg.deobf("curse.maven:better-combat-639842:${better_combat_file_id}")
+    implementation fg.deobf("curse.maven:player-animator-658587:${player_animator_file_id}")
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
