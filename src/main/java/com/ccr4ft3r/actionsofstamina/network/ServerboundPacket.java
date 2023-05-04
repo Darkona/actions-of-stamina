@@ -25,6 +25,7 @@ public class ServerboundPacket {
     public enum Action {
         PLAYER_MOVING,
         PLAYER_STOP_MOVING,
+        PLAYER_WALL_JUMP,
         WEAPON_SWING,
     }
 }

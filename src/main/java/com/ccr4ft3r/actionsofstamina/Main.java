@@ -31,4 +31,6 @@ public class Main {
         if (ModList.get().isLoaded(ModConstants.PARAGLIDER_MOD_ID))
             MinecraftForge.EVENT_BUS.addListener(CompatibilityHandler::onParagliding);
     }
+
+
 }
