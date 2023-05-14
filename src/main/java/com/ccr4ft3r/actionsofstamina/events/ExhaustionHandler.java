@@ -68,19 +68,20 @@ public class ExhaustionHandler {
         ServerPlayerData playerData = getPlayerData(player);
         boolean isCrawling = PlayerUtil.isCrawling(player);
         boolean isMoving = playerData.isMoving() && !player.position().equals(playerData.getLastPosition());
-        playerData.setLastPosition(player.position());
         boolean isInVehicle = player.getVehicle() != null;
         boolean isClimbing = player.onClimbable() && isMoving;
-        boolean isSwimming = player.isInWater() && !isInVehicle && !isClimbing && isMoving;
+        boolean isSwimming = player.isInWater() && !isInVehicle && !isClimbing && isMoving
+            && playerData.getLastPosition() != null && (player.position().x() != playerData.getLastPosition().x() || player.position().z() != playerData.getLastPosition().z());
         boolean isSneaking = player.isCrouching() && !isClimbing && isMoving;
         boolean isSprinting = player.isSprinting() && !isSwimming && !isInVehicle && !isSneaking && !isClimbing && isMoving;
         boolean isFlying = player.getPose() == Pose.FALL_FLYING || player.getAbilities().flying;
 
+        playerData.setLastPosition(player.position());
         playerData.set(SPRINTING, isSprinting, player);
         playerData.set(CRAWLING, isCrawling, player);
         playerData.set(HOLDING_THE_SHIELD, player.isBlocking() && player.getMainHandItem().getItem() instanceof ShieldItem, player);
         playerData.set(FLYING, isFlying, player);
         playerData.set(SWIMMING, isSwimming, player);
-        playerData.set(CRANKING, false, player);
+        playerData.update(player);
     }
 }

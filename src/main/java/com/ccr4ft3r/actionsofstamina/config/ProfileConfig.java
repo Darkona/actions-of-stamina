@@ -50,8 +50,7 @@ public class ProfileConfig {
 
     public static boolean shouldStop(ServerPlayer player, AoSAction action) {
         return getProfile().enabledByAction.get(action).get()
-            && (getPlayerData(player).is(action)
-            || !hasEnoughFeathers(getProfile().costsByAction.get(action), getProfile().minByAction.get(action), player));
+            && !hasEnoughFeathers(getProfile().costsByAction.get(action), getProfile().minByAction.get(action), player);
     }
 
     public static void updateChoosedProfile() {

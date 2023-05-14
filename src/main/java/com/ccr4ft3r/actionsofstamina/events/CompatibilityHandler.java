@@ -15,7 +15,7 @@ public class CompatibilityHandler {
 
     @SubscribeEvent
     public static void onParagliding(TickEvent.PlayerTickEvent event) {
-        if (cannotBeExhausted(event.player))
+        if (cannotBeExhausted(event.player) || event.phase != TickEvent.Phase.END)
             return;
         ServerPlayer player = (ServerPlayer) event.player;
         LazyOptional<PlayerMovement> movement = player.getCapability(Caps.playerMovement);

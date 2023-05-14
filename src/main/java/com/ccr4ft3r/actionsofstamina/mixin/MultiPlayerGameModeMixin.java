@@ -17,7 +17,7 @@ import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
 @Mixin(MultiPlayerGameMode.class)
 public abstract class MultiPlayerGameModeMixin {
 
-    @Inject(method = "useItem", at = @At(value = "HEAD"), cancellable = true, remap = false)
+    @Inject(method = "useItem", at = @At(value = "HEAD"), cancellable = true)
     public void stopBlocking(Player p_105236_, InteractionHand p_105238_, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack itemstack = p_105236_.getItemInHand(p_105238_);
         if (!(itemstack.getItem() instanceof ShieldItem))

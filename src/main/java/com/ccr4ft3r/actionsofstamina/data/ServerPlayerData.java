@@ -5,13 +5,14 @@ import com.ccr4ft3r.actionsofstamina.config.AoSAction;
 import com.elenai.feathers.api.FeathersHelper;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.AtomicDouble;
+import com.mojang.logging.LogUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
-import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
 import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
 import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.*;
 
@@ -23,11 +24,13 @@ public class ServerPlayerData {
 
     private final Map<AoSAction, AtomicBoolean> stateByAction = Maps.newConcurrentMap();
     private final Map<AoSAction, AtomicDouble> amountByAction = Maps.newConcurrentMap();
+    private final Map<AoSAction, AtomicLong> tickByAction = Maps.newConcurrentMap();
 
     ServerPlayerData() {
         for (AoSAction action : AoSAction.values()) {
             stateByAction.put(action, new AtomicBoolean());
             amountByAction.put(action, new AtomicDouble());
+            tickByAction.put(action, new AtomicLong());
         }
     }
 
@@ -55,16 +58,30 @@ public class ServerPlayerData {
 
     public void set(AoSAction action, boolean newState, double increment, ServerPlayer player) {
         AtomicBoolean currentState = stateByAction.get(action);
-        checkStarting(action, currentState.get(), newState, player);
+        boolean wasStarted = checkStarting(action, currentState.get(), newState, player);
         currentState.set(newState);
         if (currentState.get()) {
-            amountByAction.get(action).addAndGet(increment);
+            if (tickByAction.get(action).get() >= player.tickCount) {
+                return;
+            }
+            long factor = 1;
+            if (action.getType() == ActionType.TICKS && !wasStarted)
+                factor = player.tickCount - tickByAction.get(action).get();
+            tickByAction.get(action).set(player.tickCount);
+            amountByAction.get(action).addAndGet(increment * factor);
             exhaust(player, action);
         }
 
         if (ActionType.TIME_ACTIONS.contains(action) && action.getStopper() != null) {
             stopIfExhausted(player, action, () -> action.getStopper().accept(player));
         }
+    }
+
+    public void update(ServerPlayer player) {
+        ActionType.TIME_ACTIONS.forEach(action -> {
+            if (is(action) && tickByAction.get(action).get() + 20 < player.tickCount)
+                set(action, false, player);
+        });
     }
 
     public void set(AoSAction action, double amount, ServerPlayer player) {
@@ -75,12 +92,13 @@ public class ServerPlayerData {
         set(action, newState, 1d, player);
     }
 
-    private void checkStarting(AoSAction action, boolean currentValue, boolean newValue, ServerPlayer player) {
+    private boolean checkStarting(AoSAction action, boolean currentValue, boolean newValue, ServerPlayer player) {
         if (!currentValue && newValue) {
             if (action.getType() == ActionType.TICKS)
                 FeathersHelper.spendFeathers(player, getProfile().initialCostsByAction.get(action).get());
-            exhaust(player, ATTACKING);
+            return true;
         }
+        return false;
     }
 
     public boolean is(AoSAction action) {
