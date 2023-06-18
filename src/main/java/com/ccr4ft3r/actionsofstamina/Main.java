@@ -20,11 +20,11 @@ public class Main {
     }
 
     private static void registerConfigs() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MainConfig.CONFIG, ModConstants.MOD_ID + "-common.toml");
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_SLUGGISH, ModConstants.MOD_ID + "/sluggish-profile.toml");
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_EXHAUSTED, ModConstants.MOD_ID + "/exhausted-profile.toml");
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_BREATHLESS, ModConstants.MOD_ID + "/breathless-profile.toml");
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_CUSTOM, ModConstants.MOD_ID + "/custom-profile.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MainConfig.CONFIG, ModConstants.MOD_ID + "-0-common.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_SLUGGISH, ModConstants.MOD_ID + "/1-sluggish-profile.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_EXHAUSTED, ModConstants.MOD_ID + "/2-exhausted-profile.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_BREATHLESS, ModConstants.MOD_ID + "/3-breathless-profile.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_CUSTOM, ModConstants.MOD_ID + "/4-custom-profile.toml");
     }
 
     private static void addCompatibilitiesListener() {

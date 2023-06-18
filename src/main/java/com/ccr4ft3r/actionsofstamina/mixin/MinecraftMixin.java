@@ -1,20 +1,34 @@
 package com.ccr4ft3r.actionsofstamina.mixin;
 
-import com.ccr4ft3r.actionsofstamina.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
+import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
 import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
 
-@Mixin(Minecraft.class)
-public class MinecraftMixin {
+@Mixin(value = Minecraft.class)
+public abstract class MinecraftMixin {
 
-    @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
-    public void startAttackHeadInjected(CallbackInfoReturnable<Boolean> cir) {
-        if (getProfile().forAttacking.get() && !PlayerUtil.hasEnoughFeathers(getProfile().costsForAttacking, getProfile().minForAttacking))
-            cir.setReturnValue(false);
+    @Shadow
+    protected abstract boolean startAttack();
+
+    @Shadow
+    protected abstract void continueAttack(boolean p_91387_);
+
+    @Redirect(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;startAttack()Z"))
+    public boolean stopAttacking(Minecraft instance) {
+        if (shouldStop(ATTACKING))
+            return false;
+        return startAttack();
+    }
+
+    @Redirect(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"))
+    public void stopAttacking(Minecraft instance, boolean direction) {
+        if (shouldStop(ATTACKING))
+            return;
+        continueAttack(direction);
     }
 }
