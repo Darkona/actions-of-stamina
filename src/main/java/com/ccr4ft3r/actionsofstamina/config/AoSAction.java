@@ -21,7 +21,6 @@ public enum AoSAction {
     }), "for Elytra and Golden Ring"),
     PARAGLIDING(TICKS, of(true, true, true), of(2, 3, 4), of(50, 30, 20), (p) -> p.getCapability(Caps.playerMovement).ifPresent(m -> m.setDepleted(true))),
     CRAWLING(TICKS, of(true, true, true), of(1, 2, 3), of(65, 35, 20), "for Vanilla, Parcool, GoProne & Personality Mod"),
-    BLOCKING(TIMES, of(false, true, true), of(1, 2, 3), of(1, 2, 3)),
     SWIMMING(TICKS, of(false, true, true), of(0, 0, 0), of(150, 100, 75)),
     JUMPING(TIMES, of(false, true, true), of(0, 0, 1), of(1, 1, 1)),
     HOLDING_THE_SHIELD(TICKS, of(true, true, true), of(1, 2, 3), of(45, 20, 12), Player::stopUsingItem),
