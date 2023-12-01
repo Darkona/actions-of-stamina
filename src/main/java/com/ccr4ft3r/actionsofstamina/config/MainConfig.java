@@ -10,7 +10,7 @@ public class MainConfig {
 
     public static class Data {
 
-        public ForgeConfigSpec.ConfigValue<Boolean> enableExtendedLogging;
+        public ForgeConfigSpec.BooleanValue enableExtendedLogging;
         public ForgeConfigSpec.EnumValue<AoSProfile> profileToUse;
 
         public Data(ForgeConfigSpec.Builder builder) {
