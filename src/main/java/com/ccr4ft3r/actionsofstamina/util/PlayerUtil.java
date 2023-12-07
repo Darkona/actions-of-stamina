@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.util;
 
 import com.alrex.parcool.common.action.impl.Crawl;
-import com.alrex.parcool.common.capability.impl.Parkourability;
+import com.alrex.parcool.common.capability.Parkourability;
 import com.ccr4ft3r.actionsofstamina.config.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSAction;
 import com.ccr4ft3r.actionsofstamina.data.ServerPlayerData;
