@@ -9,8 +9,7 @@
     "FeathersCommonEventsMixin",
     "HandCrankBlockMixin",
     "MinecraftMixin",
-    "MultiPlayerGameModeMixin",
-    "WallJumpLogicMixin"
+    "MultiPlayerGameModeMixin"
   ],
   "client": [
     "KeyboardInputMixin",

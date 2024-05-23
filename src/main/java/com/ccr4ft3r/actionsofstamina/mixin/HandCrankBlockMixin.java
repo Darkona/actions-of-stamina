@@ -18,7 +18,7 @@ import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
 import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
 import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.*;
 
-@Mixin(targets = {"com.simibubi.create.content.contraptions.components.crank.HandCrankBlock"})
+@Mixin(targets = {"com.simibubi.create.content.kinetics.crank.HandCrankBlock"})
 public class HandCrankBlockMixin {
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)

@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'maven-publish'
 }
 
@@ -161,13 +161,11 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:configured-457570:${mod_configured_file_id}")
     implementation fg.deobf("curse.maven:feathers-699933:${mod_feathers_file_id}")
     implementation fg.deobf("curse.maven:angel-ring-333396:${mod_angel_ring_file_id}")
-    implementation fg.deobf("curse.maven:paragliders-289240:${mod_paragliders_file_id}")
     implementation fg.deobf("curse.maven:curios-309927:${curios_file_id}")
     compileOnly fg.deobf("curse.maven:parcool-482378:${parcool_file_id}")
     implementation fg.deobf("curse.maven:create-328085:${create_file_id}")
     implementation fg.deobf("curse.maven:better-combat-639842:${better_combat_file_id}")
     implementation fg.deobf("curse.maven:player-animator-658587:${player_animator_file_id}")
-    implementation fg.deobf("curse.maven:wall-jump-622370:${wall_jump_file_id}")
     implementation fg.deobf("curse.maven:architectury-419699:${architectury_file_id}")
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
@@ -190,11 +188,11 @@ jar {
     manifest {
         attributes([
                 "Specification-Title"     : "actionsofstamina",
-                "Specification-Vendor"    : "CCr4ft3r",
+                "Specification-Vendor"    : "CCr4ft3r, Darkona",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "CCr4ft3r",
+                "Implementation-Vendor"   : "CCr4ft3r, Darkona",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
