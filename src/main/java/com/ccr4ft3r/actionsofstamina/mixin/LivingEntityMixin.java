@@ -9,9 +9,6 @@ public abstract class LivingEntityMixin {
     @Shadow protected boolean jumping;
 
     @Shadow
-    public abstract void setJumping(boolean p_21314_);
-
-    @Shadow
     public abstract void setSprinting(boolean p_108751_);
 
 }
