@@ -28,7 +28,7 @@ import static com.elenai.feathers.api.FeathersHelper.*;
 public class PlayerUtil {
 
     public static boolean cannotBeExhausted(Player player) {
-        return player instanceof FakePlayer || !player.isAlive() || player.isLocalPlayer() || !player.isAddedToWorld() ||
+        return player instanceof FakePlayer || !player.isAlive()  || !player.isAddedToWorld() || //|| player.level().isClientSide
             player.isCreative() || player.isSpectator();
     }
 

@@ -61,10 +61,9 @@ public class ExhaustionHandler {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (cannotBeExhausted(event.player) || event.phase != TickEvent.Phase.END)
+        if (!(event.player instanceof ServerPlayer player) || cannotBeExhausted(event.player) || event.phase != TickEvent.Phase.END)
             return;
 
-        ServerPlayer player = (ServerPlayer) event.player;
         ServerPlayerData playerData = getPlayerData(player);
         boolean isCrawling = PlayerUtil.isCrawling(player);
         boolean isMoving = playerData.isMoving() && !player.position().equals(playerData.getLastPosition());

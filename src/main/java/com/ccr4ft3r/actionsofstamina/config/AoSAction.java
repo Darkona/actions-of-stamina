@@ -24,8 +24,6 @@ public enum AoSAction {
     HOLDING_THE_SHIELD(TICKS, of(true, true, true), of(1, 2, 3), of(45, 20, 12), Player::stopUsingItem),
     WALL_JUMPING(TIMES, of(false, true, true), of(3, 4, 5), of(1, 1, 1)),
     CRANKING(TICKS, of(false, true, true), of(1, 1, 2), of(75, 50, 25), "for Create")
-
-    //
     ;
 
     private final ActionType type;

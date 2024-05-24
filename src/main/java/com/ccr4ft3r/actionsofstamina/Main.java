@@ -3,8 +3,6 @@ package com.ccr4ft3r.actionsofstamina;
 import com.ccr4ft3r.actionsofstamina.config.MainConfig;
 import com.ccr4ft3r.actionsofstamina.config.ProfileConfig;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
