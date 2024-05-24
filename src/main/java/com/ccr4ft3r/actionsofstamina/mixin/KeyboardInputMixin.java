@@ -20,7 +20,7 @@ public abstract class KeyboardInputMixin extends Input {
     @Inject(method = "tick", at = @At(value = "RETURN"))
     public void stopJumpingAndCrawling(boolean p_234118_, float p_234119_, CallbackInfo ci) {
         LocalPlayer player = Minecraft.getInstance().player;
-        if (  (PlayerUtil.isCrawling(player) && shouldStop(CRAWLING)) ||
+        if (  player != null && !PlayerUtil.cannotBeExhausted(player) && (PlayerUtil.isCrawling(player) && shouldStop(CRAWLING)) ||
               (shouldStop(SWIMMING)&& PLAYER_DATA.isMoving() && player.isInWater())
             ) {
             this.forwardImpulse *= 0.2f;
