@@ -20,9 +20,7 @@ public abstract class MinecraftMixin {
 
     @Redirect(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;startAttack()Z"))
     public boolean stopAttacking(Minecraft instance) {
-        if (shouldStop(ATTACKING))
-            return false;
-        return startAttack();
+        return canDo(ATTACKING) && startAttack();
     }
 
     @Redirect(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"))

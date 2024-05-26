@@ -8,9 +8,10 @@
     "ElytraItemMixin",
     "FeathersCommonEventsMixin",
     "HandCrankBlockMixin",
+    "LivingEntityMixin",
     "MinecraftMixin",
     "MultiPlayerGameModeMixin",
-    "WallJumpLogicMixin"
+    "PlayerMixin"
   ],
   "client": [
     "KeyboardInputMixin",

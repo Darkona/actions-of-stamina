@@ -3,7 +3,6 @@ package com.ccr4ft3r.actionsofstamina.config;
 import com.google.common.base.CaseFormat;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import tictim.paraglider.capabilities.Caps;
 
 import java.util.function.Consumer;
 
@@ -19,15 +18,12 @@ public enum AoSAction {
         player.getAbilities().mayfly = false;
         player.onUpdateAbilities();
     }), "for Elytra and Angel Ring"),
-    PARAGLIDING(TICKS, of(true, true, true), of(2, 3, 4), of(50, 30, 20), (p) -> p.getCapability(Caps.playerMovement).ifPresent(m -> m.setDepleted(true))),
     CRAWLING(TICKS, of(true, true, true), of(1, 2, 3), of(65, 35, 20), "for Vanilla, Parcool, GoProne & Personality Mod"),
     SWIMMING(TICKS, of(false, true, true), of(0, 0, 0), of(150, 100, 75)),
     JUMPING(TIMES, of(false, true, true), of(0, 0, 1), of(1, 1, 1)),
     HOLDING_THE_SHIELD(TICKS, of(true, true, true), of(1, 2, 3), of(45, 20, 12), Player::stopUsingItem),
     WALL_JUMPING(TIMES, of(false, true, true), of(3, 4, 5), of(1, 1, 1)),
     CRANKING(TICKS, of(false, true, true), of(1, 1, 2), of(75, 50, 25), "for Create")
-
-    //
     ;
 
     private final ActionType type;

@@ -44,10 +44,15 @@ public class ProfileConfig {
     }
 
     public static boolean shouldStop(AoSAction action) {
+
         return getProfile().enabledByAction.get(action).get()
             && !hasEnoughFeathers(getProfile().costsByAction.get(action), getProfile().minByAction.get(action));
     }
 
+    public static boolean canDo(AoSAction action) {
+        return getProfile().enabledByAction.get(AoSAction.SPRINTING).get()
+                && hasEnoughFeathers(getProfile().costsByAction.get(action), getProfile().minByAction.get(action));
+    }
     public static boolean shouldStop(ServerPlayer player, AoSAction action) {
         return getProfile().enabledByAction.get(action).get()
             && !hasEnoughFeathers(getProfile().costsByAction.get(action), getProfile().minByAction.get(action), player);

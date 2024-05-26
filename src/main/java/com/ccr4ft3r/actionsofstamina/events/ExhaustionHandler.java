@@ -47,7 +47,7 @@ public class ExhaustionHandler {
             return;
         ServerPlayerData playerData = getPlayerData(player);
         ItemStack itemstack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        Multimap<Attribute, AttributeModifier> modifiers = itemstack.getItem().getDefaultAttributeModifiers(EquipmentSlot.MAINHAND);
+        Multimap<Attribute, AttributeModifier> modifiers = itemstack.getItem().getAttributeModifiers(EquipmentSlot.MAINHAND, itemstack);
         Iterator<AttributeModifier> attackDamages = modifiers.get(Attributes.ATTACK_DAMAGE).iterator();
 
         double multiplier = 0d;
@@ -61,10 +61,9 @@ public class ExhaustionHandler {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (cannotBeExhausted(event.player) || event.phase != TickEvent.Phase.END)
+        if (!(event.player instanceof ServerPlayer player) || cannotBeExhausted(event.player) || event.phase != TickEvent.Phase.END)
             return;
 
-        ServerPlayer player = (ServerPlayer) event.player;
         ServerPlayerData playerData = getPlayerData(player);
         boolean isCrawling = PlayerUtil.isCrawling(player);
         boolean isMoving = playerData.isMoving() && !player.position().equals(playerData.getLastPosition());
