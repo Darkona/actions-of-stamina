@@ -9,16 +9,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import com.simibubi.create.content.kinetics.crank.HandCrankBlock;
 
 import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
 import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
 import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
 import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.*;
 
-@Mixin(targets = {"com.simibubi.create.content.contraptions.components.crank.HandCrankBlock"})
+@Pseudo
+@Mixin(HandCrankBlock.class)
 public class HandCrankBlockMixin {
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)

@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina;
 
 import com.ccr4ft3r.actionsofstamina.config.MainConfig;
+import com.ccr4ft3r.actionsofstamina.config.OptionalConfig;
 import com.ccr4ft3r.actionsofstamina.config.ProfileConfig;
 import com.ccr4ft3r.actionsofstamina.events.CompatibilityHandler;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
@@ -25,10 +26,14 @@ public class Main {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_EXHAUSTED, ModConstants.MOD_ID + "/2-exhausted-profile.toml");
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_BREATHLESS, ModConstants.MOD_ID + "/3-breathless-profile.toml");
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ProfileConfig.CONFIG_CUSTOM, ModConstants.MOD_ID + "/4-custom-profile.toml");
+        if (ModList.get().isLoaded(ModConstants.PARAGLIDER_MOD_ID)) {
+            ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, OptionalConfig.CONFIG, ModConstants.MOD_ID + "-5-optional.toml");
+        }
     }
 
     private static void addCompatibilitiesListener() {
-        if (ModList.get().isLoaded(ModConstants.PARAGLIDER_MOD_ID))
+        if (ModList.get().isLoaded(ModConstants.PARAGLIDER_MOD_ID)) {
             MinecraftForge.EVENT_BUS.addListener(CompatibilityHandler::onParagliding);
+        }
     }
 }

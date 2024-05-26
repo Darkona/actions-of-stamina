@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version '6.0.25'
 }
 
 apply plugin: 'org.spongepowered.mixin'
@@ -166,7 +166,7 @@ dependencies {
     implementation fg.deobf("curse.maven:create-328085:${create_file_id}")
     implementation fg.deobf("curse.maven:better-combat-639842:${better_combat_file_id}")
     implementation fg.deobf("curse.maven:player-animator-658587:${player_animator_file_id}")
-    implementation fg.deobf("curse.maven:wall-jump-622370:${wall_jump_file_id}")
+    // not available for 1.20.1 :/( // implementation fg.deobf("curse.maven:wall-jump-622370:${wall_jump_file_id}")
     implementation fg.deobf("curse.maven:architectury-419699:${architectury_file_id}")
 
     // Real mod deobf dependency examples - these get remapped to your current mappings

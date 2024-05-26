@@ -4,8 +4,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import tictim.paraglider.capabilities.Caps;
-import tictim.paraglider.capabilities.PlayerMovement;
+import tictim.paraglider.api.movement.ParagliderPlayerStates;
+import tictim.paraglider.impl.movement.PlayerMovement;
+import tictim.paraglider.forge.capability.PlayerMovementProvider;
 
 import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
 import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
@@ -18,7 +19,10 @@ public class CompatibilityHandler {
         if (cannotBeExhausted(event.player) || event.phase != TickEvent.Phase.END)
             return;
         ServerPlayer player = (ServerPlayer) event.player;
-        LazyOptional<PlayerMovement> movement = player.getCapability(Caps.playerMovement);
-        getPlayerData(player).set(PARAGLIDING, movement.map(PlayerMovement::isParagliding).orElse(false), player);
+        LazyOptional<PlayerMovement> movement = player.getCapability(PlayerMovementProvider.PLAYER_MOVEMENT);
+        getPlayerData(player)
+                .set(PARAGLIDING, movement.map(m -> m.state().flags().contains(ParagliderPlayerStates.PARAGLIDING))
+                .orElse(false), player);
     }
+
 }

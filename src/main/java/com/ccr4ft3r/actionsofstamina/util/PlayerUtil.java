@@ -28,7 +28,7 @@ import static com.elenai.feathers.api.FeathersHelper.*;
 public class PlayerUtil {
 
     public static boolean cannotBeExhausted(Player player) {
-        return player instanceof FakePlayer || player.getLevel().isClientSide() || !player.isAddedToWorld() ||
+        return player instanceof FakePlayer || player.level().isClientSide || !player.isAddedToWorld() ||
             player.isCreative() || player.isSpectator();
     }
 
@@ -77,13 +77,17 @@ public class PlayerUtil {
         if (min.get() == 0)
             return true;
         int feathersMin = Math.max(costs.get(), min.get());
-        return getFeathers() + getEndurance() - ClientFeathersData.getWeight() >= feathersMin;
+        int maxCapacity = getFeathers() + getEndurance();
+
+        return maxCapacity - Math.min(ClientFeathersData.getWeight(), maxCapacity - 1) >= feathersMin;
     }
 
     public static boolean hasEnoughFeathers(ForgeConfigSpec.IntValue costs, ForgeConfigSpec.IntValue min, ServerPlayer player) {
         if (min.get() == 0)
             return true;
         int feathersMin = Math.max(costs.get(), min.get());
-        return getFeathers(player) + getEndurance(player) - getPlayerWeight(player) >= feathersMin;
+        int maxCapacity = getFeathers(player) + getEndurance(player);
+
+        return maxCapacity - Math.min(getPlayerWeight(player), maxCapacity - 1) >= feathersMin;
     }
 }
