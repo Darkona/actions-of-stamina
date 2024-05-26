@@ -2,12 +2,12 @@ package com.ccr4ft3r.actionsofstamina.plugins;
 
 import com.ccr4ft3r.actionsofstamina.config.AoSAction;
 import com.ccr4ft3r.actionsofstamina.config.OptionalConfig;
-import com.ccr4ft3r.actionsofstamina.config.ProfileConfig;
-import com.ccr4ft3r.actionsofstamina.util.PlayerUtil;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import com.elenai.feathers.api.FeathersHelper;
 
 import com.elenai.feathers.client.ClientFeathersData;
-import com.simibubi.create.content.redstone.displayLink.source.PercentOrProgressBarDisplaySource;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,6 +41,7 @@ public class ParagliderStaminaPlugin implements StaminaPlugin {
             return new FeathersParagliderStamina(new BotWStamina(VesselContainer.get(player)));
         }
 
+        @OnlyIn(Dist.CLIENT)
         @Override @NotNull public Stamina createLocalClientInstance(@NotNull LocalPlayer player){
             return new FeathersParagliderStamina(new BotWStamina(VesselContainer.get(player)));
         }
