@@ -5,13 +5,17 @@ import com.ccr4ft3r.actionsofstamina.data.ServerData;
 import com.ccr4ft3r.actionsofstamina.data.ServerPlayerData;
 import net.minecraftforge.event.TickEvent;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.elenai.feathers.event.CommonEvents;
+
 import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
 
-@Mixin(targets = "com.elenai.feathers.event.CommonEvents")
+@Pseudo
+@Mixin(CommonEvents.class)
 public class FeathersCommonEventsMixin {
 
     @Inject(method = "regenerateFeathers", at = @At("HEAD"), cancellable = true, remap = false)
