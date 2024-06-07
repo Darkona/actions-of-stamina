@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.mixin;
 
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,7 +15,7 @@ public abstract class LocalPlayerMixin extends PlayerMixin {
 
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSprinting()Z", ordinal = 1))
     public void stopSprinting(CallbackInfo ci) {
-        if(shouldStop(SPRINTING)) this.setSprinting(false);
+        if(shouldStop((Player) (Object) this, SPRINTING)) this.setSprinting(false);
     }
 
 

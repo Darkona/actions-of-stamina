@@ -15,4 +15,5 @@ public class PlayerEventHandler {
             return;
         ServerData.forgetAbout(event.getEntity());
     }
+
 }

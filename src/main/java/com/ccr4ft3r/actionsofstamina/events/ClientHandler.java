@@ -17,7 +17,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Predicate;
 
-import static com.ccr4ft3r.actionsofstamina.config.MainConfig.*;
+import static com.ccr4ft3r.actionsofstamina.config.MainConfig.CONFIG_DATA;
 import static com.ccr4ft3r.actionsofstamina.network.ServerboundPacket.Action.*;
 
 @Mod.EventBusSubscriber(modid = ModConstants.MOD_ID, value = Dist.CLIENT)
@@ -38,22 +38,22 @@ public class ClientHandler {
             Options options = Minecraft.getInstance().options;
             int key = event.getKey();
             boolean isMovingKey = key == options.keyUp.getKey().getValue()
-                || key == options.keyDown.getKey().getValue()
-                || key == options.keyRight.getKey().getValue()
-                || key == options.keyLeft.getKey().getValue()
-                || key == options.keyJump.getKey().getValue() && (NOT_JUMPABLE.test(player) || PLAYER_DATA.isMoving());
+                    || key == options.keyDown.getKey().getValue()
+                    || key == options.keyRight.getKey().getValue()
+                    || key == options.keyLeft.getKey().getValue()
+                    || key == options.keyJump.getKey().getValue() && (NOT_JUMPABLE.test(player) || PLAYER_DATA.isMoving());
 
             if (!isMovingKey)
                 return;
 
             boolean isActivelyMoving = options.keyUp.isDown() || options.keyDown.isDown() || options.keyLeft.isDown() || options.keyRight.isDown()
-                || options.keyJump.isDown() && NOT_JUMPABLE.test(player);
+                    || options.keyJump.isDown() && NOT_JUMPABLE.test(player);
 
             if (isActivelyMoving != PLAYER_DATA.isMoving()) {
                 PLAYER_DATA.setMoving(isActivelyMoving);
                 if (CONFIG_DATA.enableExtendedLogging.get())
                     LogUtils.getLogger().info("Sending packet to server caused by {} {}", isPressed ? "pressing" : "releasing"
-                        , GLFW.glfwGetKeyName(event.getKey(), event.getScanCode()));
+                            , GLFW.glfwGetKeyName(event.getKey(), event.getScanCode()));
                 PacketHandler.sendToServer(new ServerboundPacket(isActivelyMoving ? PLAYER_MOVING : PLAYER_STOP_MOVING));
             }
         }

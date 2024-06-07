@@ -17,8 +17,8 @@ public class WallJumpLogicMixin {
 
     //@Inject(method = "doWallJump", at = @At("HEAD"), cancellable = true, remap = false)
     private static void stopWallJump(CallbackInfo ci) {
-        if (shouldStop(AoSAction.WALL_JUMPING))
-            ci.cancel();
+        /*if (shouldStop(AoSAction.WALL_JUMPING))
+            ci.cancel();*/
     }
 
     //@Inject(method = "doWallClingJump", at = @At("HEAD"), remap = false)

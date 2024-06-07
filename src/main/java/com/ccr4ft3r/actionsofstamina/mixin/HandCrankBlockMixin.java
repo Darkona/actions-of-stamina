@@ -16,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.simibubi.create.content.kinetics.crank.HandCrankBlock;
 
-import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
-import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
-import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
-import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.*;
+import static com.ccr4ft3r.actionsofstamina.config.AoSAction.CRANKING;
+import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.shouldStop;
+import static com.ccr4ft3r.actionsofstamina.data.ServerData.getPlayerData;
+import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.cannotBeExhausted;
 
 @Pseudo
 @Mixin(HandCrankBlock.class)
@@ -27,9 +27,9 @@ public class HandCrankBlockMixin {
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     public void stopCranking(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
-        if (worldIn.isClientSide && shouldStop(CRANKING))
+        if (worldIn.isClientSide && shouldStop(player, CRANKING))
             cir.setReturnValue(InteractionResult.FAIL);
-        if (!worldIn.isClientSide && shouldStop((ServerPlayer) player, CRANKING)) {
+        if (!worldIn.isClientSide && shouldStop( player, CRANKING)) {
             getPlayerData(player).set(CRANKING, false, (ServerPlayer) player);
             cir.setReturnValue(InteractionResult.FAIL);
         }

@@ -3,6 +3,7 @@ package com.ccr4ft3r.actionsofstamina.config;
 import com.google.common.collect.Maps;
 import com.mojang.logging.LogUtils;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Map;
@@ -43,19 +44,20 @@ public class ProfileConfig {
         }
     }
 
-    public static boolean shouldStop(AoSAction action) {
+    public static boolean shouldStop(Player player, AoSAction action) {
 
         return getProfile().enabledByAction.get(action).get()
-            && !hasEnoughFeathers(getProfile().costsByAction.get(action), getProfile().minByAction.get(action));
+            && !hasEnoughFeathers(getProfile().costsByAction.get(action).get(), getProfile().minByAction.get(action).get(), player);
     }
 
-    public static boolean canDo(AoSAction action) {
+    public static boolean canDo(Player player, AoSAction action) {
         return getProfile().enabledByAction.get(AoSAction.SPRINTING).get()
-                && hasEnoughFeathers(getProfile().costsByAction.get(action), getProfile().minByAction.get(action));
+                && hasEnoughFeathers(getProfile().costsByAction.get(action).get(), getProfile().minByAction.get(action).get(), player);
     }
+
     public static boolean shouldStop(ServerPlayer player, AoSAction action) {
         return getProfile().enabledByAction.get(action).get()
-            && !hasEnoughFeathers(getProfile().costsByAction.get(action), getProfile().minByAction.get(action), player);
+            && !hasEnoughFeathers(getProfile().costsByAction.get(action).get(), getProfile().minByAction.get(action).get(), player);
     }
 
     public static void updateChoosedProfile() {

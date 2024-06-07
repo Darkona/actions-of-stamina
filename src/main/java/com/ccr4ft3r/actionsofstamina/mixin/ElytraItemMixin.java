@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
-import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
+import static com.ccr4ft3r.actionsofstamina.config.AoSAction.FLYING;
+import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.shouldStop;
 
 @Mixin(ElytraItem.class)
 public class ElytraItemMixin {

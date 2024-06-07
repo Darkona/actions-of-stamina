@@ -5,8 +5,6 @@ import com.alrex.parcool.common.capability.Parkourability;
 import com.ccr4ft3r.actionsofstamina.config.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSAction;
 import com.ccr4ft3r.actionsofstamina.data.ServerPlayerData;
-import com.elenai.feathers.api.FeathersHelper;
-import com.elenai.feathers.client.ClientFeathersData;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,18 +16,17 @@ import net.minecraftforge.fml.ModList;
 
 import java.util.function.Supplier;
 
-import static com.ccr4ft3r.actionsofstamina.ModConstants.*;
-import static com.ccr4ft3r.actionsofstamina.config.MainConfig.*;
-import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
-import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
-import static com.ccr4ft3r.actionsofstamina.events.ClientHandler.*;
-import static com.elenai.feathers.api.FeathersHelper.*;
+import static com.ccr4ft3r.actionsofstamina.ModConstants.PARCOOL_MOD_ID;
+import static com.ccr4ft3r.actionsofstamina.config.MainConfig.CONFIG_DATA;
+import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.getProfile;
+import static com.ccr4ft3r.actionsofstamina.data.ServerData.getPlayerData;
+import static com.ccr4ft3r.actionsofstamina.events.ClientHandler.PLAYER_DATA;
 
 public class PlayerUtil {
 
     public static boolean cannotBeExhausted(Player player) {
-        return player instanceof FakePlayer || player.level().isClientSide || !player.isAddedToWorld() ||
-            player.isCreative() || player.isSpectator();
+        return player instanceof FakePlayer || player.level().isClientSide || !player.isAddedToWorld() || !player.isAlive() ||
+                player.isCreative() || player.isSpectator();
     }
 
     public static void exhaust(ServerPlayer player, AoSAction action) {
@@ -41,9 +38,10 @@ public class PlayerUtil {
         if (shouldExhaust.get()) {
             int feathersToSpend = getProfile().costsByAction.get(action).get();
             if (CONFIG_DATA.enableExtendedLogging.get())
-                LogUtils.getLogger().info("Spending {} feathers for player '{}' due to rule '{}'", feathersToSpend, player.getScoreboardName(),
+                LogUtils.getLogger().info("Spending {} feathers for player '{}' due to rule '{}'",
+                        feathersToSpend, player.getScoreboardName(),
                     String.join(".", optionEnabled.getPath()));
-            FeathersHelper.spendFeathers(player, feathersToSpend);
+            //FeathersAPI.spendFeathers(player, feathersToSpend, 0);
             playerData.reset(action);
         }
         if (action.getType() == ActionType.TIMES && shouldExhaust.get())
@@ -73,21 +71,11 @@ public class PlayerUtil {
         return hasCrawlPos && PLAYER_DATA.isMoving();
     }
 
-    public static boolean hasEnoughFeathers(ForgeConfigSpec.IntValue costs, ForgeConfigSpec.IntValue min) {
-        if (min.get() == 0)
-            return true;
-        int feathersMin = Math.max(costs.get(), min.get());
-        int maxCapacity = getFeathers() + getEndurance();
-
-        return maxCapacity - Math.min(ClientFeathersData.getWeight(), maxCapacity - 1) >= feathersMin;
-    }
-
-    public static boolean hasEnoughFeathers(ForgeConfigSpec.IntValue costs, ForgeConfigSpec.IntValue min, ServerPlayer player) {
-        if (min.get() == 0)
-            return true;
-        int feathersMin = Math.max(costs.get(), min.get());
-        int maxCapacity = getFeathers(player) + getEndurance(player);
-
-        return maxCapacity - Math.min(getPlayerWeight(player), maxCapacity - 1) >= feathersMin;
+    public static boolean hasEnoughFeathers(int costs, int min, Player player) {
+        if (min == 0) return true;
+        int feathersMin = Math.max(costs, min);
+        //int capacity = FeathersAPI.getAvailableFeathers(player);
+        //return capacity >= feathersMin;
+        return true;
     }
 }

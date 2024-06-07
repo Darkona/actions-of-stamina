@@ -2,19 +2,19 @@ package com.ccr4ft3r.actionsofstamina.data;
 
 import com.ccr4ft3r.actionsofstamina.config.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSAction;
-import com.elenai.feathers.api.FeathersHelper;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.AtomicDouble;
-import com.mojang.logging.LogUtils;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
-import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.*;
+import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.getProfile;
+import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.stopIfExhausted;
+import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.exhaust;
 
 public class ServerPlayerData {
 
@@ -92,11 +92,12 @@ public class ServerPlayerData {
         set(action, newState, 1d, player);
     }
 
-    private boolean checkStarting(AoSAction action, boolean currentValue, boolean newValue, ServerPlayer player) {
+    private boolean checkStarting(AoSAction action, boolean currentValue, boolean newValue, Player player) {
         if (!currentValue && newValue) {
             if (action.getType() == ActionType.TICKS)
-                FeathersHelper.spendFeathers(player, getProfile().initialCostsByAction.get(action).get());
-            return true;
+               //return FeathersAPI.spendFeathers(player, getProfile().initialCostsByAction.get(action).get(), 0);
+                return true;
+
         }
         return false;
     }

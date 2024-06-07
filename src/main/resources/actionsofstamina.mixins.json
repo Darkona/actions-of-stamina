@@ -6,10 +6,8 @@
   "refmap": "actionsofstamina.refmap.json",
   "mixins": [
     "ElytraItemMixin",
-    "FeathersCommonEventsMixin",
     "HandCrankBlockMixin",
     "LivingEntityMixin",
-    "MinecraftMixin",
     "MultiPlayerGameModeMixin",
     "PlayerMixin"
   ],

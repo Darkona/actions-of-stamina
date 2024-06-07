@@ -135,8 +135,14 @@ repositories {
         content {
             includeGroup "curse.maven"
         }
+
     }
     maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+
+   /* flatDir {
+        dir 'libs'
+    }*/
+
 }
 
 dependencies {
@@ -145,16 +151,22 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
+    compileOnly ("curse.maven:parcool-482378:${parcool_file_id}")
+    compileOnly ("curse.maven:create-328085:${create_file_id}")
+    implementation fg.deobf(files('libs/greenfeathers-1.3.0.jar'))
+
     runtimeOnly fg.deobf("curse.maven:cloth-config-api-348521:${cloth_config_id}")
     runtimeOnly fg.deobf("curse.maven:configured-457570:${mod_configured_file_id}")
-    implementation fg.deobf("curse.maven:feathers-699933:${mod_feathers_file_id}")
-    implementation fg.deobf("curse.maven:angel-ring-333396:${mod_angel_ring_file_id}")
+
     implementation fg.deobf("curse.maven:curios-309927:${curios_file_id}")
-    compileOnly fg.deobf("curse.maven:parcool-482378:${parcool_file_id}")
-    implementation fg.deobf("curse.maven:create-328085:${create_file_id}")
+    implementation fg.deobf("curse.maven:angel-ring-333396:${mod_angel_ring_file_id}")
     implementation fg.deobf("curse.maven:better-combat-639842:${better_combat_file_id}")
     implementation fg.deobf("curse.maven:player-animator-658587:${player_animator_file_id}")
     implementation fg.deobf("curse.maven:architectury-419699:${architectury_file_id}")
+    implementation fg.deobf("curse.maven:paragliders-289240:${mod_paragliders_file_id}")
+
+    // not available for 1.20.1 :/( // implementation fg.deobf("curse.maven:wall-jump-622370:${wall_jump_file_id}")
+
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency

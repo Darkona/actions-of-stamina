@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
-import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
+import static com.ccr4ft3r.actionsofstamina.config.AoSAction.HOLDING_THE_SHIELD;
+import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.shouldStop;
 
 @Mixin(MultiPlayerGameMode.class)
 public abstract class MultiPlayerGameModeMixin {
@@ -22,7 +22,7 @@ public abstract class MultiPlayerGameModeMixin {
         ItemStack itemstack = p_105236_.getItemInHand(p_105238_);
         if (!(itemstack.getItem() instanceof ShieldItem))
             return;
-        if (shouldStop(HOLDING_THE_SHIELD))
+        if (shouldStop((Player) (Object) this, HOLDING_THE_SHIELD))
             cir.setReturnValue(InteractionResult.PASS);
     }
 }

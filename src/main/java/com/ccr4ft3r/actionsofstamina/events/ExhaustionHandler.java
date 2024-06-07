@@ -23,12 +23,16 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.Iterator;
 
 import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
-import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
-import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
-import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.*;
+import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.canDo;
+import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.getProfile;
+import static com.ccr4ft3r.actionsofstamina.data.ServerData.getPlayerData;
+import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.cannotBeExhausted;
 
 @Mod.EventBusSubscriber(modid = ModConstants.MOD_ID)
 public class ExhaustionHandler {
+
+    public static final String FEATHERS_EXHAUSTION = "f5dfc430-96b5-4fa3-a0d4-551e3e8a01d1";
+    public static final AttributeModifier Exhaustion = new AttributeModifier(FEATHERS_EXHAUSTION, -1, AttributeModifier.Operation.ADDITION);
 
     @SubscribeEvent
     public static void onPlayerJump(LivingEvent.LivingJumpEvent event) {
@@ -39,11 +43,18 @@ public class ExhaustionHandler {
 
     @SubscribeEvent
     public static void onPlayerAttack(AttackEntityEvent event) {
-        exhaustForWeaponSwing(event.isCanceled(), event.getEntity());
+        if (event.getEntity() instanceof ServerPlayer player && !event.isCanceled()) {
+
+            event.setCanceled(!canDo(player, ATTACKING));
+            if (!event.isCanceled()) {
+
+                exhaustForWeaponSwing(player);
+            }
+        }
     }
 
-    public static void exhaustForWeaponSwing(boolean preConditionNotFulfilled, Player p) {
-        if (!(p instanceof ServerPlayer player) || preConditionNotFulfilled || cannotBeExhausted(player))
+    public static void exhaustForWeaponSwing(Player p) {
+        if (!(p instanceof ServerPlayer player) || cannotBeExhausted(player))
             return;
         ServerPlayerData playerData = getPlayerData(player);
         ItemStack itemstack = player.getItemInHand(InteractionHand.MAIN_HAND);
@@ -59,6 +70,15 @@ public class ExhaustionHandler {
         playerData.set(ATTACKING, Math.max(0, 1 + multiplier), player);
     }
 
+    private static void changeAttackByFeathers(Player player) {
+        /*if (FeathersAPI.getFeathers(player) < 4) {
+            player.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(Exhaustion);
+        } else {
+
+            player.getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(Exhaustion);
+        }*/
+    }
+
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (!(event.player instanceof ServerPlayer player) || cannotBeExhausted(event.player) || event.phase != TickEvent.Phase.END)
@@ -70,7 +90,8 @@ public class ExhaustionHandler {
         boolean isInVehicle = player.getVehicle() != null;
         boolean isClimbing = player.onClimbable() && isMoving;
         boolean isSwimming = player.isInWater() && !isInVehicle && !isClimbing && isMoving
-            && playerData.getLastPosition() != null && (player.position().x() != playerData.getLastPosition().x() || player.position().z() != playerData.getLastPosition().z());
+                && playerData.getLastPosition() != null && (player.position().x() != playerData.getLastPosition().x() || player.position().z() != playerData
+                .getLastPosition().z());
         boolean isSneaking = player.isCrouching() && !isClimbing && isMoving;
         boolean isSprinting = player.isSprinting() && !isSwimming && !isInVehicle && !isSneaking && !isClimbing && isMoving;
         boolean isFlying = player.getPose() == Pose.FALL_FLYING || player.getAbilities().flying;

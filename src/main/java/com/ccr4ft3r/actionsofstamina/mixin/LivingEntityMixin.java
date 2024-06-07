@@ -6,7 +6,8 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
-    @Shadow protected boolean jumping;
+    @Shadow
+    protected boolean jumping;
 
     @Shadow
     public abstract void setSprinting(boolean p_108751_);

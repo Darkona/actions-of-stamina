@@ -16,10 +16,10 @@ public class MainConfig {
         public Data(ForgeConfigSpec.Builder builder) {
             builder.push("1 - General");
             profileToUse = builder.comment("Sets the level of difficulty for the stamina system (profile files are located in config/actionsofstamina). " +
-                    "\nSet this to CUSTOM and edit the custom-profile.toml to adapt each aspect to your preferences or edit the predefined ones.")
-                .defineEnum("profileToUse", AoSProfile.EXHAUSTED);
+                                          "\nSet this to CUSTOM and edit the custom-profile.toml to adapt each aspect to your preferences or edit the predefined ones.")
+                                  .defineEnum("profileToUse", AoSProfile.EXHAUSTED);
             enableExtendedLogging = builder.comment("Enables extended mod logging - only used for trouble shooting.")
-                .define("enableExtendedLogging", false);
+                                           .define("enableExtendedLogging", false);
             builder.pop();
         }
     }
