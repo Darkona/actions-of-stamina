@@ -59,8 +59,5 @@ public class ClientHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void onPlayerAttack(PlayerInteractEvent.LeftClickEmpty event) {
-        PacketHandler.sendToServer(new ServerboundPacket(WEAPON_SWING));
-    }
+
 }

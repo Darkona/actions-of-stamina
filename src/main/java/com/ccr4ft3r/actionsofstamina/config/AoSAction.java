@@ -31,7 +31,7 @@ public enum AoSAction {
 
     private final ActionType type;
     private final Boolean[] enabledByProfile;
-    private final Consumer<ServerPlayer> stopper;
+    private final Consumer<Player> stopper;
     private final Integer[] costsByProfile;
     private final Integer[] minByProfile;
     private final Integer[] delayByProfile;
@@ -42,7 +42,7 @@ public enum AoSAction {
     }
 
     AoSAction(ActionType type, Boolean[] enabledByProfile, Integer[] minByProfile, Integer[] delayByProfile,
-              Consumer<ServerPlayer> stopper, String... description) {
+              Consumer<Player> stopper, String... description) {
         this.type = type;
         this.enabledByProfile = enabledByProfile;
         this.stopper = stopper;
@@ -84,7 +84,7 @@ public enum AoSAction {
         return description;
     }
 
-    public Consumer<ServerPlayer> getStopper() {
+    public Consumer<Player> getStopper() {
         return stopper;
     }
 }

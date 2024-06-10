@@ -53,8 +53,8 @@ public class ExhaustionHandler {
         }
     }
 
-    public static void exhaustForWeaponSwing(Player p) {
-        if (!(p instanceof ServerPlayer player) || cannotBeExhausted(player))
+    public static void exhaustForWeaponSwing(Player player) {
+        if (/*!(p instanceof ServerPlayer player) || */cannotBeExhausted(player))
             return;
         ServerPlayerData playerData = getPlayerData(player);
         ItemStack itemstack = player.getItemInHand(InteractionHand.MAIN_HAND);

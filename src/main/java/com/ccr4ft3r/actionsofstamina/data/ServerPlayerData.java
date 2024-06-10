@@ -56,7 +56,7 @@ public class ServerPlayerData {
         isMoving = moving;
     }
 
-    public void set(AoSAction action, boolean newState, double increment, ServerPlayer player) {
+    public void set(AoSAction action, boolean newState, double increment, Player player) {
         AtomicBoolean currentState = stateByAction.get(action);
         boolean wasStarted = checkStarting(action, currentState.get(), newState, player);
         currentState.set(newState);
@@ -84,11 +84,11 @@ public class ServerPlayerData {
         });
     }
 
-    public void set(AoSAction action, double amount, ServerPlayer player) {
+    public void set(AoSAction action, double amount, Player player) {
         set(action, true, amount, player);
     }
 
-    public void set(AoSAction action, boolean newState, ServerPlayer player) {
+    public void set(AoSAction action, boolean newState, Player player) {
         set(action, newState, 1d, player);
     }
 

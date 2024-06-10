@@ -33,11 +33,11 @@ public class ProfileConfig {
 
     public static Data getProfile() {
         if (CURRENT_PROFILE == null)
-            updateChoosedProfile();
+            updateChosenProfile();
         return CURRENT_PROFILE;
     }
 
-    public static void stopIfExhausted(ServerPlayer player, AoSAction action, Runnable stopper) {
+    public static void stopIfExhausted(Player player, AoSAction action, Runnable stopper) {
         if (shouldStop(player, action) && getPlayerData(player).is(action)) {
             stopper.run();
             getPlayerData(player).set(action, false, player);
@@ -51,7 +51,7 @@ public class ProfileConfig {
     }
 
     public static boolean canDo(Player player, AoSAction action) {
-        return getProfile().enabledByAction.get(AoSAction.SPRINTING).get()
+        return getProfile().enabledByAction.get(action).get()
                 && hasEnoughFeathers(getProfile().costsByAction.get(action).get(), getProfile().minByAction.get(action).get(), player);
     }
 
@@ -60,7 +60,7 @@ public class ProfileConfig {
             && !hasEnoughFeathers(getProfile().costsByAction.get(action).get(), getProfile().minByAction.get(action).get(), player);
     }
 
-    public static void updateChoosedProfile() {
+    public static void updateChosenProfile() {
         AoSProfile profile = MainConfig.CONFIG_DATA.profileToUse.get();
         switch (profile) {
             case CUSTOM -> CURRENT_PROFILE = PROFILE_CUSTOM;
