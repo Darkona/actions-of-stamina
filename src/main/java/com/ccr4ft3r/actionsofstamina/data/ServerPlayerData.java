@@ -57,28 +57,31 @@ public class ServerPlayerData {
     }
 
     public void set(AoSAction action, boolean newState, double increment, Player player) {
-        AtomicBoolean currentState = stateByAction.get(action);
-        boolean wasStarted = checkStarting(action, currentState.get(), newState, player);
-        currentState.set(newState);
-        if (currentState.get()) {
+        AtomicBoolean previousState = stateByAction.get(action);
+        boolean wasNotDoing = checkStarting(action, previousState.get(), newState, player);
+        previousState.set(newState);
+        if (newState) {
             if (tickByAction.get(action).get() >= player.tickCount) {
                 return;
             }
+
             long factor = 1;
-            if (action.getType() == ActionType.TICKS && !wasStarted)
+            if (action.getType() == ActionType.TICKS && !wasNotDoing)
                 factor = player.tickCount - tickByAction.get(action).get();
             tickByAction.get(action).set(player.tickCount);
+
             amountByAction.get(action).addAndGet(increment * factor);
+
             exhaust(player, action);
         }
 
-        if (ActionType.TIME_ACTIONS.contains(action) && action.getStopper() != null) {
+        if (ActionType.CONTINUOUS_ACTIONS.contains(action) && action.getStopper() != null) {
             stopIfExhausted(player, action, () -> action.getStopper().accept(player));
         }
     }
 
     public void update(ServerPlayer player) {
-        ActionType.TIME_ACTIONS.forEach(action -> {
+        ActionType.CONTINUOUS_ACTIONS.forEach(action -> {
             if (is(action) && tickByAction.get(action).get() + 20 < player.tickCount)
                 set(action, false, player);
         });
@@ -92,14 +95,8 @@ public class ServerPlayerData {
         set(action, newState, 1d, player);
     }
 
-    private boolean checkStarting(AoSAction action, boolean currentValue, boolean newValue, Player player) {
-        if (!currentValue && newValue) {
-            if (action.getType() == ActionType.TICKS)
-               //return FeathersAPI.spendFeathers(player, getProfile().initialCostsByAction.get(action).get(), 0);
-                return true;
-
-        }
-        return false;
+    private boolean checkStarting(AoSAction action, boolean previousState, boolean newState, Player player) {
+        return !previousState && newState && action.getType() == ActionType.TICKS;
     }
 
     public boolean is(AoSAction action) {

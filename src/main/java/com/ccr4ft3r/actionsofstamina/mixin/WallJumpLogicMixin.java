@@ -23,6 +23,6 @@ public class WallJumpLogicMixin {
 
     //@Inject(method = "doWallClingJump", at = @At("HEAD"), remap = false)
     private static void exhaustForWallJump(CallbackInfo ci) {
-        PacketHandler.sendToServer(new ServerboundPacket(PLAYER_WALL_JUMP));
+        //PacketHandler.sendToServer(new ServerboundPacket(PLAYER_WALL_JUMP));
     }
 }

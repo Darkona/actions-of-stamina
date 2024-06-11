@@ -8,5 +8,5 @@ public enum ActionType {
 
     TICKS, TIMES;
 
-    public static final Set<AoSAction> TIME_ACTIONS = Sets.newConcurrentHashSet();
+    public static final Set<AoSAction> CONTINUOUS_ACTIONS = Sets.newConcurrentHashSet();
 }

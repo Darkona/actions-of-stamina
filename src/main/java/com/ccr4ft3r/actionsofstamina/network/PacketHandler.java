@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
 import com.ccr4ft3r.actionsofstamina.ModConstants;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackHandler;
 import com.ccr4ft3r.actionsofstamina.events.ExhaustionHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,7 +39,9 @@ public class PacketHandler {
             switch (packet.getAction()) {
                 case PLAYER_MOVING -> getPlayerData(player).setMoving(true);
                 case PLAYER_STOP_MOVING -> getPlayerData(player).setMoving(false);
-                case WEAPON_SWING -> ExhaustionHandler.exhaustForWeaponSwing(player);
+                case WEAPON_SWING -> {
+                    if(!getProfile().onlyForHits.get()) AttackHandler.exhaustForWeaponSwing(player);
+                }
                 case PLAYER_WALL_JUMP -> getPlayerData(player).set(WALL_JUMPING, true, player);
             }
             context.setPacketHandled(true);

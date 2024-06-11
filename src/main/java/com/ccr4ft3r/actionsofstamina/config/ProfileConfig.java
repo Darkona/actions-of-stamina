@@ -45,20 +45,15 @@ public class ProfileConfig {
     }
 
     public static boolean shouldStop(Player player, AoSAction action) {
-
-        return getProfile().enabledByAction.get(action).get()
+        return getProfile().isActionAvailable.get(action).get()
             && !hasEnoughFeathers(getProfile().costsByAction.get(action).get(), getProfile().minByAction.get(action).get(), player);
     }
 
-    public static boolean canDo(Player player, AoSAction action) {
-        return getProfile().enabledByAction.get(action).get()
+    public static boolean canPlayerDo(Player player, AoSAction action) {
+        return getProfile().isActionAvailable.get(action).get()
                 && hasEnoughFeathers(getProfile().costsByAction.get(action).get(), getProfile().minByAction.get(action).get(), player);
     }
 
-    public static boolean shouldStop(ServerPlayer player, AoSAction action) {
-        return getProfile().enabledByAction.get(action).get()
-            && !hasEnoughFeathers(getProfile().costsByAction.get(action).get(), getProfile().minByAction.get(action).get(), player);
-    }
 
     public static void updateChosenProfile() {
         AoSProfile profile = MainConfig.CONFIG_DATA.profileToUse.get();
@@ -88,7 +83,7 @@ public class ProfileConfig {
         public ForgeConfigSpec.BooleanValue alsoForNonWeapons;
 
         public Map<AoSAction, ForgeConfigSpec.IntValue> initialCostsByAction = Maps.newConcurrentMap();
-        public Map<AoSAction, ForgeConfigSpec.BooleanValue> enabledByAction = Maps.newConcurrentMap();
+        public Map<AoSAction, ForgeConfigSpec.BooleanValue> isActionAvailable = Maps.newConcurrentMap();
         public Map<AoSAction, ForgeConfigSpec.IntValue> costsByAction = Maps.newConcurrentMap();
         public Map<AoSAction, ForgeConfigSpec.IntValue> minByAction = Maps.newConcurrentMap();
         public Map<AoSAction, ForgeConfigSpec.BooleanValue> regenerationByAction = Maps.newConcurrentMap();
@@ -106,7 +101,7 @@ public class ProfileConfig {
 
             for (AoSAction action : AoSAction.values()) {
                 builder.push(action.getText(false));
-                enabledByAction.put(action, define(ENABLE_FOR + action.getText(true)
+                isActionAvailable.put(action, define(ENABLE_FOR + action.getText(true)
                         + action.getDescription(), "enableFor" + action.getText(false),
                     action.isEnabled(profile)));
                 costsByAction.put(action, defineRange(COSTS + action.getText(true)

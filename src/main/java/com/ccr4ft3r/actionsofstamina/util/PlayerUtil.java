@@ -32,20 +32,19 @@ public class PlayerUtil {
     public static void exhaust(Player player, AoSAction action) {
         if (cannotBeExhausted(player))
             return;
-        ForgeConfigSpec.BooleanValue optionEnabled = getProfile().enabledByAction.get(action);
+
         ServerPlayerData playerData = getPlayerData(player);
-        Supplier<Boolean> shouldExhaust = () -> optionEnabled.get() && playerData.get(action) >= getProfile().delayByAction.get(action).get();
-        if (shouldExhaust.get()) {
-            int feathersToSpend = getProfile().costsByAction.get(action).get();
+        boolean shouldExhaust = playerData.get(action) >= getProfile().delayByAction.get(action).get();
+        int feathersToSpend = getProfile().costsByAction.get(action).get();
+
+        if (shouldExhaust) {
             if (CONFIG_DATA.enableExtendedLogging.get())
-                LogUtils.getLogger().info("Spending {} feathers for player '{}' due to rule '{}'",
-                        feathersToSpend, player.getScoreboardName(),
-                    String.join(".", optionEnabled.getPath()));
+                LogUtils.getLogger().info("Spending {} feathers for player '{}'",
+                        feathersToSpend, player.getScoreboardName());
+
             FeathersAPI.spendFeathers(player, feathersToSpend, 20);
             playerData.reset(action);
         }
-        if (action.getType() == ActionType.TIMES && shouldExhaust.get())
-            exhaust(player, action);
     }
 
     public static boolean isCrawling(Player player) {
@@ -74,7 +73,6 @@ public class PlayerUtil {
     public static boolean hasEnoughFeathers(int costs, int min, Player player) {
         if (min == 0) return true;
         int feathersMin = Math.max(costs, min);
-        int capacity = FeathersAPI.getAvailableFeathers(player);
-        return capacity >= feathersMin;
+        return FeathersAPI.getAvailableFeathers(player) >= feathersMin;
     }
 }

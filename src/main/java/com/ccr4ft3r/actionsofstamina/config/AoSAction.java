@@ -1,7 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.config;
 
 import com.google.common.base.CaseFormat;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import tictim.paraglider.forge.capability.PlayerMovementProvider;
 
@@ -51,7 +50,7 @@ public enum AoSAction {
         this.delayByProfile = delayByProfile;
         this.description = description.length > 0 ? " (" + description[0] + ")" : "";
         if (type == TICKS)
-            TIME_ACTIONS.add(this);
+            CONTINUOUS_ACTIONS.add(this);
     }
 
     String getText(boolean forDescription) {
