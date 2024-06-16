@@ -1,8 +1,9 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
-import com.ccr4ft3r.actionsofstamina.ModConstants;
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackHandler;
-import com.ccr4ft3r.actionsofstamina.events.ExhaustionHandler;
+import com.ccr4ft3r.actionsofstamina.capability.AoSCapabilities;
+import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -11,15 +12,12 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.function.Supplier;
 
-import static com.ccr4ft3r.actionsofstamina.config.AoSAction.WALL_JUMPING;
-import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.getProfile;
-import static com.ccr4ft3r.actionsofstamina.data.ServerData.getPlayerData;
 
 public class PacketHandler {
 
     private static final String PROTOCOL_VERSION = "1.0.0";
     private static final SimpleChannel SIMPLE_CHANNEL = NetworkRegistry
-            .newSimpleChannel(new ResourceLocation(ModConstants.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
+            .newSimpleChannel(new ResourceLocation(ActionsOfStamina.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     public static void registerMessages() {
         SIMPLE_CHANNEL.registerMessage(0, ServerboundPacket.class, ServerboundPacket::encodeOnClientSide, ServerboundPacket::new, PacketHandler::handle);
@@ -37,12 +35,11 @@ public class PacketHandler {
                 return;
             }
             switch (packet.getAction()) {
-                case PLAYER_MOVING -> getPlayerData(player).setMoving(true);
-                case PLAYER_STOP_MOVING -> getPlayerData(player).setMoving(false);
+                case PLAYER_MOVING -> player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setMoving(true));
+                case PLAYER_STOP_MOVING -> player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setMoving(false));
                 case WEAPON_SWING -> {
-                    if(!getProfile().onlyForHits.get()) AttackHandler.exhaustForWeaponSwing(player);
+                    if (!AoSCommonConfig.ONLY_FOR_HITS.get()) AttackHandler.spendToAttack(player);
                 }
-                case PLAYER_WALL_JUMP -> getPlayerData(player).set(WALL_JUMPING, true, player);
             }
             context.setPacketHandled(true);
         });
