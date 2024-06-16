@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.crawl;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -9,6 +10,16 @@ public class CrawlAction implements Action {
     @Override
     public ResourceLocation getName() {
         return null;
+    }
+
+    @Override
+    public double getFeathersPerSecond() {
+        return 0;
+    }
+
+    @Override
+    public boolean isRegenInhibitor() {
+        return AoSCommonConfig.INHIBIT_REGEN_WHEN_CRAWLING.get();
     }
 
     @Override
@@ -26,10 +37,6 @@ public class CrawlAction implements Action {
         return 0;
     }
 
-    @Override
-    public boolean wasPerforming() {
-        return false;
-    }
 
     @Override
     public boolean isPerforming() {

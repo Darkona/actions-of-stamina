@@ -2,6 +2,7 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.attack;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.darkona.feathers.api.FeathersAPI;
 import com.google.common.collect.Multimap;
@@ -19,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Iterator;
 
-import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.cannotBeExhausted;
 
 public class AttackAction implements Action {
 
@@ -46,6 +46,16 @@ public class AttackAction implements Action {
     }
 
     @Override
+    public double getFeathersPerSecond() {
+        return 0;
+    }
+
+    @Override
+    public boolean isRegenInhibitor() {
+        return false;
+    }
+
+    @Override
     public int getCost() {
         return cost;
     }
@@ -58,11 +68,6 @@ public class AttackAction implements Action {
     @Override
     public int getTimesPerformedToExhaust() {
         return timesPerformedToExhaust;
-    }
-
-    @Override
-    public boolean wasPerforming() {
-        return false;
     }
 
     @Override
@@ -88,7 +93,7 @@ public class AttackAction implements Action {
     @Override
     public boolean perform(Player player) {
 
-        if (!(player instanceof ServerPlayer) || cannotBeExhausted(player))
+        if (!(player instanceof ServerPlayer) || IActionCapability.cannotBeExhausted(player))
             return false;
 
 

@@ -1,7 +1,10 @@
 package com.ccr4ft3r.actionsofstamina;
 
+import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderConfig;
+import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -10,6 +13,11 @@ import net.minecraftforge.fml.config.ModConfig;
 public class ActionsOfStamina {
 
     public static final String MOD_ID = "actionsofstamina";
+    public static final String PARCOOL_MOD_ID = "parcool";
+    public static final String PARAGLIDER_MOD_ID = "paraglider";
+
+    public static boolean PARCOOL = false;
+    public static boolean PARAGLIDER = false;
 
     public ActionsOfStamina() {
         registerConfigs();
@@ -19,12 +27,19 @@ public class ActionsOfStamina {
     }
 
     private static void registerConfigs() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AoSCommonConfig.SPEC, MOD_ID + "/actions_of_stamina.toml");
-       /*
-       if (ModList.get().isLoaded(ModConstants.PARAGLIDER_MOD_ID)) {
-            ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, OptionalConfig.CONFIG, ModConstants.MOD_ID + "-5-optional.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AoSCommonConfig.SPEC, MOD_ID + "/AoS_configuration.toml");
+
+       if(ModList.get().isLoaded(PARAGLIDER_MOD_ID)) {
+            ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ParagliderConfig.SPEC, MOD_ID + "/AoS_paraglider_compat.toml");
+            PARAGLIDER = true;
        }
-       */
+       if(ModList.get().isLoaded(PARCOOL_MOD_ID)) {
+            ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ParcoolConfig.SPEC, MOD_ID + "/AoS_parcool_compat.toml");
+            PARCOOL = true;
+       }
+
+
+
     }
 
     private static void addCompatibilitiesListener() {

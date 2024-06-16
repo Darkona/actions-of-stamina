@@ -9,13 +9,15 @@ public interface Action {
 
     ResourceLocation getName();
 
+    double getFeathersPerSecond();
+
+    boolean isRegenInhibitor();
+
     int getCost();
 
     int getMinCost();
 
     int getTimesPerformedToExhaust();
-
-    boolean wasPerforming();
 
     boolean isPerforming();
 

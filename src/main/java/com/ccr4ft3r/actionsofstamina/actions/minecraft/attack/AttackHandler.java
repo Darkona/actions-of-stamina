@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.attack;
 
 import com.ccr4ft3r.actionsofstamina.capability.AoSCapabilities;
+import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
 import com.ccr4ft3r.actionsofstamina.network.ServerboundPacket;
@@ -19,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.ccr4ft3r.actionsofstamina.network.ServerboundPacket.Action.WEAPON_SWING;
-import static com.ccr4ft3r.actionsofstamina.util.PlayerUtil.cannotBeExhausted;
 
 @Mod.EventBusSubscriber
 public class AttackHandler {
@@ -49,7 +49,7 @@ public class AttackHandler {
     public static void onPlayerAttemptAttack(InputEvent.InteractionKeyMappingTriggered event) {
 
         var player = Minecraft.getInstance().player;
-        if (cannotBeExhausted(player)) return;
+        if (IActionCapability.cannotBeExhausted(player)) return;
 
         log.info("Attack attempted!!!!");
         if (event.isAttack()) {

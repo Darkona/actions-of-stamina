@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina;
+package com.ccr4ft3r.actionsofstamina.capability;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
@@ -149,7 +149,11 @@ public class PlayerActions implements IActionCapability {
         var tag = new CompoundTag();
 
         var actionsTag = new CompoundTag();
-        this.enabledActions.forEach((actionName, action) -> actionsTag.put(actionName.getPath(), action.saveNBTData()));
+        this.enabledActions.forEach((actionName, action) -> {
+            if (action.saveNBTData() != null) {
+                actionsTag.put(actionName.getPath(), action.saveNBTData());
+            }
+        });
         tag.put("enabledActions", actionsTag);
 
         tag.putBoolean("moving", this.moving);

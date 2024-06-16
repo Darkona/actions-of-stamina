@@ -1,15 +1,21 @@
-package com.ccr4ft3r.actionsofstamina;
+package com.ccr4ft3r.actionsofstamina.capability;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.Map;
 import java.util.Optional;
 
 public interface IActionCapability {
+
+    static boolean cannotBeExhausted(Player player) {
+        return player == null || player instanceof FakePlayer || !player.isAlive() ||
+                player.isCreative() || player.isSpectator();
+    }
 
     boolean isMoving();
 

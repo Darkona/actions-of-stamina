@@ -18,7 +18,8 @@ public class SprintAction implements Action {
 
     private final int cost;
     private final int minCost;
-    public int cooldown;
+    private final int cooldown;
+    private boolean performing = false;
 
     public SprintAction() {
         this.cost = AoSCommonConfig.SPRINTING_COST.get();
@@ -29,6 +30,16 @@ public class SprintAction implements Action {
     @Override
     public ResourceLocation getName() {
         return name;
+    }
+
+    @Override
+    public double getFeathersPerSecond() {
+        return 0;
+    }
+
+    @Override
+    public boolean isRegenInhibitor() {
+        return AoSCommonConfig.INHIBIT_REGEN_WHEN_SPRINTING.get();
     }
 
     @Override
@@ -53,17 +64,17 @@ public class SprintAction implements Action {
 
     @Override
     public boolean wasPerforming() {
-        return false;
+        return performing;
     }
 
     @Override
     public boolean isPerforming() {
-        return false;
+        return performing;
     }
 
     @Override
     public void setPerforming(boolean performing) {
-
+        this.performing = performing;
     }
 
     @Override

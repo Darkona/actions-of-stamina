@@ -1,10 +1,16 @@
-package com.ccr4ft3r.actionsofstamina.plugins;
+package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
 
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tictim.paraglider.api.plugin.ParagliderPlugin;
 import tictim.paraglider.api.stamina.StaminaPlugin;
 
 @ParagliderPlugin
 public class ParagliderStaminaPlugin implements StaminaPlugin {
+
+
+
+
     /*@Override public StaminaFactory getStaminaFactory() {
         return new FeathersParagliderStaminaFactory();
     }
