@@ -2,6 +2,7 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.jump;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -9,7 +10,8 @@ import net.minecraft.world.entity.player.Player;
 
 public class JumpAction implements Action {
 
-    public static final ResourceLocation name = new ResourceLocation(ActionsOfStamina.MOD_ID, "jump_action");
+    public static final String actionName = "jump_action";
+    public static final ResourceLocation name = new ResourceLocation(ActionsOfStamina.MOD_ID, actionName);
     public int cooldown = 40;
     private int timesPerformed;
     private long lastPerformed;
@@ -26,8 +28,13 @@ public class JumpAction implements Action {
     }
 
     @Override
-    public ResourceLocation getName() {
-        return name;
+    public String getName() {
+        return actionName;
+    }
+
+    @Override
+    public boolean canPerform(Player player) {
+        return false;
     }
 
     @Override
@@ -55,10 +62,6 @@ public class JumpAction implements Action {
         return timesPerformedToExhaust;
     }
 
-    @Override
-    public boolean wasPerforming() {
-        return false;
-    }
 
     @Override
     public boolean isPerforming() {
@@ -71,12 +74,12 @@ public class JumpAction implements Action {
     }
 
     @Override
-    public void atStart(Player player) {
+    public void beginPerforming(Player player) {
 
     }
 
     @Override
-    public void atFinish(Player player) {
+    public void finishPerforming(Player player) {
 
     }
 
@@ -91,12 +94,12 @@ public class JumpAction implements Action {
     }
 
     @Override
-    public long getLastPerformed() {
+    public int getLastPerformed() {
         return 0;
     }
 
     @Override
-    public void tick() {
+    public void tick(Player player, IActionCapability a) {
 
     }
 
@@ -113,5 +116,15 @@ public class JumpAction implements Action {
     @Override
     public int getCooldown() {
         return 0;
+    }
+
+    @Override
+    public int getStaminaCostPerTick() {
+        return 0;
+    }
+
+    @Override
+    public void setActionState(boolean state) {
+
     }
 }

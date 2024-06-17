@@ -2,6 +2,7 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -9,7 +10,8 @@ import net.minecraft.world.entity.player.Player;
 
 public class ElytraFlightAction implements Action {
 
-    public static final ResourceLocation name = new ResourceLocation(ActionsOfStamina.MOD_ID, "elytra_action");
+    public static final String actionName = "elytra_action";
+    public static final ResourceLocation name = new ResourceLocation(ActionsOfStamina.MOD_ID, actionName);
     public int cooldown = 40;
     private int timesPerformed;
     private long lastPerformed;
@@ -28,8 +30,13 @@ public class ElytraFlightAction implements Action {
     }
 
     @Override
-    public ResourceLocation getName() {
-        return null;
+    public String getName() {
+        return actionName;
+    }
+
+    @Override
+    public boolean canPerform(Player player) {
+        return false;
     }
 
     @Override
@@ -68,12 +75,12 @@ public class ElytraFlightAction implements Action {
     }
 
     @Override
-    public void atStart(Player player) {
+    public void beginPerforming(Player player) {
 
     }
 
     @Override
-    public void atFinish(Player player) {
+    public void finishPerforming(Player player) {
 
     }
 
@@ -88,12 +95,12 @@ public class ElytraFlightAction implements Action {
     }
 
     @Override
-    public long getLastPerformed() {
+    public int getLastPerformed() {
         return 0;
     }
 
     @Override
-    public void tick() {
+    public void tick(Player player, IActionCapability a) {
 
     }
 
@@ -110,5 +117,15 @@ public class ElytraFlightAction implements Action {
     @Override
     public int getCooldown() {
         return 0;
+    }
+
+    @Override
+    public int getStaminaCostPerTick() {
+        return 0;
+    }
+
+    @Override
+    public void setActionState(boolean state) {
+
     }
 }

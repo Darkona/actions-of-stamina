@@ -1,13 +1,15 @@
 package com.ccr4ft3r.actionsofstamina.actions;
 
 
+import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 public interface Action {
 
-    ResourceLocation getName();
+    String getName();
+
+    boolean canPerform(Player player);
 
     double getFeathersPerSecond();
 
@@ -23,28 +25,25 @@ public interface Action {
 
     void setPerforming(boolean performing);
 
-    void atStart(Player player);
+    void beginPerforming(Player player);
 
-    void atFinish(Player player);
+    void finishPerforming(Player player);
 
     boolean perform(Player player);
 
     int timesPerformed();
 
-    long getLastPerformed();
+    int getLastPerformed();
 
-    void tick();
-
-    default boolean hasEnoughFeathers(int feathers) {
-
-        if (getMinCost() == 0) return true;
-        int feathersMin = Math.max(getCost(), getMinCost());
-        return feathers >= feathersMin;
-    }
+    void tick(Player player, IActionCapability capability);
 
     CompoundTag saveNBTData();
 
     void loadNBTData(CompoundTag nbt);
 
     int getCooldown();
+
+    int getStaminaCostPerTick();
+
+    void setActionState(boolean state);
 }

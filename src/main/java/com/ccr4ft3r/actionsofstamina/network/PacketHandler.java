@@ -35,11 +35,12 @@ public class PacketHandler {
                 return;
             }
             switch (packet.getAction()) {
-                case PLAYER_MOVING -> player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setMoving(true));
-                case PLAYER_STOP_MOVING -> player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setMoving(false));
+                case PLAYER_MOVING -> player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(true));
+                case PLAYER_STOP_MOVING -> player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(false));
                 case WEAPON_SWING -> {
                     if (!AoSCommonConfig.ONLY_FOR_HITS.get()) AttackHandler.spendToAttack(player);
                 }
+                case PLAYER_JUMPING -> player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setClientJumping(true));
             }
             context.setPacketHandled(true);
         });

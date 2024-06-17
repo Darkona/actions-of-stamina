@@ -1,11 +1,11 @@
 package com.ccr4ft3r.actionsofstamina.events;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.capability.AoSCapabilities;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.ccr4ft3r.actionsofstamina.data.ClientPlayerData;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
 import com.ccr4ft3r.actionsofstamina.network.ServerboundPacket;
-import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
@@ -52,8 +52,9 @@ public class ClientHandler {
             if (isActivelyMoving != PLAYER_DATA.isMoving()) {
                 PLAYER_DATA.setMoving(isActivelyMoving);
                 if (AoSCommonConfig.ENABLE_DEBUGGING.get())
-                    LogUtils.getLogger().info("Sending packet to server caused by {} {}", isPressed ? "pressing" : "releasing"
+                    ActionsOfStamina.logger.info("Sending packet to server caused by {} {}", isPressed ? "pressing" : "releasing"
                             , GLFW.glfwGetKeyName(event.getKey(), event.getScanCode()));
+                player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(isActivelyMoving));
                 PacketHandler.sendToServer(new ServerboundPacket(isActivelyMoving ? PLAYER_MOVING : PLAYER_STOP_MOVING));
             }
         }

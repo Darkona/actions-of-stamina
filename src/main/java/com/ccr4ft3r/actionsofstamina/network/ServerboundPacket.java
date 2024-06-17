@@ -26,5 +26,6 @@ public class ServerboundPacket {
         PLAYER_MOVING,
         PLAYER_STOP_MOVING,
         WEAPON_SWING,
+        PLAYER_JUMPING
     }
 }

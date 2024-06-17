@@ -2,7 +2,6 @@ package com.ccr4ft3r.actionsofstamina.capability;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
@@ -13,57 +12,30 @@ import java.util.Optional;
 public interface IActionCapability {
 
     static boolean cannotBeExhausted(Player player) {
-        return player == null || player instanceof FakePlayer || !player.isAlive() ||
-                player.isCreative() || player.isSpectator();
+        return player == null || player instanceof FakePlayer || player.isCreative() || player.isSpectator();
     }
 
-    boolean isMoving();
+    Map<String, Boolean> getActionStates();
 
-    void setMoving(boolean moving);
+    boolean isClientMoving();
 
-    boolean isSprinting();
-
-    void setSprinting(boolean sprinting);
-
-    boolean isJumping();
-
-    void setJumping(boolean jumping);
-
-    boolean isClimbing();
-
-    void setClimbing(boolean climbing);
-
-    boolean isSneaking();
-
-    void setSneaking(boolean sneaking);
-
-    boolean isFlying();
-
-    void setFlying(boolean flying);
-
-    boolean isSwimming();
-
-    void setSwimming(boolean swimming);
-
-    boolean isCrawling();
-
-    void setCrawling(boolean crawling);
+    void setClientMoving(boolean moving);
 
     Vec3 getLastPosition();
 
     void setLastPosition(Vec3 lastPosition);
 
-    Map<ResourceLocation, Action> getEnabledActions();
-
-    void update(Player player);
+    Map<String, Action> getEnabledActions();
 
     void addEnabledAction(Action action);
 
-    Optional<Action> getAction(ResourceLocation actionId);
+    Optional<Action> getAction(String actionId);
 
     CompoundTag saveNBTData();
 
     void loadNBTData(CompoundTag nbt);
 
     void copyFrom(IActionCapability oldStore);
+
+    void setClientJumping(boolean b);
 }

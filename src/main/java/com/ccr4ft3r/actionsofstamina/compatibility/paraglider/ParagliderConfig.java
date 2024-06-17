@@ -9,7 +9,6 @@ public class ParagliderConfig {
     public static final ForgeConfigSpec SPEC;
 
 
-
     static {
         BUILDER.comment("Paraglider settings").push("paraglider");
         BUILDER.pop();

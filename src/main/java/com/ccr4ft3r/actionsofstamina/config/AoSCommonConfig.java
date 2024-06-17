@@ -56,6 +56,7 @@ public class AoSCommonConfig {
     public static final ForgeConfigSpec.ConfigValue<Integer> HOLD_SHIELD_MINIMUM_COST;
     public static final ForgeConfigSpec.ConfigValue<Integer> HOLD_SHIELD_COOLDOWN;
     public static final ForgeConfigSpec.ConfigValue<Double> HOLD_SHIELD_FEATHERS_PER_SECOND;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> INHIBIT_REGEN_WHEN_HOLDING_SHIELD;
 
     public static final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_DEBUGGING;
 
@@ -109,7 +110,7 @@ public class AoSCommonConfig {
 
         ATTACKING_TIMES_PERFORMED_TO_EXHAUST = BUILDER
                 .comment("How many times you can perform attacks before consuming feathers")
-                .defineInRange("attack_times_performed_to_exhaust", 1, 0, 20);
+                .defineInRange("attack_times_performed_to_exhaust", 3, 1, 20);
 
         ALSO_FOR_NON_WEAPONS = BUILDER
                 .comment("Whether to also consume feathers for non-weapon attacks")
@@ -117,7 +118,7 @@ public class AoSCommonConfig {
 
         ATTACKING_COOLDOWN = BUILDER
                 .comment("How many ticks of cooldown to add before starting to regenerate feathers after attacking")
-                .defineInRange("attack_cooldown", 40, 0, 100);
+                .defineInRange("attack_cooldown", 70, 0, 100);
 
         BUILDER.pop();
 
@@ -134,11 +135,11 @@ public class AoSCommonConfig {
 
         SPRINTING_MINIMUM_COST = BUILDER
                 .comment("Minimum feathers available needed to start sprinting")
-                .defineInRange("sprint_min_cost", 1, 0, 20);
+                .defineInRange("sprint_min_cost", 2, 0, 20);
 
         SPRINTING_FEATHERS_PER_SECOND = BUILDER
                 .comment("How many feathers are consumed per second when sprinting")
-                .defineInRange("feathers_per_second", 0.5d, 0, 20);
+                .defineInRange("feathers_per_second", 0.25d, 0, 20);
 
         SPRINTING_COOLDOWN = BUILDER
                 .comment("How many ticks of cooldown to add before starting to regenerate feathers after sprinting")
@@ -158,7 +159,7 @@ public class AoSCommonConfig {
 
         SWIMMING_MINIMUM_COST = BUILDER
                 .comment("Minimum feathers available needed to start swimming")
-                .defineInRange("swim_min_cost", 1, 0, 20);
+                .defineInRange("swim_min_cost", 2, 0, 20);
 
         SWIMMING_FEATHERS_PER_SECOND = BUILDER
                 .comment("How many feathers are consumed per second when swimming")
@@ -166,8 +167,7 @@ public class AoSCommonConfig {
 
         SWIMMING_COOLDOWN = BUILDER
                 .comment("How many ticks of cooldown to add before starting to regenerate feathers after swimming")
-                .defineInRange("swim_cooldown", 40, 0, 100);
-
+                .defineInRange("swim_cooldown", 80, 0, 100);
 
         BUILDER.pop();
 
@@ -183,15 +183,15 @@ public class AoSCommonConfig {
 
         FLYING_MINIMUM_COST = BUILDER
                 .comment("Minimum feathers available needed to start flying")
-                .defineInRange("fly_min_cost", 1, 0, 20);
+                .defineInRange("fly_min_cost", 2, 0, 20);
 
         FLYING_FEATHERS_PER_SECOND = BUILDER
                 .comment("How many feathers are consumed per second when flying")
-                .defineInRange("fly_feathers_per_second", 0.5d, 0, 20);
+                .defineInRange("fly_feathers_per_second", 0.05d, 0, 20);
 
         FLYING_COOLDOWN = BUILDER
                 .comment("How many ticks of cooldown to add before starting to regenerate feathers after flying")
-                .defineInRange("fly_cooldown", 40, 0, 100);
+                .defineInRange("fly_cooldown", 20, 0, 100);
 
         BUILDER.pop();
 
@@ -211,7 +211,7 @@ public class AoSCommonConfig {
 
         CRAWLING_FEATHERS_PER_SECOND = BUILDER
                 .comment("How many feathers are consumed per second when crawling")
-                .defineInRange("crawl_feathers_per_second", 0.5d, 0, 20);
+                .defineInRange("crawl_feathers_per_second", 0.1d, 0, 20);
 
         CRAWLING_COOLDOWN = BUILDER
                 .comment("How many ticks of cooldown to add before starting to regenerate feathers after crawling")
@@ -231,7 +231,7 @@ public class AoSCommonConfig {
 
         JUMPING_TIMES_PERFORMED_TO_EXHAUST = BUILDER
                 .comment("How many times you can jump before consuming feathers")
-                .defineInRange("jump_times_performed_to_exhaust", 1, 0, 20);
+                .defineInRange("jump_times_performed_to_exhaust", 4, 0, 20);
 
         JUMPING_COOLDOWN = BUILDER
                 .comment("How many ticks of cooldown to add before starting to regenerate feathers after jumping")
@@ -251,11 +251,15 @@ public class AoSCommonConfig {
 
         HOLD_SHIELD_FEATHERS_PER_SECOND = BUILDER
                 .comment("How many feathers are consumed per second when holding shield")
-                .defineInRange("shield_feathers_per_second", 0.5d, 0, 20);
+                .defineInRange("shield_feathers_per_second", 0.2d, 0, 20);
 
         HOLD_SHIELD_COOLDOWN = BUILDER
                 .comment("How many ticks of cooldown to add before starting to regenerate feathers after holding shield")
-                .defineInRange("shield_cooldown", 40, 0, 100);
+                .defineInRange("shield_cooldown", 20, 0, 100);
+
+        INHIBIT_REGEN_WHEN_HOLDING_SHIELD = BUILDER
+                .comment("Whether to inhibit feather regeneration when holding shield")
+                .define("inhibit_regen_when_holding_shield", true);
 
         BUILDER.pop();
 
@@ -263,7 +267,7 @@ public class AoSCommonConfig {
 
         ENABLE_DEBUGGING = BUILDER
                 .comment("Enable debugging messages")
-                .define("debugging", false);
+                .define("debugging", true);
 
         BUILDER.pop();
 

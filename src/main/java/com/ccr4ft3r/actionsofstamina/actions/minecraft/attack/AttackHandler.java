@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.attack;
 
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.capability.AoSCapabilities;
 import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
@@ -14,22 +15,21 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.ccr4ft3r.actionsofstamina.network.ServerboundPacket.Action.WEAPON_SWING;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = ActionsOfStamina.MOD_ID)
 public class AttackHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(AttackHandler.class);
 
     @SubscribeEvent
     public static void onPlayerAttack(AttackEntityEvent event) {
 
-        log.info("Attack connected!!!");
+        if (AoSCommonConfig.ENABLE_DEBUGGING.get())
+            ActionsOfStamina.logger.info("Attack connected!!!");
+
         var player = event.getEntity();
         event.setCanceled(!spendToAttack(player));
 
@@ -38,8 +38,10 @@ public class AttackHandler {
     public static boolean spendToAttack(Player player) {
         var result = new AtomicBoolean(true);
         player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> {
-            a.getAction(AttackAction.name).ifPresent(w -> {
-                result.set(w.perform(player));
+            a.getAction(AttackAction.actionName).ifPresent(w -> {
+                if (w.canPerform(player)) {
+                    result.set(w.perform(player));
+                }
             });
         });
         return result.get();
@@ -51,19 +53,26 @@ public class AttackHandler {
         var player = Minecraft.getInstance().player;
         if (IActionCapability.cannotBeExhausted(player)) return;
 
-        log.info("Attack attempted!!!!");
         if (event.isAttack()) {
+
+            if (AoSCommonConfig.ENABLE_DEBUGGING.get())
+                ActionsOfStamina.logger.info("Attack attempted!!!");
+
             player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> {
-                a.getAction(AttackAction.name).ifPresent(w -> {
+                a.getAction(AttackAction.actionName).ifPresent(w -> {
 
                     boolean hasEnoughFeathers = FeathersAPI.canSpendFeathers(player, w.getCost());
-                    boolean onlyForHits = AoSCommonConfig.ONLY_FOR_HITS.get();
                     HitResult hitResult = Minecraft.getInstance().hitResult;
                     boolean isEntityHit = hitResult != null && hitResult.getType() == HitResult.Type.ENTITY;
 
-                    if (!hasEnoughFeathers && (!onlyForHits || isEntityHit)) {
+                    if (!hasEnoughFeathers && (!AoSCommonConfig.ONLY_FOR_HITS.get() || isEntityHit)) {
                         event.setCanceled(true);
                         event.setSwingHand(false);
+                    }
+
+                    if (hasEnoughFeathers && isEntityHit) {
+                        w.perform(player);
+                        FeathersAPI.spendFeathersRequest(player, w.getCost(), w.getCooldown());
                     }
 
                 });

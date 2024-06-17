@@ -23,11 +23,11 @@ import java.util.Iterator;
 
 public class AttackAction implements Action {
 
-
-    public static final ResourceLocation name = new ResourceLocation(ActionsOfStamina.MOD_ID, "attack_action");
-    public int cooldown = 40;
+    public static final String actionName = "attack_action";
+    public static final ResourceLocation name = new ResourceLocation(ActionsOfStamina.MOD_ID, actionName);
+    public int cooldown;
     private int timesPerformed;
-    private long lastPerformed;
+    private int lastPerformed;
     private int cost;
     private int minCost;
     private int timesPerformedToExhaust;
@@ -38,11 +38,17 @@ public class AttackAction implements Action {
         this.cost = AoSCommonConfig.ATTACKING_COST.get();
         this.minCost = AoSCommonConfig.ATTACKING_MINIMUM_COST.get();
         this.timesPerformedToExhaust = AoSCommonConfig.ATTACKING_TIMES_PERFORMED_TO_EXHAUST.get();
+        this.cooldown = AoSCommonConfig.ATTACKING_COOLDOWN.get();
     }
 
     @Override
-    public ResourceLocation getName() {
-        return name;
+    public String getName() {
+        return actionName;
+    }
+
+    @Override
+    public boolean canPerform(Player player) {
+        return !IActionCapability.cannotBeExhausted(player) && FeathersAPI.canSpendFeathers(player, minCost);
     }
 
     @Override
@@ -81,27 +87,22 @@ public class AttackAction implements Action {
     }
 
     @Override
-    public void atStart(Player player) {
+    public void beginPerforming(Player player) {
 
     }
 
     @Override
-    public void atFinish(Player player) {
+    public void finishPerforming(Player player) {
 
     }
 
     @Override
     public boolean perform(Player player) {
 
-        if (!(player instanceof ServerPlayer) || IActionCapability.cannotBeExhausted(player))
-            return false;
-
-
         ItemStack itemstack = player.getItemInHand(InteractionHand.MAIN_HAND);
         Multimap<Attribute, AttributeModifier> modifiers = itemstack.getItem().getAttributeModifiers(EquipmentSlot.MAINHAND, itemstack);
         Iterator<AttributeModifier> attackDamages = modifiers.get(Attributes.ATTACK_DAMAGE).iterator();
 
-        double multiplier = 0d;
         if (!attackDamages.hasNext() && !AoSCommonConfig.ALSO_FOR_NON_WEAPONS.get()) {
             return false;
         }
@@ -112,11 +113,13 @@ public class AttackAction implements Action {
             timesPerformed = 0;
             if (AoSCommonConfig.ENABLE_DEBUGGING.get())
                 LogUtils.getLogger().info("Spending {} feathers for player '{}'", cost, player.getScoreboardName());
-            performed = FeathersAPI.spendFeathers(player, cost, cooldown);
+            performed = player.level().isClientSide ? FeathersAPI.canSpendFeathers(player, cost) : FeathersAPI.spendFeathers(player, cost, cooldown);
+
         }
         if (performed) {
             lastPerformed = player.tickCount;
         }
+
         return performed;
     }
 
@@ -126,12 +129,12 @@ public class AttackAction implements Action {
     }
 
     @Override
-    public long getLastPerformed() {
+    public int getLastPerformed() {
         return lastPerformed;
     }
 
     @Override
-    public void tick() {
+    public void tick(Player player, IActionCapability capability) {
 
     }
 
@@ -152,11 +155,21 @@ public class AttackAction implements Action {
         minCost = nbt.getInt("minCost");
         timesPerformedToExhaust = nbt.getInt("timesPerformedToExhaust");
         timesPerformed = nbt.getInt("timesPerformed");
-        lastPerformed = nbt.getLong("lastPerformed");
+        lastPerformed = nbt.getInt("lastPerformed");
     }
 
     @Override
     public int getCooldown() {
         return cooldown;
+    }
+
+    @Override
+    public int getStaminaCostPerTick() {
+        return 0;
+    }
+
+    @Override
+    public void setActionState(boolean isSprinting) {
+
     }
 }

@@ -9,7 +9,6 @@ public class ParcoolConfig {
     public static final ForgeConfigSpec SPEC;
 
 
-
     static {
         BUILDER.comment("Parcool settings").push("parcool");
         BUILDER.pop();
