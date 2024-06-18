@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint;
 
-import com.ccr4ft3r.actionsofstamina.capability.AoSCapabilities;
+import com.ccr4ft3r.actionsofstamina.capability.AosCapabilityProvider;
 import com.darkona.feathers.api.FeathersAPI;
 import com.darkona.feathers.api.IModifier;
 import com.darkona.feathers.capability.PlayerFeathers;
@@ -24,7 +24,7 @@ public class SprintingModifier implements IModifier {
     @Override
     public void applyToDelta(Player player, PlayerFeathers playerFeathers, AtomicInteger staminaDelta) {
 
-        player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.getAction(SprintAction.actionName).ifPresent(w -> {
+        player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> a.getAction(SprintAction.actionName).ifPresent(w -> {
 
             if (w.isPerforming()) {
 

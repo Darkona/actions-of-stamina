@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.crawl;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
+import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -79,7 +79,7 @@ public class CrawlAction implements Action {
     }
 
     @Override
-    public void tick(Player player, IActionCapability capability) {
+    public void tick(Player player, PlayerActions capability) {
 
     }
 

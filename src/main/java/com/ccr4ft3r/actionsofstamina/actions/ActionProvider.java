@@ -3,7 +3,7 @@ package com.ccr4ft3r.actionsofstamina.actions;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint.SprintAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint.SprintingModifier;
-import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
+import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.darkona.feathers.capability.FeathersCapabilities;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +32,7 @@ public class ActionProvider {
         };
     }
 
-    public void addEnabledActions(IActionCapability a, Player player) {
+    public void addEnabledActions(PlayerActions a, Player player) {
 
         if (AoSCommonConfig.ATTACKING_ENABLED.get()) {
             a.addEnabledAction(new AttackAction());

@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.network;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackHandler;
-import com.ccr4ft3r.actionsofstamina.capability.AoSCapabilities;
+import com.ccr4ft3r.actionsofstamina.capability.AosCapabilityProvider;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,12 +35,12 @@ public class PacketHandler {
                 return;
             }
             switch (packet.getAction()) {
-                case PLAYER_MOVING -> player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(true));
-                case PLAYER_STOP_MOVING -> player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(false));
+                case PLAYER_MOVING -> player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(true));
+                case PLAYER_STOP_MOVING -> player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(false));
                 case WEAPON_SWING -> {
                     if (!AoSCommonConfig.ONLY_FOR_HITS.get()) AttackHandler.spendToAttack(player);
                 }
-                case PLAYER_JUMPING -> player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setClientJumping(true));
+                case PLAYER_JUMPING -> player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> a.setClientJumping(true));
             }
             context.setPacketHandled(true);
         });

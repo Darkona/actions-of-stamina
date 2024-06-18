@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
+import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -100,7 +100,7 @@ public class ElytraFlightAction implements Action {
     }
 
     @Override
-    public void tick(Player player, IActionCapability a) {
+    public void tick(Player player, PlayerActions a) {
 
     }
 

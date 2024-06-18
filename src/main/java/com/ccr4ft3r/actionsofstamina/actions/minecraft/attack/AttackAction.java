@@ -2,14 +2,14 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.attack;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
+import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.darkona.feathers.api.FeathersAPI;
+import com.darkona.feathers.api.StaminaAPI;
 import com.google.common.collect.Multimap;
 import com.mojang.logging.LogUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -48,7 +48,7 @@ public class AttackAction implements Action {
 
     @Override
     public boolean canPerform(Player player) {
-        return !IActionCapability.cannotBeExhausted(player) && FeathersAPI.canSpendFeathers(player, minCost);
+        return !PlayerActions.cannotBeExhausted(player) && FeathersAPI.canSpendFeathers(player, minCost);
     }
 
     @Override
@@ -108,19 +108,19 @@ public class AttackAction implements Action {
         }
 
         timesPerformed++;
-        boolean performed = true;
+        boolean allow = FeathersAPI.canSpendFeathers(player, cost);
         if (timesPerformed >= timesPerformedToExhaust) {
             timesPerformed = 0;
             if (AoSCommonConfig.ENABLE_DEBUGGING.get())
-                LogUtils.getLogger().info("Spending {} feathers for player '{}'", cost, player.getScoreboardName());
-            performed = player.level().isClientSide ? FeathersAPI.canSpendFeathers(player, cost) : FeathersAPI.spendFeathers(player, cost, cooldown);
-
+                ActionsOfStamina.logger.info("Spending {} feathers for attacking {} times for player '{}'",
+                        cost, timesPerformedToExhaust, player.getScoreboardName());
+            allow = FeathersAPI.spendFeathers(player, cost, cooldown);
         }
-        if (performed) {
+        if (allow) {
             lastPerformed = player.tickCount;
         }
 
-        return performed;
+        return allow;
     }
 
     @Override
@@ -134,7 +134,7 @@ public class AttackAction implements Action {
     }
 
     @Override
-    public void tick(Player player, IActionCapability capability) {
+    public void tick(Player player, PlayerActions capability) {
 
     }
 

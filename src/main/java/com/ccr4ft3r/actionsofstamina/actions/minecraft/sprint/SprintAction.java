@@ -2,17 +2,15 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.capability.IActionCapability;
+import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.darkona.feathers.api.FeathersAPI;
 import com.darkona.feathers.capability.FeathersCapabilities;
 import com.darkona.feathers.util.Calculations;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-import static com.ccr4ft3r.actionsofstamina.capability.IActionCapability.cannotBeExhausted;
 
 
 public class SprintAction implements Action {
@@ -46,7 +44,7 @@ public class SprintAction implements Action {
 
     @Override
     public boolean canPerform(Player player) {
-        if (cannotBeExhausted(player)) return true;
+        if (PlayerActions.cannotBeExhausted(player)) return true;
         if (performing) {
             return player.getCapability(FeathersCapabilities.PLAYER_FEATHERS).map(f -> f.getAvailableStamina() >= staminaPerTick).orElse(false);
         } else {
@@ -123,7 +121,7 @@ public class SprintAction implements Action {
 
 
     @Override
-    public void tick(Player player, IActionCapability a) {
+    public void tick(Player player, PlayerActions a) {
 
         if (actionState && !performing && canPerform(player)) {
             beginPerforming(player);

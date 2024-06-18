@@ -11,4 +11,5 @@ public class ClientPlayerData {
     public void setMoving(boolean moving) {
         isMoving = moving;
     }
+
 }

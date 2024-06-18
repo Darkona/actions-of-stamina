@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.mixin;
 
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint.SprintAction;
-import com.ccr4ft3r.actionsofstamina.capability.AoSCapabilities;
+import com.ccr4ft3r.actionsofstamina.capability.AosCapabilityProvider;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +19,7 @@ public abstract class LocalPlayerMixin extends PlayerMixin {
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSprinting()Z", ordinal = 1))
     public void stopSprinting(CallbackInfo ci) {
 
-        this.getCapability(AoSCapabilities.PLAYER_ACTIONS, null)
+        this.getCapability(AosCapabilityProvider.PLAYER_ACTIONS, null)
             .ifPresent(a -> a.getAction(SprintAction.actionName)
                              .ifPresent(w -> {
                                  if (!w.canPerform((LocalPlayer) (Object) this)) {

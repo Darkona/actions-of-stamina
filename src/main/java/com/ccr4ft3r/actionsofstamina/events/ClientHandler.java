@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.events;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.capability.AoSCapabilities;
+import com.ccr4ft3r.actionsofstamina.capability.AosCapabilityProvider;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.ccr4ft3r.actionsofstamina.data.ClientPlayerData;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
@@ -11,14 +11,14 @@ import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Predicate;
 
-import static com.ccr4ft3r.actionsofstamina.network.ServerboundPacket.Action.PLAYER_MOVING;
-import static com.ccr4ft3r.actionsofstamina.network.ServerboundPacket.Action.PLAYER_STOP_MOVING;
+import static com.ccr4ft3r.actionsofstamina.network.ServerboundPacket.Action.*;
 
 @Mod.EventBusSubscriber(modid = ActionsOfStamina.MOD_ID, value = Dist.CLIENT)
 public class ClientHandler {
@@ -54,11 +54,20 @@ public class ClientHandler {
                 if (AoSCommonConfig.ENABLE_DEBUGGING.get())
                     ActionsOfStamina.logger.info("Sending packet to server caused by {} {}", isPressed ? "pressing" : "releasing"
                             , GLFW.glfwGetKeyName(event.getKey(), event.getScanCode()));
-                player.getCapability(AoSCapabilities.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(isActivelyMoving));
+                player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(isActivelyMoving));
                 PacketHandler.sendToServer(new ServerboundPacket(isActivelyMoving ? PLAYER_MOVING : PLAYER_STOP_MOVING));
             }
         }
     }
 
+    /**
+     * Swing weapon when player left clicks while pointing to open air, no entity is hit
+     * @param event
+     */
+    @SubscribeEvent
+    public static void onPlayerAttack(PlayerInteractEvent.LeftClickEmpty event) {
+        if (!AoSCommonConfig.ONLY_FOR_HITS.get())
+            PacketHandler.sendToServer(new ServerboundPacket(WEAPON_SWING));
+    }
 
 }
