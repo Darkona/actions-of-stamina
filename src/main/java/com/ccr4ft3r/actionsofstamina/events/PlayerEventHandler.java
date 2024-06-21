@@ -2,6 +2,7 @@ package com.ccr4ft3r.actionsofstamina.events;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.shield.ShieldAction;
 import com.ccr4ft3r.actionsofstamina.capability.AosCapabilityProvider;
 import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.client.AoSHudDebugOverlay;
@@ -9,14 +10,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ShieldItem;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -45,8 +49,19 @@ public class PlayerEventHandler {
             a.getEnabledActions().forEach((actionName, action) -> action.tick(player, a, event.phase));
             a.setLastPosition(player.position());
         });
+    }
 
-
+    @SubscribeEvent
+    public static void shieldUsage(PlayerInteractEvent.RightClickItem event) {
+        if (event.getItemStack().getItem() instanceof ShieldItem) {
+            event.getEntity().getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(c -> {
+                c.getAction(ShieldAction.actionName).ifPresent(a -> {
+                    if(!a.canPerform(event.getEntity())){
+                        event.setCanceled(true);
+                    }
+                });
+            });
+        }
     }
 
     @SubscribeEvent
@@ -86,9 +101,6 @@ public class PlayerEventHandler {
         }
     }
 
-    public static void onJump(LivingEvent.LivingJumpEvent event) {
-
-    }
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
         Predicate<LocalPlayer> notJumpable = (player) -> player.isInWater() || player.onClimbable();
@@ -126,18 +138,5 @@ public class PlayerEventHandler {
 
 
     }
-
-    /*public static boolean isCrawling(Player player) {
-        boolean hasCrawlPos = !player.isInLava() && !player.isInWater() && player.getPose() == Pose.SWIMMING;
-        //ServerPlayerData playerData = getPlayerData(player);
-        //return (hasCrawlPos || hasParcoolCrawlPos(player)) && playerData.isMoving() && !player.position().equals(playerData.getLastPosition());
-        return hasCrawlPos;
-    }*/
-
-   /* public static boolean isCrawling(LocalPlayer player) {
-        boolean hasCrawlPos = !player.isInLava() && !player.isInWater() && player.getPose() == Pose.SWIMMING;
-        return hasCrawlPos && PLAYER_DATA.isMoving();
-    }*/
-
 
 }

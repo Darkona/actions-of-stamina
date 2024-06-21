@@ -4,12 +4,15 @@ import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.crawl.CrawlAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.shield.ShieldAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint.SprintAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.swim.SwimAction;
 import com.ccr4ft3r.actionsofstamina.network.ActionStatePacket;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.util.FakePlayer;
@@ -36,6 +39,7 @@ public class PlayerActions {
     private boolean sneaking;
     private boolean flying;
     private boolean jumping;
+    private boolean usingShield;
 
     public PlayerActions() {
     }
@@ -60,11 +64,12 @@ public class PlayerActions {
         var moving = player.position().x != lastPosition.x || player.position().z != lastPosition.z;
         var crawling = player.onGround() && player.getPose() == Pose.SWIMMING;
         var climbing = player.onClimbable() && moving;
-        var onVehicle = player.isPassenger();
+        var onVehicle = player.getVehicle() != null;
         var swimming = player.isSwimming();
-        var sprinting = player.isSprinting();
+        var sprinting = player.isSprinting() && moving && !onVehicle && player.onGround();
         var sneaking = player.isShiftKeyDown();
         var flying = player.isFallFlying() || player.getAbilities().flying;
+        var usingShield = player.getUseItem().getItem() == Items.SHIELD;
 
         if (player.level().isClientSide) {
 
@@ -75,7 +80,8 @@ public class PlayerActions {
 
             if (sprinting != this.sprinting) {
                 setActionState(SprintAction.actionName, sprinting);
-                this.sprinting = getAction(SprintAction.actionName).map(Action::isPerforming).orElse(false);
+                this.sprinting = getAction(SprintAction.actionName)
+                        .map(a -> a.canPerform(player)).orElse(false);
             }
 
             if (crawling != this.crawling) {
@@ -83,14 +89,19 @@ public class PlayerActions {
                 setActionState(CrawlAction.actionName, crawling);
             }
 
-            if(flying != this.flying) {
+            if (flying != this.flying) {
                 this.flying = flying;
                 setActionState(ElytraAction.actionName, flying);
             }
 
             if (swimming != this.swimming) {
-                this.swimming = swimming;
+                setActionState(SwimAction.actionName, swimming);
+                this.swimming = getAction(SwimAction.actionName).map(Action::isPerforming).orElse(false);
+            }
 
+            if (usingShield != this.usingShield) {
+                this.usingShield = usingShield;
+                setActionState(ShieldAction.actionName, usingShield);
             }
         }
 

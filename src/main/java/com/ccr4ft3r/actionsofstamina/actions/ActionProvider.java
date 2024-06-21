@@ -6,8 +6,12 @@ import com.ccr4ft3r.actionsofstamina.actions.minecraft.crawl.CrawlingModifier;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraModifier;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.jump.JumpAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.shield.ShieldAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.shield.ShieldModifier;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint.SprintAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint.SprintingModifier;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.swim.SwimAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.swim.SwimModifier;
 import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.darkona.feathers.capability.FeathersCapabilities;
@@ -35,6 +39,8 @@ public class ActionProvider {
             case JumpAction.actionName -> new JumpAction();
             case CrawlAction.actionName -> new CrawlAction();
             case ElytraAction.actionName -> new ElytraAction();
+            case ShieldAction.actionName -> new ShieldAction();
+            case SwimAction.actionName -> new SwimAction();
             default -> null;
         };
     }
@@ -55,7 +61,7 @@ public class ActionProvider {
             a.addEnabledAction(new JumpAction());
         }
 
-        if(AoSCommonConfig.CRAWLING_ENABLED.get()){
+        if (AoSCommonConfig.CRAWLING_ENABLED.get()) {
             a.addEnabledAction(new CrawlAction());
             player.getCapability(FeathersCapabilities.PLAYER_FEATHERS)
                   .ifPresent(f -> f.addDeltaModifier(new CrawlingModifier()));
@@ -65,6 +71,18 @@ public class ActionProvider {
             a.addEnabledAction(new ElytraAction());
             player.getCapability(FeathersCapabilities.PLAYER_FEATHERS)
                   .ifPresent(f -> f.addDeltaModifier(new ElytraModifier()));
+        }
+
+        if (AoSCommonConfig.HOLD_SHIELD_ENABLED.get()) {
+            a.addEnabledAction(new ShieldAction());
+            player.getCapability(FeathersCapabilities.PLAYER_FEATHERS)
+                  .ifPresent(f -> f.addDeltaModifier(new ShieldModifier()));
+        }
+
+        if(AoSCommonConfig.SWIMMING_ENABLED.get()){
+            a.addEnabledAction(new SwimAction());
+            player.getCapability(FeathersCapabilities.PLAYER_FEATHERS)
+                  .ifPresent(f -> f.addDeltaModifier(new SwimModifier()));
         }
     }
 }

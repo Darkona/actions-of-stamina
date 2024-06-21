@@ -5,8 +5,6 @@ import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.darkona.feathers.api.FeathersAPI;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -20,10 +18,7 @@ public class JumpAction implements Action {
     private final int minCost;
     private final int cost;
     private final int cooldown;
-    private final int staminaPerTick;
-    private final boolean regenInhibitor = false;
     private final int timesPerformedToExhaust;
-    private boolean performing = false;
     private int timesPerformed;
     private int lastPerformed;
 
@@ -31,7 +26,6 @@ public class JumpAction implements Action {
         minCost = AoSCommonConfig.JUMPING_COST.get();
         cost = AoSCommonConfig.JUMPING_MINIMUM_COST.get();
         cooldown = AoSCommonConfig.JUMPING_COOLDOWN.get();
-        staminaPerTick = AoSCommonConfig.JUMPING_TIMES_PERFORMED_TO_EXHAUST.get();
         timesPerformedToExhaust = AoSCommonConfig.JUMPING_TIMES_PERFORMED_TO_EXHAUST.get();
     }
 
@@ -104,7 +98,7 @@ public class JumpAction implements Action {
     public boolean perform(Player player) {
 
         ActionsOfStamina.sideLog(player, "Performing jump action for player");
-        if(!canPerform(player)) return false;
+        if (!canPerform(player)) return false;
         if (++timesPerformed == timesPerformedToExhaust) {
             timesPerformed = 0;
             boolean allow = canPerform(player);
@@ -135,7 +129,7 @@ public class JumpAction implements Action {
 
     @Override
     public CompoundTag saveNBTData() {
-        return null;
+        return new CompoundTag();
     }
 
     @Override

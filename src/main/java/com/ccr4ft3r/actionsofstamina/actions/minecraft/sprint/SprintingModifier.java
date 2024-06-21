@@ -51,6 +51,6 @@ public class SprintingModifier implements IModifier {
 
     @Override
     public String getName() {
-        return "action_sprinting";
+        return SprintAction.actionName;
     }
 }

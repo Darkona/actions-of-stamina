@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.actions.minecraft.crawl;
+package com.ccr4ft3r.actionsofstamina.actions.minecraft.swim;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
@@ -10,38 +10,32 @@ import com.darkona.feathers.api.FeathersAPI;
 import com.darkona.feathers.api.StaminaAPI;
 import com.darkona.feathers.util.Calculations;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 
-import java.util.UUID;
+public class SwimAction implements Action {
 
-public class CrawlAction implements Action {
-
-    public static final String actionName = "crawl_action";
-    private static final UUID CRAWL_SPEED_MODIFIER = UUID.fromString("f6975f3a-1834-4a1b-a7ed-d8519df974f8");
+    public static final String actionName = "swim_action";
 
     private final int cost;
     private final int minCost;
     private final int cooldown;
     private final int staminaPerTick;
     private final boolean regenInhibitor;
-    private final AttributeModifier crawlSpeedModifier = new AttributeModifier(CRAWL_SPEED_MODIFIER, "Crawling Speed Modifier", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL);
     private final double feathersPerSecond;
+
+    private boolean wasSwimming = false;
     private boolean performing = false;
     private boolean actionState = false;
     private String debugInfo;
-    private boolean wasCrawling = false;
 
-    public CrawlAction() {
-        this.cost = AoSCommonConfig.CRAWLING_COST.get();
-        this.minCost = AoSCommonConfig.CRAWLING_MINIMUM_COST.get();
-        this.cooldown = AoSCommonConfig.CRAWLING_COOLDOWN.get();
-        this.staminaPerTick = Calculations.calculateStaminaPerTick(AoSCommonConfig.CRAWLING_FEATHERS_PER_SECOND.get());
-        this.feathersPerSecond = AoSCommonConfig.CRAWLING_FEATHERS_PER_SECOND.get();
-        this.regenInhibitor = AoSCommonConfig.INHIBIT_REGEN_WHEN_CRAWLING.get();
+    public SwimAction() {
+        this.cost = AoSCommonConfig.FLYING_COST.get();
+        this.minCost = AoSCommonConfig.FLYING_MINIMUM_COST.get();
+        this.cooldown = AoSCommonConfig.FLYING_COOLDOWN.get();
+        this.staminaPerTick = Calculations.calculateStaminaPerTick(AoSCommonConfig.FLYING_FEATHERS_PER_SECOND.get());
+        this.regenInhibitor = AoSCommonConfig.INHIBIT_REGEN_WHEN_FLYING.get();
+        this.feathersPerSecond = AoSCommonConfig.FLYING_FEATHERS_PER_SECOND.get();
     }
 
     @Override
@@ -57,18 +51,16 @@ public class CrawlAction implements Action {
     @Override
     public boolean canPerform(Player player) {
         if (PlayerActions.cannotBeExhausted(player)) return true;
-
         if (performing) {
             return StaminaAPI.canUseStamina(player, staminaPerTick);
         } else {
             return FeathersAPI.canSpendFeathers(player, minCost);
         }
-
     }
 
     @Override
     public boolean wasPerforming() {
-        return wasCrawling;
+        return wasSwimming;
     }
 
     @Override
@@ -106,6 +98,7 @@ public class CrawlAction implements Action {
         this.performing = performing;
     }
 
+
     @Override
     public boolean perform(Player p) {
         return false;
@@ -125,31 +118,23 @@ public class CrawlAction implements Action {
     public void tick(Player player, PlayerActions capability, TickEvent.Phase phase) {
 
         if (phase == TickEvent.Phase.END) {
-            boolean perform = capability.isMoving() && actionState && StaminaAPI.useStamina(player, staminaPerTick);
-            if (wasPerforming() && !perform) {
+
+            var shouldSwim = actionState && StaminaAPI.useStamina(player, staminaPerTick);
+
+            if (wasPerforming() && !shouldSwim) {
                 finishPerforming(player);
-            } else if (!wasPerforming() && perform) {
+            } else if (!wasPerforming() && shouldSwim) {
                 beginPerforming(player);
             }
-
-            var attr = player.getAttribute(Attributes.MOVEMENT_SPEED);
-            if (attr != null) {
-                if (performing && !canPerform(player)) {
-                    if (!attr.hasModifier(crawlSpeedModifier))
-                        attr.addPermanentModifier(crawlSpeedModifier);
-                } else if (!performing && canPerform(player)) {
-                    if (attr.hasModifier(crawlSpeedModifier))
-                        attr.removeModifier(crawlSpeedModifier);
-                }
-            }
-            debugInfo = String.format("%s: Performing: %s, ActionState: %s, ShouldCrawl: %s", actionName, performing, actionState,perform);
-            wasCrawling = performing;
+            if(!performing) player.setSwimming(false);
+            debugInfo = String.format("%s: Performing: %s, ActionState: %s, ShouldSwim: %s", actionName, performing, actionState, shouldSwim);
+            wasSwimming = performing;
         }
     }
 
     @Override
     public void beginPerforming(Player player) {
-        ActionsOfStamina.sideLog(player, "SprintAction::beginPerforming");
+        ActionsOfStamina.sideLog(player, "SwimAction::beginPerforming");
         if (regenInhibitor) FeathersAPI.disableCooldown(player);
         performing = true;
         if (player.level().isClientSide) {
@@ -161,9 +146,10 @@ public class CrawlAction implements Action {
 
     @Override
     public void finishPerforming(Player player) {
-        ActionsOfStamina.sideLog(player, "SprintAction::finishPerforming");
+        ActionsOfStamina.sideLog(player, "SwimAction::finishPerforming");
         if (regenInhibitor) FeathersAPI.enableCooldown(player);
         performing = false;
+
         if (player.level().isClientSide) {
             PacketHandler.sendToServer(new ActionStatePacket(actionName, actionState));
         } else {
@@ -197,6 +183,6 @@ public class CrawlAction implements Action {
 
     @Override
     public void setActionState(boolean state) {
-        actionState = state;
+        this.actionState = state;
     }
 }

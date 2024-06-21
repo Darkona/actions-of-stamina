@@ -22,7 +22,6 @@ import java.util.UUID;
 public class SprintAction implements Action {
 
     public static final String actionName = "sprint_action";
-    public static final ResourceLocation name = new ResourceLocation(ActionsOfStamina.MOD_ID, actionName);
     private static final UUID SPEED_MODIFIER_SPRINTING_UUID = UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D");
 
     private final int cost;
@@ -156,7 +155,7 @@ public class SprintAction implements Action {
                 Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(SPEED_MODIFIER_SPRINTING_UUID);
             }
 
-            debugInfo = String.format("%s: Performing: %s, ActionState: %s, PlayerSprinting: %s, ShouldSprint: %s", actionName, performing, actionState, player.isSprinting(), shouldSprint);
+            debugInfo = String.format("%s: Performing: %s, ActionState: %s, ShouldSprint: %s", actionName, performing, actionState, shouldSprint);
             /*if (second) {
                 ActionsOfStamina.sideLog(player, "SprintAction::Tick -> Performing: {}, playerSprinting: {}", performing, player.isSprinting());
             }*/

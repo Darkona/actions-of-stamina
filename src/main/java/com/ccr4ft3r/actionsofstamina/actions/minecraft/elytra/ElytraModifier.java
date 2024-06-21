@@ -1,7 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint.SprintAction;
 import com.ccr4ft3r.actionsofstamina.capability.AosCapabilityProvider;
 import com.darkona.feathers.api.IFeathers;
 import com.darkona.feathers.api.IModifier;
@@ -34,7 +33,6 @@ public class ElytraModifier implements IModifier {
 
     }
 
-
     @Override
     public void applyToUsage(Player player, IFeathers f, AtomicInteger atomicInteger, AtomicBoolean atomicBoolean) {
 
@@ -52,6 +50,6 @@ public class ElytraModifier implements IModifier {
 
     @Override
     public String getName() {
-        return "action_sprinting";
+        return ElytraAction.actionName;
     }
 }

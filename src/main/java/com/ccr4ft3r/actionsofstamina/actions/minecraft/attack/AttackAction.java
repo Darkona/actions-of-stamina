@@ -7,7 +7,6 @@ import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.darkona.feathers.api.FeathersAPI;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -25,7 +24,6 @@ import java.util.Iterator;
 public class AttackAction implements Action {
 
     public static final String actionName = "attack_action";
-    public static final ResourceLocation name = new ResourceLocation(ActionsOfStamina.MOD_ID, actionName);
     public int cooldown;
     private int timesPerformed;
     private int lastPerformed;
@@ -52,6 +50,7 @@ public class AttackAction implements Action {
     public String getName() {
         return actionName;
     }
+
     @Override
     public String getDebugString() {
         return String.format("%s: Performed %d times", actionName, timesPerformed);
@@ -117,7 +116,7 @@ public class AttackAction implements Action {
         Iterator<AttributeModifier> attackDamages = modifiers.get(Attributes.ATTACK_DAMAGE).iterator();
 
         if (!attackDamages.hasNext() && !AoSCommonConfig.ALSO_FOR_NON_WEAPONS.get()) return false;
-        if(!canPerform(player)) return false;
+        if (!canPerform(player)) return false;
         if (++timesPerformed >= timesPerformedToExhaust) {
             timesPerformed = 0;
             boolean allow = canPerform(player);

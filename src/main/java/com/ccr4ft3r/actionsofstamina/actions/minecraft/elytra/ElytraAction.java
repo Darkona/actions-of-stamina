@@ -10,27 +10,19 @@ import com.darkona.feathers.api.FeathersAPI;
 import com.darkona.feathers.api.StaminaAPI;
 import com.darkona.feathers.util.Calculations;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
-
-import java.util.Objects;
-import java.util.UUID;
 
 public class ElytraAction implements Action {
 
     public static final String actionName = "elytra_action";
-    public static final ResourceLocation name = new ResourceLocation(ActionsOfStamina.MOD_ID, actionName);
-    private static final UUID SPEED_MODIFIER_SPRINTING_UUID = UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D");
 
     private final int cost;
     private final int minCost;
     private final int cooldown;
     private final int staminaPerTick;
     private final boolean regenInhibitor;
-
-    private double feathersPerSecond;
+    private final double feathersPerSecond;
     private boolean wasFlying = false;
     private boolean performing = false;
     private boolean actionState = false;
@@ -127,20 +119,15 @@ public class ElytraAction implements Action {
 
         if (phase == TickEvent.Phase.END) {
 
-            var shouldSprint = actionState && StaminaAPI.useStamina(player, staminaPerTick);
+            var shouldFly = actionState && StaminaAPI.useStamina(player, staminaPerTick);
 
-            if (wasPerforming() && !shouldSprint) {
+            if (wasPerforming() && !shouldFly) {
                 finishPerforming(player);
-            } else if (!wasPerforming() && shouldSprint) {
+            } else if (!wasPerforming() && shouldFly) {
                 beginPerforming(player);
             }
 
-            if (!performing) {
-
-                Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(SPEED_MODIFIER_SPRINTING_UUID);
-            }
-
-            debugInfo = String.format("%s: Performing: %s, ActionState: %s, PlayerFlying: %s, ShouldFly: %s", actionName, performing, actionState, player.isSprinting(), shouldSprint);
+            debugInfo = String.format("%s: Performing: %s, ActionState: %s, ShouldFly: %s", actionName, performing, actionState, shouldFly);
             wasFlying = performing;
         }
     }

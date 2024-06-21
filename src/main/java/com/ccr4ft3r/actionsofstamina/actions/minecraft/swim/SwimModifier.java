@@ -1,6 +1,7 @@
-package com.ccr4ft3r.actionsofstamina.actions.minecraft.crawl;
+package com.ccr4ft3r.actionsofstamina.actions.minecraft.swim;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.shield.ShieldAction;
 import com.ccr4ft3r.actionsofstamina.capability.AosCapabilityProvider;
 import com.darkona.feathers.api.IFeathers;
 import com.darkona.feathers.api.IModifier;
@@ -9,12 +10,12 @@ import net.minecraft.world.entity.player.Player;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CrawlingModifier implements IModifier {
+public class SwimModifier  implements IModifier {
 
 
     @Override
     public void onAdd(IFeathers playerFeathers) {
-        ActionsOfStamina.log("CrawlingModifier onAdd");
+        ActionsOfStamina.log("ElytraModifier onAdd");
     }
 
     @Override
@@ -26,7 +27,7 @@ public class CrawlingModifier implements IModifier {
     public void applyToDelta(Player player, IFeathers f, AtomicInteger staminaDelta) {
 
         player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS)
-              .ifPresent(c -> c.getAction(CrawlAction.actionName)
+              .ifPresent(c -> c.getAction(ShieldAction.actionName)
                                .ifPresent(a -> {
                                    if (a.isPerforming() && a.isRegenInhibitor()) staminaDelta.set(0);
                                }));
@@ -51,6 +52,6 @@ public class CrawlingModifier implements IModifier {
 
     @Override
     public String getName() {
-        return CrawlAction.actionName;
+        return SwimAction.actionName;
     }
 }

@@ -7,12 +7,9 @@
   "mixins": [
     "ElytraItemMixin",
     "HandCrankBlockMixin",
-    "LivingEntityMixin",
-    "MultiPlayerGameModeMixin",
     "PlayerMixin"
   ],
   "client": [
-    "KeyboardInputMixin",
-    "LocalPlayerMixin"
+
   ]
 }
