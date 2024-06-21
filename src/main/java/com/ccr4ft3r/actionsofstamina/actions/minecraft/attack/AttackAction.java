@@ -5,9 +5,9 @@ import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.darkona.feathers.api.FeathersAPI;
-import com.darkona.feathers.api.StaminaAPI;
 import com.google.common.collect.Multimap;
-import com.mojang.logging.LogUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.TickEvent;
 
 import java.util.Iterator;
 
@@ -32,6 +33,7 @@ public class AttackAction implements Action {
     private int minCost;
     private int timesPerformedToExhaust;
 
+
     public AttackAction() {
         this.timesPerformed = 0;
         this.lastPerformed = 0;
@@ -42,8 +44,17 @@ public class AttackAction implements Action {
     }
 
     @Override
+    public boolean wasPerforming() {
+        return false;
+    }
+
+    @Override
     public String getName() {
         return actionName;
+    }
+    @Override
+    public String getDebugString() {
+        return String.format("%s: Performed %d times", actionName, timesPerformed);
     }
 
     @Override
@@ -98,29 +109,27 @@ public class AttackAction implements Action {
 
     @Override
     public boolean perform(Player player) {
+        ActionsOfStamina.log("Performing attack action for player '{}', side: {}",
+                player.getScoreboardName(), ActionsOfStamina.getSide(player));
 
         ItemStack itemstack = player.getItemInHand(InteractionHand.MAIN_HAND);
         Multimap<Attribute, AttributeModifier> modifiers = itemstack.getItem().getAttributeModifiers(EquipmentSlot.MAINHAND, itemstack);
         Iterator<AttributeModifier> attackDamages = modifiers.get(Attributes.ATTACK_DAMAGE).iterator();
 
-        if (!attackDamages.hasNext() && !AoSCommonConfig.ALSO_FOR_NON_WEAPONS.get()) {
-            return false;
-        }
-
-        timesPerformed++;
-        boolean allow = FeathersAPI.canSpendFeathers(player, cost);
-        if (timesPerformed >= timesPerformedToExhaust) {
+        if (!attackDamages.hasNext() && !AoSCommonConfig.ALSO_FOR_NON_WEAPONS.get()) return false;
+        if(!canPerform(player)) return false;
+        if (++timesPerformed >= timesPerformedToExhaust) {
             timesPerformed = 0;
-            if (AoSCommonConfig.ENABLE_DEBUGGING.get())
-                ActionsOfStamina.logger.info("Spending {} feathers for attacking {} times for player '{}'",
-                        cost, timesPerformedToExhaust, player.getScoreboardName());
-            allow = FeathersAPI.spendFeathers(player, cost, cooldown);
+            boolean allow = canPerform(player);
+            if (player.level().isClientSide) {
+                assert Minecraft.getInstance().player != null;
+                FeathersAPI.spendFeathersRequest(Minecraft.getInstance().player, cost, cooldown);
+            }
+            if (allow) lastPerformed = player.tickCount;
+            ActionsOfStamina.log("Attack action allowed = {}, cost= {}", allow, cost);
+            return allow;
         }
-        if (allow) {
-            lastPerformed = player.tickCount;
-        }
-
-        return allow;
+        return true;
     }
 
     @Override
@@ -134,8 +143,10 @@ public class AttackAction implements Action {
     }
 
     @Override
-    public void tick(Player player, PlayerActions capability) {
-
+    public void tick(Player player, PlayerActions capability, TickEvent.Phase phase) {
+        if (phase.equals(TickEvent.Phase.END)) {
+            setPerforming(false);
+        }
     }
 
     @Override
@@ -169,7 +180,7 @@ public class AttackAction implements Action {
     }
 
     @Override
-    public void setActionState(boolean isSprinting) {
+    public void setActionState(boolean state) {
 
     }
 }

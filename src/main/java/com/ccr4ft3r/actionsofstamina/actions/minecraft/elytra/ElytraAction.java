@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint;
+package com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
@@ -18,10 +18,9 @@ import net.minecraftforge.event.TickEvent;
 import java.util.Objects;
 import java.util.UUID;
 
+public class ElytraAction implements Action {
 
-public class SprintAction implements Action {
-
-    public static final String actionName = "sprint_action";
+    public static final String actionName = "elytra_action";
     public static final ResourceLocation name = new ResourceLocation(ActionsOfStamina.MOD_ID, actionName);
     private static final UUID SPEED_MODIFIER_SPRINTING_UUID = UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D");
 
@@ -31,21 +30,19 @@ public class SprintAction implements Action {
     private final int staminaPerTick;
     private final boolean regenInhibitor;
 
-    private boolean wasSprinting = false;
+    private double feathersPerSecond;
+    private boolean wasFlying = false;
     private boolean performing = false;
     private boolean actionState = false;
     private String debugInfo;
 
-    public SprintAction() {
-        this.cost = AoSCommonConfig.SPRINTING_COST.get();
-        this.minCost = AoSCommonConfig.SPRINTING_MINIMUM_COST.get();
-        this.cooldown = AoSCommonConfig.SPRINTING_COOLDOWN.get();
-        this.staminaPerTick = Calculations.calculateStaminaPerTick(AoSCommonConfig.SPRINTING_FEATHERS_PER_SECOND.get());
-        this.regenInhibitor = AoSCommonConfig.INHIBIT_REGEN_WHEN_SPRINTING.get();
-    }
-
-    public boolean wasPerforming() {
-        return wasSprinting;
+    public ElytraAction() {
+        this.cost = AoSCommonConfig.FLYING_COST.get();
+        this.minCost = AoSCommonConfig.FLYING_MINIMUM_COST.get();
+        this.cooldown = AoSCommonConfig.FLYING_COOLDOWN.get();
+        this.staminaPerTick = Calculations.calculateStaminaPerTick(AoSCommonConfig.FLYING_FEATHERS_PER_SECOND.get());
+        this.regenInhibitor = AoSCommonConfig.INHIBIT_REGEN_WHEN_FLYING.get();
+        this.feathersPerSecond = AoSCommonConfig.FLYING_FEATHERS_PER_SECOND.get();
     }
 
     @Override
@@ -69,8 +66,13 @@ public class SprintAction implements Action {
     }
 
     @Override
+    public boolean wasPerforming() {
+        return wasFlying;
+    }
+
+    @Override
     public double getFeathersPerSecond() {
-        return 0;
+        return feathersPerSecond;
     }
 
     @Override
@@ -89,22 +91,6 @@ public class SprintAction implements Action {
     }
 
     @Override
-    public int getCooldown() {
-        return cooldown;
-    }
-
-    @Override
-    public int getStaminaCostPerTick() {
-        return staminaPerTick;
-    }
-
-    @Override
-    public void setActionState(boolean state) {
-        this.actionState = state;
-
-    }
-
-    @Override
     public int getTimesPerformedToExhaust() {
         return 0;
     }
@@ -119,8 +105,9 @@ public class SprintAction implements Action {
         this.performing = performing;
     }
 
+
     @Override
-    public boolean perform(Player player) {
+    public boolean perform(Player p) {
         return false;
     }
 
@@ -135,15 +122,12 @@ public class SprintAction implements Action {
     }
 
     @Override
-    public void tick(Player player, PlayerActions a, TickEvent.Phase phase) {
-        boolean second = player.tickCount % 10 == 0;
+    public void tick(Player player, PlayerActions capability, TickEvent.Phase phase) {
+
 
         if (phase == TickEvent.Phase.END) {
 
-            // if (second) ActionsOfStamina.sideLog(player, "SprintAction tick 1: wasSprinting: {}, ActionState: {}, ", wasSprinting, performing);
-            boolean shouldSprint = actionState && StaminaAPI.useStamina(player, staminaPerTick);
-
-            //if (second) ActionsOfStamina.sideLog(player, "SprintAction tick 2: shouldSprint: {}", shouldSprint);
+            var shouldSprint = actionState && StaminaAPI.useStamina(player, staminaPerTick);
 
             if (wasPerforming() && !shouldSprint) {
                 finishPerforming(player);
@@ -152,23 +136,18 @@ public class SprintAction implements Action {
             }
 
             if (!performing) {
-                player.setSprinting(false);
+
                 Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(SPEED_MODIFIER_SPRINTING_UUID);
             }
 
-            debugInfo = String.format("%s: Performing: %s, ActionState: %s, PlayerSprinting: %s, ShouldSprint: %s", actionName, performing, actionState, player.isSprinting(), shouldSprint);
-            /*if (second) {
-                ActionsOfStamina.sideLog(player, "SprintAction::Tick -> Performing: {}, playerSprinting: {}", performing, player.isSprinting());
-            }*/
-            wasSprinting = performing;
-
+            debugInfo = String.format("%s: Performing: %s, ActionState: %s, PlayerFlying: %s, ShouldFly: %s", actionName, performing, actionState, player.isSprinting(), shouldSprint);
+            wasFlying = performing;
         }
-
     }
 
     @Override
     public void beginPerforming(Player player) {
-        ActionsOfStamina.sideLog(player, "CrawlAction::beginPerforming");
+        ActionsOfStamina.sideLog(player, "ElytraAction::beginPerforming");
         if (regenInhibitor) FeathersAPI.disableCooldown(player);
         performing = true;
         if (player.level().isClientSide) {
@@ -176,12 +155,11 @@ public class SprintAction implements Action {
         } else {
             FeathersAPI.spendFeathers(player, 0, 0);
         }
-
     }
 
     @Override
     public void finishPerforming(Player player) {
-        ActionsOfStamina.sideLog(player, "CrawlAction::finishPerforming");
+        ActionsOfStamina.sideLog(player, "ElytraAction::finishPerforming");
         if (regenInhibitor) FeathersAPI.enableCooldown(player);
         performing = false;
 
@@ -190,7 +168,6 @@ public class SprintAction implements Action {
         } else {
             FeathersAPI.spendFeathers(player, 0, cooldown);
         }
-
     }
 
     @Override
@@ -205,5 +182,20 @@ public class SprintAction implements Action {
     public void loadNBTData(CompoundTag nbt) {
         performing = nbt.getBoolean("performing");
         actionState = nbt.getBoolean("actionState");
+    }
+
+    @Override
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    @Override
+    public int getStaminaCostPerTick() {
+        return staminaPerTick;
+    }
+
+    @Override
+    public void setActionState(boolean state) {
+        this.actionState = state;
     }
 }

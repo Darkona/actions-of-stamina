@@ -4,12 +4,17 @@ package com.ccr4ft3r.actionsofstamina.actions;
 import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.TickEvent;
 
 public interface Action {
 
     String getName();
 
-    boolean canPerform(Player player);
+    String getDebugString();
+
+    boolean canPerform(Player p);
+
+    boolean wasPerforming();
 
     double getFeathersPerSecond();
 
@@ -25,17 +30,17 @@ public interface Action {
 
     void setPerforming(boolean performing);
 
-    void beginPerforming(Player player);
+    void beginPerforming(Player p);
 
-    void finishPerforming(Player player);
+    void finishPerforming(Player p);
 
-    boolean perform(Player player);
+    boolean perform(Player p);
 
     int timesPerformed();
 
     int getLastPerformed();
 
-    void tick(Player player, PlayerActions capability);
+    void tick(Player p, PlayerActions capability, TickEvent.Phase phase);
 
     CompoundTag saveNBTData();
 

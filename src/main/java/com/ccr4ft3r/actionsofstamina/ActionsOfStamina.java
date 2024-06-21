@@ -7,6 +7,8 @@ import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
 import com.darkona.feathers.FeathersManager;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -45,6 +47,22 @@ public class ActionsOfStamina {
             PARCOOL = true;
         }
 
+    }
+
+    public static void log(String message, Object... args) {
+        if (AoSCommonConfig.ENABLE_DEBUGGING.get())
+            logger.info(message, args);
+    }
+
+    public static void sideLog(Player p, String message, Object... args) {
+        if (getSide(p).equals("Client"))
+            log("\u001B[0;94mCLIENT -> " + message + "\u001B[0m", args);
+        else
+            log("\u001B[0;91mSERVER -> " + message + "\u001B[0m", args);
+    }
+
+    public static String getSide(Entity player) {
+        return player.level().isClientSide ? "Client" : "Server";
     }
 
     private static void addCompatibilitiesListeners() {

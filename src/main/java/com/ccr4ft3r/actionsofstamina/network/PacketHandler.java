@@ -1,9 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackHandler;
 import com.ccr4ft3r.actionsofstamina.capability.AosCapabilityProvider;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -20,28 +18,31 @@ public class PacketHandler {
             .newSimpleChannel(new ResourceLocation(ActionsOfStamina.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     public static void registerMessages() {
-        SIMPLE_CHANNEL.registerMessage(0, ServerboundPacket.class, ServerboundPacket::encodeOnClientSide, ServerboundPacket::new, PacketHandler::handle);
+        SIMPLE_CHANNEL.registerMessage(0,
+                ActionStatePacket.class,
+                ActionStatePacket::encode,
+                ActionStatePacket::new,
+                PacketHandler::handle);
     }
 
-    public static void sendToServer(ServerboundPacket packet) {
+    public static void sendToServer(ActionStatePacket packet) {
+        ActionsOfStamina.log("Sending ServerBoundActionStatePacket to server with Action: {} state: {}", packet.getAction(), packet.getState());
         SIMPLE_CHANNEL.sendToServer(packet);
     }
 
-    private static void handle(ServerboundPacket packet, Supplier<NetworkEvent.Context> ctx) {
+    private static void handle(ActionStatePacket packet, Supplier<NetworkEvent.Context> ctx) {
         final NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
             final ServerPlayer player = context.getSender();
-            if (player == null) {
-                return;
-            }
-            switch (packet.getAction()) {
-                case PLAYER_MOVING -> player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(true));
-                case PLAYER_STOP_MOVING -> player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> a.setClientMoving(false));
-                case WEAPON_SWING -> {
-                    if (!AoSCommonConfig.ONLY_FOR_HITS.get()) AttackHandler.spendToAttack(player);
+            if (player == null) return;
+            player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(c -> {
+                ActionsOfStamina.log("Received ServerBoundActionStatePacket, action:{}, state: {}", packet.getAction(), packet.getState());
+                if (packet.getAction().equals("Moving")) {
+                    c.setMoving(packet.getState());
+                } else {
+                    c.getAction(packet.getAction()).ifPresent(action -> action.setActionState(packet.getState()));
                 }
-                case PLAYER_JUMPING -> player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> a.setClientJumping(true));
-            }
+            });
             context.setPacketHandled(true);
         });
     }
