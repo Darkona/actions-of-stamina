@@ -131,7 +131,7 @@ public class AoSCommonConfig {
 
         SPRINTING_COST = BUILDER
                 .comment("How many feathers it cost to start sprinting")
-                .defineInRange("sprint_cost", 1, 0, 20);
+                .defineInRange("sprint_cost", 0, 0, 20);
 
         SPRINTING_MINIMUM_COST = BUILDER
                 .comment("Minimum feathers available needed to start sprinting")
@@ -155,7 +155,7 @@ public class AoSCommonConfig {
 
         SWIMMING_COST = BUILDER
                 .comment("How many feathers it cost to start swimming")
-                .defineInRange("swim_cost", 1, 0, 20);
+                .defineInRange("swim_cost", 0, 0, 20);
 
         SWIMMING_MINIMUM_COST = BUILDER
                 .comment("Minimum feathers available needed to start swimming")
@@ -179,7 +179,7 @@ public class AoSCommonConfig {
 
         FLYING_COST = BUILDER
                 .comment("How many feathers it cost to start flying")
-                .defineInRange("fly_cost", 1, 0, 20);
+                .defineInRange("fly_cost", 0, 0, 20);
 
         FLYING_MINIMUM_COST = BUILDER
                 .comment("Minimum feathers available needed to start flying")
@@ -203,7 +203,7 @@ public class AoSCommonConfig {
 
         CRAWLING_COST = BUILDER
                 .comment("How many feathers it cost to start crawling")
-                .defineInRange("crawl_cost", 1, 0, 20);
+                .defineInRange("crawl_cost", 0, 0, 20);
 
         CRAWLING_MINIMUM_COST = BUILDER
                 .comment("Minimum feathers available needed to start crawling")
@@ -247,7 +247,7 @@ public class AoSCommonConfig {
 
         HOLD_SHIELD_MINIMUM_COST = BUILDER
                 .comment("Minimum feathers available needed to hold shield")
-                .defineInRange("shield_min_cost", 1, 0, 20);
+                .defineInRange("shield_min_cost", 0, 0, 20);
 
         HOLD_SHIELD_FEATHERS_PER_SECOND = BUILDER
                 .comment("How many feathers are consumed per second when holding shield")

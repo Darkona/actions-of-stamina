@@ -26,18 +26,17 @@ public class AttackHandler {
 
     }
 
-
     /**
      * Swing weapon when player hits an entity
      *
-     * @param event
+     * @param event the event
      */
     @SubscribeEvent
     public static void onPlayerAttemptAttack(InputEvent.InteractionKeyMappingTriggered event) {
 
         if (event.isAttack()) {
             var player = Minecraft.getInstance().player;
-            if (PlayerActions.cannotBeExhausted(player)) return;
+            if (PlayerActions.isNotExhaustable(player)) return;
             ActionsOfStamina.log("InteractionKeyMappingTriggered fired at {}, side: {}", event.isAttack(), ActionsOfStamina.getSide(player));
             HitResult hitResult = Minecraft.getInstance().hitResult;
             boolean isEntityHit = hitResult != null && hitResult.getType() == HitResult.Type.ENTITY;
@@ -49,23 +48,17 @@ public class AttackHandler {
                     event.setCanceled(true);
                     event.setSwingHand(false);
                     ActionsOfStamina.log("Attack and swing cancelled, Side: {}", ActionsOfStamina.getSide(player));
-
                 }
             } else {
                 ActionsOfStamina.log("Attack and swing allowed, Side: {}", ActionsOfStamina.getSide(player));
-
             }
         }
     }
 
     public static boolean allowAttack(Player player) {
         return player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).map(a ->
-                a.getAction(AttackAction.actionName).map(w -> {
-                    boolean can = w.canPerform(player);
-                    ActionsOfStamina.log("onPlayerAttemptAttack: can attack?", can);
-                    return can && w.perform(player);
-                }).orElse(false)
-        ).orElse(false);
+                a.getAction(AttackAction.actionName).map(w -> w.perform(player)).orElse(true)
+        ).orElse(true);
     }
 
 }

@@ -4,116 +4,33 @@ import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.TickEvent;
 
-public class ParaglideAction implements Action {
+
+public class ParaglideAction extends Action {
+
+    public static final String actionName = "paragliding_action";
+
+    public ParaglideAction() {
+        super(ParagliderConfig.PARAGLIDING_COST.get(),
+                ParagliderConfig.PARAGLIDING_MINIMUM_COST.get(),
+                ParagliderConfig.PARAGLIDING_COOLDOWN.get(),
+                ParagliderConfig.PARAGLIDING_FEATHERS_PER_SECOND.get(),
+                ParagliderConfig.INHIBIT_REGEN_WHEN_PARAGLIDING.get(),
+                0);
+    }
+
+    public ParaglideAction(CompoundTag tag) {
+        super(tag);
+    }
     @Override
-    public String getName() {
-        return "";
+    public String name() {
+        return actionName;
     }
 
     @Override
-    public String getDebugString() {
-        return "";
-    }
+    protected void performingEffects(Player p, PlayerActions a) {}
 
     @Override
-    public boolean canPerform(Player p) {
-        return false;
-    }
+    public void notPerformingEffects(Player player, PlayerActions a) {}
 
-    @Override
-    public boolean wasPerforming() {
-        return false;
-    }
-
-    @Override
-    public double getFeathersPerSecond() {
-        return 0;
-    }
-
-    @Override
-    public boolean isRegenInhibitor() {
-        return false;
-    }
-
-    @Override
-    public int getCost() {
-        return 0;
-    }
-
-    @Override
-    public int getMinCost() {
-        return 0;
-    }
-
-    @Override
-    public int getTimesPerformedToExhaust() {
-        return 0;
-    }
-
-    @Override
-    public boolean isPerforming() {
-        return false;
-    }
-
-    @Override
-    public void setPerforming(boolean performing) {
-
-    }
-
-    @Override
-    public void beginPerforming(Player p) {
-
-    }
-
-    @Override
-    public void finishPerforming(Player p) {
-
-    }
-
-    @Override
-    public boolean perform(Player p) {
-        return false;
-    }
-
-    @Override
-    public int timesPerformed() {
-        return 0;
-    }
-
-    @Override
-    public int getLastPerformed() {
-        return 0;
-    }
-
-    @Override
-    public void tick(Player p, PlayerActions capability, TickEvent.Phase phase) {
-
-    }
-
-    @Override
-    public CompoundTag saveNBTData() {
-        return null;
-    }
-
-    @Override
-    public void loadNBTData(CompoundTag nbt) {
-
-    }
-
-    @Override
-    public int getCooldown() {
-        return 0;
-    }
-
-    @Override
-    public int getStaminaCostPerTick() {
-        return 0;
-    }
-
-    @Override
-    public void setActionState(boolean state) {
-
-    }
 }

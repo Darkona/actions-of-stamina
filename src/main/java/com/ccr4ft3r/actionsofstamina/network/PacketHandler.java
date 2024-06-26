@@ -21,29 +21,17 @@ public class PacketHandler {
         SIMPLE_CHANNEL.registerMessage(0,
                 ActionStatePacket.class,
                 ActionStatePacket::encode,
-                ActionStatePacket::new,
-                PacketHandler::handle);
+                ActionStatePacket::decode,
+                ActionStatePacket::handle);
     }
 
     public static void sendToServer(ActionStatePacket packet) {
-        ActionsOfStamina.log("Sending ServerBoundActionStatePacket to server with Action: {} state: {}", packet.getAction(), packet.getState());
+        ActionsOfStamina.log("Sending ServerBoundActionStatePacket to server: {}.", Integer.toBinaryString(packet.getActionFlags()) );
         SIMPLE_CHANNEL.sendToServer(packet);
     }
 
-    private static void handle(ActionStatePacket packet, Supplier<NetworkEvent.Context> ctx) {
-        final NetworkEvent.Context context = ctx.get();
-        context.enqueueWork(() -> {
-            final ServerPlayer player = context.getSender();
-            if (player == null) return;
-            player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(c -> {
-                ActionsOfStamina.log("Received ServerBoundActionStatePacket, action:{}, state: {}", packet.getAction(), packet.getState());
-                if (packet.getAction().equals("Moving")) {
-                    c.setMoving(packet.getState());
-                } else {
-                    c.getAction(packet.getAction()).ifPresent(action -> action.setActionState(packet.getState()));
-                }
-            });
-            context.setPacketHandled(true);
-        });
-    }
+    /*public static void sendToPlayer(ServerPlayer player, ActionStatePacket packet) {
+        ActionsOfStamina.log("Sending ServerBoundActionStatePacket to player with Action: {} state: {}", packet.getAction(), packet.getState());
+        SIMPLE_CHANNEL.sendTo(packet, player.connection.getConnection(), NetworkEvent.Context.get());
+    }*/
 }

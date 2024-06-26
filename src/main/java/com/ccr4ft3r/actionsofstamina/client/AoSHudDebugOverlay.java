@@ -25,8 +25,9 @@ public class AoSHudDebugOverlay {
         byte l = 1;
         if (AoSCommonConfig.ENABLE_DEBUGGING.get()) {
             guiGraphics.drawString(Minecraft.getInstance().font, debugInfo, getXOffset(guiGraphics, screenWidth, debugInfo), l += 10, 0xFFFFFF);
+            guiGraphics.drawString(Minecraft.getInstance().font, "Moving: " + playerActions.isMoving(), getXOffset(guiGraphics, screenWidth, debugInfo), l += 10, 0xFFFFFF);
             for (var action : playerActions.getEnabledActions().values()) {
-                var actionInfo = action.getDebugString();
+                var actionInfo = action.debugString();
                 guiGraphics.drawString(Minecraft.getInstance().font, actionInfo, getXOffset(guiGraphics, screenWidth, actionInfo), l += 10, 0xFFFFFF);
             }
         }

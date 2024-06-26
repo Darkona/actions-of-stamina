@@ -2,7 +2,6 @@ package com.ccr4ft3r.actionsofstamina;
 
 import com.ccr4ft3r.actionsofstamina.actions.AosFeathersPlugin;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderHandler;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
@@ -66,10 +65,10 @@ public class ActionsOfStamina {
     }
 
     private static void addCompatibilitiesListeners() {
-
-        if (PARAGLIDER) {
-            MinecraftForge.EVENT_BUS.addListener(ParagliderHandler::onParagliding);
-        }
+//
+//        if (PARAGLIDER) {
+//            MinecraftForge.EVENT_BUS.addListener(ParagliderHandler::onParagliding);
+//        }
 
     }
 }

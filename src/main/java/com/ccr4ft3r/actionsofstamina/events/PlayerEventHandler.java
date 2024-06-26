@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ShieldItem;
@@ -18,7 +17,6 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -32,23 +30,13 @@ import java.util.function.Predicate;
 @Mod.EventBusSubscriber(modid = ActionsOfStamina.MOD_ID)
 public class PlayerEventHandler {
 
-    @SubscribeEvent(priority = EventPriority.LOW)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void playerTickEvent(TickEvent.PlayerTickEvent event) {
         var player = event.player;
 
         if (event.phase == TickEvent.Phase.END) {
-            if (PlayerActions.cannotBeExhausted(event.player)) return;
-
-            player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> {
-                a.update(player);
-
-            });
+            player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> a.tick(player));
         }
-
-        player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> {
-            a.getEnabledActions().forEach((actionName, action) -> action.tick(player, a, event.phase));
-            a.setLastPosition(player.position());
-        });
     }
 
     @SubscribeEvent
@@ -56,7 +44,7 @@ public class PlayerEventHandler {
         if (event.getItemStack().getItem() instanceof ShieldItem) {
             event.getEntity().getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(c -> {
                 c.getAction(ShieldAction.actionName).ifPresent(a -> {
-                    if(!a.canPerform(event.getEntity())){
+                    if (!PlayerActions.isNotExhaustable(event.getEntity()) && !a.canPerform(event.getEntity())) {
                         event.setCanceled(true);
                     }
                 });
@@ -77,7 +65,6 @@ public class PlayerEventHandler {
     public static void onPlayerJoin(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Player player) {
             player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> {
-
                 ActionProvider.getInstance().addEnabledActions(player, a);
             });
             if (player.level().isClientSide) {
@@ -109,7 +96,7 @@ public class PlayerEventHandler {
 
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
-        player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(c -> {
+        player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(actions -> {
             Options options = Minecraft.getInstance().options;
 
             boolean isJumpKey = event.getKey() == options.keyJump.getKey().getValue() && !notJumpable.test(player);
@@ -123,20 +110,17 @@ public class PlayerEventHandler {
             if (!isMoveKey && !isJumpKey) return;
 
             if (isMoveKey && isPressed) {
-                c.setMoving(true);
+                actions.setMoveKeyPressed(true);
             } else if (isMoveKey && isReleased) {
-                c.setMoving(false);
+                actions.setMoveKeyPressed(false);
             }
 
             if (isJumpKey && isPressed) {
-                c.setJumping(true);
+                actions.setJumping(true);
             } else if (isMoveKey && isReleased) {
-                c.setJumping(false);
+                actions.setJumping(false);
             }
-
         });
-
-
     }
 
 }

@@ -1,33 +1,44 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.capability.AosCapabilityProvider;
+import com.ccr4ft3r.actionsofstamina.util.ByteFlag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class ActionStatePacket {
 
-    private final String action;
-    private final boolean state;
+    private final byte actionFlags;
 
-    public ActionStatePacket(String action, boolean state) {
-        this.action = action;
-        this.state = state;
+    public byte getActionFlags() {
+        return actionFlags;
     }
 
-    public ActionStatePacket(FriendlyByteBuf packetBuffer) {
-        action = packetBuffer.readUtf();
-        state = packetBuffer.readBoolean();
+    public ActionStatePacket(byte actionFlags) {
+        this.actionFlags = actionFlags;
     }
 
-    public void encode(FriendlyByteBuf packetBuffer) {
-        packetBuffer.writeUtf(action);
-        packetBuffer.writeBoolean(state);
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeByte(actionFlags);
     }
 
-    public String getAction() {
-        return this.action;
+    public static ActionStatePacket decode(FriendlyByteBuf buf) {
+        return new ActionStatePacket(buf.readByte());
     }
 
-    public boolean getState() {
-        return this.state;
+    public static void handle(ActionStatePacket packet, Supplier<NetworkEvent.Context> ctx) {
+        final NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            final ServerPlayer player = context.getSender();
+            if (player == null) return;
+            player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> {
+                ActionsOfStamina.sideLog(player,"Received ActionStatePacket with flags: {}.", Integer.toBinaryString(packet.actionFlags));
+                a.processFlags(new ByteFlag(packet.actionFlags));
+            });
+            context.setPacketHandled(true);
+        });
     }
-
 }
