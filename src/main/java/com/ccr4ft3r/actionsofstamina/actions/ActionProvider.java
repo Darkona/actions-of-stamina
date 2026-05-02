@@ -1,0 +1,31 @@
+package com.ccr4ft3r.actionsofstamina.actions;
+
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.crawl.CrawlAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.jump.JumpAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.shield.ShieldAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint.SprintAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.swim.SwimAction;
+import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParaglideAction;
+import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
+import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+
+/** Builds a player's enabled actions from the current config (on every level join). */
+public final class ActionProvider {
+
+    private ActionProvider() {
+    }
+
+    public static void addEnabledActions(PlayerActions a) {
+        if (AoSCommonConfig.ATTACK.enabled()) a.addEnabledAction(new AttackAction());
+        if (AoSCommonConfig.JUMP.enabled()) a.addEnabledAction(new JumpAction());
+        if (AoSCommonConfig.SPRINT.enabled()) a.addEnabledAction(new SprintAction());
+        if (AoSCommonConfig.CRAWL.enabled()) a.addEnabledAction(new CrawlAction());
+        if (AoSCommonConfig.ELYTRA.enabled()) a.addEnabledAction(new ElytraAction());
+        if (AoSCommonConfig.SHIELD.enabled()) a.addEnabledAction(new ShieldAction());
+        if (AoSCommonConfig.SWIM.enabled()) a.addEnabledAction(new SwimAction());
+        if (ParagliderCompat.isActive()) a.addEnabledAction(new ParaglideAction());
+    }
+}

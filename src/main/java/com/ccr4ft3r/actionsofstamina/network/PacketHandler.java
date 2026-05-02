@@ -1,47 +1,20 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
-import com.ccr4ft3r.actionsofstamina.ModConstants;
-import com.ccr4ft3r.actionsofstamina.events.ExhaustionHandler;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalStaminaPacket;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
-import java.util.function.Supplier;
+public final class PacketHandler {
 
-import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
-import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
-import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
+    private static final String PROTOCOL_VERSION = "4";
 
-public class PacketHandler {
-
-    private static final String PROTOCOL_VERSION = "1.0.0";
-    private static final SimpleChannel SIMPLE_CHANNEL = NetworkRegistry
-        .newSimpleChannel(new ResourceLocation(ModConstants.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
-
-    public static void registerMessages() {
-        SIMPLE_CHANNEL.registerMessage(0, ServerboundPacket.class, ServerboundPacket::encodeOnClientSide, ServerboundPacket::new, PacketHandler::handle);
+    private PacketHandler() {
     }
 
-    public static void sendToServer(ServerboundPacket packet) {
-        SIMPLE_CHANNEL.sendToServer(packet);
-    }
-
-    private static void handle(ServerboundPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        final NetworkEvent.Context context = ctx.get();
-        context.enqueueWork(() -> {
-            final ServerPlayer player = context.getSender();
-            if (player == null) {
-                return;
-            }
-            switch (packet.getAction()) {
-                case PLAYER_MOVING -> getPlayerData(player).setMoving(true);
-                case PLAYER_STOP_MOVING -> getPlayerData(player).setMoving(false);
-                case WEAPON_SWING -> ExhaustionHandler.exhaustForWeaponSwing(getProfile().onlyForHits.get(), player);
-                case PLAYER_WALL_JUMP -> getPlayerData(player).set(WALL_JUMPING, true, player);
-            }
-            context.setPacketHandled(true);
-        });
+    public static void register(RegisterPayloadHandlersEvent event) {
+        event.registrar(PROTOCOL_VERSION)
+             .playToServer(ActionStatePacket.TYPE, ActionStatePacket.STREAM_CODEC, ActionStatePacket::handle)
+             .playToServer(ActionChargePacket.TYPE, ActionChargePacket.STREAM_CODEC, ActionChargePacket::handle)
+             .playToClient(BackendSyncPacket.TYPE, BackendSyncPacket.STREAM_CODEC, BackendSyncPacket::handle)
+             .playToClient(InternalStaminaPacket.TYPE, InternalStaminaPacket.STREAM_CODEC, InternalStaminaPacket::handle);
     }
 }

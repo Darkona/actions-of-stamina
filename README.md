@@ -1,72 +1,178 @@
-<p><img src="https://img.shields.io/badge/-ModLoader:%20Forge-lightgrey" alt="" width="111" height="20" /> <img src="https://img.shields.io/badge/-Minecraft%201.19.2-green" alt="" width="101" height="20" /> <img src="https://shields.io/badge/-More%20versions%20&amp;%20features%20are%20work%20in%20progress-informational" alt="" width="265" height="20" /> <img src="https://shields.io/badge/-Requires%20Feathers%20mod-critical" alt="" width="137" height="20" />&nbsp;</p>
-<h5><strong>At first glance limitations seem to be disadvantageous. </strong></h5>
-<h5><strong>But on closer inspection they just force us to adapt, breaking new ground and using more of our creativity in order to reach our goals.</strong></h5>
-<p><span style="font-weight: 400;">&nbsp;</span></p>
-<h4><b><strong>🌱Credits</strong></b></h4>
-<p><b>I have to thank <a href="https://www.curseforge.com/members/muraokun/projects">muraokun</a>&nbsp;for this wonderful idea - moreover&nbsp;their suggestions really shaped the concept of this mod.<br />Furthermore I really appreciate that <a href="https://www.curseforge.com/members/elenaidev/followers">ElenaiDev</a>&nbsp;allowed me to use the feather icon for the mod logo.</b></p>
-<p>&nbsp;</p>
-<h4><b><strong>💡About</strong></b></h4>
-<p><span style="font-weight: 400;">Actions of Stamina (AoS) is a vanilla friendly survival mod that uses the stamina system of the <a href="https://www.curseforge.com/minecraft/mc-mods/feathers/files">Feathers</a> mod for player actions.</span></p>
-<p><span style="font-weight: 400;">It adds logic that&nbsp;<strong>prevents a player from performing an action&nbsp;</strong>when there is no more stamina&nbsp;or not enough of it.</span></p>
-<p><span style="font-weight: 400;">Every supported action <strong>consumes feathers</strong>&nbsp;and thereforge <strong>lowers the&nbsp;available stamina</strong>.&nbsp;</span></p>
-<p><span style="font-weight: 400;">AoS enables you to define the exact amount of time and times after which feathers will be used.</span></p>
-<p><span style="font-weight: 400;">Currently there's only a few of actions that supports stamina but I will add more in the future.</span></p>
-<p>&nbsp;</p>
-<h4 class="LC20lb MBeuO DKV0Md">📜<strong> Actions that&nbsp;requires and uses stamina&nbsp;</strong>(customizable &amp; deactivatable)</h4>
-<ul>
-<li style="padding-left: 30px;">Running: If a player doesn't have enough stamina, they can only walk and need to wait a bit for the feathers regneration.</li>
-<li style="padding-left: 30px;">Jumping: AoS prevent a player from jumping when not having enough stamina - also supports auto-jump.</li>
-<li style="padding-left: 30px;">Crawling: When a player finds them in the crawling position, they can only move if they has enough stamina.</li>
-</ul>
-<p class="LC20lb MBeuO DKV0Md">AoS also supports and will support actions of other mods - look at the "Compatibilities" section</p>
-<p>&nbsp;</p>
-<h4 style="text-align: left;"><b>📖 <strong>Getting Started</strong></b></h4>
-<p style="text-align: left;"><span style="font-weight: 400;">You can enable or disable whether an action should use feathers (stamina) You can even tweak the amount of feathers an action requires beforehand and uses for and after or while being executed.</span></p>
-<p style="text-align: left;"><span style="font-weight: 400;">For configuration I recommend <a href="https://www.curseforge.com/minecraft/mc-mods/configured">Configured</a></span><span style="font-weight: 400;">. There are 3 predefined profiles (difficulty levels) that you can choose from</span><span style="font-weight: 400;">:</span></p>
-<ul style="text-align: left;">
-<li style="padding-left: 30px;">SLUGGISH: Enables a few actions that requires stamina. Moreover, these do not consume so much stamina.</li>
-<li style="padding-left: 30px;">EXHAUSTED (default profile): Adds moderate consumption of stamina when doing something.</li>
-<li style="padding-left: 30px;">BREATHLESS: All actions requires a bit of stamina and uses a lot of them. Watch out this can be challenging in some situations.</li>
-</ul>
-<p style="text-align: left;"><span style="font-weight: 400;">You can either edit these profiles&nbsp;<strong>or you can create your own one</strong> by editing the custom profile. </span></p>
-<p style="text-align: left;">&nbsp;</p>
-<h4 class="LC20lb MBeuO DKV0Md">👮<strong>Measures against cheating</strong></h4>
-<p style="text-align: left;">By default sprinting lowers the feathers bar by 1 visible feather after 5 seconds. If you only run 4 seconds to prevent using stamina and start running again, the</p>
-<p style="text-align: left;">feathers bar will be reduced by one after one further second of running. This is achieved by caching the time for which a player performs an action.</p>
-<p style="text-align: left;">Furthermore you can configure the initial costs of an action in order to make it more challenging when players start, interrupting and resume actions over and over again.</p>
-<p style="text-align: left;">&nbsp;</p>
-<h4 class="LC20lb MBeuO DKV0Md" style="text-align: left;">🔌<strong>Compatibilities</strong></h4>
-<p style="text-align: left;">AoS adds compatbility features while using other mods -&nbsp;all supported mods are optional&nbsp;dependencies so you can choose which one you want to use:</p>
-<p class="LC20lb MBeuO DKV0Md" style="text-align: left;">🥷<a href="https://www.curseforge.com/minecraft/mc-mods/goprone">GoProne</a>&nbsp;/ <a href="https://www.curseforge.com/minecraft/mc-mods/personality">Personality</a> - Feathers will also be used if the player is crawling using these mods.</p>
-<p class="LC20lb MBeuO DKV0Md" style="text-align: left;">&nbsp;</p>
-<p class="LC20lb MBeuO DKV0Md" style="text-align: left;">More to come&nbsp;- stay tuned🔔</p>
-<p style="text-align: left;">&nbsp;&nbsp;</p>
-<h4 style="text-align: left;"><b>❗<strong>Important Notes</strong></b></h4>
-<ul style="text-align: left;">
-<li>I recommend to reduce or disable the impact of armor in the feathers-common.toml (armor weight). Otherwise players will not be able to run when wearing diamond or netherite amor.</li>
-<li>Time-based actions (like sprinting) are stopping the regeneration of feathers to be able to set higher values for the time of feathers decrease than the regeneration speed of it.</li>
-<li>It's necessary to download the <a href="https://www.curseforge.com/minecraft/mc-mods/feathers/files">Feathers</a> mod when you want to use AoS, because it's a required dependency.</li>
-</ul>
-<p style="text-align: left;">&nbsp;</p>
-<h4 style="text-align: left;"><span style="font-weight: 400;">🔨</span><strong><b>ModLoader</b></strong></h4>
-<p style="text-align: left;"><span style="font-weight: 400;">AoS is currently only available for Forge - sorry. Maybe this will change in the future.</span></p>
-<p style="text-align: left;">&nbsp;</p>
-<h4 style="text-align: left;"><b>📝<strong>FAQ</strong></b></h4>
-<div class="spoiler" style="text-align: left;">
-<p><strong><b>Q: Can I use AoS in my modpack?</b></strong></p>
-<p><span style="font-weight: 400;">A: Yes -&nbsp; Feel free to include AoS into your modpack - Remember to give credit and don't claim AoS as your own creation.</span></p>
-<p>&nbsp;</p>
-<p><strong><b>Q: Which Minecraft versions are supported?</b></strong></p>
-<p><span style="font-weight: 400;">A: AoS is currently available for </span><b>1.19.2.</b></p>
-<p>&nbsp;</p>
-<p><strong>Q: Are there any known incompatibilities with other mods?</strong></p>
-<p>A: No and this shouldn't be the case. If so please report them on GitHub.</p>
-<p>&nbsp;</p>
-<p><strong><b>Q: Can you add this feature&nbsp; ...?</b></strong></p>
-<p><span style="font-weight: 400;">A: Sure - if it matches the concept of AoS. Feel free to post a comment.</span></p>
-</div>
-<p style="text-align: left;">&nbsp;</p>
-<h4 style="text-align: left;"><b>🌎 <strong>Links</strong></b></h4>
-<p style="text-align: left;"><a href="https://github.com/CCr4ft3r/actions-of-stamina/issues"><b>Report issues and request features</b></a></p>
-<p style="text-align: left;">&nbsp;</p>
-<h4 class="LC20lb MBeuO DKV0Md"><strong>🏃Do not run too fast and too long</strong></h4>
+# Actions of Stamina
+
+*Minecraft 1.21.1 · NeoForge 21.1*
+
+Actions of Stamina (AoS) makes player actions cost stamina. Sprinting, jumping, attacking, swimming, crawling,
+flying with an elytra and raising a shield all cost stamina, and so do the actions of several popular movement
+and combat mods. If you don't have enough stamina, the action doesn't happen: you can't start sprinting, a jump
+is cancelled, a swing is dropped, a roll isn't available.
+
+AoS only decides **how actions cost stamina**. The stamina bar comes from
+[Green Feathers](https://github.com/Darkona/Green-Feathers) if it is installed, or from AoS's own simple bar if it
+isn't.
+
+## Stamina backends
+
+| Backend | When | What you get |
+|---|---|---|
+| **Green Feathers** | Green Feathers 2.0+ is installed (and `backend` is `AUTO` or `FEATHERS`) | Green Feathers' feathers, regeneration, Strain, exhaustion, effects, armor weight, climate and HUD. AoS spends under its own sources (`actionsofstamina:sprint`, `actionsofstamina:parcool/dodge`, ...). |
+| **Internal** | Green Feathers isn't installed, or `backend = INTERNAL` | A small, light bar: a maximum, regeneration after a short delay, and exhaustion (once you run out, you must regain part of the bar before you can act again). It is drawn as a thin bar above the food bar. |
+
+The server picks the backend when it starts and tells each client which one it uses. Green Feathers is an
+**optional** dependency: AoS works without it.
+
+Creative and spectator players never spend stamina.
+
+## Vanilla actions
+
+| Action | How it costs | Default |
+|---|---|---|
+| Sprinting | Drain while sprinting; blocks regeneration | 0.25 feathers/s, 2 needed to start |
+| Swimming (fast swim) | Drain while swimming | 0.5 feathers/s |
+| Elytra flying | Drain while gliding | 0.05 feathers/s |
+| Crawling | Drain while moving in the crawl pose on land; you move slower when you can't pay | 0.1 feathers/s |
+| Holding up a shield | Cost to raise it, then a drain | 1 feather, then 0.2/s |
+| Jumping | Charged once every few jumps | 1 feather every 4 jumps |
+| Attacking | Charged once every few attacks | 1 feather every 3 attacks |
+
+Attacks with non-weapons (bare hands, tools without attack damage) are free unless `also_for_non_weapons = true`.
+By default only attacks that hit an entity are charged (`only_for_hits`).
+
+## Mod compatibility
+
+Every compatibility is optional and only active when that mod is installed. Each has its own section in the
+config, with an `enabled` switch.
+
+### ParCool (4.x)
+
+All 24 ParCool actions (fast run, wall run, vault, dodge, hang on, climb up, slide, dive, breakfall, charge
+jump, ...) cost stamina. Each action has its own start cost, per-second drain, finish cost and regeneration
+delay. The defaults are ParCool's own costs, scaled to a 20-feather bar.
+
+AoS charges on the server when ParCool starts, ticks and finishes an action. It stops an action from starting or
+continuing when the stamina is short. While ParCool's fast run, fast swim or crawl is active, AoS's own sprint,
+swim and crawl costs stay out, so they aren't charged twice.
+
+**Set ParCool's server config `stamina_type` to `"parcool:none"`.** Otherwise ParCool's own stamina charges the
+same actions again. AoS logs a warning at server start if it isn't set.
+
+### Paragliders (21.1.x)
+
+Paragliding drains AoS stamina, and Paragliders reads its stamina from AoS. Its stamina wheel is hidden, and its
+own stamina logic is turned off. Because of that, Paragliders never charges running or swimming. AoS's sprint and
+swim actions charge them instead. With `paragliders.enabled = false`, Paragliders keeps its own stamina wheel.
+
+### Better Combat (2.4.x)
+
+Every Better Combat weapon swing costs stamina. The server charges each swing when Better Combat's attack request
+arrives, and drops a swing it can't pay for. The client cancels a swing you can't afford as soon as its upswing
+starts. You can tune the cost with multipliers for two-handed weapons, off-hand swings and the last swing of a
+combo. Weapons that Better Combat swings use this cost instead of the vanilla attack cost.
+
+### Combat Roll (2.0.x)
+
+Each roll costs stamina. A roll isn't available on the client while you can't pay for it.
+
+### Epic Fight (21.17.x)
+
+Epic Fight skills in the dodge, guard, weapon innate and mover categories spend AoS stamina instead of Epic
+Fight stamina. Guards are charged once per blocked hit. A skill you can't pay for fails, the same as it would
+without Epic Fight stamina. Skills in other categories still use Epic Fight's own stamina.
+
+In Epic Fight's battle mode, each swing of its basic attack combo costs stamina, and the vanilla attack cost stands
+aside so a swing is only charged once. Swings you can't pay for don't happen.
+
+## Configuration
+
+`config/actionsofstamina-common.toml`. Costs are in feathers, and a feather is half a HUD icon. The defaults are
+tuned for a 20-feather bar. Delays are in ticks (20 ticks = 1 second).
+
+```toml
+[general]
+backend = "AUTO"            # AUTO | FEATHERS | INTERNAL (read when the server starts)
+debugging = false
+
+[internal]                  # only used by the internal backend
+enabled = true              # false: every action is free without Green Feathers
+max_feathers = 20
+regen_per_second = 0.5
+regen_delay = 30            # minimum pause after any spend
+exhaustion_recovery = 0.3   # share of the bar to regain after running out
+
+[vanilla.sprint]            # likewise attack, jump, swim, elytra, crawl, shield
+enabled = true
+cost = 0.0                  # one-off cost (per use, or to start)
+min_stamina = 2.0           # needed to begin
+per_second = 0.25           # drain while it lasts
+regen_delay = 40            # pause after it ends
+blocks_regen = true         # no regeneration while it lasts
+# attack and jump also have: times_to_charge; attack also: also_for_non_weapons, only_for_hits
+
+[parcool]
+enabled = true
+  [parcool.fast_run]        # one subsection per ParCool action
+  enabled = true
+  cost = 0.0
+  per_second = 0.4
+  finish_cost = 0.0
+  regen_delay = 20
+  blocks_regen = true
+
+[paragliders]
+enabled = true
+cost = 0.0
+min_stamina = 1.0
+per_second = 0.1
+regen_delay = 20
+blocks_regen = true
+
+[bettercombat]
+enabled = true
+cost = 0.4                  # per swing
+regen_delay = 40
+two_handed_multiplier = 1.5
+off_hand_multiplier = 0.75
+combo_finisher_multiplier = 1.25
+block_when_short = true
+
+[combat_roll]
+enabled = true
+cost = 1.5
+regen_delay = 30
+
+[epicfight]
+enabled = true
+  [epicfight.dodge]         # likewise guard (1.0), innate (3.0), mover (2.0), basic_attack (1.0)
+  enabled = true
+  cost = 2.0
+  regen_delay = 30
+```
+
+The actions are rebuilt from the config whenever a player joins a level, so most edits apply on the next
+respawn or dimension change. Changing `backend` needs a server restart.
+
+`config/actionsofstamina-client.toml` controls the internal stamina bar: `hud.enabled`, `hud.x_offset` and
+`hud.y_offset`.
+
+## For developers
+
+- `./gradlew build` builds the mod.
+- `./gradlew runGameTestServer` runs the GameTests: the internal backend (spend, drain, regeneration,
+  exhaustion), backend selection, and the compat hooks.
+- `-PwithoutFeathers` runs without Green Feathers.
+- `-PwithCompat` adds ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight and the libraries they need to
+  the dev runs.
+- `xvfb-run -a ./gradlew runBootCheck` starts a headless client straight into `run/saves/aosboot`.
+
+AoS compiles against the other mods only (`compileOnly`) and bundles none of their code. Every call into another
+mod goes through a bridge class that loads only when that mod is present. Mixins into other mods live in
+`actionsofstamina.compat.mixins.json`, which applies them only when their mod is loaded.
+
+## Credits
+
+Originally created by CCr4ft3r, with thanks to muraokun for the idea and ElenaiDev for the feather icon. Ported to
+1.21.1 and extended by Darkona.
+
+## License
+
+See [LICENSE](LICENSE).
