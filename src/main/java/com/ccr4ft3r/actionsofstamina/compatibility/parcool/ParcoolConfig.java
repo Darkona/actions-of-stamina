@@ -23,8 +23,8 @@ public final class ParcoolConfig {
     static {
         ModConfigSpec.Builder b = AoSCommonConfig.BUILDER;
         b.comment("ParCool (parkour) actions. AoS charges them server side and blocks starting or continuing them",
-                " when stamina runs short. Set ParCool's own server config 'stamina_type' to \"parcool:none\"",
-                " so ParCool's own stamina doesn't charge the same actions a second time.").push("parcool");
+                " when stamina runs short. ParCool's stamina is AoS's own stamina type, \"actionsofstamina:stamina\",",
+                " which replaces ParCool's default \"parcool:parcool\" while this is enabled.").push("parcool");
         ENABLED = b.comment("Whether ParCool actions cost stamina (only when ParCool is installed)").define("enabled", true);
         ENTRIES = new Entry[]{
                 continuous(b, "fast_run", 0, 0.4, 0),

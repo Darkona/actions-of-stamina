@@ -1,8 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.util;
 
 /**
- * Bit layout of the movement-state byte the client sends to the server. Plain {@code byte} + bit ops: nothing is
- * allocated to build, compare or read it.
+ * Bit layout of the movement-state flags the client sends to the server (a {@code short} on the wire). Plain
+ * {@code int} + bit ops: nothing is allocated to build, compare or read them.
  */
 public final class ActionFlags {
 
@@ -14,15 +14,17 @@ public final class ActionFlags {
     public static final int HOLDING_SHIELD = 1 << 5;
     public static final int CLIMBING = 1 << 6;
     public static final int PARAGLIDING = 1 << 7;
+    /** Wall-Jump TXF's wall cling (and the slide down the wall that follows it). */
+    public static final int WALL_CLINGING = 1 << 8;
 
     private ActionFlags() {
     }
 
-    public static boolean has(byte flags, int bit) {
+    public static boolean has(int flags, int bit) {
         return (flags & bit) != 0;
     }
 
-    public static byte with(byte flags, int bit, boolean state) {
-        return (byte) (state ? (flags | bit) : (flags & ~bit));
+    public static int with(int flags, int bit, boolean state) {
+        return state ? flags | bit : flags & ~bit;
     }
 }

@@ -53,8 +53,13 @@ AoS charges on the server when ParCool starts, ticks and finishes an action. It 
 continuing when the stamina is short. While ParCool's fast run, fast swim or crawl is active, AoS's own sprint,
 swim and crawl costs stay out, so they aren't charged twice.
 
-**Set ParCool's server config `stamina_type` to `"parcool:none"`.** Otherwise ParCool's own stamina charges the
-same actions again. AoS logs a warning at server start if it isn't set.
+AoS registers its own ParCool stamina type, `actionsofstamina:stamina`. It shows ParCool the AoS stamina (so
+ParCool knows when you are exhausted), ignores ParCool's own costs and regeneration (AoS charges the actions, so
+nothing is charged twice), and hides ParCool's stamina HUD. There is nothing to set up: it is the default
+`stamina_type` of a new ParCool server config, and while `parcool.enabled = true` it also replaces ParCool's own
+`parcool:parcool`, which existing configs hold. `parcool:none` works too. Any other type (`parcool:hunger`, Epic
+Fight's) charges the actions a second time, and AoS logs a warning at server start. With `parcool.enabled = false`,
+AoS's stamina type behaves exactly like ParCool's own.
 
 ### Paragliders (21.1.x)
 
@@ -81,6 +86,18 @@ without Epic Fight stamina. Skills in other categories still use Epic Fight's ow
 
 In Epic Fight's battle mode, each swing of its basic attack combo costs stamina, and the vanilla attack cost stands
 aside so a swing is only charged once. Swings you can't pay for don't happen.
+
+### Wall-Jump TXF (1.21.1-1.3.x)
+
+Wall jumps and double jumps cost stamina, and clinging to a wall (and sliding down it afterwards) drains it. A jump
+you can't pay for doesn't happen, you can't grab a wall without the stamina to begin, and you let go of the wall
+when you can't pay any more. Wall-Jump TXF decides these moves on the client, so the client refuses them and the
+server charges them.
+
+### Gliders (1.1.x)
+
+Gliding with a deployed glider drains stamina, since you hold on to it. You can't deploy a glider without the stamina
+to begin, and the glider folds when the stamina runs out.
 
 ## Configuration
 
@@ -146,6 +163,28 @@ enabled = true
   enabled = true
   cost = 2.0
   regen_delay = 30
+
+[walljump]
+enabled = true
+  [walljump.wall_jump]      # likewise double_jump (1.5)
+  enabled = true
+  cost = 0.5
+  regen_delay = 20
+  [walljump.wall_cling]
+  enabled = true
+  cost = 0.0
+  min_stamina = 0.5
+  per_second = 0.4
+  regen_delay = 20
+  blocks_regen = true
+
+[gliders]
+enabled = true
+cost = 0.0                  # to deploy
+min_stamina = 1.0
+per_second = 0.1
+regen_delay = 20
+blocks_regen = true
 ```
 
 The actions are rebuilt from the config whenever a player joins a level, so most edits apply on the next
@@ -158,15 +197,22 @@ respawn or dimension change. Changing `backend` needs a server restart.
 
 - `./gradlew build` builds the mod.
 - `./gradlew runGameTestServer` runs the GameTests: the internal backend (spend, drain, regeneration,
-  exhaustion), backend selection, and the compat hooks.
+  exhaustion), backend selection, and the compats against the real mods: each compat's charges, and its refusals
+  when the stamina runs out. A compat's tests pass without doing anything when its mod isn't installed.
 - `-PwithoutFeathers` runs without Green Feathers.
-- `-PwithCompat` adds ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight and the libraries they need to
-  the dev runs.
+- `-PwithCompat` adds ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders and the
+  libraries they need to the dev runs.
+- `scripts/client-boot-check.sh` boots a headless client into a copy of `run/world` and saves a screenshot to
+  `build/` (`GRADLE_ARGS="-PwithCompat"` for the compat mods).
 - `xvfb-run -a ./gradlew runBootCheck` starts a headless client straight into `run/saves/aosboot`.
 
 AoS compiles against the other mods only (`compileOnly`) and bundles none of their code. Every call into another
 mod goes through a bridge class that loads only when that mod is present. Mixins into other mods live in
-`actionsofstamina.compat.mixins.json`, which applies them only when their mod is loaded.
+`actionsofstamina.compat.mixins.json`, which applies them only when their mod is loaded. The Modrinth dependencies
+are pinned by Modrinth version id where Modrinth's maven would resolve a version number to another loader's file.
+
+AoS is ordered before ParCool: ParCool registers stamina types on its own mod bus while it is being constructed,
+so AoS adds its listener there from its own constructor.
 
 ## Credits
 

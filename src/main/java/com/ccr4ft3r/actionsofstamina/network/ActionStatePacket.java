@@ -8,13 +8,13 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-/** Client → server: the local player's full movement-state byte (see {@code ActionFlags}), sent on change. */
-public record ActionStatePacket(byte actionFlags) implements CustomPacketPayload {
+/** Client → server: the local player's full movement-state flags (see {@code ActionFlags}), sent on change. */
+public record ActionStatePacket(short actionFlags) implements CustomPacketPayload {
 
     public static final Type<ActionStatePacket> TYPE = new Type<>(ActionsOfStamina.id("action_state"));
 
     public static final StreamCodec<ByteBuf, ActionStatePacket> STREAM_CODEC =
-            ByteBufCodecs.BYTE.map(ActionStatePacket::new, ActionStatePacket::actionFlags);
+            ByteBufCodecs.SHORT.map(ActionStatePacket::new, ActionStatePacket::actionFlags);
 
     @Override
     public Type<ActionStatePacket> type() {

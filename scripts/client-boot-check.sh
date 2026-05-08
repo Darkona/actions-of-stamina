@@ -1,19 +1,54 @@
 #!/usr/bin/env bash
-# Boots the real client headless (Xvfb + Mesa software GL) straight into a copy of run/world and reports whether it
+# Boots the real client headless (Xvfb + Mesa software GL) straight into a copy of a superflat test world and reports whether it
 # joined without errors. Leaves a screenshot of the HUD in build/client-boot-check.png.
 # Adapted from Adrift's scripts/client-boot-check.sh.
 #
 # Usage: [GRADLE_ARGS="-PwithoutFeathers -PwithCompat"] [COMMANDS='feathers spend @s 7;effect give @s minecraft:speed'] [SHOT=path.png]
 #        scripts/client-boot-check.sh [TIMEOUT_SECONDS]
 #   GRADLE_ARGS  extra Gradle flags (see build.gradle); COMMANDS typed into chat after joining, ';'-separated.
-# Needs a world in run/world: any `./gradlew runServer` leaves one behind.
+# Generates its own superflat world (run/bootworld) the first time. Every run: noon, clear weather, no mob spawns.
 set -u
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 TIMEOUT="${1:-300}"
 cd "$DIR" || exit 2
 RUN=run
-[ -d "$RUN/world" ] || { echo "BOOTCHECK: no world to join (run ./gradlew runServer once)"; exit 2; }
-rm -rf "$RUN/saves/aosboot"; mkdir -p "$RUN/saves"; cp -r "$RUN/world" "$RUN/saves/aosboot"
+# Every process this run starts carries this tag in its environment, and cleanup kills only those: other checks,
+# other projects' clients and the shared Gradle daemon are never touched.
+export BOOTCHECK_TAG="$(basename "$DIR")-bootcheck-$$-$(date +%s)"
+own_processes() {
+    for d in /proc/[0-9]*; do
+        p=${d#/proc/}
+        [ "$p" = "$$" ] && continue
+        grep -qzx "BOOTCHECK_TAG=$BOOTCHECK_TAG" "$d/environ" 2>/dev/null || continue
+        tr '\0' ' ' < "$d/cmdline" 2>/dev/null | grep -q GradleDaemon && continue
+        echo "$p"
+    done
+}
+# A superflat world of its own (no structures, no caves to spawn in): generated once by a dedicated server run.
+BOOTWORLD="$RUN/bootworld"
+if [ ! -f "$BOOTWORLD/level.dat" ]; then
+    echo "Generating a superflat world for the boot check..."
+    PROPS="$RUN/server.properties"; mkdir -p "$RUN"; [ -f "$PROPS" ] && cp "$PROPS" "$PROPS.bootcheck-backup"
+    echo "eula=true" > "$RUN/eula.txt"
+    cat > "$PROPS" <<'PROPS_EOF'
+level-name=bootworld
+level-type=minecraft\:flat
+generator-settings={"layers":[{"block":"minecraft:bedrock","height":1},{"block":"minecraft:dirt","height":2},{"block":"minecraft:grass_block","height":1}],"biome":"minecraft:plains"}
+generate-structures=false
+spawn-monsters=false
+online-mode=false
+server-port=25699
+PROPS_EOF
+    GEN_LOG="build/client-boot-check-world.log"; mkdir -p build
+    ./gradlew runServer --no-configuration-cache > "$GEN_LOG" 2>&1 &
+    GEN=$!
+    for _ in $(seq 1 300); do grep -qE 'Done \(' "$GEN_LOG" && break; kill -0 $GEN 2>/dev/null || break; sleep 1; done
+    kill $(own_processes) 2>/dev/null
+    wait $GEN 2>/dev/null
+    if [ -f "$PROPS.bootcheck-backup" ]; then mv "$PROPS.bootcheck-backup" "$PROPS"; else rm -f "$PROPS"; fi
+    [ -f "$BOOTWORLD/level.dat" ] || { echo "BOOTCHECK: could not generate the superflat world (see $GEN_LOG)"; exit 2; }
+fi
+rm -rf "$RUN/saves/aosboot"; mkdir -p "$RUN/saves"; cp -r "$BOOTWORLD" "$RUN/saves/aosboot"
 rm -f "$RUN/session.lock" "$RUN/saves/aosboot/session.lock"
 # A fresh player takes the world's game type (set to survival below) instead of whatever the last run left.
 rm -rf "$RUN/saves/aosboot/playerdata"
@@ -43,7 +78,7 @@ GAME_LOG="$RUN/logs/latest.log"; rm -f "$GAME_LOG"
 SHOT="${SHOT:-build/client-boot-check.png}"; rm -f "$SHOT"
 
 export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe MESA_GL_VERSION_OVERRIDE=3.3 MESA_GLSL_VERSION_OVERRIDE=330
-XAUTH="$DIR/build/client-boot-check.xauth"
+XAUTH="$DIR/build/$BOOTCHECK_TAG.xauth"
 xvfb-run -n 97 -f "$XAUTH" -s "-screen 0 1280x720x24" ./gradlew runBootCheck --no-configuration-cache ${GRADLE_ARGS:-} > "$LOG" 2>&1 &
 PID=$!
 logs() { cat "$LOG" "$GAME_LOG" 2>/dev/null; }
@@ -56,12 +91,14 @@ for _ in $(seq 1 "$TIMEOUT"); do
     if logs | grep -qE "$OK_RE"; then
         sleep 20
         X="env DISPLAY=:97 XAUTHORITY=$XAUTH xdotool"
-        IFS=';' read -ra CMDS <<< "${COMMANDS:-}"
+        SETUP='difficulty peaceful;time set noon;weather clear;gamerule doDaylightCycle false;gamerule doWeatherCycle false;gamerule doMobSpawning false'
+        IFS=';' read -ra CMDS <<< "$SETUP;${COMMANDS:-}"
         for cmd in "${CMDS[@]}"; do
             [ -z "$cmd" ] && continue
             $X key t; sleep 1; $X type --delay 20 "/$cmd"; $X key Return; sleep 1
         done
-        [ -n "${COMMANDS:-}" ] && sleep 4
+        # Chat messages fade after 10 s; wait them out so their box doesn't cover the HUD.
+        sleep 11
         # F2: the game takes its own screenshot (no image tools needed).
         rm -rf "$RUN/screenshots"
         DISPLAY=:97 XAUTHORITY="$XAUTH" xdotool search --name "Minecraft" windowactivate --sync key F2 2>/dev/null \
@@ -76,8 +113,8 @@ for _ in $(seq 1 "$TIMEOUT"); do
     sleep 1
 done
 
-pkill -f -- "bootCheckRun(Program|Vm)Args" 2>/dev/null; kill $PID 2>/dev/null; sleep 3; pkill -9 -f -- "bootCheckRun(Program|Vm)Args" 2>/dev/null
-pkill -f -- "-auth $XAUTH" 2>/dev/null; rm -f "$XAUTH"
+kill $(own_processes) 2>/dev/null; sleep 3; kill -9 $(own_processes) 2>/dev/null
+rm -f "$XAUTH"
 echo "BOOTCHECK: $verdict"
 logs | grep -E "$FAIL_RE" | head -5
 logs | grep -E "$OK_RE" | head -2

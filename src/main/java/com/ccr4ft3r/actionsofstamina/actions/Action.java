@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
  * One stamina-costing player action, spending through the active {@link StaminaBackend} under its own
  * {@link #source}.
  * <p>
- * Continuous actions (sprint, swim, elytra, shield, crawl, paraglide) run a drain refreshed every tick while
+ * Continuous actions (sprint, swim, elytra, shield, crawl, paraglide, wall cling, glide) run a drain refreshed every tick while
  * performing; one-off actions (attack, jump) {@link #perform} a spend. All amounts are kept in stamina (1/1000
  * feather), read from the config once, in the constructor (actions are rebuilt whenever the player joins a level).
  * <p>
@@ -32,7 +32,9 @@ public abstract class Action {
     public static final int SHIELD = 5;
     public static final int SWIM = 6;
     public static final int PARAGLIDE = 7;
-    public static final int COUNT = 8;
+    public static final int WALL_CLING = 8;
+    public static final int GLIDE = 9;
+    public static final int COUNT = 10;
 
     protected final ResourceLocation source;
     /** One-off cost, in stamina: per {@link #perform}, or when a continuous action begins. */

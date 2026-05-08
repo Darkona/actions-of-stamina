@@ -9,7 +9,7 @@ displayName = "${mod_name}"
 logoFile = "aos.png"
 authors = "${mod_authors}"
 description = '''
-Actions cost stamina: vanilla actions and other mods' actions (ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight). Uses Green Feathers when installed, or its own light stamina bar.
+Actions cost stamina: vanilla actions and other mods' actions (ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders). Uses Green Feathers when installed, or its own light stamina bar.
 '''
 
 [[mixins]]
@@ -43,14 +43,17 @@ side = "BOTH"
 modId = "paraglider"
 type = "optional"
 versionRange = "[21.1,)"
-ordering = "AFTER"
+# NONE: ParCool orders itself BEFORE Paragliders, and AoS must come BEFORE ParCool (below).
+ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "parcool"
 type = "optional"
 versionRange = "[4.0,)"
-ordering = "AFTER"
+# BEFORE: ParCool posts its stamina type registration event from its constructor, so AoS must be constructed first
+# to add its listener to ParCool's mod bus.
+ordering = "BEFORE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
@@ -72,4 +75,18 @@ modId = "epicfight"
 type = "optional"
 versionRange = "[21.17,)"
 ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "walljump"
+type = "optional"
+versionRange = "[1.21.1-1.3,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "vc_gliders"
+type = "optional"
+versionRange = "[1.1,)"
+ordering = "NONE"
 side = "BOTH"

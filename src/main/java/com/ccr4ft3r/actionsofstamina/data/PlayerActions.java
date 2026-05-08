@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.data;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.util.FakePlayer;
@@ -19,8 +20,8 @@ public class PlayerActions {
 
     private final Action[] actions = new Action[Action.COUNT];
 
-    /** Last movement-state byte applied (client: last one sent; server: last one received). */
-    private byte stateFlags;
+    /** Last movement-state flags applied (client: last ones sent; server: last ones received). */
+    private short stateFlags;
     /** Set when {@link #stateFlags} changed and the action states must be re-applied on the next tick. */
     private boolean changed;
 
@@ -41,33 +42,36 @@ public class PlayerActions {
     }
 
     /**
-     * Client side: record a freshly computed movement-state byte. Returns {@code true} when it differs from the
-     * previous one (the caller then sends it to the server).
+     * Client side: record freshly computed movement-state flags. Returns {@code true} when they differ from the
+     * previous ones (the caller then sends them to the server).
      */
-    public boolean applyClientState(byte flags) {
+    public boolean applyClientState(int flags) {
         if (flags == stateFlags) return false;
-        stateFlags = flags;
+        stateFlags = (short) flags;
         changed = true;
         return true;
     }
 
-    /** Server side: movement-state byte received from the owning client. */
-    public void processFlags(byte flags) {
+    /** Server side: movement-state flags received from the owning client. */
+    public void processFlags(short flags) {
         stateFlags = flags;
         changed = true;
     }
 
     public void tick(Player player) {
         if (changed) {
-            byte f = stateFlags;
+            int f = stateFlags;
             setActionState(Action.SPRINT, ActionFlags.has(f, ActionFlags.SPRINTING));
             setActionState(Action.CRAWL, ActionFlags.has(f, ActionFlags.CRAWLING));
             setActionState(Action.ELYTRA, ActionFlags.has(f, ActionFlags.ELYTRA));
             setActionState(Action.SWIM, ActionFlags.has(f, ActionFlags.SWIMMING));
             setActionState(Action.SHIELD, ActionFlags.has(f, ActionFlags.HOLDING_SHIELD));
             setActionState(Action.PARAGLIDE, ActionFlags.has(f, ActionFlags.PARAGLIDING));
+            setActionState(Action.WALL_CLING, ActionFlags.has(f, ActionFlags.WALL_CLINGING));
             changed = false;
         }
+        // Gliders keeps its glide state on the item, synced to both sides: each side reads it itself.
+        if (actions[Action.GLIDE] != null) actions[Action.GLIDE].setActionState(GlidersCompat.isGliding(player));
 
         // Each action spends and pauses regeneration through the stamina backend under its own source.
         for (Action action : actions) {
@@ -82,7 +86,7 @@ public class PlayerActions {
         return ActionFlags.has(stateFlags, ActionFlags.MOVING);
     }
 
-    public byte getStateFlags() {
+    public short getStateFlags() {
         return stateFlags;
     }
 

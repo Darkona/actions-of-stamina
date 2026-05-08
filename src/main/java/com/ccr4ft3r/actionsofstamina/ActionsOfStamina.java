@@ -36,6 +36,8 @@ public class ActionsOfStamina {
         AosAttachments.ATTACHMENT_TYPES.register(modBus);
         modBus.addListener(PacketHandler::register);
         modBus.addListener(ActionsOfStamina::commonSetup);
+        // ParCool registers stamina types on its own mod bus while it is constructed (AoS is ordered before it).
+        ParcoolCompat.registerStaminaType();
     }
 
     private static void commonSetup(FMLCommonSetupEvent event) {

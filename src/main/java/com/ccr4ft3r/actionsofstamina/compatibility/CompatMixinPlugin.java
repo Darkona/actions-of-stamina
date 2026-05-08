@@ -30,6 +30,9 @@ public final class CompatMixinPlugin implements IMixinConfigPlugin {
         String mixin = mixinClassName.startsWith(PACKAGE) ? mixinClassName.substring(PACKAGE.length()) : mixinClassName;
         if (mixin.startsWith("BetterCombat")) return isLoaded("bettercombat");
         if (mixin.startsWith("CombatRoll")) return isLoaded("combat_roll");
+        if (mixin.startsWith("Parcool")) return isLoaded("parcool");
+        if (mixin.startsWith("WallJump")) return isLoaded("walljump");
+        if (mixin.startsWith("Gliders")) return isLoaded("vc_gliders");
         return false;
     }
 

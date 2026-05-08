@@ -5,10 +5,14 @@
   "plugin": "com.ccr4ft3r.actionsofstamina.compatibility.CompatMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "BetterCombatServerNetworkMixin"
+    "BetterCombatServerNetworkMixin",
+    "GlidersToggleGlideMixin",
+    "ParcoolConfigServerMixin"
   ],
   "client": [
-    "CombatRollManagerMixin"
+    "CombatRollManagerMixin",
+    "WallJumpDoubleJumpMixin",
+    "WallJumpLogicMixin"
   ],
   "injectors": {
     "defaultRequire": 1

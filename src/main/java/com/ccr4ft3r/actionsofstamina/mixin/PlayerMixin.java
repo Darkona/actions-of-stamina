@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.mixin;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,6 +16,8 @@ public abstract class PlayerMixin {
     @Inject(method = "jumpFromGround", at = @At("HEAD"), cancellable = true)
     private void actionsofstamina$stopJumping(CallbackInfo ci) {
         Player self = (Player) (Object) this;
+        // A Wall-Jump TXF double jump already paid its own cost: it isn't a normal jump.
+        if (WallJumpCompat.consumeDoubleJump(self)) return;
         Action jump = PlayerActions.get(self).getAction(Action.JUMP);
         if (jump != null && !jump.perform(self)) {
             ci.cancel();

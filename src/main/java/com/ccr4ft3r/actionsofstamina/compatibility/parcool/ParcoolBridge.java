@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 /** Direct ParCool calls; only reached through {@link ParcoolCompat} when ParCool is loaded. */
 final class ParcoolBridge {
 
-    /** ParCool's stamina type that charges nothing, recommended while AoS charges ParCool actions. */
-    private static final ResourceLocation PARCOOL_NONE_STAMINA = ResourceLocation.fromNamespaceAndPath("parcool", "none");
+    /** ParCool's stamina type that charges nothing: fine next to AoS, it just doesn't show AoS's stamina to ParCool. */
+    private static final ResourceLocation PARCOOL_NONE_STAMINA = ResourceLocation.fromNamespaceAndPath(ParcoolCompat.MOD_ID, "none");
 
     /** A ParCool action AoS charges: its own source and config. */
     private record Costed(ResourceLocation source, ActionCostConfig costs) {
@@ -152,12 +152,17 @@ final class ParcoolBridge {
         }
     }
 
+    /** Only a stamina type other than AoS's own, ParCool's own (replaced by AoS's) or none charges twice. */
     private static void onServerStarted(ServerStartedEvent event) {
         if (!ParcoolConfig.ENABLED.getAsBoolean()) return;
+        if (!ParcoolStaminaType.isRegistered()) {
+            ActionsOfStamina.logger.warn("AoS's ParCool stamina type {} isn't registered (was AoS constructed after ParCool?)",
+                    ParcoolCompat.STAMINA_TYPE);
+        }
         ResourceLocation type = ParCool.getConfig().server().getStaminaTypeID();
-        if (!PARCOOL_NONE_STAMINA.equals(type)) {
-            ActionsOfStamina.logger.warn("ParCool's stamina_type is {}: ParCool actions are charged by both ParCool and AoS."
-                    + " Set it to \"{}\" in ParCool's server config.", type, PARCOOL_NONE_STAMINA);
+        if (!ParcoolCompat.STAMINA_TYPE.equals(type) && !PARCOOL_NONE_STAMINA.equals(type)) {
+            ActionsOfStamina.logger.warn("ParCool's stamina_type is {}: ParCool actions are charged by both {} and AoS."
+                    + " Set it to \"{}\" in ParCool's server config.", type, type, ParcoolCompat.STAMINA_TYPE);
         }
     }
 

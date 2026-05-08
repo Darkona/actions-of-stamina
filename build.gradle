@@ -104,6 +104,9 @@ dependencies {
     compileOnly "maven.modrinth:better-combat:${bettercombat_version}"
     compileOnly "maven.modrinth:combat-roll:${combatroll_version}"
     compileOnly "maven.modrinth:epic-fight:${epicfight_version}"
+    compileOnly "maven.modrinth:wall-jump-txf:${walljump_version}"
+    compileOnly "maven.modrinth:gliders:${gliders_version}"
+    compileOnly "maven.modrinth:common-network:${commonnetwork_version}"
 
     // -PwithCompat: boot dev runs with the compat targets and their required libraries.
     if (project.hasProperty('withCompat')) {
@@ -112,6 +115,9 @@ dependencies {
         localRuntime "maven.modrinth:better-combat:${bettercombat_version}"
         localRuntime "maven.modrinth:combat-roll:${combatroll_version}"
         localRuntime "maven.modrinth:epic-fight:${epicfight_version}"
+        localRuntime "maven.modrinth:wall-jump-txf:${walljump_version}"
+        localRuntime "maven.modrinth:gliders:${gliders_version}"
+        localRuntime "maven.modrinth:common-network:${commonnetwork_version}"
         localRuntime "maven.modrinth:playeranimator:${playeranimator_version}"
         localRuntime "maven.modrinth:cloth-config:${clothconfig_version}"
         // ParCool 4.0.0.5 marks Curios "mandatory = false", a key NeoForge ignores: it is required in practice.

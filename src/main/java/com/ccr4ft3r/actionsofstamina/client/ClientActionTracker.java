@@ -1,8 +1,10 @@
 package com.ccr4ft3r.actionsofstamina.client;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionStatePacket;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
@@ -12,7 +14,7 @@ import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
- * Client only. Derives the local player's movement state every tick into one byte and sends it to the server
+ * Client only. Derives the local player's movement state every tick into a few bits and sends them to the server
  * only when it changed.
  */
 public final class ClientActionTracker {
@@ -41,9 +43,10 @@ public final class ClientActionTracker {
         if (swimming && ParcoolCompat.ownsSwim(player)) swimming = false;
         if (crawling && ParcoolCompat.ownsCrawl(player)) crawling = false;
         boolean paragliding = ParagliderCompat.isParagliding(player);
+        boolean wallClinging = actions.getAction(Action.WALL_CLING) != null && WallJumpCompat.isClinging(player);
 
         // Actions disabled in the config have no slot in PlayerActions, so their flags are simply ignored.
-        byte flags = 0;
+        int flags = 0;
         flags = ActionFlags.with(flags, ActionFlags.MOVING, moving);
         flags = ActionFlags.with(flags, ActionFlags.CLIMBING, climbing);
         flags = ActionFlags.with(flags, ActionFlags.SPRINTING, sprinting);
@@ -52,11 +55,12 @@ public final class ClientActionTracker {
         flags = ActionFlags.with(flags, ActionFlags.SWIMMING, swimming);
         flags = ActionFlags.with(flags, ActionFlags.HOLDING_SHIELD, usingShield);
         flags = ActionFlags.with(flags, ActionFlags.PARAGLIDING, paragliding);
+        flags = ActionFlags.with(flags, ActionFlags.WALL_CLINGING, wallClinging);
 
         if (actions.applyClientState(flags)) {
             ActionsOfStamina.sideLog(player, "Change detected! Moving: {}, Sprinting: {}, Crawling: {}, Flying: {}, Swimming: {}, Shield: {}",
                     moving, sprinting, crawling, flying, swimming, usingShield);
-            PacketDistributor.sendToServer(new ActionStatePacket(flags));
+            PacketDistributor.sendToServer(new ActionStatePacket((short) flags));
         }
     }
 }
