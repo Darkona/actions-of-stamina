@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.epicfight;
 
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 /**
@@ -18,7 +18,7 @@ public final class EpicFightConfig {
     public static final ActionCostConfig BASIC_ATTACK;
 
     static {
-        ModConfigSpec.Builder b = AoSCommonConfig.BUILDER;
+        ModConfigSpec.Builder b = AoSServerConfig.BUILDER;
         b.comment("Epic Fight skills (only when Epic Fight is installed). A skill that can't be paid for fails, as it would",
                 " without Epic Fight stamina.").push("epicfight");
         ENABLED = b.comment("Whether Epic Fight skills cost AoS stamina").define("enabled", true);
@@ -34,7 +34,7 @@ public final class EpicFightConfig {
     private EpicFightConfig() {
     }
 
-    /** Called by {@link AoSCommonConfig} to define this section in order. */
+    /** Called by {@link AoSServerConfig} to define this section in order. */
     public static void init() {
     }
 

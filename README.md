@@ -15,7 +15,7 @@ isn't.
 
 | Backend | When | What you get |
 |---|---|---|
-| **Green Feathers** | Green Feathers 2.0+ is installed (and `backend` is `AUTO` or `FEATHERS`) | Green Feathers' feathers, regeneration, Strain, exhaustion, effects, armor weight, climate and HUD. AoS spends under its own sources (`actionsofstamina:sprint`, `actionsofstamina:parcool/dodge`, ...). |
+| **Green Feathers** | Green Feathers 2.0+ is installed (and `backend` is `AUTO` or `FEATHERS`) | Green Feathers' feathers, regeneration, strain, exhaustion, effects, armor weight, climate and HUD. AoS spends under its own sources (`actionsofstamina:sprint`, `actionsofstamina:parcool/dodge`, ...). |
 | **Internal** | Green Feathers isn't installed, or `backend = INTERNAL` | A small, light bar: a maximum, regeneration after a short delay, and exhaustion (once you run out, you must regain part of the bar before you can act again). It is drawn as a thin bar above the food bar. |
 
 The server picks the backend when it starts and tells each client which one it uses. Green Feathers is an
@@ -101,8 +101,9 @@ to begin, and the glider folds when the stamina runs out.
 
 ## Configuration
 
-`config/actionsofstamina-common.toml`. Costs are in feathers, and a feather is half a HUD icon. The defaults are
-tuned for a 20-feather bar. Delays are in ticks (20 ticks = 1 second).
+`config/actionsofstamina-server.toml`, a server config: a server sends its own to every player who joins, so every
+client charges the same costs (modpacks set their defaults in `defaultconfigs/`). Costs are in feathers, and a
+feather is half a HUD icon. The defaults are tuned for a 20-feather bar. Delays are in ticks (20 ticks = 1 second).
 
 ```toml
 [general]

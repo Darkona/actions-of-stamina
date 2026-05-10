@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.attack;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -21,7 +21,7 @@ public class AttackAction extends Action {
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("attack");
 
     public AttackAction() {
-        super(SOURCE, AoSCommonConfig.ATTACK);
+        super(SOURCE, AoSServerConfig.ATTACK);
     }
 
 
@@ -61,7 +61,7 @@ public class AttackAction extends Action {
         charged = false;
         if (PlayerActions.isNotExhaustable(player)) return true;
         // Not a weapon and non-weapons don't cost: the attack goes ahead for free, it isn't cancelled.
-        if (!isWeapon(player.getItemInHand(InteractionHand.MAIN_HAND)) && !AoSCommonConfig.ALSO_FOR_NON_WEAPONS.get()) return true;
+        if (!isWeapon(player.getItemInHand(InteractionHand.MAIN_HAND)) && !AoSServerConfig.ALSO_FOR_NON_WEAPONS.get()) return true;
         return super.perform(player);
     }
 

@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.client;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -20,7 +20,7 @@ public final class AoSHudDebugOverlay {
     }
 
     private static void render(GuiGraphics guiGraphics) {
-        if (!AoSCommonConfig.ENABLE_DEBUGGING.get()) return;
+        if (!AoSServerConfig.ENABLE_DEBUGGING.get()) return;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || mc.options.hideGui) return;
@@ -31,7 +31,6 @@ public final class AoSHudDebugOverlay {
         int titleX = screenWidth - 5 - font.width(TITLE);
         int y = 11;
         guiGraphics.drawString(font, TITLE, titleX, y, 0xFFFFFF);
-        guiGraphics.drawString(font, playerActions.isMoving() ? "Moving: true" : "Moving: false", titleX, y += 10, 0xFFFFFF);
         for (Action action : playerActions.getActions()) {
             if (action == null) continue;
             String actionInfo = action.debugString();

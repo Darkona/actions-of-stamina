@@ -41,13 +41,15 @@ final class BetterCombatBridge {
         return (int) Math.round(BetterCombatConfig.SWING.cost() * multiplier);
     }
 
-    static boolean chargeSwing(ServerPlayer player, int comboCount) {
+    static boolean chargeSwing(ServerPlayer player, int comboCount, boolean onlyCheck) {
         if (player.isCreative() || player.isSpectator() || CombatFlags.isAttackDisabled(player)) return true;
         AttackHand hand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
         if (hand == null) return true;
         int cost = swingCost(hand);
         if (cost <= 0) return true;
-        boolean paid = StaminaBackends.server().spend(player, SOURCE, cost, BetterCombatConfig.SWING.regenDelay());
+        StaminaBackend backend = StaminaBackends.server();
+        boolean paid = onlyCheck ? backend.canSpend(player, SOURCE, cost)
+                : backend.spend(player, SOURCE, cost, BetterCombatConfig.SWING.regenDelay());
         return paid || !BetterCombatConfig.BLOCK_WHEN_SHORT.getAsBoolean();
     }
 

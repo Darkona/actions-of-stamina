@@ -5,11 +5,10 @@ import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionChargePacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.api.distmarker.Dist;
@@ -20,7 +19,6 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.lwjgl.glfw.GLFW;
 
 @EventBusSubscriber(modid = ActionsOfStamina.MOD_ID, value = Dist.CLIENT)
 public final class ClientGameEvents {
@@ -55,16 +53,16 @@ public final class ClientGameEvents {
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem())) return;
         // Same for Epic Fight's battle mode: its basic attack combo is charged by the Epic Fight compat.
         if (EpicFightCompat.inBattleMode(player)) return;
+        // Only swings at an entity cost, and at air unless only_for_hits: mining fires this every tick a block is hit.
+        if (!isEntityHit && !(isMissHit && !AoSServerConfig.ONLY_FOR_HITS.get())) return;
         if (attack.perform(player)) {
-            // The client spend above was only a prediction: have the server charge it.
-            if (attack.hasJustCharged()) PacketDistributor.sendToServer(new ActionChargePacket((byte) Action.ATTACK));
+            // The client spend above was only a prediction. Hits are charged by the server itself (AttackEntityEvent);
+            // a swing at air never reaches it, so that one is asked for.
+            if (attack.hasJustCharged() && !isEntityHit) PacketDistributor.sendToServer(new ActionChargePacket((byte) Action.ATTACK));
         } else {
-            boolean onlyForHits = AoSCommonConfig.ONLY_FOR_HITS.get();
-            if (!onlyForHits && isMissHit || isEntityHit) {
-                event.setCanceled(true);
-                event.setSwingHand(false);
-                ActionsOfStamina.log("Attack and swing cancelled");
-            }
+            event.setCanceled(true);
+            event.setSwingHand(false);
+            ActionsOfStamina.log("Attack and swing cancelled");
         }
     }
 
@@ -72,42 +70,5 @@ public final class ClientGameEvents {
     @SubscribeEvent
     public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
         StaminaBackends.clearClient();
-    }
-
-    @SubscribeEvent
-    public static void onKeyInput(InputEvent.Key event) {
-        Minecraft mc = Minecraft.getInstance();
-        LocalPlayer player = mc.player;
-        if (player == null) return;
-
-        int key = event.getKey();
-        int action = event.getAction();
-        Options options = mc.options;
-        boolean notJumpable = player.isInWater() || player.onClimbable();
-        boolean jumpKey = key == options.keyJump.getKey().getValue();
-        boolean isJumpKey = jumpKey && !notJumpable;
-        boolean isMoveKey = key == options.keyUp.getKey().getValue()
-                || key == options.keyDown.getKey().getValue()
-                || key == options.keyLeft.getKey().getValue()
-                || key == options.keyRight.getKey().getValue()
-                || jumpKey && notJumpable;
-
-        if (!isMoveKey && !isJumpKey) return;
-
-        PlayerActions actions = PlayerActions.get(player);
-        boolean isPressed = action == GLFW.GLFW_PRESS;
-        boolean isReleased = action == GLFW.GLFW_RELEASE;
-
-        if (isMoveKey && isPressed) {
-            actions.setMoveKeyPressed(true);
-        } else if (isMoveKey && isReleased) {
-            actions.setMoveKeyPressed(false);
-        }
-
-        if (isJumpKey && isPressed) {
-            actions.setJumping(true);
-        } else if (isJumpKey && isReleased) {
-            actions.setJumping(false);
-        }
     }
 }

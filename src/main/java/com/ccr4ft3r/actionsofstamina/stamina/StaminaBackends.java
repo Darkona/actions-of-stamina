@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.stamina;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModList;
@@ -59,7 +59,7 @@ public final class StaminaBackends {
     }
 
     private static BackendMode configuredMode() {
-        return AoSCommonConfig.SPEC.isLoaded() ? AoSCommonConfig.BACKEND.get() : BackendMode.AUTO;
+        return AoSServerConfig.SPEC.isLoaded() ? AoSServerConfig.BACKEND.get() : BackendMode.AUTO;
     }
 
     /** Server starting: re-read the config (it may have changed since the last world). */

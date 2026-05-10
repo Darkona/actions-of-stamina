@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.stamina.internal;
 
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.AosAttachments;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
@@ -33,11 +33,11 @@ public final class InternalBackend implements StaminaBackend {
     }
 
     public static boolean enabled() {
-        return AoSCommonConfig.INTERNAL_ENABLED.getAsBoolean();
+        return AoSServerConfig.INTERNAL_ENABLED.getAsBoolean();
     }
 
     static int configMaxStamina() {
-        return AoSCommonConfig.INTERNAL_MAX_FEATHERS.getAsInt() * StaminaUnits.PER_FEATHER;
+        return AoSServerConfig.INTERNAL_MAX_FEATHERS.getAsInt() * StaminaUnits.PER_FEATHER;
     }
 
     /** Creative and spectator players, a disabled internal stamina, and other players seen from a client. */
@@ -74,10 +74,13 @@ public final class InternalBackend implements StaminaBackend {
 
         s.stamina = current - stamina;
         if (stamina > 0 || regenDelayTicks > 0) {
-            int delay = Math.max(regenDelayTicks, AoSCommonConfig.INTERNAL_REGEN_DELAY.getAsInt());
+            int delay = Math.max(regenDelayTicks, AoSServerConfig.INTERNAL_REGEN_DELAY.getAsInt());
             if (delay > s.regenDelay) s.regenDelay = delay;
         }
         if (stamina > 0 && s.stamina == 0) s.exhausted = true;
+        // Exact value to the client after a spend: it checks one-off actions (jumps, rolls) against it, and a value
+        // a sync step too high lets it start one the server then refuses.
+        if (stamina > 0) s.markForSync();
         return true;
     }
 
@@ -186,7 +189,7 @@ public final class InternalBackend implements StaminaBackend {
         if (s.regenDelay > 0) {
             s.regenDelay--;
         } else if (!drainBlocksRegen && stamina < max) {
-            s.regenCarry += StaminaUnits.perTick(AoSCommonConfig.INTERNAL_REGEN_PER_SECOND.getAsDouble());
+            s.regenCarry += StaminaUnits.perTick(AoSServerConfig.INTERNAL_REGEN_PER_SECOND.getAsDouble());
             int whole = (int) s.regenCarry;
             if (whole > 0) {
                 s.regenCarry -= whole;
@@ -196,7 +199,7 @@ public final class InternalBackend implements StaminaBackend {
         if (stamina >= max) s.regenCarry = 0;
         s.stamina = stamina;
 
-        if (s.exhausted && stamina >= AoSCommonConfig.INTERNAL_RECOVERY.getAsDouble() * max) s.exhausted = false;
+        if (s.exhausted && stamina >= AoSServerConfig.INTERNAL_RECOVERY.getAsDouble() * max) s.exhausted = false;
 
         sync(player, s);
     }

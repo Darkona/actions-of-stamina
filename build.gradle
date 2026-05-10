@@ -52,6 +52,12 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        // A normal client with the play pack, in its own game dir so test runs never touch its worlds.
+        play {
+            client()
+            gameDirectory = project.file('run-play')
+        }
+
         // Headless client straight into run/saves/aosboot: `xvfb-run -a ./gradlew runBootCheck`.
         bootCheck {
             client()
@@ -83,6 +89,9 @@ neoForge {
         }
     }
 }
+
+// The play pack loads when runPlay is requested (or with -PplayPack).
+def playPack = project.hasProperty('playPack') || gradle.startParameter.taskNames.any { it.toLowerCase().contains('runplay') }
 
 // 'localRuntime': present when running the game from the dev environment, never published as a dependency.
 configurations {
@@ -122,6 +131,23 @@ dependencies {
         localRuntime "maven.modrinth:cloth-config:${clothconfig_version}"
         // ParCool 4.0.0.5 marks Curios "mandatory = false", a key NeoForge ignores: it is required in practice.
         localRuntime "maven.modrinth:curios:${curios_version}"
+    }
+
+    // `./gradlew runPlay`: a pack to play with by hand. Green Feathers with its season and thirst compats, and the
+    // action mods that sit well together (no ParCool, Epic Fight or Paragliders: they replace too much of the game).
+    if (playPack) {
+        localRuntime "maven.modrinth:better-combat:${bettercombat_version}"
+        localRuntime "maven.modrinth:combat-roll:${combatroll_version}"
+        localRuntime "maven.modrinth:wall-jump-txf:${walljump_version}"
+        localRuntime "maven.modrinth:common-network:${commonnetwork_version}"
+        localRuntime "maven.modrinth:playeranimator:${playeranimator_version}"
+        localRuntime "maven.modrinth:cloth-config:${clothconfig_version}"
+        localRuntime "maven.modrinth:curios:${curios_version}"
+        localRuntime "maven.modrinth:serene-seasons:${serene_seasons_version}"
+        localRuntime "maven.modrinth:glitchcore:${glitchcore_version}"
+        localRuntime "maven.modrinth:thirst-was-taken:${thirst_was_taken_version}"
+        localRuntime "maven.modrinth:appleskin:${appleskin_version}"
+        localRuntime "maven.modrinth:jade:${jade_version}"
     }
 }
 

@@ -4,7 +4,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.AosAttachments;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
 import net.minecraft.resources.ResourceLocation;
@@ -30,8 +30,9 @@ public class ActionsOfStamina {
     public static final Logger logger = LogManager.getLogger(MOD_ID);
 
     public ActionsOfStamina(IEventBus modBus, ModContainer container) {
-        // First: builds the whole common spec, compat sections included, before any compat class is touched.
-        container.registerConfig(ModConfig.Type.COMMON, AoSCommonConfig.SPEC);
+        // First: builds the whole spec, compat sections included, before any compat class is touched. A server config:
+        // the server's costs are sent to every client, so no client decides its own.
+        container.registerConfig(ModConfig.Type.SERVER, AoSServerConfig.SPEC);
         container.registerConfig(ModConfig.Type.CLIENT, AoSClientConfig.SPEC);
         AosAttachments.ATTACHMENT_TYPES.register(modBus);
         modBus.addListener(PacketHandler::register);
@@ -53,13 +54,18 @@ public class ActionsOfStamina {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
+    /** Call sites that pass arguments check this first: the varargs array and the boxing cost even when off. */
+    public static boolean debugging() {
+        return AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean();
+    }
+
     public static void log(String message, Object... args) {
-        if (AoSCommonConfig.ENABLE_DEBUGGING.getAsBoolean())
+        if (AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean())
             logger.info(message, args);
     }
 
     public static void sideLog(Player p, String message, Object... args) {
-        if (!AoSCommonConfig.ENABLE_DEBUGGING.getAsBoolean()) return;
+        if (!AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean()) return;
         if (p.level().isClientSide())
             logger.info("\u001B[0;94mCLIENT -> " + message + "\u001B[0m", args);
         else

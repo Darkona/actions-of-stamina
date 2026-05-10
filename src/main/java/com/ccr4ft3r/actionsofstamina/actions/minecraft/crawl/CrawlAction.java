@@ -3,7 +3,7 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.crawl;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -20,7 +20,7 @@ public class CrawlAction extends Action {
 
 
     public CrawlAction() {
-        super(SOURCE, AoSCommonConfig.CRAWL);
+        super(SOURCE, AoSServerConfig.CRAWL);
     }
 
 
@@ -45,6 +45,11 @@ public class CrawlAction extends Action {
     protected void finishPerforming(Player p, PlayerActions a) {
         super.finishPerforming(p, a);
         removeModifier(p);
+    }
+
+    @Override
+    public void cleanUp(Player player) {
+        removeModifier(player);
     }
 
     @Override

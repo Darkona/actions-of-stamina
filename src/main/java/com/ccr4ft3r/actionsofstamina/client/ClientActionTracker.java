@@ -10,7 +10,7 @@ import com.ccr4ft3r.actionsofstamina.network.ActionStatePacket;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ShieldItem;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
@@ -28,15 +28,18 @@ public final class ClientActionTracker {
         double lastX = actions.getLastX();
         double lastZ = actions.getLastZ();
         // NaN on the first tick: never "moved".
-        boolean moving = actions.isMoveKeyPressed() && (x != lastX || z != lastZ) && lastX == lastX;
+        // From the movement input itself: any move key (or button, or controller) held, whatever else was released.
+        boolean moving = (player.input.forwardImpulse != 0 || player.input.leftImpulse != 0 || player.input.jumping && (player.isInWater() || player.onClimbable()))
+                && (x != lastX || z != lastZ) && lastX == lastX;
         boolean inFluid = player.isInWater() || player.isInLava();
         boolean crawling = player.onGround() && player.getPose() == Pose.SWIMMING && moving && !inFluid;
         boolean climbing = player.onClimbable() && moving;
         boolean onVehicle = player.getVehicle() != null;
         boolean swimming = player.isSwimming() && player.getPose() == Pose.SWIMMING && inFluid && !climbing && !onVehicle;
         boolean sprinting = player.isSprinting() && moving && !onVehicle && player.onGround();
-        boolean flying = player.getPose() == Pose.FALL_FLYING && player.isFallFlying() || player.getAbilities().flying;
-        boolean usingShield = player.getUseItem().is(Items.SHIELD);
+        // Elytra only: flight other mods grant isn't an elytra, and nothing here could end it when stamina runs out.
+        boolean flying = player.getPose() == Pose.FALL_FLYING && player.isFallFlying();
+        boolean usingShield = player.isUsingItem() && player.getUseItem().getItem() instanceof ShieldItem;
 
         // ParCool's own sprint, swim and crawl are charged by the ParCool compat, not twice.
         if (sprinting && ParcoolCompat.ownsSprint(player)) sprinting = false;
@@ -45,10 +48,9 @@ public final class ClientActionTracker {
         boolean paragliding = ParagliderCompat.isParagliding(player);
         boolean wallClinging = actions.getAction(Action.WALL_CLING) != null && WallJumpCompat.isClinging(player);
 
+        // Only what the server acts on: moving alone would send a packet at every start and stop.
         // Actions disabled in the config have no slot in PlayerActions, so their flags are simply ignored.
         int flags = 0;
-        flags = ActionFlags.with(flags, ActionFlags.MOVING, moving);
-        flags = ActionFlags.with(flags, ActionFlags.CLIMBING, climbing);
         flags = ActionFlags.with(flags, ActionFlags.SPRINTING, sprinting);
         flags = ActionFlags.with(flags, ActionFlags.CRAWLING, crawling);
         flags = ActionFlags.with(flags, ActionFlags.ELYTRA, flying);
@@ -58,7 +60,7 @@ public final class ClientActionTracker {
         flags = ActionFlags.with(flags, ActionFlags.WALL_CLINGING, wallClinging);
 
         if (actions.applyClientState(flags)) {
-            ActionsOfStamina.sideLog(player, "Change detected! Moving: {}, Sprinting: {}, Crawling: {}, Flying: {}, Swimming: {}, Shield: {}",
+            if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "Change detected! Moving: {}, Sprinting: {}, Crawling: {}, Flying: {}, Swimming: {}, Shield: {}",
                     moving, sprinting, crawling, flying, swimming, usingShield);
             PacketDistributor.sendToServer(new ActionStatePacket((short) flags));
         }

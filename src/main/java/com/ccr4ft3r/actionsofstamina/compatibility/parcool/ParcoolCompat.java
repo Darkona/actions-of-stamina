@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.parcool;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModList;
@@ -33,7 +33,8 @@ public final class ParcoolCompat {
     }
 
     public static boolean isActive() {
-        return LOADED && ParcoolConfig.ENABLED.getAsBoolean();
+        // ParCool may ask for its stamina type before a world (and so the server config) is loaded.
+        return LOADED && AoSServerConfig.SPEC.isLoaded() && ParcoolConfig.ENABLED.getAsBoolean();
     }
 
     /** AoS's mod constructor, which runs before ParCool's: registers AoS's stamina type on ParCool's mod bus. */
@@ -47,7 +48,7 @@ public final class ParcoolCompat {
      * time, so AoS's type replaces it; any other choice is kept.
      */
     public static ResourceLocation effectiveStaminaType(ResourceLocation configured) {
-        return PARCOOL_STAMINA_TYPE.equals(configured) && AoSCommonConfig.SPEC.isLoaded() && isActive() ? STAMINA_TYPE : configured;
+        return PARCOOL_STAMINA_TYPE.equals(configured) && AoSServerConfig.SPEC.isLoaded() && isActive() ? STAMINA_TYPE : configured;
     }
 
     /** Common setup: hooks ParCool's action events. */

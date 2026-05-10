@@ -3,7 +3,7 @@ package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
@@ -101,8 +101,13 @@ public abstract class Action {
 
         boolean performing = wasPerforming;
 
+        // Creative or spectator: the action ends here, so coming back to survival mid-action begins it properly
+        // (start gate and cost) and its effects don't outlive it.
         if (PlayerActions.isNotExhaustable(p)) {
-            wasPerforming = actionState;
+            if (wasPerforming) finishPerforming(p, a);
+            if (wasPerforming || prevActionState) cleanUp(p);
+            wasPerforming = false;
+            prevActionState = false;
             return;
         }
 
@@ -126,11 +131,14 @@ public abstract class Action {
         } else if (wasPerforming) {
             finishPerforming(p, a);
             performing = false;
+        } else if (prevActionState) {
+            // Ended without ever being paid for: only its effects to undo.
+            cleanUp(p);
         }
 
         boolean changeDetected = wasPerforming != performing || actionState != prevActionState;
 
-        if (AoSCommonConfig.ENABLE_DEBUGGING.getAsBoolean() && (debugInfo == null || changeDetected))
+        if (AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean() && (debugInfo == null || changeDetected))
             debugInfo = String.format("%s: WasPerforming: %s, Performing: %s, ActionState: %s, Allow: %s, Inhibiting regen: %s", name(), wasPerforming, performing, actionState, canPerform(p), performing && blockingRegen);
 
         prevActionState = actionState;
@@ -142,8 +150,12 @@ public abstract class Action {
 
     protected abstract void notPerformingEffects(Player player, PlayerActions a);
 
+    /** Undoes whatever the action leaves on the player (modifiers): it ended, the player became exempt, or the actions are rebuilt. */
+    public void cleanUp(Player player) {
+    }
+
     protected void beginPerforming(Player p, PlayerActions a) {
-        ActionsOfStamina.sideLog(p, "{}::beginPerforming", name());
+        if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(p, "{}::beginPerforming", name());
         StaminaBackend backend = StaminaBackends.of(p);
         if (cost > 0) backend.spend(p, source, cost, cooldown);
         else if (cooldown > 0) backend.blockRegen(p, source, cooldown);
@@ -154,7 +166,7 @@ public abstract class Action {
      * cooldown.
      */
     protected void finishPerforming(Player p, PlayerActions a) {
-        ActionsOfStamina.sideLog(p, "{}::finishPerforming", name());
+        if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(p, "{}::finishPerforming", name());
         StaminaBackend backend = StaminaBackends.of(p);
         backend.stopDrain(p, source);
         if (cooldown > 0 && !backend.keepsRegenWhileActing(p)) backend.blockRegen(p, source, cooldown);
@@ -166,16 +178,16 @@ public abstract class Action {
         if (PlayerActions.isNotExhaustable(player)) return true;
         boolean allow = canPerform(player);
         if (!allow) {
-            ActionsOfStamina.log("{}::Allowed = false, cost= {}", name(), cost);
+            if (ActionsOfStamina.debugging()) ActionsOfStamina.log("{}::Allowed = false, cost= {}", name(), cost);
             return false;
         }
 
-        ActionsOfStamina.sideLog(player, "{}::Perform", name());
+        if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "{}::Perform", name());
         if (++timesPerformed >= timesPerformedToExhaust) {
             timesPerformed = 0;
             allow = charge(player);
             charged = allow;
-            ActionsOfStamina.log("{}::Allowed = {}, cost= {}", name(), allow, cost);
+            if (ActionsOfStamina.debugging()) ActionsOfStamina.log("{}::Allowed = {}, cost= {}", name(), allow, cost);
             return allow;
         }
         return true;

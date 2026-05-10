@@ -3,6 +3,8 @@ package com.ccr4ft3r.actionsofstamina.events;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
+import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.BackendSyncPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
@@ -15,6 +17,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
@@ -44,6 +47,20 @@ public final class PlayerEventHandler {
         if (StaminaBackends.server().kind() == StaminaBackend.Kind.INTERNAL) InternalBackend.INSTANCE.tick(player);
     }
 
+    /**
+     * Hits on an entity are charged here, on the server: a client can't skip paying by not asking. A hit that can't
+     * be paid for doesn't land (the client already dropped the swing if it knew).
+     */
+    @SubscribeEvent
+    public static void onAttackEntity(AttackEntityEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isNotExhaustable(player)) return;
+        Action attack = PlayerActions.get(player).getAction(Action.ATTACK);
+        if (attack == null) return;
+        // Better Combat's swings and Epic Fight's battle-mode combo are charged by their compats.
+        if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()) || EpicFightCompat.inBattleMode(player)) return;
+        if (!attack.perform(player)) event.setCanceled(true);
+    }
+
     @SubscribeEvent
     public static void shieldUsage(PlayerInteractEvent.RightClickItem event) {
         if (!(event.getItemStack().getItem() instanceof ShieldItem)) return;
@@ -60,7 +77,7 @@ public final class PlayerEventHandler {
     public static void onPlayerJoin(EntityJoinLevelEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         PlayerActions actions = PlayerActions.get(player);
-        actions.clearActions();
+        actions.clearActions(player);
         ActionProvider.addEnabledActions(actions);
         if (player instanceof ServerPlayer) InternalBackend.data(player).markForSync();
     }

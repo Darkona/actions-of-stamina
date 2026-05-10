@@ -6,13 +6,11 @@ package com.ccr4ft3r.actionsofstamina.util;
  */
 public final class ActionFlags {
 
-    public static final int MOVING = 1;
     public static final int SPRINTING = 1 << 1;
     public static final int CRAWLING = 1 << 2;
     public static final int SWIMMING = 1 << 3;
     public static final int ELYTRA = 1 << 4;
     public static final int HOLDING_SHIELD = 1 << 5;
-    public static final int CLIMBING = 1 << 6;
     public static final int PARAGLIDING = 1 << 7;
     /** Wall-Jump TXF's wall cling (and the slide down the wall that follows it). */
     public static final int WALL_CLINGING = 1 << 8;

@@ -24,7 +24,7 @@ public record ActionStatePacket(short actionFlags) implements CustomPacketPayloa
     /** Runs on the server main thread (default handler thread). */
     public static void handle(ActionStatePacket packet, IPayloadContext context) {
         var player = context.player();
-        ActionsOfStamina.sideLog(player, "Received ActionStatePacket with flags: {}.", packet.actionFlags);
+        if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "Received ActionStatePacket with flags: {}.", packet.actionFlags);
         PlayerActions.get(player).processFlags(packet.actionFlags);
     }
 }

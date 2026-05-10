@@ -82,11 +82,11 @@ public class CompatTests {
         helper.assertTrue(BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()), "a sword has Better Combat attacks");
         StaminaBackend backend = StaminaBackends.server();
         int before = backend.stamina(player);
-        helper.assertTrue(BetterCombatCompat.chargeSwing(player, 0), "first swing paid");
+        helper.assertTrue(BetterCombatCompat.chargeSwing(player, 0, false), "first swing paid");
         helper.assertValueEqual(backend.stamina(player), before - BetterCombatConfig.SWING.cost(), "stamina after one swing");
 
         String state = exhaust(backend, player);
-        helper.assertFalse(BetterCombatCompat.chargeSwing(player, 0), "a swing is dropped when it can't be paid" + state);
+        helper.assertFalse(BetterCombatCompat.chargeSwing(player, 0, false), "a swing is dropped when it can't be paid" + state);
         helper.succeed();
     }
 

@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.swim;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ public class SwimAction extends Action {
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("swim");
 
     public SwimAction() {
-        super(SOURCE, AoSCommonConfig.SWIM);
+        super(SOURCE, AoSServerConfig.SWIM);
     }
 
 

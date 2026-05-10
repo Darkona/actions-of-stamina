@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ public class ElytraAction extends Action {
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("elytra");
 
     public ElytraAction() {
-        super(SOURCE, AoSCommonConfig.ELYTRA);
+        super(SOURCE, AoSServerConfig.ELYTRA);
     }
 
 

@@ -25,8 +25,6 @@ public class PlayerActions {
     /** Set when {@link #stateFlags} changed and the action states must be re-applied on the next tick. */
     private boolean changed;
 
-    private boolean moveKeyPressed;
-    private boolean jumping;
     private double lastX = Double.NaN;
     private double lastZ = Double.NaN;
 
@@ -71,7 +69,8 @@ public class PlayerActions {
             changed = false;
         }
         // Gliders keeps its glide state on the item, synced to both sides: each side reads it itself.
-        if (actions[Action.GLIDE] != null) actions[Action.GLIDE].setActionState(GlidersCompat.isGliding(player));
+        // Nobody glides on the ground: the Curios lookup behind isGliding only runs in the air.
+        if (actions[Action.GLIDE] != null) actions[Action.GLIDE].setActionState(!player.onGround() && GlidersCompat.isGliding(player));
 
         // Each action spends and pauses regeneration through the stamina backend under its own source.
         for (Action action : actions) {
@@ -82,9 +81,6 @@ public class PlayerActions {
         lastZ = player.getZ();
     }
 
-    public boolean isMoving() {
-        return ActionFlags.has(stateFlags, ActionFlags.MOVING);
-    }
 
     public short getStateFlags() {
         return stateFlags;
@@ -98,29 +94,16 @@ public class PlayerActions {
         return lastZ;
     }
 
-    public boolean isMoveKeyPressed() {
-        return moveKeyPressed;
-    }
-
-    public void setMoveKeyPressed(boolean moveKeyPressed) {
-        this.moveKeyPressed = moveKeyPressed;
-    }
-
-    public void setJumping(boolean jumping) {
-        this.jumping = jumping;
-    }
-
-    public boolean isJumping() {
-        return jumping;
-    }
-
     /** Enabled actions, indexed by {@link Action#id()}; empty slots are {@code null}. Do not modify. */
     public Action[] getActions() {
         return actions;
     }
 
     /** Drops every action before they are rebuilt from the config; their drains time out by themselves. */
-    public void clearActions() {
+    public void clearActions(Player player) {
+        for (Action action : actions) {
+            if (action != null) action.cleanUp(player);
+        }
         Arrays.fill(actions, null);
     }
 

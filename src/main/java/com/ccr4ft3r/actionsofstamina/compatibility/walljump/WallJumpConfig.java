@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.walljump;
 
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 /** {@code [walljump]}: Wall-Jump TXF's wall jump, double jump and wall cling. No Wall-Jump TXF classes here. */
@@ -13,7 +13,7 @@ public final class WallJumpConfig {
     public static final ActionCostConfig WALL_CLING;
 
     static {
-        ModConfigSpec.Builder b = AoSCommonConfig.BUILDER;
+        ModConfigSpec.Builder b = AoSServerConfig.BUILDER;
         b.comment("Wall-Jump TXF (only when it is installed). A jump or a grip that can't be paid for doesn't happen,",
                 " and a player clinging to a wall lets go when the stamina runs out.").push("walljump");
         ENABLED = b.comment("Whether Wall-Jump TXF's moves cost stamina").define("enabled", true);
@@ -38,7 +38,7 @@ public final class WallJumpConfig {
     private WallJumpConfig() {
     }
 
-    /** Called by {@link AoSCommonConfig} to define this section in order. */
+    /** Called by {@link AoSServerConfig} to define this section in order. */
     public static void init() {
     }
 }

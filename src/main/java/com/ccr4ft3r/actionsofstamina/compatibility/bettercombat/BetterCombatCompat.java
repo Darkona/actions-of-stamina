@@ -40,7 +40,11 @@ public final class BetterCombatCompat {
      *
      * @return false to drop the swing
      */
-    public static boolean chargeSwing(ServerPlayer player, int comboCount) {
-        return !isActive() || BetterCombatBridge.chargeSwing(player, comboCount);
+    /**
+     * Charges a swing; false when it can't be paid and must be dropped. {@code onlyCheck}: decide without charging,
+     * for the network thread, which must leave the charge to the server thread.
+     */
+    public static boolean chargeSwing(ServerPlayer player, int comboCount, boolean onlyCheck) {
+        return !isActive() || BetterCombatBridge.chargeSwing(player, comboCount, onlyCheck);
     }
 }

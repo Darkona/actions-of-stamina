@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.bettercombat;
 
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 /** {@code [bettercombat]}: every Better Combat weapon swing costs stamina. No Better Combat classes here. */
@@ -14,7 +14,7 @@ public final class BetterCombatConfig {
     public static final ModConfigSpec.BooleanValue BLOCK_WHEN_SHORT;
 
     static {
-        ActionCostConfig.Builder swing = ActionCostConfig.builder(AoSCommonConfig.BUILDER, "bettercombat",
+        ActionCostConfig.Builder swing = ActionCostConfig.builder(AoSServerConfig.BUILDER, "bettercombat",
                         "Better Combat: weapon swings cost stamina (only when Better Combat is installed). Swings of weapons with"
                                 + " Better Combat attributes replace the vanilla attack cost.", true)
                 .cost(0.4, "Cost of one swing")
@@ -34,7 +34,7 @@ public final class BetterCombatConfig {
     private BetterCombatConfig() {
     }
 
-    /** Called by {@link AoSCommonConfig} to define this section in order. */
+    /** Called by {@link AoSServerConfig} to define this section in order. */
     public static void init() {
     }
 }
