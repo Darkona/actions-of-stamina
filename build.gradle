@@ -62,7 +62,7 @@ neoForge {
         bootCheck {
             client()
             gameDirectory = project.file('run')
-            programArguments.addAll '--width', '1280', '--height', '720', '--quickPlaySingleplayer', 'aosboot'
+            programArguments.addAll '--width', '1920', '--height', '1080', '--quickPlaySingleplayer', 'aosboot'
         }
 
         server {

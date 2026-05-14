@@ -9,3 +9,7 @@ The server picks the backend when it starts and tells each client which one it u
 **optional** dependency: AoS works without it.
 
 Creative and spectator players never spend stamina.
+
+![The internal bar, a thin line above the food bar, while sprinting](images/internal.png)
+
+*Without Green Feathers: AoS's own thin bar above the food bar.*

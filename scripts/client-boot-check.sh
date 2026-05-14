@@ -72,6 +72,10 @@ for cat in master music record weather block hostile neutral player ambient voic
 done
 # A fresh game dir opens the first-launch accessibility screen, which waits for a click.
 sed -i "/^onboardAccessibility:/d" "$OPTS"; echo "onboardAccessibility:false" >> "$OPTS"
+# Interface scale 2 (not auto) and fullscreen-sized window: screenshots meant for people to look at.
+sed -i "/^guiScale:/d" "$OPTS"; echo "guiScale:${GUI_SCALE:-2}" >> "$OPTS"
+# No tutorial toast ("Move with W, A, S and D") over the screenshot.
+sed -i "/^tutorialStep:/d" "$OPTS"; echo "tutorialStep:none" >> "$OPTS"
 
 LOG="build/client-boot-check.log"; mkdir -p build; : > "$LOG"
 GAME_LOG="$RUN/logs/latest.log"; rm -f "$GAME_LOG"
@@ -79,7 +83,7 @@ SHOT="${SHOT:-build/client-boot-check.png}"; rm -f "$SHOT"
 
 export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe MESA_GL_VERSION_OVERRIDE=3.3 MESA_GLSL_VERSION_OVERRIDE=330
 XAUTH="$DIR/build/$BOOTCHECK_TAG.xauth"
-xvfb-run -n 97 -f "$XAUTH" -s "-screen 0 1280x720x24" ./gradlew runBootCheck --no-configuration-cache ${GRADLE_ARGS:-} > "$LOG" 2>&1 &
+xvfb-run -n 97 -f "$XAUTH" -s "-screen 0 1920x1080x24" ./gradlew runBootCheck --no-configuration-cache ${GRADLE_ARGS:-} > "$LOG" 2>&1 &
 PID=$!
 logs() { cat "$LOG" "$GAME_LOG" 2>/dev/null; }
 
@@ -91,14 +95,29 @@ for _ in $(seq 1 "$TIMEOUT"); do
     if logs | grep -qE "$OK_RE"; then
         sleep 20
         X="env DISPLAY=:97 XAUTHORITY=$XAUTH xdotool"
-        SETUP='difficulty peaceful;time set noon;weather clear;gamerule doDaylightCycle false;gamerule doWeatherCycle false;gamerule doMobSpawning false'
+        SETUP='gamerule sendCommandFeedback false;difficulty peaceful;time set noon;weather clear;gamerule doDaylightCycle false;gamerule doWeatherCycle false;gamerule doMobSpawning false'
         IFS=';' read -ra CMDS <<< "$SETUP;${COMMANDS:-}"
         for cmd in "${CMDS[@]}"; do
             [ -z "$cmd" ] && continue
             $X key t; sleep 1; $X type --delay 20 "/$cmd"; $X key Return; sleep 1
         done
-        # Chat messages fade after 10 s; wait them out so their box doesn't cover the HUD.
-        sleep 11
+        # Chat messages fade after 10 s; wait them out (and a margin) so no chat shows in the screenshot.
+        sleep 13
+        # PRE_SHOT: what to do right before the screenshot, in order: a key to press ("F5" for the third-person view),
+        # "down:KEY" / "up:KEY" to hold and release one, "click:N" / "hold:N" / "release:N" for mouse button N,
+        # "sleep:S" to wait S seconds, "cmd:COMMAND" to run a command then (underscores for spaces; no chat feedback).
+        for step in ${PRE_SHOT:-}; do
+            case "$step" in
+                down:*) $X keydown "${step#down:}" ;;
+                up:*) $X keyup "${step#up:}" ;;
+                click:*) $X click "${step#click:}" ;;
+                hold:*) $X mousedown "${step#hold:}" ;;
+                release:*) $X mouseup "${step#release:}" ;;
+                sleep:*) sleep "${step#sleep:}" ;;
+                cmd:*) cmd="${step#cmd:}"; $X key t; sleep 0.5; $X type --delay 10 "/${cmd//_/ }"; $X key Return; sleep 0.5 ;;
+                *) $X key "$step"; sleep 1 ;;
+            esac
+        done
         # F2: the game takes its own screenshot (no image tools needed).
         rm -rf "$RUN/screenshots"
         DISPLAY=:97 XAUTHORITY="$XAUTH" xdotool search --name "Minecraft" windowactivate --sync key F2 2>/dev/null \

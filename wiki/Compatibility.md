@@ -21,11 +21,19 @@ nothing is charged twice), and hides ParCool's stamina HUD. There is nothing to 
 Fight's) charges the actions a second time, and AoS logs a warning at server start. With `parcool.enabled = false`,
 AoS's stamina type behaves exactly like ParCool's own.
 
+
+![Sprinting with ParCool: fast run, charged in feathers](images/sprint-parcool.png)
+
+![A ParCool jump mid-run](images/jump-parcool.png)
+
 ## Paragliders (21.1.x)
 
 Paragliding drains AoS stamina, and Paragliders reads its stamina from AoS. Its stamina wheel is hidden, and its
 own stamina logic is turned off. Because of that, Paragliders never charges running or swimming. AoS's sprint and
 swim actions charge them instead. With `paragliders.enabled = false`, Paragliders keeps its own stamina wheel.
+
+
+![Paragliding: the drain shows in the feathers](images/paraglider.png)
 
 ## Better Combat (2.4.x)
 
@@ -34,9 +42,15 @@ arrives, and drops a swing it can't pay for. The client cancels a swing you can'
 starts. You can tune the cost with multipliers for two-handed weapons, off-hand swings and the last swing of a
 combo. Weapons that Better Combat swings use this cost instead of the vanilla attack cost.
 
+
+![A Better Combat swing](images/bettercombat.png)
+
 ## Combat Roll (2.0.x)
 
 Each roll costs stamina. A roll isn't available on the client while you can't pay for it.
+
+
+![Mid-roll](images/combatroll.png)
 
 ## Epic Fight (21.17.x)
 

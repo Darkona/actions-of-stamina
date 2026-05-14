@@ -12,3 +12,7 @@
 
 Attacks with non-weapons (bare hands, tools without attack damage) are free unless `also_for_non_weapons = true`.
 By default only attacks that hit an entity are charged (`only_for_hits`).
+
+| ![Flying with an elytra](images/elytra.png) | ![Holding up a shield](images/shield.png) |
+|---|---|
+| Elytra flight drains slowly | A raised shield costs to raise, then drains |

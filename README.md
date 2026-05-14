@@ -14,6 +14,10 @@ isn't.
 Supported out of the box, each with its own switch in the config: ParCool, Paragliders, Better Combat, Combat Roll,
 Epic Fight, Wall-Jump TXF and Gliders.
 
+| ![Paragliding](wiki/images/paraglider.png) | ![A Better Combat swing](wiki/images/bettercombat.png) |
+|---|---|
+| Paragliding | A Better Combat swing |
+
 ## Documentation
 
 The [wiki](https://github.com/Darkona/actions-of-stamina/wiki) has the details:
