@@ -1,0 +1,60 @@
+# Compatibility
+
+Every compatibility is optional and only active when that mod is installed. Each has its own section in the
+config, with an `enabled` switch.
+
+## ParCool (4.x)
+
+All 24 ParCool actions (fast run, wall run, vault, dodge, hang on, climb up, slide, dive, breakfall, charge
+jump, ...) cost stamina. Each action has its own start cost, per-second drain, finish cost and regeneration
+delay. The defaults are ParCool's own costs, scaled to a 20-feather bar.
+
+AoS charges on the server when ParCool starts, ticks and finishes an action. It stops an action from starting or
+continuing when the stamina is short. While ParCool's fast run, fast swim or crawl is active, AoS's own sprint,
+swim and crawl costs stay out, so they aren't charged twice.
+
+AoS registers its own ParCool stamina type, `actionsofstamina:stamina`. It shows ParCool the AoS stamina (so
+ParCool knows when you are exhausted), ignores ParCool's own costs and regeneration (AoS charges the actions, so
+nothing is charged twice), and hides ParCool's stamina HUD. There is nothing to set up: it is the default
+`stamina_type` of a new ParCool server config, and while `parcool.enabled = true` it also replaces ParCool's own
+`parcool:parcool`, which existing configs hold. `parcool:none` works too. Any other type (`parcool:hunger`, Epic
+Fight's) charges the actions a second time, and AoS logs a warning at server start. With `parcool.enabled = false`,
+AoS's stamina type behaves exactly like ParCool's own.
+
+## Paragliders (21.1.x)
+
+Paragliding drains AoS stamina, and Paragliders reads its stamina from AoS. Its stamina wheel is hidden, and its
+own stamina logic is turned off. Because of that, Paragliders never charges running or swimming. AoS's sprint and
+swim actions charge them instead. With `paragliders.enabled = false`, Paragliders keeps its own stamina wheel.
+
+## Better Combat (2.4.x)
+
+Every Better Combat weapon swing costs stamina. The server charges each swing when Better Combat's attack request
+arrives, and drops a swing it can't pay for. The client cancels a swing you can't afford as soon as its upswing
+starts. You can tune the cost with multipliers for two-handed weapons, off-hand swings and the last swing of a
+combo. Weapons that Better Combat swings use this cost instead of the vanilla attack cost.
+
+## Combat Roll (2.0.x)
+
+Each roll costs stamina. A roll isn't available on the client while you can't pay for it.
+
+## Epic Fight (21.17.x)
+
+Epic Fight skills in the dodge, guard, weapon innate and mover categories spend AoS stamina instead of Epic
+Fight stamina. Guards are charged once per blocked hit. A skill you can't pay for fails, the same as it would
+without Epic Fight stamina. Skills in other categories still use Epic Fight's own stamina.
+
+In Epic Fight's battle mode, each swing of its basic attack combo costs stamina, and the vanilla attack cost stands
+aside so a swing is only charged once. Swings you can't pay for don't happen.
+
+## Wall-Jump TXF (1.21.1-1.3.x)
+
+Wall jumps and double jumps cost stamina, and clinging to a wall (and sliding down it afterwards) drains it. A jump
+you can't pay for doesn't happen, you can't grab a wall without the stamina to begin, and you let go of the wall
+when you can't pay any more. Wall-Jump TXF decides these moves on the client, so the client refuses them and the
+server charges them.
+
+## Gliders (1.1.x)
+
+Gliding with a deployed glider drains stamina, since you hold on to it. You can't deploy a glider without the stamina
+to begin, and the glider folds when the stamina runs out.
