@@ -33,6 +33,7 @@ public final class CompatMixinPlugin implements IMixinConfigPlugin {
         if (mixin.startsWith("Parcool")) return isLoaded("parcool");
         if (mixin.startsWith("WallJump")) return isLoaded("walljump");
         if (mixin.startsWith("Gliders")) return isLoaded("vc_gliders");
+        if (mixin.startsWith("Create")) return isLoaded("create");
         return false;
     }
 

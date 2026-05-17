@@ -32,6 +32,8 @@ Paragliding drains AoS stamina, and Paragliders reads its stamina from AoS. Its 
 own stamina logic is turned off. Because of that, Paragliders never charges running or swimming. AoS's sprint and
 swim actions charge them instead. With `paragliders.enabled = false`, Paragliders keeps its own stamina wheel.
 
+Stamina Vessels (traded for Spirit Orbs at a goddess statue) make the AoS bar larger, as they would make Paragliders' wheel larger: each vessel adds `feathers_per_vessel` max feathers (2 by default, 0 turns this off). With Green Feathers it is a `max_feathers` attribute modifier, `actionsofstamina:paragliders/stamina_vessels`; with the internal stamina the bar itself grows. It is set when you join, respawn or change dimension, and whenever the number of vessels changes. With `paragliders.enabled = false` the vessels only count for Paragliders' own wheel.
+
 
 ![Paragliding: the drain shows in the feathers](images/paraglider.png)
 
@@ -41,6 +43,8 @@ Every Better Combat weapon swing costs stamina. The server charges each swing wh
 arrives, and drops a swing it can't pay for. The client cancels a swing you can't afford as soon as its upswing
 starts. You can tune the cost with multipliers for two-handed weapons, off-hand swings and the last swing of a
 combo. Weapons that Better Combat swings use this cost instead of the vanilla attack cost.
+
+Each swing's cost is also multiplied by the weapon's Better Combat category (`category_multipliers`, entries like `"claymore=1.2"`): by default daggers, fists, claws, sickles, rapiers and spears cost less, axes, claymores, hammers, maces and anchors more, and any category not listed costs the base amount. The category multiplier stacks with the two-handed, off-hand and combo-finisher ones. It is worked out once per weapon type and worked out again when the config or the datapacks reload.
 
 
 ![A Better Combat swing](images/bettercombat.png)
@@ -72,3 +76,21 @@ server charges them.
 
 Gliding with a deployed glider drains stamina, since you hold on to it. You can't deploy a glider without the stamina
 to begin, and the glider folds when the stamina runs out.
+
+## Create (6.x)
+
+Turning a hand crank (holding the use key on it) drains stamina for as long as you keep it turning, as does turning a valve handle (`create.crank.valve_handles`). A crank you can't afford doesn't turn, and one you are turning stops when the stamina runs out. Create's own hunger cost for cranking still applies.
+
+## Other mods' wings, shields and weapons
+
+Wings from other mods cost stamina only when a datapack adds them to the item tag `actionsofstamina:stamina_wings` (it holds the vanilla elytra). Mechanical or propelled wings are free by default: the tag is for wings you flap or glide with yourself. They cost when worn in the chest slot, or, with Curios installed, in any curio slot (mods that give the elytra its own slot).
+
+Shields from other mods cost like the vanilla shield, as long as they block like one (NeoForge's `shield_block` item ability, which every shield that works as a shield has). They count in either hand.
+
+Bows, crossbows and spears from other mods cost like the vanilla ones when they use the same use animation (drawing a bow, loading a crossbow, aiming a trident). Throwables from other mods cost only when a datapack adds them to the item tag `actionsofstamina:throwables`.
+
+With `vanilla.attack.also_for_non_weapons = false`, an item is a weapon when it adds attack damage in the main hand, however it gets it: its own attribute modifiers, ones worked out for that very stack, or ones added by other mods through NeoForge's attribute modifier event. Modular weapons that build their damage from their parts (as Tetra's do) count as weapons.
+
+## Curios (9.x)
+
+Stamina wings (the item tag `actionsofstamina:stamina_wings`) worn in a curio slot cost stamina like wings in the chest slot. The server notices when they are put on or taken off; the client checks once a second.

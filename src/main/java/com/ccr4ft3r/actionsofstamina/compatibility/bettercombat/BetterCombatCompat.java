@@ -1,8 +1,11 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.bettercombat;
 
+import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
 
 /**
  * Better Combat compatibility, safe to load without it: calls into the mod go through {@link BetterCombatBridge}
@@ -25,6 +28,18 @@ public final class BetterCombatCompat {
         return LOADED && BetterCombatConfig.SWING.enabled();
     }
 
+    /** Mod bus (loading and reloading): the server config changed, so the category multipliers are parsed again. */
+    public static void onConfigLoad(ModConfigEvent event) {
+        if (event.getConfig().getSpec() != AoSServerConfig.SPEC) return;
+        BetterCombatConfig.reloadCategories();
+        if (LOADED) BetterCombatBridge.clearCategoryCache();
+    }
+
+    /** Game bus: datapacks reloaded or synced (Better Combat's weapon registry is rebuilt with them). */
+    public static void onTagsUpdated(TagsUpdatedEvent event) {
+        if (LOADED) BetterCombatBridge.clearCategoryCache();
+    }
+
     /** Client setup. */
     public static void initClient() {
         if (LOADED) BetterCombatClientBridge.register();
@@ -35,11 +50,6 @@ public final class BetterCombatCompat {
         return isActive() && BetterCombatBridge.hasAttacks(stack);
     }
 
-    /**
-     * Server, from the mixin: charges the swing Better Combat is about to perform.
-     *
-     * @return false to drop the swing
-     */
     /**
      * Charges a swing; false when it can't be paid and must be dropped. {@code onlyCheck}: decide without charging,
      * for the network thread, which must leave the charge to the server thread.

@@ -71,6 +71,19 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		also_for_non_weapons = false
 		#Whether only attacks that hit an entity cost (misses stay free)
 		only_for_hits = true
+		#What an attack without the stamina for it does:
+		# CANCEL - it doesn't happen (no swing, no hit)
+		# WEAKEN - it lands, with less damage and a slower attack speed until the stamina is back
+		#Allowed Values: CANCEL, WEAKEN
+		exhausted_mode = "CANCEL"
+		#WEAKEN: share of the attack damage left while the stamina is short (0-1)
+		# Default: 0.5
+		# Range: 0.0 ~ 1.0
+		weaken_damage = 0.5
+		#WEAKEN: share of the attack speed left while the stamina is short (0.05-1)
+		# Default: 0.5
+		# Range: 0.05 ~ 1.0
+		weaken_speed = 0.5
 
 	#Jumping
 	[vanilla.jump]
@@ -139,7 +152,7 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		#Whether regeneration pauses while it lasts
 		blocks_regen = true
 
-	#Elytra flying
+	#Flying with wings from the item tag actionsofstamina:stamina_wings (the elytra; datapacks add other mods' wings)
 	[vanilla.elytra]
 		#Whether this action costs stamina.
 		enabled = true
@@ -161,6 +174,8 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		regen_delay = 20
 		#Whether regeneration pauses while it lasts
 		blocks_regen = true
+		#Whether flight keeps draining while a firework rocket boosts it
+		rocket_boost_costs = false
 
 	#Crawling (moving in the swimming pose on land)
 	[vanilla.crawl]
@@ -207,6 +222,104 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		regen_delay = 20
 		#Whether regeneration pauses while it lasts
 		blocks_regen = true
+
+	#Drawing a bow, loading a crossbow or aiming a trident (any item used with their animation)
+	[vanilla.draw]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start drawing (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Feathers drained per second while it lasts
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#Throwing an item from the item tag actionsofstamina:throwables (snowball, egg, ender pearl, splash and lingering potions, trident on release)
+	[vanilla.throw]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of a throw (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Charge the cost once every this many uses
+		# Default: 1
+		# Range: 1 ~ 100
+		times_to_charge = 1
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+
+	#Mining: breaking a block (never cancelled)
+	[vanilla.mine]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost of breaking a block (of hardness 1 with scale_with_hardness) (feathers)
+		# Default: 0.1
+		# Range: 0.0 ~ 1000.0
+		cost = 0.1
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Charge the cost once every this many uses
+		# Default: 4
+		# Range: 1 ~ 100
+		times_to_charge = 4
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether each block costs the cost times its hardness (dirt 0.5, stone 1.5, obsidian 50; instant blocks are free)
+		scale_with_hardness = true
+		#scale_with_hardness: the most a single block's hardness multiplies the cost by
+		# Default: 10.0
+		# Range: 0.0 ~ 100.0
+		max_hardness_multiplier = 10.0
+		#Whether mining gets slower while the player can't afford it (min_stamina); it is never cancelled
+		block_when_exhausted = false
+		#block_when_exhausted: share of the normal break speed left while the stamina is short (0.01-1)
+		# Default: 0.3
+		# Range: 0.01 ~ 1.0
+		exhausted_break_speed = 0.3
+
+	#Building: placing a block (never refused)
+	[vanilla.build]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost of placing a block (feathers)
+		# Default: 0.1
+		# Range: 0.0 ~ 1000.0
+		cost = 0.1
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.0
+		#Charge the cost once every this many uses
+		# Default: 4
+		# Range: 1 ~ 100
+		times_to_charge = 4
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
 
 #ParCool (parkour) actions. AoS charges them server side and blocks starting or continuing them
 # when stamina runs short. ParCool's stamina is AoS's own stamina type, "actionsofstamina:stamina",
@@ -739,6 +852,10 @@ respawn or dimension change. Changing `backend` needs a server restart.
 	regen_delay = 20
 	#Whether regeneration pauses while it lasts
 	blocks_regen = true
+	#Max feathers each Stamina Vessel adds (Green Feathers: a max_feathers modifier; the internal stamina: a larger bar). 0 turns vessels off. Applies on joining, respawning, or when the vessel count changes
+	# Default: 2
+	# Range: 0 ~ 100
+	feathers_per_vessel = 2
 
 #Better Combat: weapon swings cost stamina (only when Better Combat is installed). Swings of weapons with Better Combat attributes replace the vanilla attack cost.
 [bettercombat]
@@ -766,6 +883,8 @@ respawn or dimension change. Changing `backend` needs a server restart.
 	combo_finisher_multiplier = 1.25
 	#Whether swings are stopped when the stamina can't pay for them (otherwise they are just free)
 	block_when_short = true
+	#Cost multipliers by the weapon's Better Combat category ("category=multiplier", 0-10), on top of the others; categories not listed cost 1x. Better Combat's own categories: sword, claymore, dagger, axe, heavy_axe, double_axe, mace, hammer, spear, trident, glaive, halberd, scythe, sickle, katana, rapier, cutlass, twin_blade, claw, fist, lance, anchor, staff, battlestaff, wand, pickaxe, coral_blade, soul_knife
+	category_multipliers = ["dagger=0.6", "fist=0.6", "claw=0.7", "sickle=0.7", "rapier=0.8", "spear=0.9", "axe=1.2", "claymore=1.2", "double_axe=1.2", "heavy_axe=1.3", "hammer=1.3", "mace=1.3", "anchor=1.4"]
 
 #Combat Roll: each roll costs stamina (only when Combat Roll is installed)
 [combat_roll]
@@ -928,6 +1047,34 @@ respawn or dimension change. Changing `backend` needs a server restart.
 	regen_delay = 20
 	#Whether regeneration pauses while it lasts
 	blocks_regen = true
+
+#Create (only when it is installed)
+[create]
+
+	#Turning a hand crank (holding the use key on it). Without the stamina it doesn't turn, and it stops when the stamina runs out
+	[create.crank]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start turning (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Feathers drained per second while it lasts
+		# Default: 0.25
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.25
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+		#Whether turning a valve handle costs the same (each turn drains while the player works it)
+		valve_handles = true
 ```
 
 ## Default `actionsofstamina-client.toml`

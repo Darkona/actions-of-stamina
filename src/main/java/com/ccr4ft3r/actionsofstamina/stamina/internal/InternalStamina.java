@@ -24,6 +24,8 @@ public final class InternalStamina {
     /** Server: current max. Client: max as last synced. */
     int maxStamina;
     boolean exhausted;
+    /** Server: extra max stamina on top of the configured bar (Paragliders' vessels), transient. */
+    int bonusMax;
     int regenDelay;
     double regenCarry;
 

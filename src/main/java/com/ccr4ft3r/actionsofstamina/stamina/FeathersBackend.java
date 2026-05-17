@@ -3,8 +3,11 @@ package com.ccr4ft3r.actionsofstamina.stamina;
 import com.darkona.feathers.api.DrainOptions;
 import com.darkona.feathers.api.FeathersAPI;
 import com.darkona.feathers.api.SpendOptions;
+import com.darkona.feathers.api.registry.FeathersAttributes;
 import com.darkona.feathers.api.registry.FeathersMobEffects;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 
 /**
@@ -67,6 +70,21 @@ final class FeathersBackend implements StaminaBackend {
     @Override
     public boolean keepsRegenWhileActing(Player player) {
         return player.hasEffect(FeathersMobEffects.ENERGIZED);
+    }
+
+    /** A transient {@code max_feathers} modifier named after the source; Green Feathers picks the new max up itself. */
+    @Override
+    public void setMaxBonus(Player player, ResourceLocation source, int stamina) {
+        AttributeInstance maxFeathers = player.getAttribute(FeathersAttributes.MAX_FEATHERS);
+        if (maxFeathers == null) return;
+        if (stamina <= 0) {
+            maxFeathers.removeModifier(source);
+            return;
+        }
+        double feathers = stamina / (double) StaminaUnits.PER_FEATHER;
+        AttributeModifier current = maxFeathers.getModifier(source);
+        if (current != null && current.amount() == feathers) return;
+        maxFeathers.addOrUpdateTransientModifier(new AttributeModifier(source, feathers, AttributeModifier.Operation.ADD_VALUE));
     }
 
     @Override

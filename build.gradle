@@ -116,6 +116,8 @@ dependencies {
     compileOnly "maven.modrinth:wall-jump-txf:${walljump_version}"
     compileOnly "maven.modrinth:gliders:${gliders_version}"
     compileOnly "maven.modrinth:common-network:${commonnetwork_version}"
+    compileOnly "maven.modrinth:curios:${curios_version}"
+    compileOnly "maven.modrinth:create:${create_version}"
 
     // -PwithCompat: boot dev runs with the compat targets and their required libraries.
     if (project.hasProperty('withCompat')) {
@@ -131,6 +133,8 @@ dependencies {
         localRuntime "maven.modrinth:cloth-config:${clothconfig_version}"
         // ParCool 4.0.0.5 marks Curios "mandatory = false", a key NeoForge ignores: it is required in practice.
         localRuntime "maven.modrinth:curios:${curios_version}"
+        // Create carries its libraries (Flywheel, Ponder, Registrate) inside its own jar.
+        localRuntime "maven.modrinth:create:${create_version}"
     }
 
     // `./gradlew runPlay`: a pack to play with by hand. Green Feathers with its season and thirst compats, and the

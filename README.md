@@ -12,7 +12,7 @@ AoS only decides **how actions cost stamina**. The stamina bar comes from
 isn't.
 
 Supported out of the box, each with its own switch in the config: ParCool, Paragliders, Better Combat, Combat Roll,
-Epic Fight, Wall-Jump TXF and Gliders.
+Epic Fight, Wall-Jump TXF, Gliders and Create.
 
 | ![Paragliding](wiki/images/paraglider.png) | ![A Better Combat swing](wiki/images/bettercombat.png) |
 |---|---|
@@ -34,7 +34,7 @@ The [wiki](https://github.com/Darkona/actions-of-stamina/wiki) has the details:
   exhaustion), backend selection, and the compats against the real mods: each compat's charges, and its refusals
   when the stamina runs out. A compat's tests pass without doing anything when its mod isn't installed.
 - `-PwithoutFeathers` runs without Green Feathers.
-- `-PwithCompat` adds ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders and the
+- `-PwithCompat` adds ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders, Create and the
   libraries they need to the dev runs.
 - `scripts/client-boot-check.sh` boots a headless client into a copy of `run/world` and saves a screenshot to
   `build/` (`GRADLE_ARGS="-PwithCompat"` for the compat mods).

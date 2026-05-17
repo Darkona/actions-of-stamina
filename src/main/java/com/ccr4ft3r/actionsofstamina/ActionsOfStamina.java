@@ -1,6 +1,8 @@
 package com.ccr4ft3r.actionsofstamina;
 
+import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
@@ -14,7 +16,9 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,6 +41,10 @@ public class ActionsOfStamina {
         AosAttachments.ATTACHMENT_TYPES.register(modBus);
         modBus.addListener(PacketHandler::register);
         modBus.addListener(ActionsOfStamina::commonSetup);
+        // Parsed config lists and the caches built from them follow config and datapack reloads.
+        modBus.addListener(ModConfigEvent.Loading.class, BetterCombatCompat::onConfigLoad);
+        modBus.addListener(ModConfigEvent.Reloading.class, BetterCombatCompat::onConfigLoad);
+        NeoForge.EVENT_BUS.addListener(BetterCombatCompat::onTagsUpdated);
         // ParCool registers stamina types on its own mod bus while it is constructed (AoS is ordered before it).
         ParcoolCompat.registerStaminaType();
     }
@@ -47,6 +55,7 @@ public class ActionsOfStamina {
             ParcoolCompat.init();
             CombatRollCompat.init();
             EpicFightCompat.init();
+            CuriosCompat.init();
         });
     }
 

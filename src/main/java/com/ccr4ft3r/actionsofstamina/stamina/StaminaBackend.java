@@ -58,6 +58,12 @@ public interface StaminaBackend {
     /** Whether an effect (Green Feathers' Energized) lets the player keep regenerating while acting. */
     boolean keepsRegenWhileActing(Player player);
 
+    /**
+     * Server: extra max stamina given by {@code source} (0 takes it away). Transient: kept by this player entity only,
+     * so it is set again when the player joins a level.
+     */
+    void setMaxBonus(Player player, ResourceLocation source, int stamina);
+
     int stamina(Player player);
 
     int maxStamina(Player player);

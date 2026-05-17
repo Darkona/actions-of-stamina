@@ -3,6 +3,7 @@ package com.ccr4ft3r.actionsofstamina.compatibility.bettercombat;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import it.unimi.dsi.fastutil.objects.Reference2DoubleOpenHashMap;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.ComboState;
 import net.bettercombat.api.CombatFlags;
@@ -19,6 +20,16 @@ final class BetterCombatBridge {
 
     static final ResourceLocation SOURCE = ActionsOfStamina.id("bettercombat/swing");
 
+    /**
+     * Category multiplier per weapon attributes (one instance per weapon type in Better Combat's registry, replaced
+     * when it reloads). Cleared on config and datapack reloads. Locked: the server, network and client threads read it.
+     */
+    private static final Reference2DoubleOpenHashMap<WeaponAttributes> CATEGORY_CACHE = new Reference2DoubleOpenHashMap<>();
+
+    static {
+        CATEGORY_CACHE.defaultReturnValue(-1.0);
+    }
+
     private BetterCombatBridge() {
     }
 
@@ -28,12 +39,33 @@ final class BetterCombatBridge {
         return attributes != null && attributes.attacks() != null;
     }
 
-    /** Stamina one swing costs, with the two-handed, off-hand and combo-finisher multipliers. */
+    static void clearCategoryCache() {
+        synchronized (CATEGORY_CACHE) {
+            CATEGORY_CACHE.clear();
+        }
+    }
+
+    /** The weapon's category multiplier, looked up once per weapon type. */
+    private static double categoryMultiplier(WeaponAttributes attributes) {
+        synchronized (CATEGORY_CACHE) {
+            double multiplier = CATEGORY_CACHE.getDouble(attributes);
+            if (multiplier < 0) {
+                multiplier = BetterCombatConfig.categoryMultiplier(attributes.category());
+                CATEGORY_CACHE.put(attributes, multiplier);
+            }
+            return multiplier;
+        }
+    }
+
+    /** Stamina one swing costs, with the category, two-handed, off-hand and combo-finisher multipliers. */
     static int swingCost(AttackHand hand) {
         double multiplier = 1.0;
         if (hand.isOffHand()) multiplier *= BetterCombatConfig.OFF_HAND_MULTIPLIER.getAsDouble();
         WeaponAttributes attributes = hand.attributes();
-        if (attributes != null && attributes.isTwoHanded()) multiplier *= BetterCombatConfig.TWO_HANDED_MULTIPLIER.getAsDouble();
+        if (attributes != null) {
+            multiplier *= categoryMultiplier(attributes);
+            if (attributes.isTwoHanded()) multiplier *= BetterCombatConfig.TWO_HANDED_MULTIPLIER.getAsDouble();
+        }
         ComboState combo = hand.combo();
         if (combo != null && combo.total() > 1 && combo.current() == combo.total()) {
             multiplier *= BetterCombatConfig.COMBO_FINISHER_MULTIPLIER.getAsDouble();

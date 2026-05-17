@@ -17,5 +17,5 @@ isn't.
 
 - [Stamina Backends](Stamina-Backends): Green Feathers' feathers, or AoS's own bar.
 - [Vanilla Actions](Vanilla-Actions): what sprinting, jumping, attacking and the rest cost.
-- [Compatibility](Compatibility): ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders.
+- [Compatibility](Compatibility): ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders, Create.
 - [Configuration](Configuration): every option.

@@ -2,7 +2,9 @@ package com.ccr4ft3r.actionsofstamina.client;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
@@ -31,11 +33,13 @@ public final class ClientGameEvents {
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof LocalPlayer player)) return;
         PlayerActions actions = PlayerActions.get(player);
+        // Curios only reports curio changes on the server: the client looks at an interval (curio wings).
+        if (CuriosCompat.LOADED && player.tickCount % CuriosCompat.CLIENT_REFRESH_INTERVAL == 0) actions.refreshCurioWings(player);
         ClientActionTracker.update(player, actions);
         actions.tick(player);
     }
 
-    /** Cancels the attack (and swing) when the player can't afford it. */
+    /** Cancels the attack (and swing) when the player can't afford it, unless it lands weakened instead (WEAKEN). */
     @SubscribeEvent
     public static void onPlayerAttemptAttack(InputEvent.InteractionKeyMappingTriggered event) {
         if (!event.isAttack()) return;
@@ -59,7 +63,7 @@ public final class ClientGameEvents {
             // The client spend above was only a prediction. Hits are charged by the server itself (AttackEntityEvent);
             // a swing at air never reaches it, so that one is asked for.
             if (attack.hasJustCharged() && !isEntityHit) PacketDistributor.sendToServer(new ActionChargePacket((byte) Action.ATTACK));
-        } else {
+        } else if (!(attack instanceof AttackAction weakening && weakening.weakens())) {
             event.setCanceled(true);
             event.setSwingHand(false);
             ActionsOfStamina.log("Attack and swing cancelled");

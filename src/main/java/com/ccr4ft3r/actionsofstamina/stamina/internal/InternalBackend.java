@@ -40,6 +40,11 @@ public final class InternalBackend implements StaminaBackend {
         return AoSServerConfig.INTERNAL_MAX_FEATHERS.getAsInt() * StaminaUnits.PER_FEATHER;
     }
 
+    /** Server: the bar's size, the configured one plus the transient bonus. */
+    private static int serverMax(InternalStamina s) {
+        return configMaxStamina() + s.bonusMax;
+    }
+
     /** Creative and spectator players, a disabled internal stamina, and other players seen from a client. */
     private static boolean exempt(Player player) {
         return player.isCreative() || player.isSpectator() || !enabled()
@@ -49,7 +54,7 @@ public final class InternalBackend implements StaminaBackend {
     /** Current stamina; an unset bar (new player, or a client before the first sync) counts as full. */
     private static int current(InternalStamina s) {
         if (s.stamina != InternalStamina.UNSET) return s.stamina;
-        return s.maxStamina > 0 ? s.maxStamina : configMaxStamina();
+        return s.maxStamina > 0 ? s.maxStamina : serverMax(s);
     }
 
     @Override
@@ -145,6 +150,13 @@ public final class InternalBackend implements StaminaBackend {
         return false;
     }
 
+    /** One bonus at a time (vessels are its only source): the bar grows now, or shrinks and clamps on the next tick. */
+    @Override
+    public void setMaxBonus(Player player, ResourceLocation source, int stamina) {
+        if (player.level().isClientSide()) return;
+        data(player).bonusMax = Math.max(0, stamina);
+    }
+
     @Override
     public int stamina(Player player) {
         return current(data(player));
@@ -153,7 +165,7 @@ public final class InternalBackend implements StaminaBackend {
     @Override
     public int maxStamina(Player player) {
         InternalStamina s = data(player);
-        return player.level().isClientSide() && s.maxStamina > 0 ? s.maxStamina : configMaxStamina();
+        return player.level().isClientSide() ? s.maxStamina > 0 ? s.maxStamina : configMaxStamina() : serverMax(s);
     }
 
     @Override
@@ -172,7 +184,7 @@ public final class InternalBackend implements StaminaBackend {
      */
     public void tick(ServerPlayer player) {
         InternalStamina s = data(player);
-        int max = configMaxStamina();
+        int max = serverMax(s);
         s.maxStamina = max;
         int stamina = current(s);
         if (stamina > max) stamina = max;

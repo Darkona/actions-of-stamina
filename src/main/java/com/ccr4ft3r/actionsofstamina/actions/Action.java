@@ -14,8 +14,8 @@ import net.minecraft.world.entity.player.Player;
  * One stamina-costing player action, spending through the active {@link StaminaBackend} under its own
  * {@link #source}.
  * <p>
- * Continuous actions (sprint, swim, elytra, shield, crawl, paraglide, wall cling, glide) run a drain refreshed every tick while
- * performing; one-off actions (attack, jump) {@link #perform} a spend. All amounts are kept in stamina (1/1000
+ * Continuous actions (sprint, swim, elytra, shield, crawl, draw, paraglide, wall cling, glide, crank) run a drain refreshed every tick while
+ * performing; one-off actions (attack, jump, throw, mine, build) {@link #perform} a spend. All amounts are kept in stamina (1/1000
  * feather), read from the config once, in the constructor (actions are rebuilt whenever the player joins a level).
  * <p>
  * Runs on both sides: on the client the backend only checks (Green Feathers also predicts), the server is
@@ -34,7 +34,12 @@ public abstract class Action {
     public static final int PARAGLIDE = 7;
     public static final int WALL_CLING = 8;
     public static final int GLIDE = 9;
-    public static final int COUNT = 10;
+    public static final int DRAW = 10;
+    public static final int THROW = 11;
+    public static final int MINE = 12;
+    public static final int BUILD = 13;
+    public static final int CRANK = 14;
+    public static final int COUNT = 15;
 
     protected final ResourceLocation source;
     /** One-off cost, in stamina: per {@link #perform}, or when a continuous action begins. */
@@ -94,7 +99,15 @@ public abstract class Action {
     private boolean drain(Player player, StaminaBackend backend) {
         // Energized players (Green Feathers) keep regenerating, as with the old regen inhibitor.
         blockingRegen = regenInhibitor && !backend.keepsRegenWhileActing(player);
-        return backend.drain(player, source, staminaPerTick, blockingRegen);
+        return backend.drain(player, source, drainPerTick(player), blockingRegen);
+    }
+
+    /**
+     * What the drain takes this tick. An action may lower it for a while (0: still going on, and still pausing
+     * regeneration, but free).
+     */
+    protected double drainPerTick(Player player) {
+        return staminaPerTick;
     }
 
     public void tick(Player p, PlayerActions a) {

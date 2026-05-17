@@ -1,7 +1,9 @@
 package com.ccr4ft3r.actionsofstamina.config;
 
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.ExhaustedAttackMode;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollConfig;
+import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderConfig;
@@ -31,12 +33,24 @@ public final class AoSServerConfig {
     public static final ActionCostConfig ATTACK;
     public static final ModConfigSpec.BooleanValue ALSO_FOR_NON_WEAPONS;
     public static final ModConfigSpec.BooleanValue ONLY_FOR_HITS;
+    public static final ModConfigSpec.EnumValue<ExhaustedAttackMode> EXHAUSTED_MODE;
+    public static final ModConfigSpec.DoubleValue WEAKEN_DAMAGE;
+    public static final ModConfigSpec.DoubleValue WEAKEN_SPEED;
     public static final ActionCostConfig JUMP;
     public static final ActionCostConfig SPRINT;
     public static final ActionCostConfig SWIM;
     public static final ActionCostConfig ELYTRA;
+    public static final ModConfigSpec.BooleanValue ROCKET_BOOST_COSTS;
     public static final ActionCostConfig CRAWL;
     public static final ActionCostConfig SHIELD;
+    public static final ActionCostConfig DRAW;
+    public static final ActionCostConfig THROW;
+    public static final ActionCostConfig MINE;
+    public static final ModConfigSpec.BooleanValue MINE_SCALE_WITH_HARDNESS;
+    public static final ModConfigSpec.DoubleValue MINE_MAX_HARDNESS_MULTIPLIER;
+    public static final ModConfigSpec.BooleanValue MINE_BLOCK_WHEN_EXHAUSTED;
+    public static final ModConfigSpec.DoubleValue MINE_EXHAUSTED_BREAK_SPEED;
+    public static final ActionCostConfig BUILD;
 
     public static final ModConfigSpec SPEC;
 
@@ -76,6 +90,14 @@ public final class AoSServerConfig {
                 .define("also_for_non_weapons", false);
         ONLY_FOR_HITS = attack.spec().comment("Whether only attacks that hit an entity cost (misses stay free)")
                 .define("only_for_hits", true);
+        EXHAUSTED_MODE = attack.spec().comment("What an attack without the stamina for it does:",
+                        " CANCEL - it doesn't happen (no swing, no hit)",
+                        " WEAKEN - it lands, with less damage and a slower attack speed until the stamina is back")
+                .defineEnum("exhausted_mode", ExhaustedAttackMode.CANCEL);
+        WEAKEN_DAMAGE = attack.spec().comment("WEAKEN: share of the attack damage left while the stamina is short (0-1)")
+                .defineInRange("weaken_damage", 0.5, 0.0, 1.0);
+        WEAKEN_SPEED = attack.spec().comment("WEAKEN: share of the attack speed left while the stamina is short (0.05-1)")
+                .defineInRange("weaken_speed", 0.5, 0.05, 1.0);
         ATTACK = attack.build();
         JUMP = ActionCostConfig.builder(b, "jump", "Jumping", true)
                 .cost(1.0, "Cost of a jump")
@@ -97,13 +119,16 @@ public final class AoSServerConfig {
                 .regenDelay(80)
                 .blocksRegen(true)
                 .build();
-        ELYTRA = ActionCostConfig.builder(b, "elytra", "Elytra flying", true)
+        ActionCostConfig.Builder elytra = ActionCostConfig.builder(b, "elytra",
+                        "Flying with wings from the item tag actionsofstamina:stamina_wings (the elytra; datapacks add other mods' wings)", true)
                 .cost(0.0, "Cost to start")
                 .minStamina(2.0)
                 .perSecond(0.05)
                 .regenDelay(20)
-                .blocksRegen(true)
-                .build();
+                .blocksRegen(true);
+        ROCKET_BOOST_COSTS = elytra.spec().comment("Whether flight keeps draining while a firework rocket boosts it")
+                .define("rocket_boost_costs", false);
+        ELYTRA = elytra.build();
         CRAWL = ActionCostConfig.builder(b, "crawl", "Crawling (moving in the swimming pose on land)", true)
                 .cost(0.0, "Cost to start")
                 .minStamina(1.0)
@@ -118,6 +143,40 @@ public final class AoSServerConfig {
                 .regenDelay(20)
                 .blocksRegen(true)
                 .build();
+        DRAW = ActionCostConfig.builder(b, "draw", "Drawing a bow, loading a crossbow or aiming a trident (any item used with their animation)", true)
+                .cost(0.5, "Cost to start drawing")
+                .minStamina(1.0)
+                .perSecond(0.5)
+                .regenDelay(30)
+                .blocksRegen(true)
+                .build();
+        THROW = ActionCostConfig.builder(b, "throw",
+                        "Throwing an item from the item tag actionsofstamina:throwables (snowball, egg, ender pearl, splash and lingering potions, trident on release)", true)
+                .cost(0.5, "Cost of a throw")
+                .minStamina(0.5)
+                .timesToCharge(1)
+                .regenDelay(30)
+                .build();
+        ActionCostConfig.Builder mine = ActionCostConfig.builder(b, "mine", "Mining: breaking a block (never cancelled)", false)
+                .cost(0.1, "Cost of breaking a block (of hardness 1 with scale_with_hardness)")
+                .minStamina(0.5)
+                .timesToCharge(4)
+                .regenDelay(30);
+        MINE_SCALE_WITH_HARDNESS = mine.spec().comment("Whether each block costs the cost times its hardness (dirt 0.5, stone 1.5, obsidian 50; instant blocks are free)")
+                .define("scale_with_hardness", true);
+        MINE_MAX_HARDNESS_MULTIPLIER = mine.spec().comment("scale_with_hardness: the most a single block's hardness multiplies the cost by")
+                .defineInRange("max_hardness_multiplier", 10.0, 0.0, 100.0);
+        MINE_BLOCK_WHEN_EXHAUSTED = mine.spec().comment("Whether mining gets slower while the player can't afford it (min_stamina); it is never cancelled")
+                .define("block_when_exhausted", false);
+        MINE_EXHAUSTED_BREAK_SPEED = mine.spec().comment("block_when_exhausted: share of the normal break speed left while the stamina is short (0.01-1)")
+                .defineInRange("exhausted_break_speed", 0.3, 0.01, 1.0);
+        MINE = mine.build();
+        BUILD = ActionCostConfig.builder(b, "build", "Building: placing a block (never refused)", false)
+                .cost(0.1, "Cost of placing a block")
+                .minStamina(0.0)
+                .timesToCharge(4)
+                .regenDelay(30)
+                .build();
         b.pop();
 
         ParcoolConfig.init();
@@ -127,6 +186,7 @@ public final class AoSServerConfig {
         EpicFightConfig.init();
         WallJumpConfig.init();
         GlidersConfig.init();
+        CreateConfig.init();
 
         SPEC = b.build();
     }

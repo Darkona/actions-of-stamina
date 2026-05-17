@@ -4,7 +4,6 @@
   "package": "com.ccr4ft3r.actionsofstamina.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ElytraItemMixin",
     "PlayerMixin"
   ],
   "client": [],

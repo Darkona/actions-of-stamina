@@ -14,6 +14,8 @@ public final class ActionFlags {
     public static final int PARAGLIDING = 1 << 7;
     /** Wall-Jump TXF's wall cling (and the slide down the wall that follows it). */
     public static final int WALL_CLINGING = 1 << 8;
+    /** Drawing a bow, loading a crossbow or aiming a trident. */
+    public static final int DRAWING = 1 << 9;
 
     private ActionFlags() {
     }

@@ -2,6 +2,8 @@ package com.ccr4ft3r.actionsofstamina.client;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
@@ -10,7 +12,7 @@ import com.ccr4ft3r.actionsofstamina.network.ActionStatePacket;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.item.ShieldItem;
+import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
@@ -37,9 +39,12 @@ public final class ClientActionTracker {
         boolean onVehicle = player.getVehicle() != null;
         boolean swimming = player.isSwimming() && player.getPose() == Pose.SWIMMING && inFluid && !climbing && !onVehicle;
         boolean sprinting = player.isSprinting() && moving && !onVehicle && player.onGround();
-        // Elytra only: flight other mods grant isn't an elytra, and nothing here could end it when stamina runs out.
-        boolean flying = player.getPose() == Pose.FALL_FLYING && player.isFallFlying();
-        boolean usingShield = player.isUsingItem() && player.getUseItem().getItem() instanceof ShieldItem;
+        // Only wings from the stamina_wings tag: mechanical or propelled wings of other mods fly for free.
+        boolean flying = player.getPose() == Pose.FALL_FLYING && player.isFallFlying() && ElytraAction.wearsStaminaWings(player);
+        // Any item that blocks like a shield, not only ShieldItem subclasses: modded shields count too.
+        boolean usingShield = player.isUsingItem() && player.getUseItem().canPerformAction(ItemAbilities.SHIELD_BLOCK);
+        // By the use animation (bow, crossbow, spear), so modded bows and spears count too.
+        boolean drawing = DrawAction.isDrawing(player);
 
         // ParCool's own sprint, swim and crawl are charged by the ParCool compat, not twice.
         if (sprinting && ParcoolCompat.ownsSprint(player)) sprinting = false;
@@ -56,12 +61,13 @@ public final class ClientActionTracker {
         flags = ActionFlags.with(flags, ActionFlags.ELYTRA, flying);
         flags = ActionFlags.with(flags, ActionFlags.SWIMMING, swimming);
         flags = ActionFlags.with(flags, ActionFlags.HOLDING_SHIELD, usingShield);
+        flags = ActionFlags.with(flags, ActionFlags.DRAWING, drawing);
         flags = ActionFlags.with(flags, ActionFlags.PARAGLIDING, paragliding);
         flags = ActionFlags.with(flags, ActionFlags.WALL_CLINGING, wallClinging);
 
         if (actions.applyClientState(flags)) {
-            if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "Change detected! Moving: {}, Sprinting: {}, Crawling: {}, Flying: {}, Swimming: {}, Shield: {}",
-                    moving, sprinting, crawling, flying, swimming, usingShield);
+            if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "Change detected! Moving: {}, Sprinting: {}, Crawling: {}, Flying: {}, Swimming: {}, Shield: {}, Drawing: {}",
+                    moving, sprinting, crawling, flying, swimming, usingShield, drawing);
             PacketDistributor.sendToServer(new ActionStatePacket((short) flags));
         }
     }

@@ -3,23 +3,34 @@ package com.ccr4ft3r.actionsofstamina.events;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.mine.MineAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.throwing.ThrowAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.BackendSyncPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -49,7 +60,8 @@ public final class PlayerEventHandler {
 
     /**
      * Hits on an entity are charged here, on the server: a client can't skip paying by not asking. A hit that can't
-     * be paid for doesn't land (the client already dropped the swing if it knew).
+     * be paid for doesn't land (the client already dropped the swing if it knew), or with {@code exhausted_mode =
+     * WEAKEN} lands weakened (the damage is worked out after this event).
      */
     @SubscribeEvent
     public static void onAttackEntity(AttackEntityEvent event) {
@@ -58,18 +70,106 @@ public final class PlayerEventHandler {
         if (attack == null) return;
         // Better Combat's swings and Epic Fight's battle-mode combo are charged by their compats.
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()) || EpicFightCompat.inBattleMode(player)) return;
-        if (!attack.perform(player)) event.setCanceled(true);
+        if (attack.perform(player)) return;
+        if (attack instanceof AttackAction weakening && weakening.weakens()) weakening.weaken(player);
+        else event.setCanceled(true);
     }
 
+    /** Raising a shield the player can't afford is refused; modded shields are found by their shield-block ability. */
     @SubscribeEvent
     public static void shieldUsage(PlayerInteractEvent.RightClickItem event) {
-        if (!(event.getItemStack().getItem() instanceof ShieldItem)) return;
+        if (!event.getItemStack().canPerformAction(ItemAbilities.SHIELD_BLOCK)) return;
         Player player = event.getEntity();
         if (PlayerActions.isNotExhaustable(player)) return;
         Action shield = PlayerActions.get(player).getAction(Action.SHIELD);
         if (shield != null && !shield.canPerform(player)) {
             event.setCanceled(true);
         }
+    }
+
+    /**
+     * Drawing a bow, loading a crossbow or aiming a trident the player can't afford is refused (both sides), which also
+     * keeps a held use button from starting the draw again right after it ran out.
+     */
+    @SubscribeEvent
+    public static void drawUsage(PlayerInteractEvent.RightClickItem event) {
+        Player player = event.getEntity();
+        if (PlayerActions.isNotExhaustable(player) || !DrawAction.draws(event.getItemStack())) return;
+        Action draw = PlayerActions.get(player).getAction(Action.DRAW);
+        if (draw != null && !draw.canPerform(player)) {
+            event.setCanceled(true);
+        }
+    }
+
+    /** A snowball, egg, ender pearl or throwable potion thrown on use (both sides); one the player can't afford isn't thrown. */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void throwOnUse(PlayerInteractEvent.RightClickItem event) {
+        Player player = event.getEntity();
+        if (PlayerActions.isNotExhaustable(player) || !ThrowAction.throwsOnUse(event.getItemStack(), player)) return;
+        Action throwing = PlayerActions.get(player).getAction(Action.THROW);
+        if (throwing != null && !throwing.perform(player)) {
+            event.setCancellationResult(InteractionResult.FAIL);
+            event.setCanceled(true);
+        }
+    }
+
+    /**
+     * A trident released after aiming (both sides; the event comes before the item's release): charged as a throw, and
+     * one the player can't afford isn't thrown (cancelling skips the release, the aim just ends).
+     */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void throwOnRelease(LivingEntityUseItemEvent.Stop event) {
+        if (!(event.getEntity() instanceof Player player) || PlayerActions.isNotExhaustable(player)) return;
+        ItemStack stack = event.getItem();
+        if (!ThrowAction.throwsOnRelease(stack, player, event.getDuration())) return;
+        Action throwing = PlayerActions.get(player).getAction(Action.THROW);
+        if (throwing != null && !throwing.perform(player)) {
+            event.setCanceled(true);
+        }
+    }
+
+    /** Server: a block broken by a player (after every other mod had its say: a cancelled break isn't charged). */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void blockBroken(BlockEvent.BreakEvent event) {
+        Player player = event.getPlayer();
+        if (player.level().isClientSide() || PlayerActions.isNotExhaustable(player)) return;
+        if (PlayerActions.get(player).getAction(Action.MINE) instanceof MineAction mine) {
+            mine.mined(player, event.getState().getDestroySpeed(event.getLevel(), event.getPos()));
+        }
+    }
+
+    /** Server: a block (or a multi-block, such as a bed or a door, once) placed by a player; never refused. */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void blockPlaced(BlockEvent.EntityPlaceEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isNotExhaustable(player)) return;
+        Action build = PlayerActions.get(player).getAction(Action.BUILD);
+        if (build != null) build.perform(player);
+    }
+
+    /**
+     * {@code block_when_exhausted}: mining slows down while the player can't afford it. Both sides, every tick of
+     * mining: the client's break progress must match the server's.
+     */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void breakSpeed(PlayerEvent.BreakSpeed event) {
+        Player player = event.getEntity();
+        if (PlayerActions.isNotExhaustable(player)) return;
+        if (PlayerActions.get(player).getAction(Action.MINE) instanceof MineAction mine) {
+            float multiplier = mine.breakSpeedMultiplier(player);
+            if (multiplier < 1.0f) event.setNewSpeed(event.getNewSpeed() * multiplier);
+        }
+    }
+
+    /**
+     * A firework rocket used while fall-flying boosts the flight (both sides, as the item itself only boosts then).
+     * Recorded here, with the rocket's flight duration, rather than by looking for rocket entities every tick.
+     */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void rocketBoost(PlayerInteractEvent.RightClickItem event) {
+        if (!(event.getItemStack().getItem() instanceof FireworkRocketItem)) return;
+        Player player = event.getEntity();
+        if (!player.isFallFlying() || PlayerActions.isNotExhaustable(player)) return;
+        if (PlayerActions.get(player).getAction(Action.ELYTRA) instanceof ElytraAction elytra) elytra.boost(player, event.getItemStack());
     }
 
     /** Login, respawn and dimension change: rebuild the actions from the current config and resync the bar. */
@@ -79,7 +179,11 @@ public final class PlayerEventHandler {
         PlayerActions actions = PlayerActions.get(player);
         actions.clearActions(player);
         ActionProvider.addEnabledActions(actions);
-        if (player instanceof ServerPlayer) InternalBackend.data(player).markForSync();
+        actions.refreshCurioWings(player);
+        if (player instanceof ServerPlayer serverPlayer) {
+            InternalBackend.data(player).markForSync();
+            ParagliderCompat.onJoin(serverPlayer);
+        }
     }
 
     @SubscribeEvent

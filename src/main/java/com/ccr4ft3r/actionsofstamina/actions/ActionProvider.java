@@ -1,12 +1,18 @@
 package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.building.BuildAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.crawl.CrawlAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.jump.JumpAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.mine.MineAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.shield.ShieldAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint.SprintAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.swim.SwimAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.throwing.ThrowAction;
+import com.ccr4ft3r.actionsofstamina.compatibility.create.CrankAction;
+import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlideAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParaglideAction;
@@ -31,8 +37,13 @@ public final class ActionProvider {
         if (AoSServerConfig.ELYTRA.enabled()) a.addEnabledAction(new ElytraAction());
         if (AoSServerConfig.SHIELD.enabled()) a.addEnabledAction(new ShieldAction());
         if (AoSServerConfig.SWIM.enabled()) a.addEnabledAction(new SwimAction());
+        if (AoSServerConfig.DRAW.enabled()) a.addEnabledAction(new DrawAction());
+        if (AoSServerConfig.THROW.enabled()) a.addEnabledAction(new ThrowAction());
+        if (AoSServerConfig.MINE.enabled()) a.addEnabledAction(new MineAction());
+        if (AoSServerConfig.BUILD.enabled()) a.addEnabledAction(new BuildAction());
         if (ParagliderCompat.isActive()) a.addEnabledAction(new ParaglideAction());
         if (WallJumpCompat.isActive() && WallJumpConfig.WALL_CLING.enabled()) a.addEnabledAction(new WallClingAction());
         if (GlidersCompat.isActive()) a.addEnabledAction(new GlideAction());
+        if (CreateCompat.isActive()) a.addEnabledAction(new CrankAction());
     }
 }

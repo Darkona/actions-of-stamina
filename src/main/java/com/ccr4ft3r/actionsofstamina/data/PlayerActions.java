@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.data;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +25,12 @@ public class PlayerActions {
     private short stateFlags;
     /** Set when {@link #stateFlags} changed and the action states must be re-applied on the next tick. */
     private boolean changed;
+
+    /** Whether stamina wings are worn in a curio slot; cached, see {@link CuriosCompat}. */
+    private boolean curioWings;
+    /** Paragliders' vessel container already listened to for this player (a Paragliders object: kept untyped here). */
+    @Nullable
+    private Object vesselListenerTarget;
 
     private double lastX = Double.NaN;
     private double lastZ = Double.NaN;
@@ -64,6 +71,7 @@ public class PlayerActions {
             setActionState(Action.ELYTRA, ActionFlags.has(f, ActionFlags.ELYTRA));
             setActionState(Action.SWIM, ActionFlags.has(f, ActionFlags.SWIMMING));
             setActionState(Action.SHIELD, ActionFlags.has(f, ActionFlags.HOLDING_SHIELD));
+            setActionState(Action.DRAW, ActionFlags.has(f, ActionFlags.DRAWING));
             setActionState(Action.PARAGLIDE, ActionFlags.has(f, ActionFlags.PARAGLIDING));
             setActionState(Action.WALL_CLING, ActionFlags.has(f, ActionFlags.WALL_CLINGING));
             changed = false;
@@ -81,6 +89,24 @@ public class PlayerActions {
         lastZ = player.getZ();
     }
 
+
+    public boolean wearsCurioWings() {
+        return curioWings;
+    }
+
+    /** Looks the player's curios up again (allocates: on a change, on join, or at an interval, never every tick). */
+    public void refreshCurioWings(Player player) {
+        curioWings = CuriosCompat.wearsStaminaWings(player);
+    }
+
+    @Nullable
+    public Object vesselListenerTarget() {
+        return vesselListenerTarget;
+    }
+
+    public void setVesselListenerTarget(@Nullable Object target) {
+        vesselListenerTarget = target;
+    }
 
     public short getStateFlags() {
         return stateFlags;
