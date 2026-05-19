@@ -16,6 +16,12 @@ public final class ActionFlags {
     public static final int WALL_CLINGING = 1 << 8;
     /** Drawing a bow, loading a crossbow or aiming a trident. */
     public static final int DRAWING = 1 << 9;
+    /** Going up something climbable (ladder, vine, scaffolding). */
+    public static final int CLIMBING = 1 << 10;
+    /** Paddling (or turning) a boat from the rowed_boats tag as its driver. */
+    public static final int ROWING = 1 << 11;
+    /** Brushing (any item with the brush animation). */
+    public static final int BRUSHING = 1 << 12;
 
     private ActionFlags() {
     }

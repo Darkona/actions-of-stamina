@@ -74,6 +74,9 @@ public class PlayerActions {
             setActionState(Action.DRAW, ActionFlags.has(f, ActionFlags.DRAWING));
             setActionState(Action.PARAGLIDE, ActionFlags.has(f, ActionFlags.PARAGLIDING));
             setActionState(Action.WALL_CLING, ActionFlags.has(f, ActionFlags.WALL_CLINGING));
+            setActionState(Action.CLIMB, ActionFlags.has(f, ActionFlags.CLIMBING));
+            setActionState(Action.ROW, ActionFlags.has(f, ActionFlags.ROWING));
+            setActionState(Action.BRUSH, ActionFlags.has(f, ActionFlags.BRUSHING));
             changed = false;
         }
         // Gliders keeps its glide state on the item, synced to both sides: each side reads it itself.

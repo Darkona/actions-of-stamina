@@ -4,6 +4,7 @@ import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -12,13 +13,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 import java.util.List;
 
 
 /**
- * Attacking, charged once every few attacks. An attack the player can't afford is cancelled, or with
+ * Attacking, charged once every few attacks; a mace smash is charged on its own, at a multiple of the cost. An attack the player can't afford is cancelled, or with
  * {@code exhausted_mode = WEAKEN} lands weakened: transient attack damage and attack speed modifiers stay on the
  * player while the stamina is short.
  */
@@ -32,12 +34,15 @@ public class AttackAction extends Action {
     private static final int WEAKEN_CHECK_INTERVAL = 10;
 
     private final boolean weakens;
+    /** What a mace smash costs, in stamina: the cost times {@code mace_smash_multiplier}. */
+    private final int smashCost;
     private final AttributeModifier damageModifier;
     private final AttributeModifier speedModifier;
 
     public AttackAction() {
         super(SOURCE, AoSServerConfig.ATTACK);
         this.weakens = AoSServerConfig.EXHAUSTED_MODE.get() == ExhaustedAttackMode.WEAKEN;
+        this.smashCost = (int) Math.round(cost * AoSServerConfig.MACE_SMASH_MULTIPLIER.getAsDouble());
         this.damageModifier = new AttributeModifier(WEAKEN_ID, AoSServerConfig.WEAKEN_DAMAGE.get() - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         this.speedModifier = new AttributeModifier(WEAKEN_ID, AoSServerConfig.WEAKEN_SPEED.get() - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
@@ -117,6 +122,22 @@ public class AttackAction extends Action {
             if (entry.attribute() == Attributes.ATTACK_DAMAGE && entry.slot().test(EquipmentSlot.MAINHAND)) return true;
         }
         return false;
+    }
+
+    /**
+     * An attack that hits an entity (server: the attack event; client: the attack key on an entity). A mace smash, a
+     * mace hit while falling as the mace itself tells it, is charged on its own, right away, at {@link #smashCost}; any
+     * other hit is a normal {@link #perform}. Misses never smash.
+     */
+    public boolean performHit(Player player) {
+        if (PlayerActions.isNotExhaustable(player) || !(player.getMainHandItem().getItem() instanceof MaceItem) || !MaceItem.canSmashAttack(player)) {
+            return perform(player);
+        }
+        charged = false;
+        if (smashCost <= 0) return true;
+        charged = StaminaBackends.of(player).spend(player, source, smashCost, cooldown);
+        if (ActionsOfStamina.debugging()) ActionsOfStamina.log("{}::Smash allowed = {}, cost= {}", name(), charged, smashCost);
+        return charged;
     }
 
     @Override

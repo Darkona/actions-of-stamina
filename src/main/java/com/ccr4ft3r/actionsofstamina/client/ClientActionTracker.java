@@ -2,8 +2,10 @@ package com.ccr4ft3r.actionsofstamina.client;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.brush.BrushAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.row.RowAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
@@ -21,6 +23,9 @@ import net.neoforged.neoforge.network.PacketDistributor;
  */
 public final class ClientActionTracker {
 
+    /** Least rise in a tick that counts as climbing up (a ladder lifts about 0.12 blocks a tick). */
+    private static final double CLIMB_EPSILON = 0.01;
+
     private ClientActionTracker() {
     }
 
@@ -31,12 +36,19 @@ public final class ClientActionTracker {
         double lastZ = actions.getLastZ();
         // NaN on the first tick: never "moved".
         // From the movement input itself: any move key (or button, or controller) held, whatever else was released.
-        boolean moving = (player.input.forwardImpulse != 0 || player.input.leftImpulse != 0 || player.input.jumping && (player.isInWater() || player.onClimbable()))
+        boolean onClimbable = player.onClimbable();
+        boolean moving = (player.input.forwardImpulse != 0 || player.input.leftImpulse != 0 || player.input.jumping && (player.isInWater() || onClimbable))
                 && (x != lastX || z != lastZ) && lastX == lastX;
         boolean inFluid = player.isInWater() || player.isInLava();
         boolean crawling = player.onGround() && player.getPose() == Pose.SWIMMING && moving && !inFluid;
-        boolean climbing = player.onClimbable() && moving;
+        boolean climbing = onClimbable && moving;
         boolean onVehicle = player.getVehicle() != null;
+        // Going up whatever the game lets the player climb, by this tick's own movement (yo: where this tick began).
+        // Going down or holding on is free; creative flight is exempt anyway.
+        boolean climbingUp = onClimbable && player.getY() - player.yo > CLIMB_EPSILON && !onVehicle && !player.isFallFlying();
+        // Only boats from the rowed_boats tag, driven by this player, with a paddle key held (forward, back or turning).
+        boolean rowing = onVehicle && (player.input.up || player.input.down || player.input.left || player.input.right)
+                && RowAction.drivesRowedBoat(player, player.getVehicle());
         boolean swimming = player.isSwimming() && player.getPose() == Pose.SWIMMING && inFluid && !climbing && !onVehicle;
         boolean sprinting = player.isSprinting() && moving && !onVehicle && player.onGround();
         // Only wings from the stamina_wings tag: mechanical or propelled wings of other mods fly for free.
@@ -45,6 +57,8 @@ public final class ClientActionTracker {
         boolean usingShield = player.isUsingItem() && player.getUseItem().canPerformAction(ItemAbilities.SHIELD_BLOCK);
         // By the use animation (bow, crossbow, spear), so modded bows and spears count too.
         boolean drawing = DrawAction.isDrawing(player);
+        // Same for brushes.
+        boolean brushing = BrushAction.isBrushing(player);
 
         // ParCool's own sprint, swim and crawl are charged by the ParCool compat, not twice.
         if (sprinting && ParcoolCompat.ownsSprint(player)) sprinting = false;
@@ -64,10 +78,13 @@ public final class ClientActionTracker {
         flags = ActionFlags.with(flags, ActionFlags.DRAWING, drawing);
         flags = ActionFlags.with(flags, ActionFlags.PARAGLIDING, paragliding);
         flags = ActionFlags.with(flags, ActionFlags.WALL_CLINGING, wallClinging);
+        flags = ActionFlags.with(flags, ActionFlags.CLIMBING, climbingUp);
+        flags = ActionFlags.with(flags, ActionFlags.ROWING, rowing);
+        flags = ActionFlags.with(flags, ActionFlags.BRUSHING, brushing);
 
         if (actions.applyClientState(flags)) {
-            if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "Change detected! Moving: {}, Sprinting: {}, Crawling: {}, Flying: {}, Swimming: {}, Shield: {}, Drawing: {}",
-                    moving, sprinting, crawling, flying, swimming, usingShield, drawing);
+            if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "Change detected! Moving: {}, Sprinting: {}, Crawling: {}, Flying: {}, Swimming: {}, Shield: {}, Drawing: {}, Climbing: {}, Rowing: {}, Brushing: {}",
+                    moving, sprinting, crawling, flying, swimming, usingShield, drawing, climbingUp, rowing, brushing);
             PacketDistributor.sendToServer(new ActionStatePacket((short) flags));
         }
     }

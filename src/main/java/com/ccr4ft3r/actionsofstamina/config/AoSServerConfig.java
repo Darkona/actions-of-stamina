@@ -36,6 +36,7 @@ public final class AoSServerConfig {
     public static final ModConfigSpec.EnumValue<ExhaustedAttackMode> EXHAUSTED_MODE;
     public static final ModConfigSpec.DoubleValue WEAKEN_DAMAGE;
     public static final ModConfigSpec.DoubleValue WEAKEN_SPEED;
+    public static final ModConfigSpec.DoubleValue MACE_SMASH_MULTIPLIER;
     public static final ActionCostConfig JUMP;
     public static final ActionCostConfig SPRINT;
     public static final ActionCostConfig SWIM;
@@ -51,6 +52,12 @@ public final class AoSServerConfig {
     public static final ModConfigSpec.BooleanValue MINE_BLOCK_WHEN_EXHAUSTED;
     public static final ModConfigSpec.DoubleValue MINE_EXHAUSTED_BREAK_SPEED;
     public static final ActionCostConfig BUILD;
+    public static final ActionCostConfig CLIMB;
+    public static final ActionCostConfig ROW;
+    public static final ActionCostConfig RIPTIDE;
+    public static final ActionCostConfig FISH;
+    public static final ActionCostConfig TILL;
+    public static final ActionCostConfig BRUSH;
 
     public static final ModConfigSpec SPEC;
 
@@ -98,6 +105,8 @@ public final class AoSServerConfig {
                 .defineInRange("weaken_damage", 0.5, 0.0, 1.0);
         WEAKEN_SPEED = attack.spec().comment("WEAKEN: share of the attack speed left while the stamina is short (0.05-1)")
                 .defineInRange("weaken_speed", 0.5, 0.05, 1.0);
+        MACE_SMASH_MULTIPLIER = attack.spec().comment("A mace smash (a mace hit while falling) is charged on its own, right away: the cost times this (0 makes it free)")
+                .defineInRange("mace_smash_multiplier", 2.0, 0.0, 10.0);
         ATTACK = attack.build();
         JUMP = ActionCostConfig.builder(b, "jump", "Jumping", true)
                 .cost(1.0, "Cost of a jump")
@@ -151,7 +160,7 @@ public final class AoSServerConfig {
                 .blocksRegen(true)
                 .build();
         THROW = ActionCostConfig.builder(b, "throw",
-                        "Throwing an item from the item tag actionsofstamina:throwables (snowball, egg, ender pearl, splash and lingering potions, trident on release)", true)
+                        "Throwing an item from the item tag actionsofstamina:throwables (snowball, egg, ender pearl, splash and lingering potions, wind charge, trident on release)", true)
                 .cost(0.5, "Cost of a throw")
                 .minStamina(0.5)
                 .timesToCharge(1)
@@ -176,6 +185,45 @@ public final class AoSServerConfig {
                 .minStamina(0.0)
                 .timesToCharge(4)
                 .regenDelay(30)
+                .build();
+        CLIMB = ActionCostConfig.builder(b, "climb", "Climbing: going up a ladder, vines, scaffolding or anything else climbable (down is free)", false)
+                .cost(0.0, "Cost to start")
+                .minStamina(1.0)
+                .perSecond(0.3)
+                .regenDelay(30)
+                .blocksRegen(true)
+                .build();
+        ROW = ActionCostConfig.builder(b, "row",
+                        "Rowing a boat from the entity tag actionsofstamina:rowed_boats as its driver (vanilla boats, chest boats and rafts; datapacks add other mods' boats)", false)
+                .cost(0.0, "Cost to start")
+                .minStamina(1.0)
+                .perSecond(0.15)
+                .regenDelay(30)
+                .blocksRegen(true)
+                .build();
+        RIPTIDE = ActionCostConfig.builder(b, "riptide", "Launching with a Riptide trident, charged on release", false)
+                .cost(1.0, "Cost of a launch")
+                .minStamina(1.0)
+                .regenDelay(40)
+                .build();
+        FISH = ActionCostConfig.builder(b, "fish", "Fishing: casting a rod and reeling it in, each charged (any item with the fishing rod's cast ability)", false)
+                .cost(0.25, "Cost of a cast or a reel")
+                .minStamina(0.5)
+                .regenDelay(20)
+                .build();
+        TILL = ActionCostConfig.builder(b, "till",
+                        "Working a block with a tool: tilling with a hoe, making a path with a shovel, stripping logs and scraping or unwaxing copper with an axe (modded tools with those abilities too)", false)
+                .cost(0.25, "Cost of working a block")
+                .minStamina(0.5)
+                .timesToCharge(2)
+                .regenDelay(30)
+                .build();
+        BRUSH = ActionCostConfig.builder(b, "brush", "Brushing (any item used with the brush animation)", false)
+                .cost(0.0, "Cost to start brushing")
+                .minStamina(0.5)
+                .perSecond(0.2)
+                .regenDelay(30)
+                .blocksRegen(true)
                 .build();
         b.pop();
 

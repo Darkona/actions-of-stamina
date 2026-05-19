@@ -84,6 +84,10 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		# Default: 0.5
 		# Range: 0.05 ~ 1.0
 		weaken_speed = 0.5
+		#A mace smash (a mace hit while falling) is charged on its own, right away: the cost times this (0 makes it free)
+		# Default: 2.0
+		# Range: 0.0 ~ 10.0
+		mace_smash_multiplier = 2.0
 
 	#Jumping
 	[vanilla.jump]
@@ -246,7 +250,7 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		#Whether regeneration pauses while it lasts
 		blocks_regen = true
 
-	#Throwing an item from the item tag actionsofstamina:throwables (snowball, egg, ender pearl, splash and lingering potions, trident on release)
+	#Throwing an item from the item tag actionsofstamina:throwables (snowball, egg, ender pearl, splash and lingering potions, wind charge, trident on release)
 	[vanilla.throw]
 		#Whether this action costs stamina.
 		enabled = true
@@ -320,6 +324,130 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		# Default: 30
 		# Range: 0 ~ 1200
 		regen_delay = 30
+
+	#Climbing: going up a ladder, vines, scaffolding or anything else climbable (down is free)
+	[vanilla.climb]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Feathers drained per second while it lasts
+		# Default: 0.3
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.3
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#Rowing a boat from the entity tag actionsofstamina:rowed_boats as its driver (vanilla boats, chest boats and rafts; datapacks add other mods' boats)
+	[vanilla.row]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Feathers drained per second while it lasts
+		# Default: 0.15
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.15
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#Launching with a Riptide trident, charged on release
+	[vanilla.riptide]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost of a launch (feathers)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		cost = 1.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 40
+		# Range: 0 ~ 1200
+		regen_delay = 40
+
+	#Fishing: casting a rod and reeling it in, each charged (any item with the fishing rod's cast ability)
+	[vanilla.fish]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost of a cast or a reel (feathers)
+		# Default: 0.25
+		# Range: 0.0 ~ 1000.0
+		cost = 0.25
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+
+	#Working a block with a tool: tilling with a hoe, making a path with a shovel, stripping logs and scraping or unwaxing copper with an axe (modded tools with those abilities too)
+	[vanilla.till]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost of working a block (feathers)
+		# Default: 0.25
+		# Range: 0.0 ~ 1000.0
+		cost = 0.25
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Charge the cost once every this many uses
+		# Default: 2
+		# Range: 1 ~ 100
+		times_to_charge = 2
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+
+	#Brushing (any item used with the brush animation)
+	[vanilla.brush]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost to start brushing (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Feathers drained per second while it lasts
+		# Default: 0.2
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.2
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
 
 #ParCool (parkour) actions. AoS charges them server side and blocks starting or continuing them
 # when stamina runs short. ParCool's stamina is AoS's own stamina type, "actionsofstamina:stamina",

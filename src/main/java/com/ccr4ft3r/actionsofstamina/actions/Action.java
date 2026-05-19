@@ -14,8 +14,8 @@ import net.minecraft.world.entity.player.Player;
  * One stamina-costing player action, spending through the active {@link StaminaBackend} under its own
  * {@link #source}.
  * <p>
- * Continuous actions (sprint, swim, elytra, shield, crawl, draw, paraglide, wall cling, glide, crank) run a drain refreshed every tick while
- * performing; one-off actions (attack, jump, throw, mine, build) {@link #perform} a spend. All amounts are kept in stamina (1/1000
+ * Continuous actions (sprint, swim, elytra, shield, crawl, draw, paraglide, wall cling, glide, crank, climb, row, brush) run a drain refreshed every tick while
+ * performing; one-off actions (attack, jump, throw, mine, build, riptide, fish, till) {@link #perform} a spend. All amounts are kept in stamina (1/1000
  * feather), read from the config once, in the constructor (actions are rebuilt whenever the player joins a level).
  * <p>
  * Runs on both sides: on the client the backend only checks (Green Feathers also predicts), the server is
@@ -39,7 +39,13 @@ public abstract class Action {
     public static final int MINE = 12;
     public static final int BUILD = 13;
     public static final int CRANK = 14;
-    public static final int COUNT = 15;
+    public static final int CLIMB = 15;
+    public static final int ROW = 16;
+    public static final int RIPTIDE = 17;
+    public static final int FISH = 18;
+    public static final int TILL = 19;
+    public static final int BRUSH = 20;
+    public static final int COUNT = 21;
 
     protected final ResourceLocation source;
     /** One-off cost, in stamina: per {@link #perform}, or when a continuous action begins. */

@@ -13,6 +13,7 @@ import yesman.epicfight.api.event.types.player.SkillConsumeEvent;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillCategories;
 import yesman.epicfight.skill.SkillCategory;
+import yesman.epicfight.skill.modules.HoldableSkill;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
@@ -24,6 +25,11 @@ final class EpicFightBridge {
     private static final ResourceLocation INNATE = ActionsOfStamina.id("epicfight/innate");
     private static final ResourceLocation MOVER = ActionsOfStamina.id("epicfight/mover");
     private static final ResourceLocation BASIC_ATTACK = ActionsOfStamina.id("epicfight/basic_attack");
+
+    // Server thread only: the holdable skill AoS charged in the last consume event, to tell the repeat of a hold start.
+    private static int paidPlayer = -1;
+    @Nullable private static Skill paidSkill;
+    private static long paidTick = Long.MIN_VALUE;
 
     private EpicFightBridge() {
     }
@@ -76,9 +82,23 @@ final class EpicFightBridge {
         ResourceLocation source = sourceOf(category);
         int cost = costs.cost();
         StaminaBackend backend = StaminaBackends.of(player);
-        boolean paid = player.level().isClientSide()
-                ? backend.canSpend(player, source, cost)
-                : backend.spend(player, source, cost, costs.regenDelay());
+        boolean paid;
+        if (player.level().isClientSide()) {
+            paid = backend.canSpend(player, source, cost);
+        } else {
+            // Starting to hold a skill (guard, charged skills), Epic Fight posts the event twice in a row on the
+            // server: once from the resource check, then again to consume. The second one is already paid.
+            long tick = player.level().getGameTime();
+            boolean repeat = paidSkill == event.getSkill() && paidPlayer == player.getId() && paidTick == tick;
+            paidSkill = null;
+            if (repeat) {
+                paid = true;
+            } else if ((paid = backend.spend(player, source, cost, costs.regenDelay())) && event.getSkill() instanceof HoldableSkill) {
+                paidPlayer = player.getId();
+                paidSkill = event.getSkill();
+                paidTick = tick;
+            }
+        }
         if (paid) event.setResourceType(Skill.Resource.NONE);
         else event.cancel();
     }

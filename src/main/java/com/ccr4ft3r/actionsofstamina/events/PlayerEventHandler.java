@@ -4,10 +4,14 @@ import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.brush.BrushAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.fish.FishAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.mine.MineAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.riptide.RiptideAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.throwing.ThrowAction;
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.till.TillAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
@@ -20,11 +24,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
@@ -66,12 +73,11 @@ public final class PlayerEventHandler {
     @SubscribeEvent
     public static void onAttackEntity(AttackEntityEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isNotExhaustable(player)) return;
-        Action attack = PlayerActions.get(player).getAction(Action.ATTACK);
-        if (attack == null) return;
+        if (!(PlayerActions.get(player).getAction(Action.ATTACK) instanceof AttackAction attack)) return;
         // Better Combat's swings and Epic Fight's battle-mode combo are charged by their compats.
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()) || EpicFightCompat.inBattleMode(player)) return;
-        if (attack.perform(player)) return;
-        if (attack instanceof AttackAction weakening && weakening.weakens()) weakening.weaken(player);
+        if (attack.performHit(player)) return;
+        if (attack.weakens()) attack.weaken(player);
         else event.setCanceled(true);
     }
 
@@ -98,6 +104,21 @@ public final class PlayerEventHandler {
         Action draw = PlayerActions.get(player).getAction(Action.DRAW);
         if (draw != null && !draw.canPerform(player)) {
             event.setCanceled(true);
+        }
+    }
+
+    /**
+     * Brushing the player can't afford is refused (both sides; a brush is used on a block, not in the air), which also
+     * keeps a held use button from starting it again right after it ran out. Only the item use is refused: the block
+     * can still be used.
+     */
+    @SubscribeEvent
+    public static void brushUsage(PlayerInteractEvent.RightClickBlock event) {
+        Player player = event.getEntity();
+        if (PlayerActions.isNotExhaustable(player) || !BrushAction.brushes(event.getItemStack())) return;
+        Action brush = PlayerActions.get(player).getAction(Action.BRUSH);
+        if (brush != null && !brush.canPerform(player)) {
+            event.setUseItem(TriState.FALSE);
         }
     }
 
@@ -128,6 +149,50 @@ public final class PlayerEventHandler {
         }
     }
 
+    /**
+     * A Riptide trident released after aiming (both sides; the event comes before the item's release): charged as a
+     * launch, and one the player can't afford doesn't happen (cancelling skips the release, the aim just ends).
+     */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void riptideOnRelease(LivingEntityUseItemEvent.Stop event) {
+        if (!(event.getEntity() instanceof Player player) || PlayerActions.isNotExhaustable(player)) return;
+        if (!RiptideAction.launchesOnRelease(event.getItem(), player, event.getDuration())) return;
+        Action riptide = PlayerActions.get(player).getAction(Action.RIPTIDE);
+        if (riptide != null && !riptide.perform(player)) {
+            event.setCanceled(true);
+        }
+    }
+
+    /**
+     * Casting a fishing rod or reeling it in (both sides; any item with the rod's cast ability): charged on use, and one
+     * the player can't afford doesn't happen (the line stays where it is).
+     */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void fishOnUse(PlayerInteractEvent.RightClickItem event) {
+        Player player = event.getEntity();
+        if (PlayerActions.isNotExhaustable(player) || !FishAction.isRod(event.getItemStack())) return;
+        Action fish = PlayerActions.get(player).getAction(Action.FISH);
+        if (fish != null && !fish.perform(player)) {
+            event.setCancellationResult(InteractionResult.FAIL);
+            event.setCanceled(true);
+        }
+    }
+
+    /**
+     * Tilling, making a path, stripping a log, scraping or unwaxing copper (after every other mod had its say; a
+     * simulated check is never charged nor refused). The server charges it and refuses it without the stamina; the
+     * client only refuses it, so it doesn't show a change the server won't make.
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
+        if (event.isSimulated() || !TillAction.charges(event.getItemAbility())) return;
+        Player player = event.getPlayer();
+        if (PlayerActions.isNotExhaustable(player)) return;
+        Action till = PlayerActions.get(player).getAction(Action.TILL);
+        if (till == null || !TillAction.changesBlock(event)) return;
+        if (player.level().isClientSide() ? !till.canPerform(player) : !till.perform(player)) event.setCanceled(true);
+    }
+
     /** Server: a block broken by a player (after every other mod had its say: a cancelled break isn't charged). */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void blockBroken(BlockEvent.BreakEvent event) {
@@ -138,12 +203,19 @@ public final class PlayerEventHandler {
         }
     }
 
-    /** Server: a block (or a multi-block, such as a bed or a door, once) placed by a player; never refused. */
+    /**
+     * Server: a block (or a multi-block, such as a bed or a door, once) placed by a player; never refused. NeoForge
+     * posts this event for every block any item changes on use (a hoe tilling, an axe stripping, bone meal, flint and
+     * steel), so only a block placed from the item held for it counts.
+     */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void blockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isNotExhaustable(player)) return;
         Action build = PlayerActions.get(player).getAction(Action.BUILD);
-        if (build != null) build.perform(player);
+        if (build == null) return;
+        Item placed = event.getPlacedBlock().getBlock().asItem();
+        if (placed == Items.AIR || !player.getMainHandItem().is(placed) && !player.getOffhandItem().is(placed)) return;
+        build.perform(player);
     }
 
     /**

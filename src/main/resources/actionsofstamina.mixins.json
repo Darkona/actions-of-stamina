@@ -4,6 +4,8 @@
   "package": "com.ccr4ft3r.actionsofstamina.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BoatMixin",
+    "LivingEntityMixin",
     "PlayerMixin"
   ],
   "client": [],

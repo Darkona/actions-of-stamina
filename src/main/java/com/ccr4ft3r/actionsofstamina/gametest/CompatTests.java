@@ -177,6 +177,13 @@ public class CompatTests {
             helper.assertValueEqual(backend.stamina(player), before - epicFightCosts(category).cost(), "stamina after " + name);
         }
 
+        // Starting to hold a guard, Epic Fight posts the event twice in a row on the server: charged once.
+        int beforeHold = backend.stamina(player);
+        EpicFightTestHooks.consumeSkill(player, 1);
+        EpicFightTestHooks.Consume repeat = EpicFightTestHooks.consumeSkill(player, 1);
+        helper.assertTrue(repeat.switchedToNone(), "the repeated guard post spends no Epic Fight stamina");
+        helper.assertValueEqual(backend.stamina(player), beforeHold - EpicFightConfig.GUARD.cost(), "stamina after a guard hold start");
+
         String state = exhaust(backend, player);
         for (int category = 0; category < EpicFightTestHooks.CATEGORIES; category++) {
             String name = EpicFightTestHooks.CATEGORY_NAMES[category];

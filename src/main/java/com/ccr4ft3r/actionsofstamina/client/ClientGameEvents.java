@@ -51,19 +51,19 @@ public final class ClientGameEvents {
         boolean isEntityHit = hitResult != null && hitResult.getType() == HitResult.Type.ENTITY;
         boolean isMissHit = hitResult != null && hitResult.getType() == HitResult.Type.MISS;
 
-        Action attack = PlayerActions.get(player).getAction(Action.ATTACK);
-        if (attack == null) return;
+        if (!(PlayerActions.get(player).getAction(Action.ATTACK) instanceof AttackAction attack)) return;
         // Better Combat swings these weapons itself and its compat charges each swing.
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem())) return;
         // Same for Epic Fight's battle mode: its basic attack combo is charged by the Epic Fight compat.
         if (EpicFightCompat.inBattleMode(player)) return;
         // Only swings at an entity cost, and at air unless only_for_hits: mining fires this every tick a block is hit.
         if (!isEntityHit && !(isMissHit && !AoSServerConfig.ONLY_FOR_HITS.get())) return;
-        if (attack.perform(player)) {
+        // A hit on an entity may be a mace smash, charged at its own cost; a swing at air never is.
+        if (isEntityHit ? attack.performHit(player) : attack.perform(player)) {
             // The client spend above was only a prediction. Hits are charged by the server itself (AttackEntityEvent);
             // a swing at air never reaches it, so that one is asked for.
             if (attack.hasJustCharged() && !isEntityHit) PacketDistributor.sendToServer(new ActionChargePacket((byte) Action.ATTACK));
-        } else if (!(attack instanceof AttackAction weakening && weakening.weakens())) {
+        } else if (!attack.weakens()) {
             event.setCanceled(true);
             event.setSwingHand(false);
             ActionsOfStamina.log("Attack and swing cancelled");
