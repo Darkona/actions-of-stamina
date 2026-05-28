@@ -5,11 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "actionsofstamina.refmap.json",
   "mixins": [
-    "ElytraItemMixin",
-    "HandCrankBlockMixin",
+    "BoatMixin",
+    "LivingEntityMixin",
     "PlayerMixin"
   ],
-  "client": [
-
-  ]
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

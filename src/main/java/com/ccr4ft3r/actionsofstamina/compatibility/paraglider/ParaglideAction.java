@@ -1,30 +1,29 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
 
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
-import net.minecraft.nbt.CompoundTag;
+import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 
 public class ParaglideAction extends Action {
 
     public static final String actionName = "paragliding_action";
+    public static final ResourceLocation SOURCE = ActionsOfStamina.id("paraglide");
 
     public ParaglideAction() {
-        super(ParagliderConfig.PARAGLIDING_COST.get(),
-                ParagliderConfig.PARAGLIDING_MINIMUM_COST.get(),
-                ParagliderConfig.PARAGLIDING_COOLDOWN.get(),
-                ParagliderConfig.PARAGLIDING_FEATHERS_PER_SECOND.get(),
-                ParagliderConfig.INHIBIT_REGEN_WHEN_PARAGLIDING.get(),
-                0);
+        super(SOURCE, ParagliderConfig.PARAGLIDE);
     }
 
-    public ParaglideAction(CompoundTag tag) {
-        super(tag);
-    }
     @Override
     public String name() {
         return actionName;
+    }
+
+    @Override
+    public int id() {
+        return PARAGLIDE;
     }
 
     @Override
