@@ -1,47 +1,52 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
-import com.ccr4ft3r.actionsofstamina.ModConstants;
-import com.ccr4ft3r.actionsofstamina.events.ExhaustionHandler;
-import net.minecraft.resources.ResourceLocation;
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpChargePacket;
+import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalStaminaPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-import java.util.function.Supplier;
+public final class PacketHandler {
 
-import static com.ccr4ft3r.actionsofstamina.config.AoSAction.*;
-import static com.ccr4ft3r.actionsofstamina.config.ProfileConfig.*;
-import static com.ccr4ft3r.actionsofstamina.data.ServerData.*;
+    private static final String PROTOCOL_VERSION = "5";
 
-public class PacketHandler {
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(ActionsOfStamina.id("main"), () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
-    private static final String PROTOCOL_VERSION = "1.0.0";
-    private static final SimpleChannel SIMPLE_CHANNEL = NetworkRegistry
-        .newSimpleChannel(new ResourceLocation(ModConstants.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
-
-    public static void registerMessages() {
-        SIMPLE_CHANNEL.registerMessage(0, ServerboundPacket.class, ServerboundPacket::encodeOnClientSide, ServerboundPacket::new, PacketHandler::handle);
+    private PacketHandler() {
     }
 
-    public static void sendToServer(ServerboundPacket packet) {
-        SIMPLE_CHANNEL.sendToServer(packet);
+    /** Mod construction. Client-bound handlers only touch client classes through {@code ClientPackets}. */
+    public static void register() {
+        int id = 0;
+        CHANNEL.messageBuilder(ActionStatePacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
+               .encoder(ActionStatePacket::encode).decoder(ActionStatePacket::decode)
+               .consumerMainThread(ActionStatePacket::handle).add();
+        CHANNEL.messageBuilder(ActionChargePacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
+               .encoder(ActionChargePacket::encode).decoder(ActionChargePacket::decode)
+               .consumerMainThread(ActionChargePacket::handle).add();
+        CHANNEL.messageBuilder(WallJumpChargePacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
+               .encoder(WallJumpChargePacket::encode).decoder(WallJumpChargePacket::decode)
+               .consumerMainThread(WallJumpChargePacket::handle).add();
+        CHANNEL.messageBuilder(BackendSyncPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+               .encoder(BackendSyncPacket::encode).decoder(BackendSyncPacket::decode)
+               .consumerMainThread(BackendSyncPacket::handle).add();
+        CHANNEL.messageBuilder(InternalStaminaPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+               .encoder(InternalStaminaPacket::encode).decoder(InternalStaminaPacket::decode)
+               .consumerMainThread(InternalStaminaPacket::handle).add();
     }
 
-    private static void handle(ServerboundPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        final NetworkEvent.Context context = ctx.get();
-        context.enqueueWork(() -> {
-            final ServerPlayer player = context.getSender();
-            if (player == null) {
-                return;
-            }
-            switch (packet.getAction()) {
-                case PLAYER_MOVING -> getPlayerData(player).setMoving(true);
-                case PLAYER_STOP_MOVING -> getPlayerData(player).setMoving(false);
-                case WEAPON_SWING -> ExhaustionHandler.exhaustForWeaponSwing(getProfile().onlyForHits.get(), player);
-                case PLAYER_WALL_JUMP -> getPlayerData(player).set(WALL_JUMPING, true, player);
-            }
-            context.setPacketHandled(true);
-        });
+    public static void sendToServer(Object packet) {
+        CHANNEL.sendToServer(packet);
+    }
+
+    /** Fake players (machines acting as players) and connections without AoS's channel can't receive packets. */
+    public static void sendToPlayer(ServerPlayer player, Object packet) {
+        if (player instanceof FakePlayer || player.connection == null || !CHANNEL.isRemotePresent(player.connection.connection)) return;
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
     }
 }

@@ -1,0 +1,27 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.ccr4ft3r.actionsofstamina.compatmixin",
+  "plugin": "com.ccr4ft3r.actionsofstamina.compatibility.CompatMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "actionsofstamina.refmap.json",
+  "mixins": [
+    "BetterCombatServerNetworkMixin",
+    "CreateHandCrankBlockMixin",
+    "CreateValveHandleBlockMixin",
+    "GlidersToggleGlideMixin",
+    "ParagliderPlayerMovementMixin",
+    "ParagliderServerMovementMixin",
+    "ParcoolConfigServerMixin",
+    "ParcoolStaminaTypeEventMixin"
+  ],
+  "client": [
+    "CombatRollManagerMixin",
+    "ParagliderStaminaWheelMixin",
+    "WallJumpDoubleJumpMixin",
+    "WallJumpLogicMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
