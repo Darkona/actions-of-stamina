@@ -8,7 +8,7 @@ and combat mods. If you don't have enough stamina, the action doesn't happen: yo
 is cancelled, a swing is dropped, a roll isn't available.
 
 AoS only decides **how actions cost stamina**. The stamina bar comes from
-[Green Feathers](https://github.com/Darkona/Green-Feathers) if it is installed, or from AoS's own simple bar if it
+[Green Feathers](https://github.com/Darkona/green-feathers) if it is installed, or from AoS's own simple bar if it
 isn't.
 
 ![Paragliding with Green Feathers and Actions of Stamina](images/paraglider.png)
