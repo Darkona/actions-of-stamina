@@ -1,206 +1,224 @@
-buildscript {
-    repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
-}
-
 plugins {
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'java-library'
+    id 'maven-publish'
+    id 'idea'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.141'
 }
 
-apply plugin: 'org.spongepowered.mixin'
-
-group = 'com.ccr4ft3r'
-version = "${mc_version}-${mod_version}"
-
-java {
-    archivesBaseName = 'actions-of-stamina'
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
 }
 
-minecraft {
-    // The mappings can be changed at any time and must be in the following format.
-    // Channel:   Version:
-    // official   MCVersion             Official field/method names from Mojang mapping files
-    // parchment  YYYY.MM.DD-MCVersion  Open community-sourced parameter names and javadocs layered on top of official
-    //
-    // You must be aware of the Mojang license when using the 'official' or 'parchment' mappings.
-    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-    //
-    // Parchment is an unofficial project maintained by ParchmentMC, separate from MinecraftForge
-    // Additional setup is needed to use their mappings: https://parchmentmc.org/docs/getting-started
-    //
-    // Use non-default mappings at your own risk. They may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: mc_version
+version = System.getenv("GITHUB_HASH") ?: "${minecraft_version}-${mod_version}"
+group = mod_group_id
 
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+base {
+    archivesName = archive_name
+}
 
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
+// Minecraft 1.18.2 runs on Java 17: compile for it and run the game on it.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        name = 'Curios'
+        url = 'https://maven.theillusivec4.top/'
+        content { includeGroup 'top.theillusivec4.curios' }
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+    maven {
+        name = "CurseMaven"
+        url = "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
+
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
     runs {
         client {
-            workingDirectory project.file('run')
+            client()
+            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        }
 
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
-
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'debug'
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'actions-of-stamina'
-
-            mods {
-                actionsofstamina {
-                    source sourceSets.main
-                }
-            }
+        // Boot check (scripts/client-boot-check.sh): 1.18.2 can't open a singleplayer world from the command line, so a
+        // dedicated server of its own (run/bootserver) hosts a copy of the test world and the headless client joins it.
+        // Named after the project: other projects' boot checks kill processes whose arguments name a "bootCheck" run.
+        aosBootServer {
+            server()
+            gameDirectory = project.file('run/bootserver')
+            programArguments.addAll '--nogui', '--port', project.findProperty('bootCheckPort') ?: '25699'
+        }
+        aosBoot {
+            client()
+            gameDirectory = project.file('run')
+            programArguments.addAll '--width', '1920', '--height', '1080', '--username', 'AoSBoot',
+                    '--server', 'localhost', '--port', project.findProperty('bootCheckPort') ?: '25699'
         }
 
         server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'forge.enabledGameTestNamespaces', 'actions-of-stamina'
-
-            mods {
-                actionsofstamina {
-                    source sourceSets.main
-                }
-            }
+            server()
+            programArgument '--nogui'
+            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         }
 
-        // This run config launches GameTestServer and runs all registered gametests, then exits.
-        // By default, the server will crash when no gametests are provided.
-        // The gametest system is also enabled by default for other run configs under the /test command.
         gameTestServer {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'forge.enabledGameTestNamespaces', 'actions-of-stamina'
-
-            mods {
-                actionsofstamina {
-                    source sourceSets.main
-                }
-            }
+            type = 'gameTestServer'
+            gameDirectory = project.file('run/gametest')
+            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         }
 
-        data {
-            workingDirectory project.file('run')
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'mixin.env.remapRefMap', 'true'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
 
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'actionsofstamina', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                actionsofstamina {
-                    source sourceSets.main
-                }
-            }
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
         }
     }
 }
 
 mixin {
-    add sourceSets.main, "actionsofstamina.refmap.json"
-
-    config "actionsofstamina.mixins.json"
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "${mod_id}.mixins.json"
+    config "${mod_id}.compat.mixins.json"
 }
 
-// Include resources generated by data generators.
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+// 'localRuntime': present when running the game from the dev environment, never published as a dependency.
+configurations {
+    localRuntime
+    runtimeClasspath.extendsFrom localRuntime
+}
 
-repositories {
-    // Put repositories for dependencies here
-    // ForgeGradle automatically adds the Forge maven and Maven Central for you
-
-    // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
-    // flatDir {
-    //     dir 'libs'
-    // }
-    maven {
-        url "https://www.cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+obfuscation {
+    // modLocalRuntime: mods on the dev runtime only, remapped like the other mod dependencies.
+    createRemappingConfiguration(configurations.localRuntime)
 }
 
 dependencies {
-    // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft' it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-
-    runtimeOnly fg.deobf("curse.maven:cloth-config-api-348521:${cloth_config_id}")
-    runtimeOnly fg.deobf("curse.maven:configured-457570:${mod_configured_file_id}")
-    implementation fg.deobf("curse.maven:feathers-699933:${mod_feathers_file_id}")
-    implementation fg.deobf("curse.maven:angel-ring-333396:${mod_angel_ring_file_id}")
-    implementation fg.deobf("curse.maven:paragliders-289240:${mod_paragliders_file_id}")
-    implementation fg.deobf("curse.maven:curios-309927:${curios_file_id}")
-    compileOnly fg.deobf("curse.maven:parcool-482378:${parcool_file_id}")
-    implementation fg.deobf("curse.maven:create-328085:${create_file_id}")
-    implementation fg.deobf("curse.maven:better-combat-639842:${better_combat_file_id}")
-    implementation fg.deobf("curse.maven:player-animator-658587:${player_animator_file_id}")
-    implementation fg.deobf("curse.maven:wall-jump-622370:${wall_jump_file_id}")
-    implementation fg.deobf("curse.maven:architectury-419699:${architectury_file_id}")
-
-    // Real mod deobf dependency examples - these get remapped to your current mappings
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
-    // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
-
-    // Examples using mod jars from ./libs
-    // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    // Forge 40 doesn't ship MixinExtras: bundled in the jar.
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixinextras_version}"))
+
+    // Green Feathers is optional: AoS compiles against its API only and falls back to its internal stamina
+    // without it. Dev runs load the full mod unless -PwithoutFeathers is given.
+    modCompileOnly "com.darkona.feathers:greenfeathers-api:${greenfeathers_version}"
+    if (!project.hasProperty('withoutFeathers')) {
+        modLocalRuntime "com.darkona.feathers:greenfeathers:${greenfeathers_version}"
+    }
+
+    // Optional compatibility targets. All direct use sits behind ModList checks and bridge classes.
+    modCompileOnly "curse.maven:paragliders-289240:${paragliders_file_id}"
+    modCompileOnly "maven.modrinth:parcool:${parcool_version}"
+    modCompileOnly "maven.modrinth:better-combat:${bettercombat_version}"
+    modCompileOnly "maven.modrinth:combat-roll:${combatroll_version}"
+    modCompileOnly "maven.modrinth:epic-fight:${epicfight_version}"
+    modCompileOnly "maven.modrinth:wall-jump-txf:${walljump_version}"
+    modCompileOnly "maven.modrinth:create:${create_version}"
+    modCompileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
+
+    // -PwithCompat: boot dev runs with the compat targets, Curios and their required libraries.
+    // Unlike on 1.20.1, ParCool, Curios and Epic Fight run together here: ParCool 3 has no Curios items (the traceur
+    // gloves whose attribute modifiers recursed with Epic Fight's listener came with ParCool 4).
+    if (project.hasProperty('withCompat')) {
+        modLocalRuntime "curse.maven:paragliders-289240:${paragliders_file_id}"
+        modLocalRuntime "maven.modrinth:parcool:${parcool_version}"
+        modLocalRuntime "maven.modrinth:better-combat:${bettercombat_version}"
+        modLocalRuntime "maven.modrinth:combat-roll:${combatroll_version}"
+        modLocalRuntime "maven.modrinth:epic-fight:${epicfight_version}"
+        modLocalRuntime "maven.modrinth:wall-jump-txf:${walljump_version}"
+        modLocalRuntime "maven.modrinth:playeranimator:${playeranimator_version}"
+        modLocalRuntime "maven.modrinth:cloth-config:${clothconfig_version}"
+        // Create carries its libraries (Flywheel, Registrate) inside its own jar.
+        modLocalRuntime "maven.modrinth:create:${create_version}"
+        modLocalRuntime "top.theillusivec4.curios:curios-forge:${curios_version}"
+    }
 }
 
-// Example for how to get properties into the manifest for reading at runtime.
-jar {
+// Expands ${} properties in src/main/templates (mods.toml) into the resources.
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [
+            minecraft_version          : minecraft_version,
+            minecraft_version_range    : minecraft_version_range,
+            forge_version              : forge_version,
+            forge_version_range        : forge_version_range,
+            loader_version_range       : loader_version_range,
+            mod_id                     : mod_id,
+            mod_name                   : mod_name,
+            mod_license                : mod_license,
+            mod_version                : mod_version,
+            mod_authors                : mod_authors,
+            greenfeathers_version_range: greenfeathers_version_range,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
+}
+sourceSets.main.resources.srcDir generateModMetadata
+legacyForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('jar', Jar) {
     manifest {
         attributes([
-                "Specification-Title"     : "actionsofstamina",
-                "Specification-Vendor"    : "CCr4ft3r",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Specification-Title"     : mod_id,
+                "Specification-Vendor"    : mod_authors,
+                "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "CCr4ft3r",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Implementation-Version"  : project.version,
+                "Implementation-Vendor"   : mod_authors,
+                "MixinConfigs"            : "${mod_id}.mixins.json,${mod_id}.compat.mixins.json"
         ])
     }
 }
 
-jar.finalizedBy('reobfJar')
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifactId = archive_name
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GithubPackages"
+            url = "https://maven.pkg.github.com/NewWind-Modpacks/actions-of-stamina"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
 }

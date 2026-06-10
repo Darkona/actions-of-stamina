@@ -1,0 +1,91 @@
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+logoFile = "aos.png"
+authors = "${mod_authors}"
+description = '''
+Actions cost stamina: vanilla actions and other mods' actions (ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Create). Uses Green Feathers when installed, or its own light stamina bar.
+'''
+
+[[dependencies.${mod_id}]]
+modId = "forge"
+mandatory = true
+versionRange = "${forge_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+mandatory = true
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "greenfeathers"
+mandatory = false
+versionRange = "${greenfeathers_version_range}"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "paraglider"
+mandatory = false
+versionRange = "[1.6,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "parcool"
+mandatory = false
+versionRange = "[3.4,4)"
+# NONE: AoS's stamina stands in for ParCool's through a mixin on ParCool's stamina capability, whatever the order.
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "bettercombat"
+mandatory = false
+versionRange = "[1.6,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "combatroll"
+mandatory = false
+versionRange = "[1.1,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "epicfight"
+mandatory = false
+versionRange = "[18.5,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "walljump"
+mandatory = false
+versionRange = "[1.18.2-1.3,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "create"
+mandatory = false
+versionRange = "[0.5.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "curios"
+mandatory = false
+versionRange = "[1.18.2-5.0,)"
+ordering = "NONE"
+side = "BOTH"
