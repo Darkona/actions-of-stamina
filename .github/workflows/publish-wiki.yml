@@ -11,3 +11,5 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: Andrew-Chen-Wang/github-wiki-action@v5
+        with:
+          path: wiki/

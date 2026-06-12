@@ -1,6 +1,6 @@
 # Actions of Stamina
 
-*Minecraft 1.21.1 · NeoForge 21.1*
+*Minecraft 1.21.1 · NeoForge 21.1. Also for 1.20.1, 1.19.2 and 1.18.2 (Forge): see [Minecraft Versions](Minecraft-Versions) for what differs.*
 
 Actions of Stamina (AoS) makes player actions cost stamina. Sprinting, jumping, attacking, swimming, crawling,
 flying with an elytra and raising a shield all cost stamina, and so do the actions of several popular movement
@@ -19,3 +19,4 @@ isn't.
 - [Vanilla Actions](Vanilla-Actions): what sprinting, jumping, attacking and the rest cost.
 - [Compatibility](Compatibility): ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders, Create.
 - [Configuration](Configuration): every option.
+- [Minecraft Versions](Minecraft-Versions): what is different on 1.20.1, 1.19.2 and 1.18.2.
