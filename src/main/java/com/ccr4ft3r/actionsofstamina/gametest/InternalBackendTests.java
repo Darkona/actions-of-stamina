@@ -3,6 +3,9 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
+import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalStaminaPacket;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -130,6 +133,20 @@ public class InternalBackendTests {
         player.setGameMode(GameType.CREATIVE);
         helper.assertTrue(BACKEND.spend(player, TEST, StaminaUnits.ofFeathers(50), 0), "creative spend");
         helper.assertValueEqual(BACKEND.stamina(player), FULL, "creative stamina");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void staminaPacketRoundTrips(GameTestHelper helper) {
+        ByteBuf buf = Unpooled.buffer();
+        try {
+            InternalStaminaPacket sent = new InternalStaminaPacket(12345, FULL, true);
+            InternalStaminaPacket.STREAM_CODEC.encode(buf, sent);
+            helper.assertValueEqual(InternalStaminaPacket.STREAM_CODEC.decode(buf), sent, "decoded packet");
+            helper.assertValueEqual(buf.readableBytes(), 0, "bytes left over");
+        } finally {
+            buf.release();
+        }
         helper.succeed();
     }
 }

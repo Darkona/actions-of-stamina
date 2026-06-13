@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.stamina.internal;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -12,11 +12,14 @@ public record InternalStaminaPacket(int stamina, int maxStamina, boolean exhaust
 
     public static final Type<InternalStaminaPacket> TYPE = new Type<>(ActionsOfStamina.id("internal_stamina"));
 
-    public static final StreamCodec<ByteBuf, InternalStaminaPacket> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, InternalStaminaPacket::stamina,
-            ByteBufCodecs.VAR_INT, InternalStaminaPacket::maxStamina,
-            ByteBufCodecs.BOOL, InternalStaminaPacket::exhausted,
-            InternalStaminaPacket::new);
+    /** Written by hand: it goes out whenever the bar moves a sync step, and composite codecs box every int. */
+    public static final StreamCodec<ByteBuf, InternalStaminaPacket> STREAM_CODEC = StreamCodec.of(
+            (buf, packet) -> {
+                VarInt.write(buf, packet.stamina);
+                VarInt.write(buf, packet.maxStamina);
+                buf.writeBoolean(packet.exhausted);
+            },
+            buf -> new InternalStaminaPacket(VarInt.read(buf), VarInt.read(buf), buf.readBoolean()));
 
     @Override
     public Type<InternalStaminaPacket> type() {
