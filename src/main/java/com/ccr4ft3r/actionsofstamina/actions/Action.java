@@ -119,6 +119,8 @@ public abstract class Action {
     }
 
     public void tick(Player p, PlayerActions a) {
+        // Idle (not flagged, not performing, nothing to undo): most actions most of the time, and nothing below changes.
+        if (!actionState && !wasPerforming && !prevActionState && (debugInfo != null || !ActionsOfStamina.debugging())) return;
 
         boolean performing = wasPerforming;
 
