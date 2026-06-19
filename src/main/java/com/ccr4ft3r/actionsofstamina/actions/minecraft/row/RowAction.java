@@ -39,9 +39,7 @@ public class RowAction extends Action {
 
     /** Whether the player may paddle the rowed boat they drive (asked on the driver's client, which moves the boat). */
     public static boolean mayRow(Player player) {
-        if (PlayerActions.isNotExhaustable(player)) return true;
-        Action row = PlayerActions.get(player).getAction(ROW);
-        return row == null || row.canPerform(player);
+        return PlayerActions.canPerform(player, ROW);
     }
 
     @Override

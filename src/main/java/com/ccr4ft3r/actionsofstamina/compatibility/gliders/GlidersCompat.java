@@ -32,9 +32,7 @@ public final class GlidersCompat {
 
     /** Server, from the mixin: whether {@code player} may open a glider now. */
     public static boolean canDeploy(ServerPlayer player) {
-        if (!isActive() || PlayerActions.isNotExhaustable(player)) return true;
-        Action glide = PlayerActions.get(player).getAction(Action.GLIDE);
-        return glide == null || glide.canPerform(player);
+        return !isActive() || PlayerActions.canPerform(player, Action.GLIDE);
     }
 
     /** Server: the glide can't be paid for, so the player lets go of the glider. */
