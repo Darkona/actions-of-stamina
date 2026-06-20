@@ -131,6 +131,7 @@ public class PlayerActions {
         vesselListenerTarget = target;
     }
 
+    @SuppressWarnings("unused") // for addons
     public short getStateFlags() {
         return stateFlags;
     }

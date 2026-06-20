@@ -47,10 +47,12 @@ public final class InternalStamina {
         this.exhausted = exhausted;
     }
 
+    @SuppressWarnings("unused") // for addons
     public int stamina() {
         return Math.max(stamina, 0);
     }
 
+    @SuppressWarnings("unused") // for addons
     public int maxStamina() {
         return maxStamina;
     }
@@ -59,6 +61,7 @@ public final class InternalStamina {
         return exhausted;
     }
 
+    @SuppressWarnings("unused") // for addons
     public int regenDelay() {
         return regenDelay;
     }
