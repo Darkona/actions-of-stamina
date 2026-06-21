@@ -44,6 +44,26 @@ public class PlayerActions {
     }
 
     /**
+     * Whether the player may perform or begin action {@code actionId} now. Never refused for an exempt player or an
+     * action the config leaves off.
+     */
+    public static boolean canPerform(Player player, int actionId) {
+        if (isNotExhaustable(player)) return true;
+        Action action = get(player).getAction(actionId);
+        return action == null || action.canPerform(player);
+    }
+
+    /**
+     * Performs one-off action {@code actionId}, charging it when it is due; false when the player can't afford it.
+     * Never refused for an exempt player or an action the config leaves off.
+     */
+    public static boolean perform(Player player, int actionId) {
+        if (isNotExhaustable(player)) return true;
+        Action action = get(player).getAction(actionId);
+        return action == null || action.perform(player);
+    }
+
+    /**
      * Client side: record freshly computed movement-state flags. Returns {@code true} when they differ from the
      * previous ones (the caller then sends them to the server).
      */
