@@ -98,6 +98,7 @@ public class PlayerActions {
         curioWings = CuriosCompat.wearsStaminaWings(player);
     }
 
+    @SuppressWarnings("unused") // for addons
     public short getStateFlags() {
         return stateFlags;
     }
