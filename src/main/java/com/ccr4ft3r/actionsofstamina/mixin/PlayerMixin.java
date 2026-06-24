@@ -50,10 +50,7 @@ public abstract class PlayerMixin implements AosPlayerData {
         Player self = (Player) (Object) this;
         // A Wall-Jump TXF double jump already paid its own cost: it isn't a normal jump.
         if (WallJumpCompat.consumeDoubleJump(self)) return;
-        Action jump = PlayerActions.get(self).getAction(Action.JUMP);
-        if (jump != null && !jump.perform(self)) {
-            ci.cancel();
-        }
+        if (!PlayerActions.perform(self, Action.JUMP)) ci.cancel();
     }
 
     /**
@@ -63,9 +60,7 @@ public abstract class PlayerMixin implements AosPlayerData {
     @Inject(method = "tryToStartFallFlying", at = @At("HEAD"), cancellable = true)
     private void actionsofstamina$stopFallFlyingStart(CallbackInfoReturnable<Boolean> cir) {
         Player self = (Player) (Object) this;
-        if (PlayerActions.isNotExhaustable(self)) return;
-        Action elytra = PlayerActions.get(self).getAction(Action.ELYTRA);
-        if (elytra != null && ElytraAction.wearsStaminaWings(self) && !elytra.canPerform(self)) {
+        if (ElytraAction.wearsStaminaWings(self) && !PlayerActions.canPerform(self, Action.ELYTRA)) {
             cir.setReturnValue(false);
         }
     }

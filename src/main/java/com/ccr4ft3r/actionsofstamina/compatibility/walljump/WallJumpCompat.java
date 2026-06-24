@@ -104,9 +104,7 @@ public final class WallJumpCompat {
      * cling action then only needs one more drain tick).
      */
     public static boolean canCling(Player player) {
-        if (!isActive()) return true;
-        Action cling = PlayerActions.get(player).getAction(Action.WALL_CLING);
-        return cling == null || cling.canPerform(player);
+        return !isActive() || PlayerActions.canPerform(player, Action.WALL_CLING);
     }
 
     /** Client only: whether the local player is clinging to (or sliding down) a wall. */

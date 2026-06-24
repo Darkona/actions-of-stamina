@@ -26,9 +26,7 @@ public class ClimbAction extends Action {
      * jump). Remote players on a client are moved by their own client: never held back here.
      */
     public static boolean mayClimbUp(Player player) {
-        if (PlayerActions.isNotExhaustable(player) || player.level.isClientSide() && !player.isLocalPlayer()) return true;
-        Action climb = PlayerActions.get(player).getAction(CLIMB);
-        return climb == null || climb.canPerform(player);
+        return player.level.isClientSide() && !player.isLocalPlayer() || PlayerActions.canPerform(player, CLIMB);
     }
 
     @Override
