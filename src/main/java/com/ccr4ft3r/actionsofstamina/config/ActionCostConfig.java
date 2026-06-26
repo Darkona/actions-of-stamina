@@ -56,6 +56,7 @@ public final class ActionCostConfig {
         return perSecond == null ? 0 : StaminaUnits.perTick(perSecond.get());
     }
 
+    @SuppressWarnings("unused") // for addons
     public double perSecondFeathers() {
         return perSecond == null ? 0 : perSecond.get();
     }

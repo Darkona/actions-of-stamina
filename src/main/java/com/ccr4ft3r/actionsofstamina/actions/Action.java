@@ -230,6 +230,7 @@ public abstract class Action {
         return wasPerforming;
     }
 
+    @SuppressWarnings("unused") // for addons
     public boolean isRegenInhibitor() {
         return regenInhibitor;
     }

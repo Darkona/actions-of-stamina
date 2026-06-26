@@ -78,6 +78,7 @@ public class ActionsOfStamina {
             logger.info("\u001B[0;91mSERVER -> " + message + "\u001B[0m", args);
     }
 
+    @SuppressWarnings("unused") // for addons
     public static String getSide(Entity player) {
         return player.level.isClientSide() ? "Client" : "Server";
     }
