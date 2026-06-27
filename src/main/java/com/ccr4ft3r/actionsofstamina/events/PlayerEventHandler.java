@@ -25,7 +25,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.TickEvent;
@@ -82,11 +81,7 @@ public final class PlayerEventHandler {
     /** Raising a shield the player can't afford is refused; modded shields are found by their shield-block tool action. */
     @SubscribeEvent
     public static void shieldUsage(PlayerInteractEvent.RightClickItem event) {
-        if (!event.getItemStack().canPerformAction(ToolActions.SHIELD_BLOCK)) return;
-        Player player = event.getPlayer();
-        if (PlayerActions.isNotExhaustable(player)) return;
-        Action shield = PlayerActions.get(player).getAction(Action.SHIELD);
-        if (shield != null && !shield.canPerform(player)) {
+        if (event.getItemStack().canPerformAction(ToolActions.SHIELD_BLOCK) && !PlayerActions.canPerform(event.getPlayer(), Action.SHIELD)) {
             event.setCanceled(true);
         }
     }
@@ -97,10 +92,7 @@ public final class PlayerEventHandler {
      */
     @SubscribeEvent
     public static void drawUsage(PlayerInteractEvent.RightClickItem event) {
-        Player player = event.getPlayer();
-        if (PlayerActions.isNotExhaustable(player) || !DrawAction.draws(event.getItemStack())) return;
-        Action draw = PlayerActions.get(player).getAction(Action.DRAW);
-        if (draw != null && !draw.canPerform(player)) {
+        if (DrawAction.draws(event.getItemStack()) && !PlayerActions.canPerform(event.getPlayer(), Action.DRAW)) {
             event.setCanceled(true);
         }
     }
@@ -109,9 +101,7 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void throwOnUse(PlayerInteractEvent.RightClickItem event) {
         Player player = event.getPlayer();
-        if (PlayerActions.isNotExhaustable(player) || !ThrowAction.throwsOnUse(event.getItemStack(), player)) return;
-        Action throwing = PlayerActions.get(player).getAction(Action.THROW);
-        if (throwing != null && !throwing.perform(player)) {
+        if (ThrowAction.throwsOnUse(event.getItemStack(), player) && !PlayerActions.perform(player, Action.THROW)) {
             event.setCancellationResult(InteractionResult.FAIL);
             event.setCanceled(true);
         }
@@ -123,11 +113,8 @@ public final class PlayerEventHandler {
      */
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void throwOnRelease(LivingEntityUseItemEvent.Stop event) {
-        if (!(event.getEntity() instanceof Player player) || PlayerActions.isNotExhaustable(player)) return;
-        ItemStack stack = event.getItem();
-        if (!ThrowAction.throwsOnRelease(stack, player, event.getDuration())) return;
-        Action throwing = PlayerActions.get(player).getAction(Action.THROW);
-        if (throwing != null && !throwing.perform(player)) {
+        if (event.getEntity() instanceof Player player && ThrowAction.throwsOnRelease(event.getItem(), player, event.getDuration())
+                && !PlayerActions.perform(player, Action.THROW)) {
             event.setCanceled(true);
         }
     }
@@ -138,10 +125,8 @@ public final class PlayerEventHandler {
      */
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void riptideOnRelease(LivingEntityUseItemEvent.Stop event) {
-        if (!(event.getEntity() instanceof Player player) || PlayerActions.isNotExhaustable(player)) return;
-        if (!RiptideAction.launchesOnRelease(event.getItem(), player, event.getDuration())) return;
-        Action riptide = PlayerActions.get(player).getAction(Action.RIPTIDE);
-        if (riptide != null && !riptide.perform(player)) {
+        if (event.getEntity() instanceof Player player && RiptideAction.launchesOnRelease(event.getItem(), player, event.getDuration())
+                && !PlayerActions.perform(player, Action.RIPTIDE)) {
             event.setCanceled(true);
         }
     }
@@ -152,10 +137,7 @@ public final class PlayerEventHandler {
      */
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void fishOnUse(PlayerInteractEvent.RightClickItem event) {
-        Player player = event.getPlayer();
-        if (PlayerActions.isNotExhaustable(player) || !FishAction.isRod(event.getItemStack())) return;
-        Action fish = PlayerActions.get(player).getAction(Action.FISH);
-        if (fish != null && !fish.perform(player)) {
+        if (FishAction.isRod(event.getItemStack()) && !PlayerActions.perform(event.getPlayer(), Action.FISH)) {
             event.setCancellationResult(InteractionResult.FAIL);
             event.setCanceled(true);
         }
