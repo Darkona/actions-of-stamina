@@ -22,7 +22,7 @@
 | Mace smash | Charged on its own, at a multiple of the attack cost | 2 feathers |
 
 Attacks with non-weapons (bare hands, tools without attack damage) are free unless `also_for_non_weapons = true`.
-By default only attacks that hit an entity are charged (`only_for_hits`).
+By default only attacks that hit an entity are charged (`only_for_hits`); with it off, swings at the air count like hits towards the charge.
 
 Without the stamina for an attack, the attack is cancelled: no swing, no hit (`exhausted_mode = "CANCEL"`). With `exhausted_mode = "WEAKEN"` it lands anyway, but weakened: while your stamina is short, your attack damage and attack speed drop to `weaken_damage` and `weaken_speed` of their normal values (half, by default). They come back as soon as you have the stamina to attack again.
 

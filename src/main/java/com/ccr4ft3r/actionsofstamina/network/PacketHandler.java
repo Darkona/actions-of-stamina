@@ -14,7 +14,7 @@ public final class PacketHandler {
     public static void register(RegisterPayloadHandlersEvent event) {
         event.registrar(PROTOCOL_VERSION)
              .playToServer(ActionStatePacket.TYPE, ActionStatePacket.STREAM_CODEC, ActionStatePacket::handle)
-             .playToServer(ActionChargePacket.TYPE, ActionChargePacket.STREAM_CODEC, ActionChargePacket::handle)
+             .playToServer(ActionPerformedPacket.TYPE, ActionPerformedPacket.STREAM_CODEC, ActionPerformedPacket::handle)
              .playToServer(WallJumpChargePacket.TYPE, WallJumpChargePacket.STREAM_CODEC, WallJumpChargePacket::handle)
              .playToClient(BackendSyncPacket.TYPE, BackendSyncPacket.STREAM_CODEC, BackendSyncPacket::handle)
              .playToClient(InternalStaminaPacket.TYPE, InternalStaminaPacket.STREAM_CODEC, InternalStaminaPacket::handle);
