@@ -24,7 +24,8 @@ Changes by feature, newest version first.
 - **Farming tools:** tilling, making paths, stripping logs and scraping or unwaxing copper cost stamina once every few blocks, off by default. Modded tools count. A block you can't afford stays as it is.
 - **Brushing:** brushing drains stamina, off by default. Out of stamina, brushing stops.
 - **Mace smash:** the falling mace attack is charged on its own, at the attack cost times `mace_smash_multiplier` (2 by default).
-- Sprinting, jumping, crawling and swimming.
+- **Sprinting and swimming:** drain while they last. Without the stamina to begin they don't start, as sprinting doesn't without food, and they stop when the stamina runs out.
+- Jumping and crawling.
 
 ### Compatibility
 

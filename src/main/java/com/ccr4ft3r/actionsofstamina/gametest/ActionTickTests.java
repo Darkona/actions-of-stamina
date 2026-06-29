@@ -13,6 +13,7 @@ import net.minecraft.world.level.GameType;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
+import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.tickEvent;
 
@@ -58,6 +59,23 @@ public class ActionTickTests {
         int ended = backend.stamina(player);
         tickEvent(player, 10);
         helper.assertValueEqual(backend.stamina(player), ended, "no drain after the end (regen delay still running)");
+        helper.succeed();
+    }
+
+    /**
+     * Default swim config. The server sets the swimming pose from the sprint flag on every tick, so a refused swim
+     * has to stop the sprint behind it, or the player swims on for free.
+     */
+    @GameTest(template = "empty")
+    public static void refusedSwimStopsTheSprintBehindIt(GameTestHelper helper) {
+        ServerPlayer player = survivalPlayer(helper);
+        exhaust(StaminaBackends.server(), player);
+        player.setSprinting(true);
+        player.setSwimming(true);
+        PlayerActions.get(player).processFlags((short) ActionFlags.SWIMMING);
+        tickEvent(player, 1);
+        helper.assertFalse(player.isSprinting(), "swim refused: the sprint is stopped");
+        helper.assertFalse(player.isSwimming(), "swim refused: the pose is dropped");
         helper.succeed();
     }
 

@@ -1,15 +1,18 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
-import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
-import com.mojang.authlib.GameProfile;
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
+import com.mojang.authlib.GameProfile;
 import io.netty.channel.embedded.EmbeddedChannel;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
@@ -30,6 +33,8 @@ import java.util.UUID;
  * survival server players. The server doesn't tick either: tests tick them.
  */
 final class TestSupport {
+
+    private static final ResourceLocation TEST = ActionsOfStamina.id("test");
 
     private TestSupport() {
     }
@@ -76,6 +81,12 @@ final class TestSupport {
         @Override
         public void send(Packet<?> packet, @Nullable PacketSendListener listener) {
         }
+    }
+
+    /** Spends in small steps until nothing more can be spent (Green Feathers: through strain too). */
+    static void exhaust(StaminaBackend backend, ServerPlayer player) {
+        int spends = 0;
+        while (spends < 10000 && backend.spend(player, TEST, 50, 0)) spends++;
     }
 
     /**

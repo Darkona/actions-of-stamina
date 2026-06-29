@@ -32,8 +32,13 @@ public class SwimAction extends Action {
 
     }
 
+    /**
+     * Out of stamina (to begin, or any more): the swim ends. Swimming is sprinting in water, and the server puts the
+     * pose back from the sprint flag every tick, so the sprint is what has to stop; the pose is dropped at once.
+     */
     @Override
     public void notPerformingEffects(Player player, PlayerActions a) {
+        player.setSprinting(false);
         player.setSwimming(false);
     }
 }

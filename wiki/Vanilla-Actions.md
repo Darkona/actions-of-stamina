@@ -21,6 +21,8 @@
 | Brushing (off by default) | Drain while brushing | 0.2 feathers/s |
 | Mace smash | Charged on its own, at a multiple of the attack cost | 2 feathers |
 
+Sprinting and swimming need the stamina to begin (`min_stamina`), as sprinting needs food: holding the sprint key without it does nothing until the stamina is back, and they stop when it runs out.
+
 Attacks with non-weapons (bare hands, tools without attack damage) are free unless `also_for_non_weapons = true`.
 By default only attacks that hit an entity are charged (`only_for_hits`); with it off, swings at the air count like hits towards the charge.
 
