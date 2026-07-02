@@ -84,6 +84,9 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		# Default: 0.5
 		# Range: 0.05 ~ 1.0
 		weaken_speed = 0.5
+		#Girl mode. WEAKEN: whether attacks with non-weapons (bare hands, tools without attack damage) are weakened too
+		# while the stamina is short, even when also_for_non_weapons leaves them free (false: only attacks that cost are weakened)
+		weaken_non_weapons = true
 		#A mace smash (a mace hit while falling) is charged on its own, right away: the cost times this (0 makes it free)
 		# Default: 2.0
 		# Range: 0.0 ~ 10.0

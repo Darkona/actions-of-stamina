@@ -28,6 +28,8 @@ By default only attacks that hit an entity are charged (`only_for_hits`); with i
 
 Without the stamina for an attack, the attack is cancelled: no swing, no hit (`exhausted_mode = "CANCEL"`). With `exhausted_mode = "WEAKEN"` it lands anyway, but weakened: while your stamina is short, your attack damage and attack speed drop to `weaken_damage` and `weaken_speed` of their normal values (half, by default). They come back as soon as you have the stamina to attack again.
 
+**Girl mode** (`weaken_non_weapons`, on by default): WEAKEN also weakens attacks with non-weapons, such as bare hands, while your stamina is short, even though those attacks cost nothing. Turn it off and only attacks that cost stamina are weakened: an empty hand or a tool without attack damage hits at full strength.
+
 A mace smash, a mace hit while you fall, isn't counted with the other attacks: it is charged on its own, right away, at the attack's `cost` times `mace_smash_multiplier` (2 by default, so 2 feathers). Without the stamina for it, the smash is cancelled or lands weakened, as `exhausted_mode` says. A swing at air is never a smash.
 
 ## Bows, crossbows and throwables
