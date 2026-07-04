@@ -16,7 +16,6 @@ import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatComp
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.network.BackendSyncPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
@@ -39,7 +38,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * Common (both-sides) game-bus handlers. The client-side counterpart (local player tick, key input, attack key)
@@ -241,13 +239,6 @@ public final class PlayerEventHandler {
         if (player instanceof ServerPlayer serverPlayer) {
             InternalBackend.data(player).markForSync();
             ParagliderCompat.onJoin(serverPlayer);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            PacketDistributor.sendToPlayer(player, new BackendSyncPacket(StaminaBackends.server().kind()));
         }
     }
 }

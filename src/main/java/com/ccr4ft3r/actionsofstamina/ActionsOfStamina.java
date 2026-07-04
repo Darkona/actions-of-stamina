@@ -8,6 +8,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.AosAttachments;
+import com.ccr4ft3r.actionsofstamina.network.BackendSyncTask;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -40,6 +41,7 @@ public class ActionsOfStamina {
         container.registerConfig(ModConfig.Type.CLIENT, AoSClientConfig.SPEC);
         AosAttachments.ATTACHMENT_TYPES.register(modBus);
         modBus.addListener(PacketHandler::register);
+        modBus.addListener(BackendSyncTask::register);
         modBus.addListener(ActionsOfStamina::commonSetup);
         // Parsed config lists and the caches built from them follow config and datapack reloads.
         modBus.addListener(ModConfigEvent.Loading.class, BetterCombatCompat::onConfigLoad);

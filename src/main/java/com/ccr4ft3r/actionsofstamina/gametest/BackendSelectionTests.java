@@ -1,16 +1,27 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.network.BackendSyncPacket;
+import com.ccr4ft3r.actionsofstamina.network.BackendSyncTask;
 import com.ccr4ft3r.actionsofstamina.stamina.BackendMode;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.protocol.configuration.ServerConfigurationPacketListener;
+import net.minecraft.server.network.ConfigurationTask;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
+
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 /** Which backend runs, and that the Green Feathers one really spends feathers when Green Feathers is installed. */
 @GameTestHolder(ActionsOfStamina.MOD_ID)
@@ -48,6 +59,53 @@ public class BackendSelectionTests {
         int before = feathers.stamina(player);
         helper.assertTrue(feathers.spend(player, TEST, StaminaUnits.ofFeathers(2), 0), "spend 2 feathers");
         helper.assertValueEqual(feathers.stamina(player), before - StaminaUnits.ofFeathers(2), "feathers after spending 2");
+        helper.succeed();
+    }
+
+    /**
+     * A configuration listener that only answers {@code hasChannel} (with {@code channel}) and records the tasks it is
+     * told are finished; every other call does nothing.
+     */
+    private static ServerConfigurationPacketListener listener(boolean channel, List<Object> finished) {
+        return (ServerConfigurationPacketListener) Proxy.newProxyInstance(BackendSelectionTests.class.getClassLoader(),
+                new Class<?>[]{ServerConfigurationPacketListener.class}, (proxy, method, args) -> {
+                    switch (method.getName()) {
+                        case "hasChannel" -> {
+                            return channel;
+                        }
+                        case "finishCurrentTask" -> finished.add(args[0]);
+                        case "hashCode" -> {
+                            return System.identityHashCode(proxy);
+                        }
+                        case "equals" -> {
+                            return proxy == args[0];
+                        }
+                        default -> {
+                        }
+                    }
+                    Class<?> type = method.getReturnType();
+                    return type == boolean.class ? Boolean.FALSE : type == int.class ? 0 : null;
+                });
+    }
+
+    /** The backend reaches the client in the configuration phase, before it has a player, and the task ends itself. */
+    @GameTest(template = "empty")
+    public static void backendIsSentWhileConfiguring(GameTestHelper helper) {
+        List<Object> finished = new ArrayList<>();
+        RegisterConfigurationTasksEvent event = new RegisterConfigurationTasksEvent(listener(true, finished));
+        BackendSyncTask.register(event);
+        Queue<ConfigurationTask> tasks = event.getConfigurationTasks();
+        helper.assertValueEqual(tasks.size(), 1, "configuration tasks");
+        List<CustomPacketPayload> sent = new ArrayList<>();
+        ((BackendSyncTask) tasks.peek()).run(sent::add);
+        helper.assertValueEqual(sent.size(), 1, "payloads sent");
+        helper.assertTrue(sent.get(0) instanceof BackendSyncPacket packet && packet.kind() == StaminaBackends.server().kind().ordinal(),
+                "the payload names the server's backend");
+        helper.assertValueEqual(finished, List.<Object>of(BackendSyncTask.TYPE), "finished tasks");
+
+        RegisterConfigurationTasksEvent deaf = new RegisterConfigurationTasksEvent(listener(false, finished));
+        BackendSyncTask.register(deaf);
+        helper.assertTrue(deaf.getConfigurationTasks().isEmpty(), "no task for a client without the channel");
         helper.succeed();
     }
 }
