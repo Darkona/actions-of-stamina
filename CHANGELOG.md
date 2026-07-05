@@ -40,6 +40,10 @@ Changes by feature, newest version first.
 - **Curios:** wings in a Curios slot count.
 - Weapons whose damage comes from other mods' modifiers (such as modular weapons) count as weapons.
 
+### Addon API
+
+- Other mods can add their own actions: an `ActionCostConfig` section, an `Action` subclass and a type registered in `ActionTypes`. Addon actions are gated, drained and charged like the built-in ones, and a continuous action can charge a `finish_cost` when it ends. See the wiki's Addon API page.
+
 ## Planned
 
 ### Ports

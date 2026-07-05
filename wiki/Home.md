@@ -20,3 +20,4 @@ isn't.
 - [Compatibility](Compatibility): ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders, Create.
 - [Configuration](Configuration): every option.
 - [Minecraft Versions](Minecraft-Versions): what is different on 1.20.1, 1.19.2 and 1.18.2.
+- [Addon API](Addon-API): for mod developers, adding stamina-costing actions of your own.

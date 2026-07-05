@@ -79,8 +79,9 @@ public final class ParcoolConfig {
                 .build());
     }
 
+    /** A ParCool action's section by its id path; public for the GameTests, which borrow one for a test action. */
     @Nullable
-    static Entry byName(String name) {
+    public static Entry byName(String name) {
         for (Entry entry : ENTRIES) {
             if (entry.name.equals(name)) return entry;
         }

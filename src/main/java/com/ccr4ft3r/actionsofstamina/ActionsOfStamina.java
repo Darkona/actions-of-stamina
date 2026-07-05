@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina;
 
+import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
@@ -19,6 +20,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,6 +45,8 @@ public class ActionsOfStamina {
         modBus.addListener(PacketHandler::register);
         modBus.addListener(BackendSyncTask::register);
         modBus.addListener(ActionsOfStamina::commonSetup);
+        // Addons register their action types while constructed or in common setup; the slots are fixed after that.
+        modBus.addListener(FMLLoadCompleteEvent.class, event -> ActionTypes.freeze());
         // Parsed config lists and the caches built from them follow config and datapack reloads.
         modBus.addListener(ModConfigEvent.Loading.class, BetterCombatCompat::onConfigLoad);
         modBus.addListener(ModConfigEvent.Reloading.class, BetterCombatCompat::onConfigLoad);
