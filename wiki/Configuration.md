@@ -62,7 +62,7 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		#Charge the cost once every this many uses
 		# Default: 3
 		# Range: 1 ~ 100
-		times_to_charge = 3
+		times_performed_to_exhaust = 3
 		#Ticks without regeneration after it (20 ticks = 1 second)
 		# Default: 70
 		# Range: 0 ~ 1200
@@ -107,7 +107,7 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		#Charge the cost once every this many uses
 		# Default: 4
 		# Range: 1 ~ 100
-		times_to_charge = 4
+		times_performed_to_exhaust = 4
 		#Ticks without regeneration after it (20 ticks = 1 second)
 		# Default: 40
 		# Range: 0 ~ 1200
@@ -268,7 +268,7 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		#Charge the cost once every this many uses
 		# Default: 1
 		# Range: 1 ~ 100
-		times_to_charge = 1
+		times_performed_to_exhaust = 1
 		#Ticks without regeneration after it (20 ticks = 1 second)
 		# Default: 30
 		# Range: 0 ~ 1200
@@ -289,7 +289,7 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		#Charge the cost once every this many uses
 		# Default: 4
 		# Range: 1 ~ 100
-		times_to_charge = 4
+		times_performed_to_exhaust = 4
 		#Ticks without regeneration after it (20 ticks = 1 second)
 		# Default: 30
 		# Range: 0 ~ 1200
@@ -322,7 +322,7 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		#Charge the cost once every this many uses
 		# Default: 4
 		# Range: 1 ~ 100
-		times_to_charge = 4
+		times_performed_to_exhaust = 4
 		#Ticks without regeneration after it (20 ticks = 1 second)
 		# Default: 30
 		# Range: 0 ~ 1200
@@ -423,7 +423,7 @@ respawn or dimension change. Changing `backend` needs a server restart.
 		#Charge the cost once every this many uses
 		# Default: 2
 		# Range: 1 ~ 100
-		times_to_charge = 2
+		times_performed_to_exhaust = 2
 		#Ticks without regeneration after it (20 ticks = 1 second)
 		# Default: 30
 		# Range: 0 ~ 1200

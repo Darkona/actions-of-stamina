@@ -6,7 +6,7 @@ Everything below is in `com.ccr4ft3r.actionsofstamina` (Minecraft 1.21.1, NeoFor
 
 ## Asking whether a player can do something
 
-`PlayerActions.canPerform(player, actionId)` says whether the player may perform or begin an action now. `PlayerActions.perform(player, actionId)` performs a one-off action: it counts the use, charges the cost when it is due (`times_to_charge`) and returns whether the action may go ahead. Neither ever refuses a creative or spectator player, a fake player, or an action the config turns off.
+`PlayerActions.canPerform(player, actionId)` says whether the player may perform or begin an action now. `PlayerActions.perform(player, actionId)` performs a one-off action: it counts the use, charges the cost when it is due (`times_performed_to_exhaust`) and returns whether the action may go ahead. Neither ever refuses a creative or spectator player, a fake player, or an action the config turns off.
 
 The ids of the built-in actions are the constants in `Action` (`Action.ATTACK`, `Action.JUMP`, `Action.SPRINT` and so on). An addon's own action uses the index of its type, below.
 
@@ -26,7 +26,7 @@ public static final ActionCostConfig DASH = ActionCostConfig.builder(BUILDER, "d
 public static final ModConfigSpec SPEC = BUILDER.build();
 ```
 
-The builder offers `cost`, `minStamina`, `perSecond`, `finishCost`, `regenDelay`, `blocksRegen` and `timesToCharge`, in feathers and ticks; define only the ones your action uses, in that order. `spec()` gives the spec builder for options of your own before `build()`.
+The builder offers `cost`, `minStamina`, `perSecond`, `finishCost`, `regenDelay`, `blocksRegen` and `timesPerformedToExhaust`, in feathers and ticks; define only the ones your action uses, in that order. `spec()` gives the spec builder for options of your own before `build()`.
 
 The action extends `Action`. Its `id()` returns its type's index:
 

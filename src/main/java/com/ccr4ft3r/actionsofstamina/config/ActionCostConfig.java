@@ -20,7 +20,7 @@ public final class ActionCostConfig {
     @Nullable private final ModConfigSpec.DoubleValue finishCost;
     @Nullable private final ModConfigSpec.IntValue regenDelay;
     @Nullable private final ModConfigSpec.BooleanValue blocksRegen;
-    @Nullable private final ModConfigSpec.IntValue timesToCharge;
+    @Nullable private final ModConfigSpec.IntValue timesPerformedToExhaust;
 
     private ActionCostConfig(Builder b) {
         this.enabled = b.enabled;
@@ -30,7 +30,7 @@ public final class ActionCostConfig {
         this.finishCost = b.finishCost;
         this.regenDelay = b.regenDelay;
         this.blocksRegen = b.blocksRegen;
-        this.timesToCharge = b.timesToCharge;
+        this.timesPerformedToExhaust = b.timesPerformedToExhaust;
     }
 
     /** Pushes {@code path}; define the fields in order, then {@link Builder#build()} pops it. */
@@ -73,8 +73,8 @@ public final class ActionCostConfig {
         return blocksRegen != null && blocksRegen.getAsBoolean();
     }
 
-    public int timesToCharge() {
-        return timesToCharge == null ? 1 : timesToCharge.getAsInt();
+    public int timesPerformedToExhaust() {
+        return timesPerformedToExhaust == null ? 1 : timesPerformedToExhaust.getAsInt();
     }
 
     /** Whether this action costs anything at all. */
@@ -91,7 +91,7 @@ public final class ActionCostConfig {
         private ModConfigSpec.DoubleValue finishCost;
         private ModConfigSpec.IntValue regenDelay;
         private ModConfigSpec.BooleanValue blocksRegen;
-        private ModConfigSpec.IntValue timesToCharge;
+        private ModConfigSpec.IntValue timesPerformedToExhaust;
 
         private Builder(ModConfigSpec.Builder spec, String path, String description, boolean enabledByDefault) {
             this.spec = spec;
@@ -134,9 +134,9 @@ public final class ActionCostConfig {
             return this;
         }
 
-        public Builder timesToCharge(int times) {
-            timesToCharge = spec.comment("Charge the cost once every this many uses")
-                    .defineInRange("times_to_charge", times, 1, 100);
+        public Builder timesPerformedToExhaust(int times) {
+            timesPerformedToExhaust = spec.comment("Charge the cost once every this many uses")
+                    .defineInRange("times_performed_to_exhaust", times, 1, 100);
             return this;
         }
 

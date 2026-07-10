@@ -42,7 +42,7 @@ A Riptide launch is its own action, off by default (`[vanilla.riptide]`, `enable
 
 ## Mining and building
 
-Both are off by default (`[vanilla.mine]` and `[vanilla.build]`, `enabled = true` to turn them on). They are charged once every `times_to_charge` blocks, for all the blocks since the last charge. With `scale_with_hardness = true` (the default) each broken block adds the cost times its hardness: dirt 0.5, stone 1.5, obsidian 50, capped at `max_hardness_multiplier`; blocks that break instantly are free.
+Both are off by default (`[vanilla.mine]` and `[vanilla.build]`, `enabled = true` to turn them on). They are charged once every `times_performed_to_exhaust` blocks, for all the blocks since the last charge. With `scale_with_hardness = true` (the default) each broken block adds the cost times its hardness: dirt 0.5, stone 1.5, obsidian 50, capped at `max_hardness_multiplier`; blocks that break instantly are free.
 
 Neither is ever cancelled: without the stamina, blocks break and place for free. With `block_when_exhausted = true`, mining slows down to `exhausted_break_speed` of its normal speed (0.3 by default) while you can't afford it (`min_stamina`), until the stamina is back.
 
@@ -64,7 +64,7 @@ Off by default (`[vanilla.fish]`, `enabled = true` to turn it on). Casting a rod
 
 ## Farming tools
 
-Off by default (`[vanilla.till]`, `enabled = true` to turn it on). Working a block with a tool costs: tilling with a hoe, making a path with a shovel, stripping a log, scraping or unwaxing copper with an axe. Modded tools and blocks with the same abilities count too. Dousing a campfire is free. It is charged once every `times_to_charge` blocks. A block you can't afford stays as it is.
+Off by default (`[vanilla.till]`, `enabled = true` to turn it on). Working a block with a tool costs: tilling with a hoe, making a path with a shovel, stripping a log, scraping or unwaxing copper with an axe. Modded tools and blocks with the same abilities count too. Dousing a campfire is free. It is charged once every `times_performed_to_exhaust` blocks. A block you can't afford stays as it is.
 
 ## Brushing
 
