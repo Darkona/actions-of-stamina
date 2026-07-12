@@ -26,7 +26,6 @@ import java.util.List;
  */
 public class AttackAction extends Action {
 
-    public static final String actionName = "attack_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("attack");
     /** Id of both WEAKEN modifiers (one per attribute). */
     public static final ResourceLocation WEAKEN_ID = ActionsOfStamina.id("exhausted_attack");
@@ -102,12 +101,6 @@ public class AttackAction extends Action {
         if (damage != null) damage.removeModifier(WEAKEN_ID);
         AttributeInstance speed = player.getAttribute(Attributes.ATTACK_SPEED);
         if (speed != null) speed.removeModifier(WEAKEN_ID);
-    }
-
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

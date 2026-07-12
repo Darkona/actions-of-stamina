@@ -9,16 +9,10 @@ import net.minecraft.world.entity.player.Player;
 
 public class ParaglideAction extends Action {
 
-    public static final String actionName = "paragliding_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("paraglide");
 
     public ParaglideAction() {
         super(SOURCE, ParagliderConfig.PARAGLIDE);
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

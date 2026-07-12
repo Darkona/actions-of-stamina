@@ -12,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 
 public class CrawlAction extends Action {
 
-    public static final String actionName = "crawl_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("crawl");
     private static final ResourceLocation CRAWL_SPEED_MODIFIER_ID = ActionsOfStamina.id("crawling_speed");
     private static final AttributeModifier CRAWL_SPEED_MODIFIER =
@@ -21,12 +20,6 @@ public class CrawlAction extends Action {
 
     public CrawlAction() {
         super(SOURCE, AoSServerConfig.CRAWL);
-    }
-
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

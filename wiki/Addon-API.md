@@ -37,11 +37,6 @@ public class DashAction extends Action {
     }
 
     @Override
-    public String name() {
-        return "dash_action";
-    }
-
-    @Override
     public int id() {
         return MyMod.DASH_TYPE.index();
     }

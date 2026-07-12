@@ -12,7 +12,6 @@ import net.minecraft.world.item.UseAnim;
 /** Brushing: using any item whose use animation is {@code BRUSH}, modded brushes included. */
 public class BrushAction extends Action {
 
-    public static final String actionName = "brush_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("brush");
 
     public BrushAction() {
@@ -27,11 +26,6 @@ public class BrushAction extends Action {
     /** Whether the player is brushing right now. */
     public static boolean isBrushing(Player player) {
         return player.isUsingItem() && brushes(player.getUseItem());
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

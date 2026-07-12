@@ -12,18 +12,11 @@ import net.neoforged.neoforge.common.ItemAbilities;
 public class ShieldAction extends Action {
 
 
-    public static final String actionName = "shield_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("shield");
 
 
     public ShieldAction() {
         super(SOURCE, AoSServerConfig.SHIELD);
-    }
-
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

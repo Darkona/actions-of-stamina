@@ -17,11 +17,6 @@ public class GlideAction extends Action {
     }
 
     @Override
-    public String name() {
-        return "glide_action";
-    }
-
-    @Override
     public int id() {
         return GLIDE;
     }

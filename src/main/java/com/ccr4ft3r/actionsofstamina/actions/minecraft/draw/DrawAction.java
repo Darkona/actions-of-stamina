@@ -16,7 +16,6 @@ import net.minecraft.world.item.UseAnim;
  */
 public class DrawAction extends Action {
 
-    public static final String actionName = "draw_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("draw");
 
     public DrawAction() {
@@ -34,11 +33,6 @@ public class DrawAction extends Action {
         if (!player.isUsingItem()) return false;
         UseAnim anim = player.getUseItem().getUseAnimation();
         return anim == UseAnim.BOW || anim == UseAnim.SPEAR || anim == UseAnim.CROSSBOW;
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

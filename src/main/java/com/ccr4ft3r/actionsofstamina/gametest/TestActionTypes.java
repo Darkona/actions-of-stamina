@@ -39,11 +39,6 @@ final class TestActionTypes {
         }
 
         @Override
-        public String name() {
-            return "test_finishing_action";
-        }
-
-        @Override
         public int id() {
             return finishing.index();
         }

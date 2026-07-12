@@ -20,7 +20,6 @@ import net.minecraft.world.item.component.Fireworks;
  */
 public class ElytraAction extends Action {
 
-    public static final String actionName = "elytra_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("elytra");
     /** Wings that cost stamina to fly with; the mod's own tag file holds the elytra. */
     public static final TagKey<Item> STAMINA_WINGS = ItemTags.create(ActionsOfStamina.id("stamina_wings"));
@@ -56,11 +55,6 @@ public class ElytraAction extends Action {
     @Override
     protected double drainPerTick(Player player) {
         return player.tickCount < boostEndTick ? 0 : staminaPerTick;
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

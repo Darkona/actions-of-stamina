@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
  */
 public class MineAction extends Action {
 
-    public static final String actionName = "mine_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("mine");
 
     private final boolean scaleWithHardness;
@@ -51,11 +50,6 @@ public class MineAction extends Action {
      */
     public float breakSpeedMultiplier(Player player) {
         return slowsWhenExhausted && !canPerform(player) ? exhaustedBreakSpeed : 1.0f;
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override
