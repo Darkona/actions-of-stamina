@@ -30,7 +30,7 @@ public final class CreateCompat {
 
     /** Both sides, from the hand crank mixin: whether the player may turn the crank at {@code pos} now. */
     public static boolean turnCrank(Player player, Level level, BlockPos pos) {
-        if (PlayerActions.isNotExhaustable(player)) return true;
+        if (PlayerActions.isExempt(player)) return true;
         if (!(PlayerActions.get(player).getAction(Action.CRANK) instanceof CrankAction crank)) return true;
         return crank.turn(player, level.getBlockEntity(pos));
     }
@@ -49,7 +49,7 @@ public final class CreateCompat {
 
     @Nullable
     private static CrankAction valveAction(Player player) {
-        if (PlayerActions.isNotExhaustable(player) || !CreateConfig.VALVE_HANDLES.getAsBoolean()) return null;
+        if (PlayerActions.isExempt(player) || !CreateConfig.VALVE_HANDLES.getAsBoolean()) return null;
         return PlayerActions.get(player).getAction(Action.CRANK) instanceof CrankAction crank ? crank : null;
     }
 

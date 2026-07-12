@@ -142,7 +142,7 @@ public class AttackAction extends Action {
      * other hit is a normal {@link #perform}. Misses never smash.
      */
     public boolean performHit(Player player) {
-        if (PlayerActions.isNotExhaustable(player) || !(player.getMainHandItem().getItem() instanceof MaceItem) || !MaceItem.canSmashAttack(player)) {
+        if (PlayerActions.isExempt(player) || !(player.getMainHandItem().getItem() instanceof MaceItem) || !MaceItem.canSmashAttack(player)) {
             return perform(player);
         }
         charged = false;
@@ -155,7 +155,7 @@ public class AttackAction extends Action {
     @Override
     public boolean perform(Player player) {
         charged = false;
-        if (PlayerActions.isNotExhaustable(player)) return true;
+        if (PlayerActions.isExempt(player)) return true;
         // Not a weapon and non-weapons don't cost: the attack goes ahead for free, it isn't cancelled.
         if (!isWeapon(player.getItemInHand(InteractionHand.MAIN_HAND)) && !AoSServerConfig.ALSO_FOR_NON_WEAPONS.get()) return true;
         return super.perform(player);
