@@ -13,7 +13,7 @@ The 1.21.1 version of Actions of Stamina, ported to Forge 1.20.1 with the same a
 
 ### Vanilla actions
 
-- **Attack:** charged on the server, so a client can't skip paying. `exhausted_mode = CANCEL | WEAKEN`: an attack you can't afford is cancelled, or lands with less damage and attack speed (`weaken_damage`, `weaken_speed`).
+- **Attack:** charged on the server, so a client can't skip paying. `exhausted_mode = CANCEL | WEAKEN`: an attack you can't afford is cancelled, or lands with less damage and attack speed (`weaken_damage`, `weaken_speed`). With `only_for_hits = false`, swings at the air count towards `times_to_charge` like hits, in the one count the server keeps.
 - **Wings:** only wings in the `actionsofstamina:stamina_wings` item tag cost stamina (the elytra by default), worn in the chest or a Curios slot. Mechanical or powered wings from other mods fly free unless a modpack tags them. Out of stamina, the wings fold and won't open. A rocket boost is free unless `rocket_boost_costs`.
 - **Shields:** raising a shield drains stamina, including shields from other mods (found by Forge's shield-block tool action).
 - **Bows, crossbows and tridents (draw):** drawing drains stamina; out of stamina the draw drops without a shot.
