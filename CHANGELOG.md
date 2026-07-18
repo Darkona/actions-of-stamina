@@ -25,7 +25,8 @@ The 1.21.1 version of Actions of Stamina, ported to Forge 1.20.1 with the same a
 - **Fishing:** casting a rod and reeling it in each cost stamina, off by default. Modded rods count (by the rod's cast tool action). A cast or reel you can't afford doesn't happen.
 - **Farming tools:** tilling, making paths, stripping logs and scraping or unwaxing copper cost stamina once every few blocks, off by default. Modded tools count. A block you can't afford stays as it is.
 - **Brushing:** brushing drains stamina, off by default. Out of stamina, brushing stops.
-- Sprinting, jumping, crawling and swimming.
+- **Sprinting and swimming:** drain while they last. Without the stamina to begin they don't start, as sprinting doesn't without food, and they stop when the stamina runs out.
+- Jumping and crawling.
 
 ### Compatibility
 
