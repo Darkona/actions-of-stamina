@@ -5,6 +5,7 @@ import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 /**
  * Chooses the {@link StaminaBackend}. The server resolves the {@code backend} config when it starts and tells each
@@ -80,8 +81,12 @@ public final class StaminaBackends {
         client = byKind(kind);
     }
 
-    /** Client left the server. */
+    /**
+     * Client left the server. Without an integrated server still running, the server backend this client resolved for
+     * itself goes too: it came from the last server's synced config, and the next server's may differ.
+     */
     public static void clearClient() {
         client = null;
+        if (ServerLifecycleHooks.getCurrentServer() == null) server = null;
     }
 }
