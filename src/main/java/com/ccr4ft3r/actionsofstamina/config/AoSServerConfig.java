@@ -36,6 +36,7 @@ public final class AoSServerConfig {
     public static final ForgeConfigSpec.EnumValue<ExhaustedAttackMode> EXHAUSTED_MODE;
     public static final ForgeConfigSpec.DoubleValue WEAKEN_DAMAGE;
     public static final ForgeConfigSpec.DoubleValue WEAKEN_SPEED;
+    public static final ForgeConfigSpec.BooleanValue WEAKEN_NON_WEAPONS;
     public static final ActionCostConfig JUMP;
     public static final ActionCostConfig SPRINT;
     public static final ActionCostConfig SWIM;
@@ -104,6 +105,9 @@ public final class AoSServerConfig {
                 .defineInRange("weaken_damage", 0.5, 0.0, 1.0);
         WEAKEN_SPEED = attack.spec().comment("WEAKEN: share of the attack speed left while the stamina is short (0.05-1)")
                 .defineInRange("weaken_speed", 0.5, 0.05, 1.0);
+        WEAKEN_NON_WEAPONS = attack.spec().comment("Girl mode. WEAKEN: whether attacks with non-weapons (bare hands, tools without attack damage) are weakened too",
+                        " while the stamina is short, even when also_for_non_weapons leaves them free (false: only attacks that cost are weakened)")
+                .define("weaken_non_weapons", true);
         ATTACK = attack.build();
         JUMP = ActionCostConfig.builder(b, "jump", "Jumping", true)
                 .cost(1.0, "Cost of a jump")
