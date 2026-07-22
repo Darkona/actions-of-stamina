@@ -49,6 +49,10 @@ Each one only does something when its mod is installed, and can be turned off in
 - **Mace smash:** Minecraft 1.20.1 has no mace, so there is no `[vanilla.attack] mace_smash_multiplier` option.
 - **Wind charges:** Minecraft 1.20.1 has no wind charge, so it isn't in the `actionsofstamina:throwables` tag.
 
+### Addon API
+
+- Other mods can add their own actions: an `ActionCostConfig` section, an `Action` subclass and a type registered in `ActionTypes`. Addon actions are gated, drained and charged like the built-in ones, and a continuous action can charge a `finish_cost` when it ends. See the wiki's Addon API page.
+
 ## Planned
 
 ### Ports

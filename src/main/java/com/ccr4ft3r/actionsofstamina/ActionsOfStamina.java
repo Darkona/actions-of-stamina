@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina;
 
+import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,6 +43,8 @@ public class ActionsOfStamina {
         context.registerConfig(ModConfig.Type.CLIENT, AoSClientConfig.SPEC);
         PacketHandler.register();
         modBus.addListener(ActionsOfStamina::commonSetup);
+        // Addons register their action types while constructed or in common setup; the slots are fixed after that.
+        modBus.addListener((FMLLoadCompleteEvent event) -> ActionTypes.freeze());
         // Parsed config lists and the caches built from them follow config and datapack reloads.
         modBus.addListener((ModConfigEvent.Loading event) -> BetterCombatCompat.onConfigLoad(event));
         modBus.addListener((ModConfigEvent.Reloading event) -> BetterCombatCompat.onConfigLoad(event));
