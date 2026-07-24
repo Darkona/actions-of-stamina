@@ -136,7 +136,7 @@ public class AttackAction extends Action {
     @Override
     public boolean perform(Player player) {
         charged = false;
-        if (PlayerActions.isNotExhaustable(player)) return true;
+        if (PlayerActions.isExempt(player)) return true;
         // Not a weapon and non-weapons don't cost: the attack goes ahead for free, it isn't cancelled.
         if (!isWeapon(player.getItemInHand(InteractionHand.MAIN_HAND)) && !AoSServerConfig.ALSO_FOR_NON_WEAPONS.get()) return true;
         return super.perform(player);

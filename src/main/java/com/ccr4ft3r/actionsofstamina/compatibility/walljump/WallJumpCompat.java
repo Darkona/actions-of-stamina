@@ -79,7 +79,7 @@ public final class WallJumpCompat {
     }
 
     private static boolean tryJump(Player player, byte move) {
-        if (!isActive() || PlayerActions.isNotExhaustable(player)) return true;
+        if (!isActive() || PlayerActions.isExempt(player)) return true;
         ActionCostConfig costs = costsOf(move);
         int cost = costs.cost();
         if (!costs.enabled() || cost <= 0) return true;
