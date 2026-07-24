@@ -33,7 +33,7 @@ public class MineAction extends Action {
         this.exhaustedBreakSpeed = AoSServerConfig.MINE_EXHAUSTED_BREAK_SPEED.get().floatValue();
     }
 
-    /** Server: a block of {@code hardness} was broken. Every {@code times_to_charge} blocks, their added-up cost is charged. */
+    /** Server: a block of {@code hardness} was broken. Every {@code times_performed_to_exhaust} blocks, their added-up cost is charged. */
     public void mined(Player player, float hardness) {
         if (PlayerActions.isNotExhaustable(player)) return;
         pending += scaleWithHardness ? cost * Math.min(Math.max(hardness, 0.0), maxHardnessMultiplier) : cost;
