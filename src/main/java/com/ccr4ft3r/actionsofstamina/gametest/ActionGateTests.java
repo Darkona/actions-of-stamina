@@ -96,11 +96,6 @@ public class ActionGateTests {
         }
 
         @Override
-        public String name() {
-            return "charge_probe";
-        }
-
-        @Override
         public int id() {
             return Action.JUMP;
         }

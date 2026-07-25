@@ -23,7 +23,6 @@ import java.util.UUID;
  */
 public class AttackAction extends Action {
 
-    public static final String actionName = "attack_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("attack");
     /** Id of both WEAKEN modifiers (one per attribute). */
     public static final UUID WEAKEN_ID = UUID.fromString("5b0f3c52-8a1e-4f6b-9d0c-2f4e7a1c6d31");
@@ -97,12 +96,6 @@ public class AttackAction extends Action {
         if (damage != null) damage.removeModifier(WEAKEN_ID);
         AttributeInstance speed = player.getAttribute(Attributes.ATTACK_SPEED);
         if (speed != null) speed.removeModifier(WEAKEN_ID);
-    }
-
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

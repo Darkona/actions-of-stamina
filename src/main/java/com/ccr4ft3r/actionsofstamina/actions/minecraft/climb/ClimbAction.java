@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
  */
 public class ClimbAction extends Action {
 
-    public static final String actionName = "climb_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("climb");
 
     public ClimbAction() {
@@ -27,11 +26,6 @@ public class ClimbAction extends Action {
      */
     public static boolean mayClimbUp(Player player) {
         return player.level().isClientSide() && !player.isLocalPlayer() || PlayerActions.canPerform(player, CLIMB);
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

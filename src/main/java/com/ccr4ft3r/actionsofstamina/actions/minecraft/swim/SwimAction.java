@@ -9,17 +9,10 @@ import net.minecraft.world.entity.player.Player;
 
 public class SwimAction extends Action {
 
-    public static final String actionName = "swim_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("swim");
 
     public SwimAction() {
         super(SOURCE, AoSServerConfig.SWIM);
-    }
-
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override
