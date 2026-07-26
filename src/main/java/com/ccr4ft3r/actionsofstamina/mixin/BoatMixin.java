@@ -19,7 +19,7 @@ public abstract class BoatMixin {
     @Inject(method = "controlBoat", at = @At("HEAD"), cancellable = true)
     private void actionsofstamina$rowWithStamina(CallbackInfo ci) {
         Boat self = (Boat) (Object) this;
-        if (self.getControllingPassenger() instanceof Player player && RowAction.drivesRowedBoat(player, self) && !RowAction.mayRow(player)) {
+        if (self.getControllingPassenger() instanceof Player player && RowAction.isRowed(self) && !RowAction.mayRow(player)) {
             self.setPaddleState(false, false);
             ci.cancel();
         }
