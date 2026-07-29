@@ -1,11 +1,16 @@
 package com.ccr4ft3r.actionsofstamina;
 
 import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.AosAttachments;
@@ -41,11 +46,22 @@ public class ActionsOfStamina {
         // the server's costs are sent to every client, so no client decides its own.
         container.registerConfig(ModConfig.Type.SERVER, AoSServerConfig.SPEC);
         container.registerConfig(ModConfig.Type.CLIENT, AoSClientConfig.SPEC);
+        // Every action type, Minecraft's and each compat's, whether or not that mod is installed: the indices then don't
+        // depend on which mods are there.
+        VanillaActions.register();
+        ParcoolCompat.registerActions();
+        ParagliderCompat.registerActions();
+        BetterCombatCompat.registerActions();
+        CombatRollCompat.registerActions();
+        EpicFightCompat.registerActions();
+        WallJumpCompat.registerActions();
+        GlidersCompat.registerActions();
+        CreateCompat.registerActions();
         AosAttachments.ATTACHMENT_TYPES.register(modBus);
         modBus.addListener(PacketHandler::register);
         modBus.addListener(BackendSyncTask::register);
         modBus.addListener(ActionsOfStamina::commonSetup);
-        // Addons register their action types while constructed or in common setup; the slots are fixed after that.
+        // Other mods register their action types while constructed or in common setup; the slots are fixed after that.
         modBus.addListener(FMLLoadCompleteEvent.class, event -> ActionTypes.freeze());
         // Parsed config lists and the caches built from them follow config and datapack reloads.
         modBus.addListener(ModConfigEvent.Loading.class, BetterCombatCompat::onConfigLoad);

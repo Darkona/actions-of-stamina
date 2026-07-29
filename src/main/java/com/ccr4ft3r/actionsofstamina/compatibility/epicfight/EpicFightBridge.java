@@ -1,10 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.epicfight;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import net.minecraft.resources.ResourceLocation;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.event.EpicFightEventHooks;
@@ -19,12 +16,6 @@ import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 /** Direct Epic Fight calls; only reached through {@link EpicFightCompat} when Epic Fight is loaded. */
 final class EpicFightBridge {
-
-    private static final ResourceLocation DODGE = ActionsOfStamina.id("epicfight/dodge");
-    private static final ResourceLocation GUARD = ActionsOfStamina.id("epicfight/guard");
-    private static final ResourceLocation INNATE = ActionsOfStamina.id("epicfight/innate");
-    private static final ResourceLocation MOVER = ActionsOfStamina.id("epicfight/mover");
-    private static final ResourceLocation BASIC_ATTACK = ActionsOfStamina.id("epicfight/basic_attack");
 
     // Server thread only: the holdable skill AoS charged in the last consume event, to tell the repeat of a hold start.
     private static int paidPlayer = -1;
@@ -51,40 +42,29 @@ final class EpicFightBridge {
         if (!EpicFightCompat.isActive() || !EpicFightConfig.BASIC_ATTACK.enabled()) return;
         Player player = event.getPlayerPatch().getOriginal();
         if (player.isCreative() || player.isSpectator()) return;
-        ActionCostConfig costs = EpicFightConfig.BASIC_ATTACK;
-        if (!StaminaBackends.of(player).spend(player, BASIC_ATTACK, costs.cost(), costs.regenDelay())) event.cancel();
+        if (!PlayerActions.perform(player, EpicFightCompat.BASIC_ATTACK)) event.cancel();
     }
 
+    /** The action a skill of this category is, or null for a category AoS leaves to Epic Fight's own stamina. */
     @Nullable
-    private static ActionCostConfig costsOf(SkillCategory category) {
-        if (category == SkillCategories.DODGE) return EpicFightConfig.DODGE;
-        if (category == SkillCategories.GUARD) return EpicFightConfig.GUARD;
-        if (category == SkillCategories.WEAPON_INNATE) return EpicFightConfig.INNATE;
-        if (category == SkillCategories.MOVER) return EpicFightConfig.MOVER;
+    private static ActionType typeOf(SkillCategory category) {
+        if (category == SkillCategories.DODGE) return EpicFightCompat.DODGE;
+        if (category == SkillCategories.GUARD) return EpicFightCompat.GUARD;
+        if (category == SkillCategories.WEAPON_INNATE) return EpicFightCompat.INNATE;
+        if (category == SkillCategories.MOVER) return EpicFightCompat.MOVER;
         return null;
-    }
-
-    private static ResourceLocation sourceOf(SkillCategory category) {
-        if (category == SkillCategories.DODGE) return DODGE;
-        if (category == SkillCategories.GUARD) return GUARD;
-        if (category == SkillCategories.WEAPON_INNATE) return INNATE;
-        return MOVER;
     }
 
     private static void onConsume(SkillConsumeEvent event) {
         if (!EpicFightCompat.isActive() || event.getResourceType() != Skill.Resource.STAMINA) return;
-        SkillCategory category = event.getSkill().getCategory();
-        ActionCostConfig costs = costsOf(category);
-        if (costs == null || !costs.enabled()) return;
+        ActionType type = typeOf(event.getSkill().getCategory());
+        if (type == null || !type.config().enabled()) return;
         if (!(event.getEntityPatch().getOriginal() instanceof Player player)) return;
         if (player.isCreative() || player.isSpectator()) return;
 
-        ResourceLocation source = sourceOf(category);
-        int cost = costs.cost();
-        StaminaBackend backend = StaminaBackends.of(player);
         boolean paid;
         if (player.level().isClientSide()) {
-            paid = backend.canSpend(player, source, cost);
+            paid = PlayerActions.canPerform(player, type);
         } else {
             // Starting to hold a skill (guard, charged skills), Epic Fight posts the event twice in a row on the
             // server: once from the resource check, then again to consume. The second one is already paid.
@@ -93,7 +73,7 @@ final class EpicFightBridge {
             paidSkill = null;
             if (repeat) {
                 paid = true;
-            } else if ((paid = backend.spend(player, source, cost, costs.regenDelay())) && event.getSkill() instanceof HoldableSkill) {
+            } else if ((paid = PlayerActions.perform(player, type)) && event.getSkill() instanceof HoldableSkill) {
                 paidPlayer = player.getId();
                 paidSkill = event.getSkill();
                 paidTick = tick;

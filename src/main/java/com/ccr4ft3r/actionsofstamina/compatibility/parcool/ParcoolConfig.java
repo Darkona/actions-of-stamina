@@ -79,6 +79,11 @@ public final class ParcoolConfig {
                 .build());
     }
 
+    /** Every ParCool action's section, in config order. Do not modify. */
+    static Entry[] entries() {
+        return ENTRIES;
+    }
+
     /** A ParCool action's section by its id path; public for the GameTests, which borrow one for a test action. */
     @Nullable
     public static Entry byName(String name) {

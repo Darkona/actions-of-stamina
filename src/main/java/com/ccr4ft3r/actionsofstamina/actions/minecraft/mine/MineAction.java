@@ -1,11 +1,10 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.mine;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 /**
@@ -15,8 +14,6 @@ import net.minecraft.world.entity.player.Player;
  */
 public class MineAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("mine");
-
     private final boolean scaleWithHardness;
     private final double maxHardnessMultiplier;
     private final boolean slowsWhenExhausted;
@@ -24,8 +21,8 @@ public class MineAction extends Action {
     /** Stamina added up by the blocks broken since the last charge. */
     private double pending;
 
-    public MineAction() {
-        super(SOURCE, AoSServerConfig.MINE);
+    public MineAction(ActionType type) {
+        super(type);
         this.scaleWithHardness = AoSServerConfig.MINE_SCALE_WITH_HARDNESS.getAsBoolean();
         this.maxHardnessMultiplier = AoSServerConfig.MINE_MAX_HARDNESS_MULTIPLIER.getAsDouble();
         this.slowsWhenExhausted = AoSServerConfig.MINE_BLOCK_WHEN_EXHAUSTED.getAsBoolean();
@@ -50,11 +47,6 @@ public class MineAction extends Action {
      */
     public float breakSpeedMultiplier(Player player) {
         return slowsWhenExhausted && !canPerform(player) ? exhaustedBreakSpeed : 1.0f;
-    }
-
-    @Override
-    public int id() {
-        return MINE;
     }
 
     @Override

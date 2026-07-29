@@ -11,42 +11,24 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * One stamina-costing player action, spending through the active {@link StaminaBackend} under its own
- * {@link #source}.
+ * One stamina-costing player action of an {@link ActionType}, spending through the active {@link StaminaBackend}
+ * under its type's id (its {@link #source}). Every action, Actions of Stamina's own and other mods' alike, is registered
+ * in {@link ActionTypes} and built per player from its type.
  * <p>
- * Continuous actions (sprint, swim, elytra, shield, crawl, draw, paraglide, wall cling, glide, crank, climb, row, brush) run a drain refreshed every tick while
- * performing, and may charge a finish cost when they end; one-off actions (attack, jump, throw, mine, build, riptide, fish, till) {@link #perform} a spend. All amounts are kept in stamina (1/1000
- * feather), read from the config once, in the constructor (actions are rebuilt whenever the player joins a level).
+ * Continuous actions (sprint, swim, elytra, shield, crawl, draw, paraglide, wall cling, glide, crank, climb, row, brush)
+ * run a drain refreshed every tick while performing, and may charge a finish cost when they end; one-off actions
+ * (attack, jump, throw, mine, build, riptide, fish, till, rolls, skills) {@link #perform} a spend. A continuous action
+ * follows the state {@link #setActionState} gives it every tick; one whose start, ticks and end come from another mod's
+ * events drives itself with {@link #canBegin}, {@link #begin}, {@link #canContinue}, {@link #continueTick} and
+ * {@link #end} instead. All amounts are kept in stamina (1/1000 feather), read from the config once, in the constructor
+ * (actions are rebuilt whenever the player joins a level).
  * <p>
  * Runs on both sides: on the client the backend only checks (Green Feathers also predicts), the server is
  * authoritative.
  */
-public abstract class Action {
+public class Action {
 
-    // Slots of the built-in action types in PlayerActions' action array (ActionTypes registers them in this order;
-    // addon types come after them).
-    public static final int ATTACK = 0;
-    public static final int SPRINT = 1;
-    public static final int JUMP = 2;
-    public static final int CRAWL = 3;
-    public static final int ELYTRA = 4;
-    public static final int SHIELD = 5;
-    public static final int SWIM = 6;
-    public static final int PARAGLIDE = 7;
-    public static final int WALL_CLING = 8;
-    public static final int GLIDE = 9;
-    public static final int DRAW = 10;
-    public static final int THROW = 11;
-    public static final int MINE = 12;
-    public static final int BUILD = 13;
-    public static final int CRANK = 14;
-    public static final int CLIMB = 15;
-    public static final int ROW = 16;
-    public static final int RIPTIDE = 17;
-    public static final int FISH = 18;
-    public static final int TILL = 19;
-    public static final int BRUSH = 20;
-
+    protected final ActionType type;
     protected final ResourceLocation source;
     /** One-off cost, in stamina: per {@link #perform}, or when a continuous action begins. */
     protected final int cost;
@@ -54,9 +36,9 @@ public abstract class Action {
     protected final int minCost;
     /** Charged when a continuous action ends. */
     protected final int finishCost;
-    /** What must be affordable to begin a continuous action: the stamina to begin, else the finish cost. */
+    /** What must be affordable to begin: the stamina to begin, else one drain tick, else the finish cost. */
     private final int beginCost;
-    /** Ticks without regeneration after spending (and after a continuous action ends). */
+    /** Ticks without regeneration after spending (and after a continuous action with a drain ends). */
     protected final int cooldown;
     protected final double staminaPerTick;
     /** Stamina one drain tick may take at most: what must stay affordable to keep performing. */
@@ -73,16 +55,11 @@ public abstract class Action {
 
     protected String debugInfo;
 
-    /** For debug output: the action's id, which is also its stamina source. */
-    public String name() {
-        return source.toString();
-    }
-
-    /** Slot in {@link PlayerActions#getActions()}: one of the constants above, or an addon type's {@link ActionType#index()}. */
-    public abstract int id();
-
-    public Action(ResourceLocation source, ActionCostConfig config) {
-        this.source = source;
+    /** Costs from the type's config section. */
+    public Action(ActionType type) {
+        ActionCostConfig config = type.config();
+        this.type = type;
+        this.source = type.id();
         this.cost = config.cost();
         this.minCost = config.minStamina();
         this.finishCost = config.finishCost();
@@ -91,7 +68,21 @@ public abstract class Action {
         this.tickCost = (int) Math.ceil(staminaPerTick);
         this.regenInhibitor = config.blocksRegen();
         this.timesPerformedToExhaust = config.timesPerformedToExhaust();
-        this.beginCost = minCost > 0 || tickCost > 0 ? minCost : finishCost;
+        this.beginCost = minCost > 0 ? minCost : tickCost > 0 ? tickCost : finishCost;
+    }
+
+    /** For debug output: the action's id, which is also its stamina source. */
+    public String name() {
+        return source.toString();
+    }
+
+    public ActionType type() {
+        return type;
+    }
+
+    /** Slot in {@link PlayerActions#getActions()}: its type's {@link ActionType#index()}. */
+    public final int id() {
+        return type.index();
     }
 
     public ResourceLocation source() {
@@ -176,31 +167,83 @@ public abstract class Action {
 
     }
 
-    protected abstract void performingEffects(Player p, PlayerActions a);
+    /** Every tick the action goes on and is paid for. */
+    protected void performingEffects(Player p, PlayerActions a) {
+    }
 
-    protected abstract void notPerformingEffects(Player player, PlayerActions a);
+    /** Every tick the state asks for the action but the stamina can't pay for it: stop it here. */
+    protected void notPerformingEffects(Player player, PlayerActions a) {
+    }
 
     /** Undoes whatever the action leaves on the player (modifiers): it ended, the player became exempt, or the actions are rebuilt. */
     public void cleanUp(Player player) {
     }
 
+    /**
+     * Charges the start cost with the cooldown; a free start of an action with a drain pauses regeneration for the
+     * cooldown instead (one without a drain leaves regeneration alone until its end, if that costs).
+     */
     protected void beginPerforming(Player p, PlayerActions a) {
         if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(p, "{}::beginPerforming", name());
         StaminaBackend backend = StaminaBackends.of(p);
         if (cost > 0) backend.spend(p, source, cost, cooldown);
-        else if (cooldown > 0) backend.blockRegen(p, source, cooldown);
+        else if (cooldown > 0 && staminaPerTick > 0) backend.blockRegen(p, source, cooldown);
     }
 
     /**
      * Stops the drain right away (it would otherwise run until its timeout), charges the finish cost if any (never to
-     * an exempt player) and delays regeneration by the cooldown.
+     * an exempt player) and delays regeneration by the cooldown after a drain (an action without one already paused
+     * it when it began).
      */
     protected void finishPerforming(Player p, PlayerActions a) {
         if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(p, "{}::finishPerforming", name());
         StaminaBackend backend = StaminaBackends.of(p);
         backend.stopDrain(p, source);
         if (finishCost > 0 && !PlayerActions.isExempt(p)) backend.spend(p, source, finishCost, cooldown);
-        else if (cooldown > 0 && !backend.keepsRegenWhileActing(p)) backend.blockRegen(p, source, cooldown);
+        else if (cooldown > 0 && staminaPerTick > 0 && !backend.keepsRegenWhileActing(p)) backend.blockRegen(p, source, cooldown);
+    }
+
+    /** Event-driven continuous action: whether it may begin now (what the state-driven tick checks first). */
+    public boolean canBegin(Player player) {
+        return PlayerActions.isExempt(player) || canAfford(player, beginCost);
+    }
+
+    /** Whether this action drains stamina while it lasts ({@code per_second} above 0). */
+    public boolean drains() {
+        return staminaPerTick > 0;
+    }
+
+    /** Event-driven continuous action: whether one more drain tick is affordable. */
+    public boolean canContinue(Player player) {
+        return PlayerActions.isExempt(player) || canAfford(player, tickCost);
+    }
+
+    /** Event-driven continuous action: it began; charges the start cost (or pauses regeneration for the cooldown). */
+    public void begin(Player player) {
+        beginPerforming(player, PlayerActions.get(player));
+    }
+
+    /** Event-driven continuous action: one more tick of it; false when the drain can't go on. */
+    public boolean continueTick(Player player) {
+        return drain(player, StaminaBackends.of(player));
+    }
+
+    /** Event-driven continuous action: it ended; stops the drain and charges the finish cost. */
+    public void end(Player player) {
+        finishPerforming(player, PlayerActions.get(player));
+    }
+
+    /**
+     * A use whose cost the caller works out (a swing with its weapon's multipliers): whether {@code stamina} is
+     * affordable now.
+     */
+    public boolean canPay(Player player, int stamina) {
+        return PlayerActions.isExempt(player) || canAfford(player, stamina);
+    }
+
+    /** A use whose cost the caller works out: spends {@code stamina} with this action's regen delay. */
+    public boolean pay(Player player, int stamina) {
+        return PlayerActions.isExempt(player) || StaminaBackends.of(player).spend(player, source, stamina, cooldown);
     }
 
     /** One-off use: charges {@link #cost} every {@code timesPerformedToExhaust} uses. */
@@ -250,6 +293,4 @@ public abstract class Action {
     public void setActionState(boolean state) {
         actionState = state;
     }
-
-
 }

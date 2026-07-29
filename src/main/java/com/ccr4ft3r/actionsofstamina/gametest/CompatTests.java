@@ -16,6 +16,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
@@ -58,7 +59,7 @@ public class CompatTests {
             helper.succeed();
             return;
         }
-        ServerPlayer player = player(helper);
+        ServerPlayer player = survivalPlayer(helper);
         StaminaBackend backend = StaminaBackends.server();
         int before = backend.stamina(player);
         helper.assertFalse(ParcoolTestHooks.dodgeStartCancelled(player), "dodge may start with a full bar");
@@ -77,7 +78,7 @@ public class CompatTests {
             return;
         }
         helper.assertTrue(BetterCombatTestHooks.serverMixinApplied(), "mixin into Better Combat's ServerNetwork applied");
-        ServerPlayer player = player(helper);
+        ServerPlayer player = survivalPlayer(helper);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD));
         helper.assertTrue(BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()), "a sword has Better Combat attacks");
         StaminaBackend backend = StaminaBackends.server();
@@ -133,7 +134,7 @@ public class CompatTests {
             helper.succeed();
             return;
         }
-        ServerPlayer player = player(helper);
+        ServerPlayer player = survivalPlayer(helper);
         StaminaBackend backend = StaminaBackends.server();
         int before = backend.stamina(player);
         helper.assertTrue(CombatRollCompat.canRoll(player), "a roll is available with a full bar");
@@ -163,7 +164,7 @@ public class CompatTests {
             helper.succeed();
             return;
         }
-        ServerPlayer player = player(helper);
+        ServerPlayer player = survivalPlayer(helper);
         helper.assertTrue(EpicFightTestHooks.hasPatch(player), "the player has an Epic Fight server patch");
         StaminaBackend backend = StaminaBackends.server();
         for (int category = 0; category < EpicFightTestHooks.CATEGORIES; category++) {
@@ -199,7 +200,7 @@ public class CompatTests {
             helper.succeed();
             return;
         }
-        ServerPlayer player = player(helper);
+        ServerPlayer player = survivalPlayer(helper);
         StaminaBackend backend = StaminaBackends.server();
         EpicFightTestHooks.battleMode(player, false);
         helper.assertFalse(EpicFightCompat.inBattleMode(player), "vanilla mode: AoS's vanilla attack cost applies");
@@ -224,14 +225,14 @@ public class CompatTests {
         ServerPlayer player = survivalPlayer(helper);
         StaminaBackend backend = StaminaBackends.server();
         int before = backend.stamina(player);
-        WallJumpCompat.charge(player, WallJumpCompat.WALL_JUMP);
+        ActionPerformedPacket.apply(player, WallJumpCompat.WALL_JUMP.index());
         helper.assertValueEqual(backend.stamina(player), before - WallJumpConfig.WALL_JUMP.cost(), "stamina after a wall jump");
         before = backend.stamina(player);
-        WallJumpCompat.charge(player, WallJumpCompat.DOUBLE_JUMP);
+        ActionPerformedPacket.apply(player, WallJumpCompat.DOUBLE_JUMP.index());
         helper.assertValueEqual(backend.stamina(player), before - WallJumpConfig.DOUBLE_JUMP.cost(), "stamina after a double jump");
 
         PlayerActions actions = PlayerActions.get(player);
-        Action cling = actions.getAction(Action.WALL_CLING);
+        Action cling = actions.getAction(WallJumpCompat.WALL_CLING);
         helper.assertTrue(cling != null, "the wall cling action exists");
         helper.assertTrue(WallJumpCompat.canCling(player), "a wall can be grabbed with stamina");
         actions.processFlags((short) ActionFlags.WALL_CLINGING);
@@ -262,7 +263,7 @@ public class CompatTests {
         ServerPlayer player = survivalPlayer(helper);
         StaminaBackend backend = StaminaBackends.server();
         PlayerActions actions = PlayerActions.get(player);
-        Action glide = actions.getAction(Action.GLIDE);
+        Action glide = actions.getAction(GlidersCompat.GLIDE);
         helper.assertTrue(glide != null, "the glide action exists");
         GlidersTestHooks.equipGlider(player);
         GlidersTestHooks.pressDeployKey(player);

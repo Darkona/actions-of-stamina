@@ -2,6 +2,7 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
@@ -31,7 +32,7 @@ public class ActionTickTests {
         StaminaBackend backend = StaminaBackends.server();
         int start = backend.stamina(player);
         tickEvent(player, 40);
-        Action sprint = PlayerActions.get(player).getAction(Action.SPRINT);
+        Action sprint = PlayerActions.get(player).getAction(VanillaActions.SPRINT);
         helper.assertTrue(sprint != null, "sprint action exists");
         helper.assertFalse(sprint.isPerforming(), "idle sprint isn't performing");
         helper.assertValueEqual(backend.stamina(player), start, "stamina while idle");
@@ -43,7 +44,7 @@ public class ActionTickTests {
         ServerPlayer player = survivalPlayer(helper);
         StaminaBackend backend = StaminaBackends.server();
         PlayerActions actions = PlayerActions.get(player);
-        Action sprint = actions.getAction(Action.SPRINT);
+        Action sprint = actions.getAction(VanillaActions.SPRINT);
         helper.assertTrue(sprint != null, "sprint action exists");
         tickEvent(player, 1);
         int start = backend.stamina(player);
@@ -83,7 +84,7 @@ public class ActionTickTests {
     public static void exemptPlayersEndAndRestartActions(GameTestHelper helper) {
         ServerPlayer player = survivalPlayer(helper);
         PlayerActions actions = PlayerActions.get(player);
-        Action sprint = actions.getAction(Action.SPRINT);
+        Action sprint = actions.getAction(VanillaActions.SPRINT);
         helper.assertTrue(sprint != null, "sprint action exists");
 
         actions.processFlags((short) ActionFlags.SPRINTING);

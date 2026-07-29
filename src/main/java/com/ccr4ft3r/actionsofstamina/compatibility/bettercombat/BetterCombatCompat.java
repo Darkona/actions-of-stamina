@@ -1,5 +1,9 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.bettercombat;
 
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +25,15 @@ public final class BetterCombatCompat {
     public static final String MOD_ID = "bettercombat";
     public static final boolean LOADED = ModList.get().isLoaded(MOD_ID);
 
+    /** A swing: a one-off action whose cost each swing works out with its weapon's multipliers. */
+    public static final ActionType SWING = ActionTypes.register(ActionsOfStamina.id("bettercombat/swing"), BetterCombatConfig.SWING,
+            BetterCombatCompat::isActive, Action::new);
+
     private BetterCombatCompat() {
+    }
+
+    /** Mod construction: registers the action type above (set when this class loads). */
+    public static void registerActions() {
     }
 
     public static boolean isActive() {

@@ -1,10 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.fish;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -15,20 +13,13 @@ import net.neoforged.neoforge.common.ItemAbilities;
  */
 public class FishAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("fish");
-
-    public FishAction() {
-        super(SOURCE, AoSServerConfig.FISH);
+    public FishAction(ActionType type) {
+        super(type);
     }
 
     /** Whether using the item casts or reels in a fishing line. */
     public static boolean isRod(ItemStack stack) {
         return stack.canPerformAction(ItemAbilities.FISHING_ROD_CAST);
-    }
-
-    @Override
-    public int id() {
-        return FISH;
     }
 
     @Override

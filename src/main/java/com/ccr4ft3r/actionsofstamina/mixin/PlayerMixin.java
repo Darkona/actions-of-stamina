@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.mixin;
 
-import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
@@ -20,7 +20,7 @@ public abstract class PlayerMixin {
         Player self = (Player) (Object) this;
         // A Wall-Jump TXF double jump already paid its own cost: it isn't a normal jump.
         if (WallJumpCompat.consumeDoubleJump(self)) return;
-        if (!PlayerActions.perform(self, Action.JUMP)) ci.cancel();
+        if (!PlayerActions.perform(self, VanillaActions.JUMP)) ci.cancel();
     }
 
     /**
@@ -30,7 +30,7 @@ public abstract class PlayerMixin {
     @Inject(method = "tryToStartFallFlying", at = @At("HEAD"), cancellable = true)
     private void actionsofstamina$stopFallFlyingStart(CallbackInfoReturnable<Boolean> cir) {
         Player self = (Player) (Object) this;
-        if (ElytraAction.wearsStaminaWings(self) && !PlayerActions.canPerform(self, Action.ELYTRA)) {
+        if (ElytraAction.wearsStaminaWings(self) && !PlayerActions.canPerform(self, VanillaActions.ELYTRA)) {
             cir.setReturnValue(false);
         }
     }

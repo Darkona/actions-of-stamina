@@ -1,10 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.riptide;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TridentItem;
@@ -16,10 +14,8 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
  */
 public class RiptideAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("riptide");
-
-    public RiptideAction() {
-        super(SOURCE, AoSServerConfig.RIPTIDE);
+    public RiptideAction(ActionType type) {
+        super(type);
     }
 
     /**
@@ -32,11 +28,6 @@ public class RiptideAction extends Action {
         return stack.getUseDuration(player) - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME
                 && EnchantmentHelper.getTridentSpinAttackStrength(stack, player) > 0 && player.isInWaterOrRain()
                 && stack.getDamageValue() < stack.getMaxDamage() - 1;
-    }
-
-    @Override
-    public int id() {
-        return RIPTIDE;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.combatroll;
 
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.combat_roll.api.event.ServerSideRollEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
@@ -17,8 +17,6 @@ final class CombatRollBridge {
 
     /** Server main thread; the roll already happened client side, so it can only be charged, not stopped. */
     private static void onRoll(ServerPlayer player, Vec3 velocity) {
-        if (!CombatRollCompat.isActive()) return;
-        int cost = CombatRollConfig.ROLL.cost();
-        if (cost > 0) StaminaBackends.server().spend(player, CombatRollCompat.SOURCE, cost, CombatRollConfig.ROLL.regenDelay());
+        if (CombatRollCompat.isActive()) PlayerActions.perform(player, CombatRollCompat.ROLL);
     }
 }

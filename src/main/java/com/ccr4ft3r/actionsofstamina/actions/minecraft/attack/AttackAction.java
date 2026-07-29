@@ -2,6 +2,7 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.attack;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
@@ -18,7 +19,6 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 import java.util.List;
 
-
 /**
  * Attacking, charged once every few attacks; a mace smash is charged on its own, at a multiple of the cost. An attack the player can't afford is cancelled, or with
  * {@code exhausted_mode = WEAKEN} lands weakened: transient attack damage and attack speed modifiers stay on the
@@ -26,7 +26,6 @@ import java.util.List;
  */
 public class AttackAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("attack");
     /** Id of both WEAKEN modifiers (one per attribute). */
     public static final ResourceLocation WEAKEN_ID = ActionsOfStamina.id("exhausted_attack");
     /** Ticks between checks of whether the WEAKEN modifiers still belong on the player. */
@@ -40,8 +39,8 @@ public class AttackAction extends Action {
     private final AttributeModifier damageModifier;
     private final AttributeModifier speedModifier;
 
-    public AttackAction() {
-        super(SOURCE, AoSServerConfig.ATTACK);
+    public AttackAction(ActionType type) {
+        super(type);
         this.weakens = AoSServerConfig.EXHAUSTED_MODE.get() == ExhaustedAttackMode.WEAKEN;
         this.weakensFreeAttacks = AoSServerConfig.WEAKEN_NON_WEAPONS.getAsBoolean() || AoSServerConfig.ALSO_FOR_NON_WEAPONS.getAsBoolean();
         this.smashCost = (int) Math.round(cost * AoSServerConfig.MACE_SMASH_MULTIPLIER.getAsDouble());
@@ -101,11 +100,6 @@ public class AttackAction extends Action {
         if (damage != null) damage.removeModifier(WEAKEN_ID);
         AttributeInstance speed = player.getAttribute(Attributes.ATTACK_SPEED);
         if (speed != null) speed.removeModifier(WEAKEN_ID);
-    }
-
-    @Override
-    public int id() {
-        return ATTACK;
     }
 
     @Override

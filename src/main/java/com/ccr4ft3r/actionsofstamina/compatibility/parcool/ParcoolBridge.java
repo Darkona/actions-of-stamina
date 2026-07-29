@@ -7,9 +7,9 @@ import com.alrex.parcool.api.action.ParCoolActionEvent;
 import com.alrex.parcool.common.Parkourability;
 import com.alrex.parcool.common.action.ParCoolActions;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -24,12 +24,8 @@ final class ParcoolBridge {
     /** ParCool's stamina type that charges nothing: fine next to AoS, it just doesn't show AoS's stamina to ParCool. */
     private static final ResourceLocation PARCOOL_NONE_STAMINA = ResourceLocation.fromNamespaceAndPath(ParcoolCompat.MOD_ID, "none");
 
-    /** A ParCool action AoS charges: its own source and config. */
-    private record Costed(ResourceLocation source, ActionCostConfig costs) {
-    }
-
     /** Keyed by ParCool's singleton action entries; filled once at setup, read-only afterwards (both sides). */
-    private static final Reference2ObjectOpenHashMap<ActionEntry<?>, Costed> COSTS = new Reference2ObjectOpenHashMap<>();
+    private static final Reference2ObjectOpenHashMap<ActionEntry<?>, ActionType> TYPES = new Reference2ObjectOpenHashMap<>();
 
     private ParcoolBridge() {
     }
@@ -69,87 +65,59 @@ final class ParcoolBridge {
     }
 
     private static void add(ActionEntry<?> entry) {
-        String name = entry.id().getPath();
-        ParcoolConfig.Entry config = ParcoolConfig.byName(name);
-        if (config == null) {
+        ActionType type = ParcoolCompat.typeOf(entry.id().getPath());
+        if (type == null) {
             ActionsOfStamina.logger.warn("No AoS config for ParCool action {}", entry.id());
             return;
         }
-        COSTS.put(entry, new Costed(ActionsOfStamina.id("parcool/" + name), config.costs()));
+        TYPES.put(entry, type);
     }
 
+    /**
+     * The player's AoS action for the ParCool action of {@code event}, or null when AoS doesn't charge it (the section
+     * is off, or the action costs nothing). ParCool drives it: the start, each tick and the end come from its events.
+     */
     @Nullable
-    private static Costed costed(ParCoolActionEvent event) {
+    private static Action actionOf(ParCoolActionEvent event, Player player) {
         if (!ParcoolConfig.ENABLED.getAsBoolean()) return null;
-        Costed costed = COSTS.get(event.getAction().getEntry());
-        return costed != null && costed.costs.enabled() ? costed : null;
-    }
-
-    /** What must be affordable to start: the start cost, else one drain tick, else the finish cost. */
-    private static int startRequirement(ActionCostConfig costs) {
-        int cost = costs.cost();
-        if (cost > 0) return cost;
-        double perTick = costs.perTick();
-        if (perTick > 0) return (int) Math.ceil(perTick);
-        return costs.finishCost();
+        ActionType type = TYPES.get(event.getAction().getEntry());
+        return type != null && type.config().enabled() ? PlayerActions.get(player).getAction(type) : null;
     }
 
     /** On the deciding side (the local client, or the server for server-triggered actions). */
     private static void onTryToStart(ParCoolActionEvent.TryToStart event) {
-        Costed costed = costed(event);
-        if (costed == null || !costed.costs.costsAnything()) return;
         Player player = event.getPlayer();
-        if (!StaminaBackends.of(player).canSpend(player, costed.source, startRequirement(costed.costs))) {
-            event.setCanceled(true);
-        }
+        Action action = actionOf(event, player);
+        if (action != null && !action.canBegin(player)) event.setCanceled(true);
     }
 
     private static void onTryToContinue(ParCoolActionEvent.TryToContinue event) {
-        Costed costed = costed(event);
-        if (costed == null) return;
-        double perTick = costed.costs.perTick();
-        if (perTick <= 0) return;
         Player player = event.getPlayer();
-        if (!StaminaBackends.of(player).canSpend(player, costed.source, (int) Math.ceil(perTick))) {
-            event.setCanceled(true);
-        }
+        Action action = actionOf(event, player);
+        if (action != null && action.drains() && !action.canContinue(player)) event.setCanceled(true);
     }
 
     private static void onStart(ParCoolActionEvent.Start.Post event) {
         Player player = event.getPlayer();
         if (player.level().isClientSide()) return;
-        Costed costed = costed(event);
-        if (costed == null) return;
-        int cost = costed.costs.cost();
-        if (cost > 0) StaminaBackends.server().spend(player, costed.source, cost, costed.costs.regenDelay());
+        Action action = actionOf(event, player);
+        if (action != null) action.begin(player);
     }
 
     /** Fires for every ParCool action of every player every tick: the cheap checks come first. */
     private static void onTick(ParCoolActionEvent.Tick.Post event) {
         Player player = event.getPlayer();
         if (player.level().isClientSide()) return;
-        if (!(event.getAction() instanceof ContinuableAction action) || !action.isDoing()) return;
-        Costed costed = costed(event);
-        if (costed == null) return;
-        double perTick = costed.costs.perTick();
-        if (perTick <= 0) return;
-        StaminaBackend backend = StaminaBackends.server();
-        backend.drain(player, costed.source, perTick, costed.costs.blocksRegen() && !backend.keepsRegenWhileActing(player));
+        if (!(event.getAction() instanceof ContinuableAction parcoolAction) || !parcoolAction.isDoing()) return;
+        Action action = actionOf(event, player);
+        if (action != null && action.drains()) action.continueTick(player);
     }
 
     private static void onFinish(ParCoolActionEvent.Finish.Post event) {
         Player player = event.getPlayer();
         if (player.level().isClientSide()) return;
-        Costed costed = costed(event);
-        if (costed == null) return;
-        StaminaBackend backend = StaminaBackends.server();
-        backend.stopDrain(player, costed.source);
-        int finish = costed.costs.finishCost();
-        int delay = costed.costs.regenDelay();
-        if (finish > 0) backend.spend(player, costed.source, finish, delay);
-        else if (delay > 0 && costed.costs.perTick() > 0 && !backend.keepsRegenWhileActing(player)) {
-            backend.blockRegen(player, costed.source, delay);
-        }
+        Action action = actionOf(event, player);
+        if (action != null) action.end(player);
     }
 
     /** Only a stamina type other than AoS's own, ParCool's own (replaced by AoS's) or none charges twice. */

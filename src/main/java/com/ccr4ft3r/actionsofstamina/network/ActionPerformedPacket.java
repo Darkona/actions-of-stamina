@@ -11,7 +11,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import static com.ccr4ft3r.actionsofstamina.ActionsOfStamina.id;
 
 /**
- * Client → server: a one-off action the client decided and the server never sees on its own (a swing at the air).
+ * Client → server: a one-off action the client decided and the server never sees on its own (a swing at the air, a
+ * Wall-Jump TXF jump).
  * The server performs it as one it saw itself: it counts towards {@code times_performed_to_exhaust} and is charged when it is
  * due, through the server's stamina backend, with the action's own source and regen delay. Client-side spends are
  * only checked or predicted, so the server's count is the one that charges. Used with both backends. It can only

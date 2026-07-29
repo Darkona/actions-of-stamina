@@ -1,24 +1,16 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.gliders;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 /** Gliding with a Gliders glider: drains while it lasts, and folds the glider when it can't be paid. */
 public class GlideAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("gliders/glide");
-
-    public GlideAction() {
-        super(SOURCE, GlidersConfig.GLIDE);
-    }
-
-    @Override
-    public int id() {
-        return GLIDE;
+    public GlideAction(ActionType type) {
+        super(type);
     }
 
     @Override
