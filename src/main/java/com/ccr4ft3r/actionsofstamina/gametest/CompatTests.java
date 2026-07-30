@@ -45,7 +45,7 @@ public class CompatTests {
 
     private static final ResourceLocation TEST = ActionsOfStamina.id("test");
 
-    /** Spends in small steps until nothing more can be spent (Green Feathers: through Strain too). */
+    /** Spends in small steps until nothing more can be spent (Green Feathers: through strain too). */
     private static String exhaust(StaminaBackend backend, ServerPlayer player) {
         int spends = 0;
         while (spends < 10000 && backend.spend(player, TEST, 50, 0)) spends++;

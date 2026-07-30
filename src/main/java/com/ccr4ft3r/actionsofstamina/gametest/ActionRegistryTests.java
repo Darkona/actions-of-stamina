@@ -74,11 +74,11 @@ public class ActionRegistryTests {
         StaminaBackend backend = StaminaBackends.server();
         int finishCost = ParcoolConfig.byName("charge_jump").costs().finishCost();
         int start = backend.stamina(player);
-        actions.setActionState(slot, true);
+        actions.setActionState(TestActionTypes.finishing, true);
         action.tick(player, actions);
         helper.assertTrue(action.isPerforming(), "it begins");
         helper.assertValueEqual(backend.stamina(player), start, "beginning is free");
-        actions.setActionState(slot, false);
+        actions.setActionState(TestActionTypes.finishing, false);
         action.tick(player, actions);
         helper.assertFalse(action.isPerforming(), "it ends");
         helper.assertValueEqual(backend.stamina(player), start - finishCost, "ending charges the finish cost");
@@ -92,7 +92,7 @@ public class ActionRegistryTests {
         int slot = TestActionTypes.finishing.index();
         helper.assertFalse(PlayerActions.canPerform(player, slot), "an exhausted player can't begin it");
         PlayerActions actions = PlayerActions.get(player);
-        actions.setActionState(slot, true);
+        actions.setActionState(TestActionTypes.finishing, true);
         actions.getAction(slot).tick(player, actions);
         helper.assertFalse(actions.getAction(slot).isPerforming(), "it doesn't begin");
         helper.assertTrue(PlayerActions.canPerform(player, ActionTypes.count() + 5), "a slot no type has is never refused");
