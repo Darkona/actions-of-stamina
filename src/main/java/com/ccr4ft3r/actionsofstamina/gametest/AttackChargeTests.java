@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.ExhaustedAttackMode;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
@@ -36,7 +36,7 @@ public class AttackChargeTests {
     /** The player's attack action, with a sword in hand so the attacks count. */
     private static AttackAction attack(ServerPlayer player) {
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
-        return (AttackAction) PlayerActions.get(player).getAction(Action.ATTACK);
+        return (AttackAction) PlayerActions.get(player).getAction(VanillaActions.ATTACK);
     }
 
     @GameTest(template = "empty")
@@ -47,8 +47,8 @@ public class AttackChargeTests {
         StaminaBackend backend = StaminaBackends.server();
         int cost = AoSServerConfig.ATTACK.cost();
         int start = backend.stamina(player);
-        ActionPerformedPacket.apply(player, Action.ATTACK);
-        ActionPerformedPacket.apply(player, Action.ATTACK);
+        ActionPerformedPacket.apply(player, VanillaActions.ATTACK.index());
+        ActionPerformedPacket.apply(player, VanillaActions.ATTACK.index());
         assertValueEqual(helper, backend.stamina(player), start, "two misses charge nothing yet");
         attack.performHit(player);
         assertValueEqual(helper, backend.stamina(player), start - cost, "the third attack, a hit, is charged");
@@ -65,7 +65,7 @@ public class AttackChargeTests {
         int start = backend.stamina(player);
         attack.performHit(player);
         attack.performHit(player);
-        ActionPerformedPacket.apply(player, Action.ATTACK);
+        ActionPerformedPacket.apply(player, VanillaActions.ATTACK.index());
         assertValueEqual(helper, backend.stamina(player), start - cost, "the third attack, a miss, is charged");
         attack.performHit(player);
         assertValueEqual(helper, backend.stamina(player), start - cost, "the fourth attack, a hit, starts a new count");
@@ -87,7 +87,7 @@ public class AttackChargeTests {
             player.setItemInHand(InteractionHand.MAIN_HAND, stack);
             PlayerActions actions = PlayerActions.get(player);
             player.tickCount = 10;
-            actions.getAction(Action.ATTACK).tick(player, actions);
+            actions.getAction(VanillaActions.ATTACK).tick(player, actions);
             return player.getAttribute(Attributes.ATTACK_DAMAGE).getModifier(AttackAction.WEAKEN_ID) != null;
         } finally {
             AoSServerConfig.EXHAUSTED_MODE.set(mode);

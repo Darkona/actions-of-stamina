@@ -1,9 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.create;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class CrankAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("create/crank");
     /**
      * Ticks a turn keeps the action going: a held use key turns the crank again every 4 ticks, and Create keeps it
      * turning 10 ticks after the last turn.
@@ -27,13 +25,8 @@ public class CrankAction extends Action {
     @Nullable
     private BlockEntity crank;
 
-    public CrankAction() {
-        super(SOURCE, CreateConfig.CRANK);
-    }
-
-    @Override
-    public int id() {
-        return CRANK;
+    public CrankAction(ActionType type) {
+        super(type);
     }
 
     /** A turn the player can't afford is refused; otherwise it keeps the action going. */

@@ -3,6 +3,7 @@ package com.ccr4ft3r.actionsofstamina.events;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.brush.BrushAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
@@ -72,7 +73,7 @@ public final class PlayerEventHandler {
     @SubscribeEvent
     public static void onAttackEntity(AttackEntityEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isExempt(player)) return;
-        if (!(PlayerActions.get(player).getAction(Action.ATTACK) instanceof AttackAction attack)) return;
+        if (!(PlayerActions.get(player).getAction(VanillaActions.ATTACK) instanceof AttackAction attack)) return;
         // Better Combat's swings and Epic Fight's battle-mode combo are charged by their compats.
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()) || EpicFightCompat.inBattleMode(player)) return;
         // The modifiers follow the item in hand right away, not at the next periodic check (weaken_non_weapons off).
@@ -85,7 +86,7 @@ public final class PlayerEventHandler {
     /** Raising a shield the player can't afford is refused; modded shields are found by their shield-block tool action. */
     @SubscribeEvent
     public static void shieldUsage(PlayerInteractEvent.RightClickItem event) {
-        if (event.getItemStack().canPerformAction(ToolActions.SHIELD_BLOCK) && !PlayerActions.canPerform(event.getEntity(), Action.SHIELD)) {
+        if (event.getItemStack().canPerformAction(ToolActions.SHIELD_BLOCK) && !PlayerActions.canPerform(event.getEntity(), VanillaActions.SHIELD)) {
             event.setCanceled(true);
         }
     }
@@ -96,7 +97,7 @@ public final class PlayerEventHandler {
      */
     @SubscribeEvent
     public static void drawUsage(PlayerInteractEvent.RightClickItem event) {
-        if (DrawAction.draws(event.getItemStack()) && !PlayerActions.canPerform(event.getEntity(), Action.DRAW)) {
+        if (DrawAction.draws(event.getItemStack()) && !PlayerActions.canPerform(event.getEntity(), VanillaActions.DRAW)) {
             event.setCanceled(true);
         }
     }
@@ -108,7 +109,7 @@ public final class PlayerEventHandler {
      */
     @SubscribeEvent
     public static void brushUsage(PlayerInteractEvent.RightClickBlock event) {
-        if (BrushAction.brushes(event.getItemStack()) && !PlayerActions.canPerform(event.getEntity(), Action.BRUSH)) {
+        if (BrushAction.brushes(event.getItemStack()) && !PlayerActions.canPerform(event.getEntity(), VanillaActions.BRUSH)) {
             event.setUseItem(Event.Result.DENY);
         }
     }
@@ -117,7 +118,7 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void throwOnUse(PlayerInteractEvent.RightClickItem event) {
         Player player = event.getEntity();
-        if (ThrowAction.throwsOnUse(event.getItemStack(), player) && !PlayerActions.perform(player, Action.THROW)) {
+        if (ThrowAction.throwsOnUse(event.getItemStack(), player) && !PlayerActions.perform(player, VanillaActions.THROW)) {
             event.setCancellationResult(InteractionResult.FAIL);
             event.setCanceled(true);
         }
@@ -130,7 +131,7 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void throwOnRelease(LivingEntityUseItemEvent.Stop event) {
         if (event.getEntity() instanceof Player player && ThrowAction.throwsOnRelease(event.getItem(), player, event.getDuration())
-                && !PlayerActions.perform(player, Action.THROW)) {
+                && !PlayerActions.perform(player, VanillaActions.THROW)) {
             event.setCanceled(true);
         }
     }
@@ -142,7 +143,7 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void riptideOnRelease(LivingEntityUseItemEvent.Stop event) {
         if (event.getEntity() instanceof Player player && RiptideAction.launchesOnRelease(event.getItem(), player, event.getDuration())
-                && !PlayerActions.perform(player, Action.RIPTIDE)) {
+                && !PlayerActions.perform(player, VanillaActions.RIPTIDE)) {
             event.setCanceled(true);
         }
     }
@@ -153,7 +154,7 @@ public final class PlayerEventHandler {
      */
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void fishOnUse(PlayerInteractEvent.RightClickItem event) {
-        if (FishAction.isRod(event.getItemStack()) && !PlayerActions.perform(event.getEntity(), Action.FISH)) {
+        if (FishAction.isRod(event.getItemStack()) && !PlayerActions.perform(event.getEntity(), VanillaActions.FISH)) {
             event.setCancellationResult(InteractionResult.FAIL);
             event.setCanceled(true);
         }
@@ -169,7 +170,7 @@ public final class PlayerEventHandler {
         if (event.isSimulated() || !TillAction.charges(event.getToolAction())) return;
         Player player = event.getPlayer();
         if (PlayerActions.isExempt(player)) return;
-        Action till = PlayerActions.get(player).getAction(Action.TILL);
+        Action till = PlayerActions.get(player).getAction(VanillaActions.TILL);
         if (till == null || !TillAction.changesBlock(event)) return;
         if (player.level().isClientSide() ? !till.canPerform(player) : !till.perform(player)) event.setCanceled(true);
     }
@@ -179,7 +180,7 @@ public final class PlayerEventHandler {
     public static void blockBroken(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
         if (player.level().isClientSide() || PlayerActions.isExempt(player)) return;
-        if (PlayerActions.get(player).getAction(Action.MINE) instanceof MineAction mine) {
+        if (PlayerActions.get(player).getAction(VanillaActions.MINE) instanceof MineAction mine) {
             mine.mined(player, event.getState().getDestroySpeed(event.getLevel(), event.getPos()));
         }
     }
@@ -192,7 +193,7 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void blockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isExempt(player)) return;
-        Action build = PlayerActions.get(player).getAction(Action.BUILD);
+        Action build = PlayerActions.get(player).getAction(VanillaActions.BUILD);
         if (build == null) return;
         Item placed = event.getPlacedBlock().getBlock().asItem();
         if (placed == Items.AIR || !player.getMainHandItem().is(placed) && !player.getOffhandItem().is(placed)) return;
@@ -207,7 +208,7 @@ public final class PlayerEventHandler {
     public static void breakSpeed(PlayerEvent.BreakSpeed event) {
         Player player = event.getEntity();
         if (PlayerActions.isExempt(player)) return;
-        if (PlayerActions.get(player).getAction(Action.MINE) instanceof MineAction mine) {
+        if (PlayerActions.get(player).getAction(VanillaActions.MINE) instanceof MineAction mine) {
             float multiplier = mine.breakSpeedMultiplier(player);
             if (multiplier < 1.0f) event.setNewSpeed(event.getNewSpeed() * multiplier);
         }
@@ -222,7 +223,7 @@ public final class PlayerEventHandler {
         if (!(event.getItemStack().getItem() instanceof FireworkRocketItem)) return;
         Player player = event.getEntity();
         if (!player.isFallFlying() || PlayerActions.isExempt(player)) return;
-        if (PlayerActions.get(player).getAction(Action.ELYTRA) instanceof ElytraAction elytra) elytra.boost(player, event.getItemStack());
+        if (PlayerActions.get(player).getAction(VanillaActions.ELYTRA) instanceof ElytraAction elytra) elytra.boost(player, event.getItemStack());
     }
 
     /**

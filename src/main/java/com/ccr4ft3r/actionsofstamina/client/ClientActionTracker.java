@@ -1,7 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.client;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.brush.BrushAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
@@ -65,7 +64,7 @@ public final class ClientActionTracker {
         if (swimming && ParcoolCompat.ownsSwim(player)) swimming = false;
         if (crawling && ParcoolCompat.ownsCrawl(player)) crawling = false;
         boolean paragliding = ParagliderCompat.isParagliding(player);
-        boolean wallClinging = actions.getAction(Action.WALL_CLING) != null && WallJumpCompat.isClinging(player);
+        boolean wallClinging = actions.getAction(WallJumpCompat.WALL_CLING) != null && WallJumpCompat.isClinging(player);
 
         // Only what the server acts on: moving alone would send a packet at every start and stop.
         // Actions disabled in the config have no slot in PlayerActions, so their flags are simply ignored.

@@ -1,6 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.create;
 
-import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +26,13 @@ public final class CreateCompat {
     private CreateCompat() {
     }
 
+    public static final ActionType CRANK = ActionTypes.register(ActionsOfStamina.id("create/crank"), CreateConfig.CRANK,
+            CreateCompat::isActive, CrankAction::new);
+
+    /** Mod construction: registers the action type above (set when this class loads). */
+    public static void registerActions() {
+    }
+
     public static boolean isActive() {
         return LOADED && CreateConfig.CRANK.enabled();
     }
@@ -31,7 +40,7 @@ public final class CreateCompat {
     /** Both sides, from the hand crank mixin: whether the player may turn the crank at {@code pos} now. */
     public static boolean turnCrank(Player player, Level level, BlockPos pos) {
         if (PlayerActions.isExempt(player)) return true;
-        if (!(PlayerActions.get(player).getAction(Action.CRANK) instanceof CrankAction crank)) return true;
+        if (!(PlayerActions.get(player).getAction(CRANK) instanceof CrankAction crank)) return true;
         return crank.turn(player, level.getBlockEntity(pos));
     }
 
@@ -50,7 +59,7 @@ public final class CreateCompat {
     @Nullable
     private static CrankAction valveAction(Player player) {
         if (PlayerActions.isExempt(player) || !CreateConfig.VALVE_HANDLES.get()) return null;
-        return PlayerActions.get(player).getAction(Action.CRANK) instanceof CrankAction crank ? crank : null;
+        return PlayerActions.get(player).getAction(CRANK) instanceof CrankAction crank ? crank : null;
     }
 
     /** The player ran out while turning: the crank stops now rather than coasting through Create's own delay. */

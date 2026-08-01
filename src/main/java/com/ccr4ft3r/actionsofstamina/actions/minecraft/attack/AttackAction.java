@@ -1,10 +1,9 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.attack;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -15,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
 
-
 /**
  * Attacking, charged once every few attacks. An attack the player can't afford is cancelled, or with
  * {@code exhausted_mode = WEAKEN} lands weakened: transient attack damage and attack speed modifiers stay on the
@@ -23,7 +21,6 @@ import java.util.UUID;
  */
 public class AttackAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("attack");
     /** Id of both WEAKEN modifiers (one per attribute). */
     public static final UUID WEAKEN_ID = UUID.fromString("5b0f3c52-8a1e-4f6b-9d0c-2f4e7a1c6d31");
     /** Ticks between checks of whether the WEAKEN modifiers still belong on the player. */
@@ -35,8 +32,8 @@ public class AttackAction extends Action {
     private final AttributeModifier damageModifier;
     private final AttributeModifier speedModifier;
 
-    public AttackAction() {
-        super(SOURCE, AoSServerConfig.ATTACK);
+    public AttackAction(ActionType type) {
+        super(type);
         this.weakens = AoSServerConfig.EXHAUSTED_MODE.get() == ExhaustedAttackMode.WEAKEN;
         this.weakensFreeAttacks = AoSServerConfig.WEAKEN_NON_WEAPONS.get() || AoSServerConfig.ALSO_FOR_NON_WEAPONS.get();
         this.damageModifier = new AttributeModifier(WEAKEN_ID, "actionsofstamina:exhausted_attack", AoSServerConfig.WEAKEN_DAMAGE.get() - 1.0, AttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -96,11 +93,6 @@ public class AttackAction extends Action {
         if (damage != null) damage.removeModifier(WEAKEN_ID);
         AttributeInstance speed = player.getAttribute(Attributes.ATTACK_SPEED);
         if (speed != null) speed.removeModifier(WEAKEN_ID);
-    }
-
-    @Override
-    public int id() {
-        return ATTACK;
     }
 
     @Override

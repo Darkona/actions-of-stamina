@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.mixin;
 
-import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.client.player.LocalPlayer;
@@ -20,7 +21,7 @@ public abstract class LocalPlayerMixin {
     private boolean actionsofstamina$sprintNeedsStamina(boolean original) {
         if (!original) return false;
         LocalPlayer self = (LocalPlayer) (Object) this;
-        int action = (self.isInWater() || self.isInLava()) && !self.onGround() ? Action.SWIM : Action.SPRINT;
+        ActionType action = (self.isInWater() || self.isInLava()) && !self.onGround() ? VanillaActions.SWIM : VanillaActions.SPRINT;
         return PlayerActions.canPerform(self, action);
     }
 }

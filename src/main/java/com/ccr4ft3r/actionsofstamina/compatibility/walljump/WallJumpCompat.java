@@ -2,12 +2,12 @@ package com.ccr4ft3r.actionsofstamina.compatibility.walljump;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.ModList;
 
@@ -17,36 +17,33 @@ import net.minecraftforge.fml.ModList;
  * <p>
  * Wall-Jump TXF decides every move on the local player. So the client refuses a wall jump, a double jump or a grip
  * the stamina can't pay for, and lets go of a wall when the grip can't be paid any more. The server charges: a wall
- * or double jump arrives as a {@link WallJumpChargePacket}, and the wall cling is a continuous action
- * ({@link WallClingAction}) driven by the client's movement-state flags, like sprinting.
+ * or double jump is a one-off action the client reports with an {@link ActionPerformedPacket}, and the wall cling is a
+ * continuous action ({@link WallClingAction}) driven by the client's movement-state flags, like sprinting.
  */
 public final class WallJumpCompat {
 
     public static final String MOD_ID = "walljump";
     public static final boolean LOADED = ModList.get().isLoaded(MOD_ID);
 
-    public static final byte WALL_JUMP = 0;
-    public static final byte DOUBLE_JUMP = 1;
-
-    static final ResourceLocation WALL_JUMP_SOURCE = ActionsOfStamina.id("walljump/wall_jump");
-    static final ResourceLocation DOUBLE_JUMP_SOURCE = ActionsOfStamina.id("walljump/double_jump");
+    public static final ActionType WALL_JUMP = ActionTypes.register(ActionsOfStamina.id("walljump/wall_jump"), WallJumpConfig.WALL_JUMP,
+            () -> isActive() && WallJumpConfig.WALL_JUMP.enabled(), Action::new);
+    public static final ActionType DOUBLE_JUMP = ActionTypes.register(ActionsOfStamina.id("walljump/double_jump"), WallJumpConfig.DOUBLE_JUMP,
+            () -> isActive() && WallJumpConfig.DOUBLE_JUMP.enabled(), Action::new);
+    public static final ActionType WALL_CLING = ActionTypes.register(ActionsOfStamina.id("walljump/wall_cling"), WallJumpConfig.WALL_CLING,
+            () -> isActive() && WallJumpConfig.WALL_CLING.enabled(), WallClingAction::new);
 
     private WallJumpCompat() {
+    }
+
+    /** Mod construction: registers the action types above (set when this class loads). */
+    public static void registerActions() {
     }
 
     public static boolean isActive() {
         return LOADED && WallJumpConfig.ENABLED.get();
     }
 
-    private static ActionCostConfig costsOf(byte move) {
-        return move == WALL_JUMP ? WallJumpConfig.WALL_JUMP : WallJumpConfig.DOUBLE_JUMP;
-    }
-
-    private static ResourceLocation sourceOf(byte move) {
-        return move == WALL_JUMP ? WALL_JUMP_SOURCE : DOUBLE_JUMP_SOURCE;
-    }
-
-    /** Client, from the mixin: whether the local player may wall jump now; if so the server is asked to charge it. */
+    /** Client, from the mixin: whether the local player may wall jump now; if so the server is told to perform it. */
     public static boolean tryWallJump(Player player) {
         return tryJump(player, WALL_JUMP);
     }
@@ -57,7 +54,7 @@ public final class WallJumpCompat {
      */
     private static boolean doubleJumping;
 
-    /** Client, from the mixin: whether the local player may double jump now; if so the server is asked to charge it. */
+    /** Client, from the mixin: whether the local player may double jump now; if so the server is told to perform it. */
     public static boolean tryDoubleJump(Player player) {
         boolean allowed = tryJump(player, DOUBLE_JUMP);
         doubleJumping = allowed;
@@ -78,25 +75,17 @@ public final class WallJumpCompat {
         doubleJumping = false;
     }
 
-    private static boolean tryJump(Player player, byte move) {
-        if (!isActive() || PlayerActions.isExempt(player)) return true;
-        ActionCostConfig costs = costsOf(move);
-        int cost = costs.cost();
-        if (!costs.enabled() || cost <= 0) return true;
-        if (!StaminaBackends.of(player).canSpend(player, sourceOf(move), cost)) return false;
-        PacketHandler.sendToServer(new WallJumpChargePacket(move));
-        return true;
-    }
-
     /**
-     * Server: charges a wall jump or a double jump the client just performed. It already happened, so it can only be
-     * charged, not stopped.
+     * The client only checks: the move already happens there, and the server performs it, as one it saw itself, when
+     * the {@link ActionPerformedPacket} arrives.
      */
-    public static void charge(ServerPlayer player, byte move) {
-        if (move != WALL_JUMP && move != DOUBLE_JUMP || !isActive()) return;
-        ActionCostConfig costs = costsOf(move);
-        int cost = costs.cost();
-        if (costs.enabled() && cost > 0) StaminaBackends.server().spend(player, sourceOf(move), cost, costs.regenDelay());
+    private static boolean tryJump(Player player, ActionType move) {
+        if (!isActive() || PlayerActions.isExempt(player)) return true;
+        ActionCostConfig costs = move.config();
+        if (!costs.enabled() || costs.cost() <= 0) return true;
+        if (!PlayerActions.canPerform(player, move)) return false;
+        PacketHandler.sendToServer(new ActionPerformedPacket((byte) move.index()));
+        return true;
     }
 
     /**
@@ -104,7 +93,7 @@ public final class WallJumpCompat {
      * cling action then only needs one more drain tick).
      */
     public static boolean canCling(Player player) {
-        return !isActive() || PlayerActions.canPerform(player, Action.WALL_CLING);
+        return !isActive() || PlayerActions.canPerform(player, WALL_CLING);
     }
 
     /** Client only: whether the local player is clinging to (or sliding down) a wall. */

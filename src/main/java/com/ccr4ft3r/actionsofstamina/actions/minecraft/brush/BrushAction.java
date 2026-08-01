@@ -1,10 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.brush;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -12,10 +10,8 @@ import net.minecraft.world.item.UseAnim;
 /** Brushing: using any item whose use animation is {@code BRUSH}, modded brushes included. */
 public class BrushAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("brush");
-
-    public BrushAction() {
-        super(SOURCE, AoSServerConfig.BRUSH);
+    public BrushAction(ActionType type) {
+        super(type);
     }
 
     /** Whether using the item brushes. */
@@ -26,11 +22,6 @@ public class BrushAction extends Action {
     /** Whether the player is brushing right now. */
     public static boolean isBrushing(Player player) {
         return player.isUsingItem() && brushes(player.getUseItem());
-    }
-
-    @Override
-    public int id() {
-        return BRUSH;
     }
 
     @Override

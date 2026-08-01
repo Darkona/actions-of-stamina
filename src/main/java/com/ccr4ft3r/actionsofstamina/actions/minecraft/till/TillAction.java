@@ -1,10 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.till;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolAction;
@@ -18,10 +16,8 @@ import net.minecraftforge.event.level.BlockEvent;
  */
 public class TillAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("till");
-
-    public TillAction() {
-        super(SOURCE, AoSServerConfig.TILL);
+    public TillAction(ActionType type) {
+        super(type);
     }
 
     /** Whether the tool action is one of the block changes charged here (dousing a campfire, trimming or lighting aren't). */
@@ -41,11 +37,6 @@ public class TillAction extends Action {
         if (result == original) result = original.getBlock().getToolModifiedState(original, event.getContext(), event.getToolAction(), true);
         if (result == null || result == original) return false;
         return event.getToolAction() != ToolActions.SHOVEL_FLATTEN || event.getLevel().getBlockState(event.getPos().above()).isAir();
-    }
-
-    @Override
-    public int id() {
-        return TILL;
     }
 
     @Override

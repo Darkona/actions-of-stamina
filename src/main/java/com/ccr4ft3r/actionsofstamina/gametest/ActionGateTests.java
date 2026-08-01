@@ -2,11 +2,10 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.jump.JumpAction;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.climb.ClimbAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.row.RowAction;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.gametest.framework.GameTest;
@@ -80,13 +79,13 @@ public class ActionGateTests {
         helper.succeed();
     }
 
-    /** A jump-configured action whose charge goes through or not as the test says, counting the attempts. */
+    /** A jump action whose charge goes through or not as the test says, counting the attempts. */
     private static final class ChargeProbe extends Action {
         boolean chargeGoesThrough;
         int attempts;
 
         ChargeProbe() {
-            super(JumpAction.SOURCE, AoSServerConfig.JUMP);
+            super(VanillaActions.JUMP);
         }
 
         @Override
@@ -95,18 +94,6 @@ public class ActionGateTests {
             return chargeGoesThrough;
         }
 
-        @Override
-        public int id() {
-            return Action.JUMP;
-        }
-
-        @Override
-        protected void performingEffects(Player p, PlayerActions a) {
-        }
-
-        @Override
-        protected void notPerformingEffects(Player player, PlayerActions a) {
-        }
     }
 
     /** A charge that is due but doesn't go through is tried again on the next use, not after a whole new count. */

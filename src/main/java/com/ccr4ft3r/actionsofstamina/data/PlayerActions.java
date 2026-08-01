@@ -1,9 +1,13 @@
 package com.ccr4ft3r.actionsofstamina.data;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.FakePlayer;
@@ -21,6 +25,9 @@ import java.util.Arrays;
 public class PlayerActions {
 
     private final Action[] actions = new Action[ActionTypes.count()];
+    /** The same actions, packed at the front for the tick loop; {@link #tickCount} of them. */
+    private final Action[] ticking = new Action[actions.length];
+    private int tickCount;
 
     /** Last movement-state flags applied (client: last ones sent; server: last ones received). */
     private short stateFlags;
@@ -55,6 +62,11 @@ public class PlayerActions {
         return action == null || action.canPerform(player);
     }
 
+    /** {@link #canPerform(Player, int)} by type. */
+    public static boolean canPerform(Player player, ActionType type) {
+        return canPerform(player, type.index());
+    }
+
     /**
      * Performs one-off action {@code actionId}, charging it when it is due; false when the player can't afford it.
      * Never refused for an exempt player or an action the config leaves off.
@@ -63,6 +75,11 @@ public class PlayerActions {
         if (isExempt(player)) return true;
         Action action = get(player).getAction(actionId);
         return action == null || action.perform(player);
+    }
+
+    /** {@link #perform(Player, int)} by type. */
+    public static boolean perform(Player player, ActionType type) {
+        return perform(player, type.index());
     }
 
     /**
@@ -85,27 +102,27 @@ public class PlayerActions {
     public void tick(Player player) {
         if (changed) {
             int f = stateFlags;
-            setActionState(Action.SPRINT, ActionFlags.has(f, ActionFlags.SPRINTING));
-            setActionState(Action.CRAWL, ActionFlags.has(f, ActionFlags.CRAWLING));
-            setActionState(Action.ELYTRA, ActionFlags.has(f, ActionFlags.ELYTRA));
-            setActionState(Action.SWIM, ActionFlags.has(f, ActionFlags.SWIMMING));
-            setActionState(Action.SHIELD, ActionFlags.has(f, ActionFlags.HOLDING_SHIELD));
-            setActionState(Action.DRAW, ActionFlags.has(f, ActionFlags.DRAWING));
-            setActionState(Action.PARAGLIDE, ActionFlags.has(f, ActionFlags.PARAGLIDING));
-            setActionState(Action.WALL_CLING, ActionFlags.has(f, ActionFlags.WALL_CLINGING));
-            setActionState(Action.CLIMB, ActionFlags.has(f, ActionFlags.CLIMBING));
-            setActionState(Action.ROW, ActionFlags.has(f, ActionFlags.ROWING));
-            setActionState(Action.BRUSH, ActionFlags.has(f, ActionFlags.BRUSHING));
+            setActionState(VanillaActions.SPRINT, ActionFlags.has(f, ActionFlags.SPRINTING));
+            setActionState(VanillaActions.CRAWL, ActionFlags.has(f, ActionFlags.CRAWLING));
+            setActionState(VanillaActions.ELYTRA, ActionFlags.has(f, ActionFlags.ELYTRA));
+            setActionState(VanillaActions.SWIM, ActionFlags.has(f, ActionFlags.SWIMMING));
+            setActionState(VanillaActions.SHIELD, ActionFlags.has(f, ActionFlags.HOLDING_SHIELD));
+            setActionState(VanillaActions.DRAW, ActionFlags.has(f, ActionFlags.DRAWING));
+            setActionState(ParagliderCompat.PARAGLIDE, ActionFlags.has(f, ActionFlags.PARAGLIDING));
+            setActionState(WallJumpCompat.WALL_CLING, ActionFlags.has(f, ActionFlags.WALL_CLINGING));
+            setActionState(VanillaActions.CLIMB, ActionFlags.has(f, ActionFlags.CLIMBING));
+            setActionState(VanillaActions.ROW, ActionFlags.has(f, ActionFlags.ROWING));
+            setActionState(VanillaActions.BRUSH, ActionFlags.has(f, ActionFlags.BRUSHING));
             changed = false;
         }
         // Gliders keeps its glide state on the item, synced to both sides: each side reads it itself.
         // Nobody glides on the ground: the Curios lookup behind isGliding only runs in the air.
-        if (actions[Action.GLIDE] != null) actions[Action.GLIDE].setActionState(!player.onGround() && GlidersCompat.isGliding(player));
+        Action glide = getAction(GlidersCompat.GLIDE);
+        if (glide != null) glide.setActionState(!player.onGround() && GlidersCompat.isGliding(player));
 
         // Each action spends and pauses regeneration through the stamina backend under its own source.
-        for (Action action : actions) {
-            if (action != null) action.tick(player, this);
-        }
+        Action[] ticking = this.ticking;
+        for (int i = 0, n = tickCount; i < n; i++) ticking[i].tick(player, this);
 
         // Only the client's movement detection reads them (ClientActionTracker).
         if (player.level().isClientSide()) {
@@ -144,14 +161,17 @@ public class PlayerActions {
 
     /** Drops every action before they are rebuilt from the config; their drains time out by themselves. */
     public void clearActions(Player player) {
-        for (Action action : actions) {
-            if (action != null) action.cleanUp(player);
-        }
+        for (int i = 0; i < tickCount; i++) ticking[i].cleanUp(player);
         Arrays.fill(actions, null);
+        Arrays.fill(ticking, null);
+        tickCount = 0;
     }
 
     public void addEnabledAction(Action action) {
-        if (actions[action.id()] == null) actions[action.id()] = action;
+        int slot = action.id();
+        if (actions[slot] != null) return;
+        actions[slot] = action;
+        ticking[tickCount++] = action;
     }
 
     /** The action in slot {@code actionId}, or null when the config leaves it off or no type has that slot. */
@@ -160,8 +180,19 @@ public class PlayerActions {
         return actionId >= 0 && actionId < actions.length ? actions[actionId] : null;
     }
 
+    /** The player's action of {@code type}, or null when the config leaves it off. */
+    @Nullable
+    public Action getAction(ActionType type) {
+        return actions[type.index()];
+    }
+
     public void setActionState(int actionId, boolean state) {
         Action action = getAction(actionId);
+        if (action != null) action.setActionState(state);
+    }
+
+    public void setActionState(ActionType type, boolean state) {
+        Action action = actions[type.index()];
         if (action != null) action.setActionState(state);
     }
 }
