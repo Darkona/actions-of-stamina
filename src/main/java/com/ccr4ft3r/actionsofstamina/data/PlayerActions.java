@@ -25,9 +25,9 @@ import java.util.Arrays;
 public class PlayerActions {
 
     private final Action[] actions = new Action[ActionTypes.count()];
-    /** The same actions, packed at the front for the tick loop; {@link #tickCount} of them. */
+    /** The same actions, packed at the front for the tick loop; {@link #tickingCount} of them. */
     private final Action[] ticking = new Action[actions.length];
-    private int tickCount;
+    private int tickingCount;
 
     /** Last movement-state flags applied (client: last ones sent; server: last ones received). */
     private short stateFlags;
@@ -122,7 +122,7 @@ public class PlayerActions {
 
         // Each action spends and pauses regeneration through the stamina backend under its own source.
         Action[] ticking = this.ticking;
-        for (int i = 0, n = tickCount; i < n; i++) ticking[i].tick(player, this);
+        for (int i = 0, n = tickingCount; i < n; i++) ticking[i].tick(player, this);
 
         // Only the client's movement detection reads them (ClientActionTracker).
         if (player.level().isClientSide()) {
@@ -161,17 +161,17 @@ public class PlayerActions {
 
     /** Drops every action before they are rebuilt from the config; their drains time out by themselves. */
     public void clearActions(Player player) {
-        for (int i = 0; i < tickCount; i++) ticking[i].cleanUp(player);
+        for (int i = 0; i < tickingCount; i++) ticking[i].cleanUp(player);
         Arrays.fill(actions, null);
         Arrays.fill(ticking, null);
-        tickCount = 0;
+        tickingCount = 0;
     }
 
     public void addEnabledAction(Action action) {
         int slot = action.id();
         if (actions[slot] != null) return;
         actions[slot] = action;
-        ticking[tickCount++] = action;
+        ticking[tickingCount++] = action;
     }
 
     /** The action in slot {@code actionId}, or null when the config leaves it off or no type has that slot. */
@@ -184,11 +184,6 @@ public class PlayerActions {
     @Nullable
     public Action getAction(ActionType type) {
         return actions[type.index()];
-    }
-
-    public void setActionState(int actionId, boolean state) {
-        Action action = getAction(actionId);
-        if (action != null) action.setActionState(state);
     }
 
     public void setActionState(ActionType type, boolean state) {
