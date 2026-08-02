@@ -9,7 +9,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.network.ActionChargePacket;
+import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -59,9 +59,10 @@ public final class ClientGameEvents {
         // Only swings at an entity cost, and at air unless only_for_hits: mining fires this every tick a block is hit.
         if (!isEntityHit && !(isMissHit && !AoSServerConfig.ONLY_FOR_HITS.get())) return;
         if (isEntityHit ? attack.performHit(player) : attack.perform(player)) {
-            // The client spend above was only a prediction. Hits are charged by the server itself (AttackEntityEvent);
-            // a swing at air never reaches it, so that one is asked for.
-            if (attack.hasJustCharged() && !isEntityHit) PacketHandler.sendToServer(new ActionChargePacket((byte) Action.ATTACK));
+            // The client spend above was only a prediction. Hits are counted and charged by the server itself
+            // (AttackEntityEvent); a swing at air never reaches it, so the server is told to count that one, and its
+            // own count decides when the charge is due.
+            if (!isEntityHit) PacketHandler.sendToServer(new ActionPerformedPacket((byte) Action.ATTACK));
         } else if (!attack.weakens()) {
             event.setCanceled(true);
             event.setSwingHand(false);
