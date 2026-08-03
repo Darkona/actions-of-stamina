@@ -7,7 +7,6 @@ import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
@@ -21,6 +20,7 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.assertFalse;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.assertTrue;
+import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
 
 /**
@@ -31,13 +31,6 @@ import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class ActionGateTests {
-
-    private static final ResourceLocation TEST = ActionsOfStamina.id("test");
-
-    private static void exhaust(StaminaBackend backend, ServerPlayer player) {
-        int spends = 0;
-        while (spends < 10000 && backend.spend(player, TEST, 50, 0)) spends++;
-    }
 
     /** Whether right-clicking {@code item} in the main hand is refused. */
     private static boolean refused(ServerPlayer player, Item item) {
