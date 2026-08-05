@@ -31,12 +31,15 @@ public class AttackAction extends Action {
     private static final int WEAKEN_CHECK_INTERVAL = 10;
 
     private final boolean weakens;
+    /** Whether WEAKEN also weakens attacks that cost nothing because of what is in hand ({@code weaken_non_weapons}). */
+    private final boolean weakensFreeAttacks;
     private final AttributeModifier damageModifier;
     private final AttributeModifier speedModifier;
 
     public AttackAction() {
         super(SOURCE, AoSServerConfig.ATTACK);
         this.weakens = AoSServerConfig.EXHAUSTED_MODE.get() == ExhaustedAttackMode.WEAKEN;
+        this.weakensFreeAttacks = AoSServerConfig.WEAKEN_NON_WEAPONS.get() || AoSServerConfig.ALSO_FOR_NON_WEAPONS.get();
         this.damageModifier = new AttributeModifier(WEAKEN_ID, "actionsofstamina:exhausted_attack", AoSServerConfig.WEAKEN_DAMAGE.get() - 1.0, AttributeModifier.Operation.MULTIPLY_TOTAL);
         this.speedModifier = new AttributeModifier(WEAKEN_ID, "actionsofstamina:exhausted_attack", AoSServerConfig.WEAKEN_SPEED.get() - 1.0, AttributeModifier.Operation.MULTIPLY_TOTAL);
     }
@@ -48,14 +51,23 @@ public class AttackAction extends Action {
 
     /**
      * Server, WEAKEN only: every {@link #WEAKEN_CHECK_INTERVAL} ticks, puts the modifiers on or takes them off when
-     * the stamina went short or came back. Attributes sync to the client by themselves (attack speed drives its
-     * cooldown indicator).
+     * the stamina went short or came back, or when the item in hand changed whether attacks cost. Attributes sync to
+     * the client by themselves (attack speed drives its cooldown indicator).
      */
     @Override
     public void tick(Player p, PlayerActions a) {
         super.tick(p, a);
         if (!weakens || p.level.isClientSide() || p.tickCount % WEAKEN_CHECK_INTERVAL != 0) return;
-        setWeakened(p, !canPerform(p)); // Creative and spectator players can always perform.
+        refreshWeakened(p);
+    }
+
+    /**
+     * Server, WEAKEN only: whether the modifiers belong on the player right now. They do while the stamina is short
+     * (creative and spectator players can always perform), unless the attack in hand is free and
+     * {@code weaken_non_weapons} is off.
+     */
+    public void refreshWeakened(Player player) {
+        setWeakened(player, !canPerform(player) && (weakensFreeAttacks || isWeapon(player.getMainHandItem())));
     }
 
     /** Server: an attack the player can't afford lands weakened right away, without waiting for the next check. */
