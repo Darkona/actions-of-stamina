@@ -88,7 +88,7 @@ public abstract class Action {
         this.staminaPerTick = config.perTick();
         this.tickCost = (int) Math.ceil(staminaPerTick);
         this.regenInhibitor = config.blocksRegen();
-        this.timesPerformedToExhaust = config.timesToCharge();
+        this.timesPerformedToExhaust = config.timesPerformedToExhaust();
         this.beginCost = minCost > 0 || tickCost > 0 ? minCost : finishCost;
     }
 
