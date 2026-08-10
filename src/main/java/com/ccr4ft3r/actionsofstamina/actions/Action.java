@@ -101,7 +101,7 @@ public abstract class Action {
     }
 
     public boolean canPerform(Player player) {
-        return PlayerActions.isNotExhaustable(player) || canAfford(player, wasPerforming ? tickCost : beginCost);
+        return PlayerActions.isExempt(player) || canAfford(player, wasPerforming ? tickCost : beginCost);
     }
 
     private boolean canAfford(Player player, int stamina) {
@@ -131,7 +131,7 @@ public abstract class Action {
 
         // Creative or spectator: the action ends here, so coming back to survival mid-action begins it properly
         // (start gate and cost) and its effects don't outlive it.
-        if (PlayerActions.isNotExhaustable(p)) {
+        if (PlayerActions.isExempt(p)) {
             if (wasPerforming) finishPerforming(p, a);
             if (wasPerforming || prevActionState) cleanUp(p);
             wasPerforming = false;
@@ -197,14 +197,14 @@ public abstract class Action {
         if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(p, "{}::finishPerforming", name());
         StaminaBackend backend = StaminaBackends.of(p);
         backend.stopDrain(p, source);
-        if (finishCost > 0 && !PlayerActions.isNotExhaustable(p)) backend.spend(p, source, finishCost, cooldown);
+        if (finishCost > 0 && !PlayerActions.isExempt(p)) backend.spend(p, source, finishCost, cooldown);
         else if (cooldown > 0 && !backend.keepsRegenWhileActing(p)) backend.blockRegen(p, source, cooldown);
     }
 
     /** One-off use: charges {@link #cost} every {@code timesPerformedToExhaust} uses. */
     public boolean perform(Player player) {
         charged = false;
-        if (PlayerActions.isNotExhaustable(player)) return true;
+        if (PlayerActions.isExempt(player)) return true;
         boolean allow = canPerform(player);
         if (!allow) {
             if (ActionsOfStamina.debugging()) ActionsOfStamina.log("{}::Allowed = false, cost= {}", name(), cost);

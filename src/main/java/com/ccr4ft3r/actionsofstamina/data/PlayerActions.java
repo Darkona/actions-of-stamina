@@ -40,7 +40,8 @@ public class PlayerActions {
         return ((AosPlayerData) player).actionsofstamina$actions();
     }
 
-    public static boolean isNotExhaustable(@Nullable Player player) {
+    /** Whether no action ever costs {@code player} anything: no player, creative, spectator or a fake player. */
+    public static boolean isExempt(@Nullable Player player) {
         return player == null || player.isCreative() || player.isSpectator() || player instanceof FakePlayer;
     }
 
@@ -49,7 +50,7 @@ public class PlayerActions {
      * action the config leaves off.
      */
     public static boolean canPerform(Player player, int actionId) {
-        if (isNotExhaustable(player)) return true;
+        if (isExempt(player)) return true;
         Action action = get(player).getAction(actionId);
         return action == null || action.canPerform(player);
     }
@@ -59,7 +60,7 @@ public class PlayerActions {
      * Never refused for an exempt player or an action the config leaves off.
      */
     public static boolean perform(Player player, int actionId) {
-        if (isNotExhaustable(player)) return true;
+        if (isExempt(player)) return true;
         Action action = get(player).getAction(actionId);
         return action == null || action.perform(player);
     }
