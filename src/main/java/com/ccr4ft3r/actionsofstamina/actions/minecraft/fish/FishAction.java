@@ -15,7 +15,6 @@ import net.minecraftforge.common.ToolActions;
  */
 public class FishAction extends Action {
 
-    public static final String actionName = "fish_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("fish");
 
     public FishAction() {
@@ -25,11 +24,6 @@ public class FishAction extends Action {
     /** Whether using the item casts or reels in a fishing line. */
     public static boolean isRod(ItemStack stack) {
         return stack.canPerformAction(ToolActions.FISHING_ROD_CAST);
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

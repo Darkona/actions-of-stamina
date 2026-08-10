@@ -18,7 +18,6 @@ import net.minecraftforge.event.level.BlockEvent;
  */
 public class TillAction extends Action {
 
-    public static final String actionName = "till_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("till");
 
     public TillAction() {
@@ -42,11 +41,6 @@ public class TillAction extends Action {
         if (result == original) result = original.getBlock().getToolModifiedState(original, event.getContext(), event.getToolAction(), true);
         if (result == null || result == original) return false;
         return event.getToolAction() != ToolActions.SHOVEL_FLATTEN || event.getLevel().getBlockState(event.getPos().above()).isAir();
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

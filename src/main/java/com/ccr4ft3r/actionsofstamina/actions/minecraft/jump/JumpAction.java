@@ -9,17 +9,10 @@ import net.minecraft.world.entity.player.Player;
 
 public class JumpAction extends Action {
 
-    public static final String actionName = "jump_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("jump");
 
     public JumpAction() {
         super(SOURCE, AoSServerConfig.JUMP);
-    }
-
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

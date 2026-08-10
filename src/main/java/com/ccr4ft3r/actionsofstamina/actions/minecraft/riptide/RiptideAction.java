@@ -16,7 +16,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
  */
 public class RiptideAction extends Action {
 
-    public static final String actionName = "riptide_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("riptide");
 
     public RiptideAction() {
@@ -31,11 +30,6 @@ public class RiptideAction extends Action {
         if (!(stack.getItem() instanceof TridentItem)) return false;
         return stack.getUseDuration() - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME
                 && EnchantmentHelper.getRiptide(stack) > 0 && player.isInWaterOrRain();
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

@@ -20,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class RowAction extends Action {
 
-    public static final String actionName = "row_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("row");
     /**
      * Boats that cost stamina to row; the mod's own tag file holds the vanilla boat and chest boat (every wood type is a
@@ -40,11 +39,6 @@ public class RowAction extends Action {
     /** Whether the player may paddle the rowed boat they drive (asked on the driver's client, which moves the boat). */
     public static boolean mayRow(Player player) {
         return PlayerActions.canPerform(player, ROW);
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

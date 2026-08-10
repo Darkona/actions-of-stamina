@@ -10,16 +10,10 @@ import net.minecraft.world.entity.player.Player;
 /** Building: placing a block, charged once every few blocks. Never refused: without the stamina, the block is free. */
 public class BuildAction extends Action {
 
-    public static final String actionName = "build_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("build");
 
     public BuildAction() {
         super(SOURCE, AoSServerConfig.BUILD);
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override
