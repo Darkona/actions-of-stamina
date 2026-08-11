@@ -106,8 +106,11 @@ public class PlayerActions {
             if (action != null) action.tick(player, this);
         }
 
-        lastX = player.getX();
-        lastZ = player.getZ();
+        // Only the client's movement detection reads them (ClientActionTracker).
+        if (player.level.isClientSide()) {
+            lastX = player.getX();
+            lastZ = player.getZ();
+        }
     }
 
 
