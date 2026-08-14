@@ -1,16 +1,16 @@
 package com.ccr4ft3r.actionsofstamina.client;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.HitResult;
@@ -51,7 +51,7 @@ public final class ClientGameEvents {
         boolean isEntityHit = hitResult != null && hitResult.getType() == HitResult.Type.ENTITY;
         boolean isMissHit = hitResult != null && hitResult.getType() == HitResult.Type.MISS;
 
-        if (!(PlayerActions.get(player).getAction(Action.ATTACK) instanceof AttackAction attack)) return;
+        if (!(PlayerActions.get(player).getAction(VanillaActions.ATTACK) instanceof AttackAction attack)) return;
         // Better Combat swings these weapons itself and its compat charges each swing.
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem())) return;
         // Same for Epic Fight's battle mode: its basic attack combo is charged by the Epic Fight compat.
@@ -62,7 +62,7 @@ public final class ClientGameEvents {
             // The client spend above was only a prediction. Hits are counted and charged by the server itself
             // (AttackEntityEvent); a swing at air never reaches it, so the server is told to count that one, and its
             // own count decides when the charge is due.
-            if (!isEntityHit) PacketHandler.sendToServer(new ActionPerformedPacket((byte) Action.ATTACK));
+            if (!isEntityHit) PacketHandler.sendToServer(new ActionPerformedPacket((byte) VanillaActions.ATTACK.index()));
         } else if (!attack.weakens()) {
             event.setCanceled(true);
             event.setSwingHand(false);

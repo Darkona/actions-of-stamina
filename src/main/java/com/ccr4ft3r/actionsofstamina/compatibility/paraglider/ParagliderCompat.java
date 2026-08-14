@@ -1,6 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
@@ -29,6 +31,13 @@ public final class ParagliderCompat {
     public static final ResourceLocation VESSELS = ActionsOfStamina.id("paragliders/stamina_vessels");
 
     private ParagliderCompat() {
+    }
+
+    public static final ActionType PARAGLIDE = ActionTypes.register(ActionsOfStamina.id("paraglide"), ParagliderConfig.PARAGLIDE,
+            ParagliderCompat::isActive, ParaglideAction::new);
+
+    /** Mod construction: registers the action type above (set when this class loads). */
+    public static void registerActions() {
     }
 
     public static boolean isActive() {

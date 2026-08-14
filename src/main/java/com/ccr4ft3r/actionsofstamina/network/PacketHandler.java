@@ -1,7 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpChargePacket;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalStaminaPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.FakePlayer;
@@ -12,7 +11,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public final class PacketHandler {
 
-    private static final String PROTOCOL_VERSION = "5";
+    private static final String PROTOCOL_VERSION = "6";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(ActionsOfStamina.id("main"), () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
@@ -29,9 +28,6 @@ public final class PacketHandler {
         CHANNEL.messageBuilder(ActionPerformedPacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
                .encoder(ActionPerformedPacket::encode).decoder(ActionPerformedPacket::decode)
                .consumerMainThread(ActionPerformedPacket::handle).add();
-        CHANNEL.messageBuilder(WallJumpChargePacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
-               .encoder(WallJumpChargePacket::encode).decoder(WallJumpChargePacket::decode)
-               .consumerMainThread(WallJumpChargePacket::handle).add();
         CHANNEL.messageBuilder(BackendSyncPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
                .encoder(BackendSyncPacket::encode).decoder(BackendSyncPacket::decode)
                .consumerMainThread(BackendSyncPacket::handle).add();

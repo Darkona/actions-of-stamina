@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Wall-Jump TXF, client side (applied only when it is loaded): a wall can't be grabbed, or held any longer, without
  * the stamina for it, and a wall jump the stamina can't pay for doesn't happen. The server charges through
- * {@code WallJumpChargePacket} and the wall cling action.
+ * {@code ActionPerformedPacket} and the wall cling action.
  */
 @Mixin(value = WallJumpLogic.class, remap = false)
 public abstract class WallJumpLogicMixin {

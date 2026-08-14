@@ -2,10 +2,10 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
  */
 public class ElytraAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("elytra");
     /** Wings that cost stamina to fly with; the mod's own tag file holds the elytra. */
     public static final TagKey<Item> STAMINA_WINGS = ItemTags.create(ActionsOfStamina.id("stamina_wings"));
 
@@ -30,8 +29,8 @@ public class ElytraAction extends Action {
     /** {@code player.tickCount} at which the last rocket boost ends. */
     private int boostEndTick;
 
-    public ElytraAction() {
-        super(SOURCE, AoSServerConfig.ELYTRA);
+    public ElytraAction(ActionType type) {
+        super(type);
         this.rocketBoostCosts = AoSServerConfig.ROCKET_BOOST_COSTS.get();
     }
 
@@ -55,11 +54,6 @@ public class ElytraAction extends Action {
     @Override
     protected double drainPerTick(Player player) {
         return player.tickCount < boostEndTick ? 0 : staminaPerTick;
-    }
-
-    @Override
-    public int id() {
-        return ELYTRA;
     }
 
     @Override

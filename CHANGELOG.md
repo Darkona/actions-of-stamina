@@ -54,7 +54,8 @@ Each one only does something when its mod is installed, and can be turned off in
 
 ### Addon API
 
-- Other mods can add their own actions: an `ActionCostConfig` section, an `Action` subclass and a type registered in `ActionTypes`. Addon actions are gated, drained and charged like the built-in ones, and a continuous action can charge a `finish_cost` when it ends. See the wiki's Addon API page.
+- Every action is a type registered in `ActionTypes`: Minecraft's, each supported mod's, and other mods' own, which only need an `ActionCostConfig` section and, for effects, an `Action` subclass. They are gated, drained and charged by the same code, and a continuous action can charge a `finish_cost` when it ends. See the wiki's Addon API page.
+- Fake players (machines acting as players) never pay stamina, for the supported mods' actions too.
 
 ## Planned
 

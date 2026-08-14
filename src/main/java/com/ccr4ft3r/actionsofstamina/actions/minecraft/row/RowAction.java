@@ -2,10 +2,10 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.row;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -20,15 +20,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public class RowAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("row");
     /**
      * Boats that cost stamina to row; the mod's own tag file holds the vanilla boat and chest boat (every wood type is a
      * variant of these two).
      */
     public static final TagKey<EntityType<?>> ROWED_BOATS = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, ActionsOfStamina.id("rowed_boats"));
 
-    public RowAction() {
-        super(SOURCE, AoSServerConfig.ROW);
+    public RowAction(ActionType type) {
+        super(type);
     }
 
     /** Whether the player drives {@code vehicle} and it's a boat rowed with stamina. */
@@ -43,12 +42,7 @@ public class RowAction extends Action {
 
     /** Whether the player may paddle the rowed boat they drive (asked on the driver's client, which moves the boat). */
     public static boolean mayRow(Player player) {
-        return PlayerActions.canPerform(player, ROW);
-    }
-
-    @Override
-    public int id() {
-        return ROW;
+        return PlayerActions.canPerform(player, VanillaActions.ROW);
     }
 
     @Override

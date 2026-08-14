@@ -1,6 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.gliders;
 
-import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -21,6 +23,13 @@ public final class GlidersCompat {
     private GlidersCompat() {
     }
 
+    public static final ActionType GLIDE = ActionTypes.register(ActionsOfStamina.id("gliders/glide"), GlidersConfig.GLIDE,
+            GlidersCompat::isActive, GlideAction::new);
+
+    /** Mod construction: registers the action type above (set when this class loads). */
+    public static void registerActions() {
+    }
+
     public static boolean isActive() {
         return LOADED && GlidersConfig.GLIDE.enabled();
     }
@@ -32,7 +41,7 @@ public final class GlidersCompat {
 
     /** Server, from the mixin: whether {@code player} may open a glider now. */
     public static boolean canDeploy(ServerPlayer player) {
-        return !isActive() || PlayerActions.canPerform(player, Action.GLIDE);
+        return !isActive() || PlayerActions.canPerform(player, GLIDE);
     }
 
     /** Server: the glide can't be paid for, so the player lets go of the glider. */
