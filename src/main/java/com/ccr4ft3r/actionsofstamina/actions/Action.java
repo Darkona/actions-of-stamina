@@ -103,7 +103,7 @@ public class Action {
 
     /** Refreshes this action's drain for one more tick; false when it can't go on (the drain then stops itself). */
     private boolean drain(Player player, StaminaBackend backend) {
-        // Energized players (Green Feathers) keep regenerating, as with the old regen inhibitor.
+        // Energized players (Green Feathers) keep regenerating while they act.
         blockingRegen = regenInhibitor && !backend.keepsRegenWhileActing(player);
         return backend.drain(player, source, drainPerTick(player), blockingRegen);
     }
