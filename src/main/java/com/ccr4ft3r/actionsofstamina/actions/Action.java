@@ -221,7 +221,8 @@ public abstract class Action {
         return StaminaBackends.of(player).spend(player, source, cost, cooldown);
     }
 
-    /** Whether the last {@link #perform} charged the cost (client side: only checked, the server must charge). */
+    /** Whether the last {@link #perform} charged the cost (client side: only checked or predicted, the server charges). */
+    @SuppressWarnings("unused") // for addons
     public boolean hasJustCharged() {
         return charged;
     }

@@ -30,9 +30,9 @@ public final class PacketHandler {
         CHANNEL.messageBuilder(ActionStatePacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
                .encoder(ActionStatePacket::encode).decoder(ActionStatePacket::decode)
                .consumer(mainThread(ActionStatePacket::handle)).add();
-        CHANNEL.messageBuilder(ActionChargePacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
-               .encoder(ActionChargePacket::encode).decoder(ActionChargePacket::decode)
-               .consumer(mainThread(ActionChargePacket::handle)).add();
+        CHANNEL.messageBuilder(ActionPerformedPacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
+               .encoder(ActionPerformedPacket::encode).decoder(ActionPerformedPacket::decode)
+               .consumer(mainThread(ActionPerformedPacket::handle)).add();
         CHANNEL.messageBuilder(WallJumpChargePacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
                .encoder(WallJumpChargePacket::encode).decoder(WallJumpChargePacket::decode)
                .consumer(mainThread(WallJumpChargePacket::handle)).add();
