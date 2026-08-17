@@ -24,7 +24,8 @@ The 1.21.1 version of Actions of Stamina, ported to Forge 1.18.2 (through the 1.
 - **Riptide:** a trident launch costs stamina when released, off by default. A launch you can't afford doesn't happen.
 - **Fishing:** casting a rod and reeling it in each cost stamina, off by default. Modded rods count when they are built on the vanilla fishing rod. A cast or reel you can't afford doesn't happen.
 - **Farming tools:** tilling, making paths, stripping logs and scraping or unwaxing copper cost stamina once every few blocks, off by default. Modded tools count. A block you can't afford stays as it is.
-- Sprinting, jumping, crawling and swimming.
+- **Sprinting and swimming:** drain while they last. Without the stamina to begin they don't start, as sprinting doesn't without food, and they stop when the stamina runs out.
+- Jumping and crawling.
 
 ### Compatibility
 
