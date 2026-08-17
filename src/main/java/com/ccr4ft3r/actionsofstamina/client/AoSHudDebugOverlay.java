@@ -22,10 +22,10 @@ public final class AoSHudDebugOverlay {
     }
 
     private static void render(PoseStack poseStack, int screenWidth) {
-        if (!AoSServerConfig.ENABLE_DEBUGGING.get()) return;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (player == null || mc.options.hideGui) return;
+        // The player first: the server config behind the switch is only loaded while there is one.
+        if (player == null || mc.options.hideGui || !AoSServerConfig.ENABLE_DEBUGGING.get()) return;
 
         PlayerActions playerActions = PlayerActions.get(player);
         Font font = mc.font;
