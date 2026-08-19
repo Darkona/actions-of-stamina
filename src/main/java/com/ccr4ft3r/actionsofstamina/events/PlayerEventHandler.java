@@ -209,10 +209,15 @@ public final class PlayerEventHandler {
         if (PlayerActions.get(player).getAction(Action.ELYTRA) instanceof ElytraAction elytra) elytra.boost(player, event.getItemStack());
     }
 
-    /** Login, respawn and dimension change: rebuild the actions from the current config and resync the bar. */
+    /**
+     * Login, respawn and dimension change: rebuild the actions from the current config and resync the bar. On a client
+     * only the local player gets actions: remote players entering tracking range are the server's business, and
+     * building theirs would cost a set of actions and a Curios lookup each time one comes into view.
+     */
     @SubscribeEvent
     public static void onPlayerJoin(EntityJoinWorldEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
+        if (player.level.isClientSide() && !player.isLocalPlayer()) return;
         PlayerActions actions = PlayerActions.get(player);
         actions.clearActions(player);
         ActionProvider.addEnabledActions(actions);
