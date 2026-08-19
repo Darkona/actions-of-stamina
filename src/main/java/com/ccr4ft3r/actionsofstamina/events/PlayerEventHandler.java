@@ -73,6 +73,8 @@ public final class PlayerEventHandler {
         if (!(PlayerActions.get(player).getAction(Action.ATTACK) instanceof AttackAction attack)) return;
         // Better Combat's swings and Epic Fight's battle-mode combo are charged by their compats.
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()) || EpicFightCompat.inBattleMode(player)) return;
+        // The modifiers follow the item in hand right away, not at the next periodic check (weaken_non_weapons off).
+        if (attack.weakens()) attack.refreshWeakened(player);
         if (attack.performHit(player)) return;
         if (attack.weakens()) attack.weaken(player);
         else event.setCanceled(true);
