@@ -56,6 +56,10 @@ Each one only does something when its mod is installed, and can be turned off in
 - **Epic Fight guard:** Epic Fight 18 takes a blocked hit's stamina straight from its own bar, without a skill event, so guarding keeps Epic Fight's stamina and `[epicfight.guard]` does nothing.
 - **Paragliders stamina plugin:** Paragliders 1.6 has no stamina API. Actions of Stamina changes its player movement instead (mixins), with the same result: Paragliders reads its stamina from Actions of Stamina, and neither regenerates nor drains its own.
 
+### Addon API
+
+- Other mods can add their own actions: an `ActionCostConfig` section, an `Action` subclass and a type registered in `ActionTypes`. Addon actions are gated, drained and charged like the built-in ones, and a continuous action can charge a `finish_cost` when it ends. See the wiki's Addon API page.
+
 ## Planned
 
 ### Ports

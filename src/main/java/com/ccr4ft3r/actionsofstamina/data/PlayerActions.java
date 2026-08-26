@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.data;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
 import net.minecraft.world.entity.player.Player;
@@ -13,12 +14,12 @@ import java.util.Arrays;
  * Per-player action state, a transient field of every player ({@link AosPlayerData}).
  * <p>
  * Common code only: the local-player movement detection that feeds {@link #applyClientState} lives in
- * {@code ClientActionTracker}. Actions are kept in a fixed array indexed by {@link Action#id()} so the
- * per-tick loop allocates nothing.
+ * {@code ClientActionTracker}. Actions are kept in an array of one slot per registered action type
+ * ({@link ActionTypes}), indexed by {@link Action#id()}, so the per-tick loop allocates nothing and looks nothing up.
  */
 public class PlayerActions {
 
-    private final Action[] actions = new Action[Action.COUNT];
+    private final Action[] actions = new Action[ActionTypes.count()];
 
     /** Last movement-state flags applied (client: last ones sent; server: last ones received). */
     private short stateFlags;
@@ -143,13 +144,14 @@ public class PlayerActions {
         if (actions[action.id()] == null) actions[action.id()] = action;
     }
 
+    /** The action in slot {@code actionId}, or null when the config leaves it off or no type has that slot. */
     @Nullable
     public Action getAction(int actionId) {
-        return actions[actionId];
+        return actionId >= 0 && actionId < actions.length ? actions[actionId] : null;
     }
 
     public void setActionState(int actionId, boolean state) {
-        Action action = actions[actionId];
+        Action action = getAction(actionId);
         if (action != null) action.setActionState(state);
     }
 }

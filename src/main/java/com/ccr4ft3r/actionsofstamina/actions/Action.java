@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
  * {@link #source}.
  * <p>
  * Continuous actions (sprint, swim, elytra, shield, crawl, draw, paraglide, wall cling, crank, climb, row) run a drain refreshed every tick while
- * performing; one-off actions (attack, jump, throw, mine, build, riptide, fish, till) {@link #perform} a spend. All amounts are kept in stamina (1/1000
+ * performing, and may charge a finish cost when they end; one-off actions (attack, jump, throw, mine, build, riptide, fish, till) {@link #perform} a spend. All amounts are kept in stamina (1/1000
  * feather), read from the config once, in the constructor (actions are rebuilt whenever the player joins a level).
  * <p>
  * Runs on both sides: on the client the backend only checks (Green Feathers also predicts), the server is
@@ -23,7 +23,8 @@ import net.minecraft.world.entity.player.Player;
  */
 public abstract class Action {
 
-    // Fixed slots in PlayerActions' action array.
+    // Slots of the built-in action types in PlayerActions' action array (ActionTypes registers them in this order;
+    // addon types come after them).
     public static final int ATTACK = 0;
     public static final int SPRINT = 1;
     public static final int JUMP = 2;
@@ -47,13 +48,16 @@ public abstract class Action {
     public static final int TILL = 19;
     /** Brushing in later versions; Minecraft 1.18.2 has no brush. The id stays reserved so ids match across versions. */
     public static final int BRUSH = 20;
-    public static final int COUNT = 21;
 
     protected final ResourceLocation source;
     /** One-off cost, in stamina: per {@link #perform}, or when a continuous action begins. */
     protected final int cost;
     /** Stamina that must be affordable to perform or begin the action. */
     protected final int minCost;
+    /** Charged when a continuous action ends. */
+    protected final int finishCost;
+    /** What must be affordable to begin a continuous action: the stamina to begin, else the finish cost. */
+    private final int beginCost;
     /** Ticks without regeneration after spending (and after a continuous action ends). */
     protected final int cooldown;
     protected final double staminaPerTick;
@@ -73,18 +77,20 @@ public abstract class Action {
 
     public abstract String name();
 
-    /** Slot in {@link PlayerActions#getActions()}; one of the constants above. */
+    /** Slot in {@link PlayerActions#getActions()}: one of the constants above, or an addon type's {@link ActionType#index()}. */
     public abstract int id();
 
     public Action(ResourceLocation source, ActionCostConfig config) {
         this.source = source;
         this.cost = config.cost();
         this.minCost = config.minStamina();
+        this.finishCost = config.finishCost();
         this.cooldown = config.regenDelay();
         this.staminaPerTick = config.perTick();
         this.tickCost = (int) Math.ceil(staminaPerTick);
         this.regenInhibitor = config.blocksRegen();
         this.timesPerformedToExhaust = config.timesToCharge();
+        this.beginCost = minCost > 0 || tickCost > 0 ? minCost : finishCost;
     }
 
     public ResourceLocation source() {
@@ -96,7 +102,7 @@ public abstract class Action {
     }
 
     public boolean canPerform(Player player) {
-        return PlayerActions.isNotExhaustable(player) || canAfford(player, wasPerforming ? tickCost : minCost);
+        return PlayerActions.isNotExhaustable(player) || canAfford(player, wasPerforming ? tickCost : beginCost);
     }
 
     private boolean canAfford(Player player, int stamina) {
@@ -137,7 +143,7 @@ public abstract class Action {
         if (actionState) {
             StaminaBackend backend = StaminaBackends.of(p);
             if (!wasPerforming) {
-                if (backend.canSpend(p, source, minCost) && drain(p, backend)) {
+                if (backend.canSpend(p, source, beginCost) && drain(p, backend)) {
                     beginPerforming(p, a);
                     performing = true;
                 }
@@ -185,14 +191,15 @@ public abstract class Action {
     }
 
     /**
-     * Stops the drain right away (it would otherwise run until its timeout) and delays regeneration by the
-     * cooldown.
+     * Stops the drain right away (it would otherwise run until its timeout), charges the finish cost if any (never to
+     * an exempt player) and delays regeneration by the cooldown.
      */
     protected void finishPerforming(Player p, PlayerActions a) {
         if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(p, "{}::finishPerforming", name());
         StaminaBackend backend = StaminaBackends.of(p);
         backend.stopDrain(p, source);
-        if (cooldown > 0 && !backend.keepsRegenWhileActing(p)) backend.blockRegen(p, source, cooldown);
+        if (finishCost > 0 && !PlayerActions.isNotExhaustable(p)) backend.spend(p, source, finishCost, cooldown);
+        else if (cooldown > 0 && !backend.keepsRegenWhileActing(p)) backend.blockRegen(p, source, cooldown);
     }
 
     /** One-off use: charges {@link #cost} every {@code timesPerformedToExhaust} uses. */

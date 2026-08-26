@@ -1,6 +1,5 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
-import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,9 +31,8 @@ public record ActionPerformedPacket(byte actionId) {
         if (player != null) apply(player, packet.actionId);
     }
 
-    /** Performs action {@code actionId} for {@code player} on the server; an id out of range is ignored. */
+    /** Performs action {@code actionId} for {@code player} on the server; an id no action type has is ignored. */
     public static void apply(Player player, int actionId) {
-        if (actionId < 0 || actionId >= Action.COUNT) return;
         PlayerActions.perform(player, actionId);
     }
 }

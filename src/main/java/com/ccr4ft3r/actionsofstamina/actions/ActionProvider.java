@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.actions;
 
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.building.BuildAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.climb.ClimbAction;
@@ -26,31 +27,21 @@ import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 
-/** Builds a player's enabled actions from the current config (on every level join). */
+/** Builds a player's enabled actions, of every registered {@link ActionType}, from the current config (on every level join). */
 public final class ActionProvider {
 
     private ActionProvider() {
     }
 
     public static void addEnabledActions(PlayerActions a) {
-        if (AoSServerConfig.ATTACK.enabled()) a.addEnabledAction(new AttackAction());
-        if (AoSServerConfig.JUMP.enabled()) a.addEnabledAction(new JumpAction());
-        if (AoSServerConfig.SPRINT.enabled()) a.addEnabledAction(new SprintAction());
-        if (AoSServerConfig.CRAWL.enabled()) a.addEnabledAction(new CrawlAction());
-        if (AoSServerConfig.ELYTRA.enabled()) a.addEnabledAction(new ElytraAction());
-        if (AoSServerConfig.SHIELD.enabled()) a.addEnabledAction(new ShieldAction());
-        if (AoSServerConfig.SWIM.enabled()) a.addEnabledAction(new SwimAction());
-        if (AoSServerConfig.DRAW.enabled()) a.addEnabledAction(new DrawAction());
-        if (AoSServerConfig.THROW.enabled()) a.addEnabledAction(new ThrowAction());
-        if (AoSServerConfig.MINE.enabled()) a.addEnabledAction(new MineAction());
-        if (AoSServerConfig.BUILD.enabled()) a.addEnabledAction(new BuildAction());
-        if (AoSServerConfig.CLIMB.enabled()) a.addEnabledAction(new ClimbAction());
-        if (AoSServerConfig.ROW.enabled()) a.addEnabledAction(new RowAction());
-        if (AoSServerConfig.RIPTIDE.enabled()) a.addEnabledAction(new RiptideAction());
-        if (AoSServerConfig.FISH.enabled()) a.addEnabledAction(new FishAction());
-        if (AoSServerConfig.TILL.enabled()) a.addEnabledAction(new TillAction());
-        if (ParagliderCompat.isActive()) a.addEnabledAction(new ParaglideAction());
-        if (WallJumpCompat.isActive() && WallJumpConfig.WALL_CLING.enabled()) a.addEnabledAction(new WallClingAction());
-        if (CreateCompat.isActive()) a.addEnabledAction(new CrankAction());
+        for (ActionType type : ActionTypes.all()) {
+            if (!type.enabled()) continue;
+            Action action = type.create();
+            if (action.id() != type.index()) {
+                ActionsOfStamina.logger.error("Action {} reports slot {} but its type has slot {}: left out", type, action.id(), type.index());
+                continue;
+            }
+            a.addEnabledAction(action);
+        }
     }
 }
