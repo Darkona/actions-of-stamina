@@ -89,7 +89,7 @@ public final class AoSServerConfig {
         ActionCostConfig.Builder attack = ActionCostConfig.builder(b, "attack", "Attacking", true)
                 .cost(1.0, "Cost of an attack")
                 .minStamina(1.0)
-                .timesToCharge(3)
+                .timesPerformedToExhaust(3)
                 .regenDelay(70);
         ALSO_FOR_NON_WEAPONS = attack.spec().comment("Whether attacks with non-weapons (bare hands, tools without attack damage) cost too")
                 .define("also_for_non_weapons", false);
@@ -110,7 +110,7 @@ public final class AoSServerConfig {
         JUMP = ActionCostConfig.builder(b, "jump", "Jumping", true)
                 .cost(1.0, "Cost of a jump")
                 .minStamina(1.0)
-                .timesToCharge(4)
+                .timesPerformedToExhaust(4)
                 .regenDelay(40)
                 .build();
         SPRINT = ActionCostConfig.builder(b, "sprint", "Sprinting", true)
@@ -162,13 +162,13 @@ public final class AoSServerConfig {
                         "Throwing an item from the item tag actionsofstamina:throwables (snowball, egg, ender pearl, splash and lingering potions, trident on release)", true)
                 .cost(0.5, "Cost of a throw")
                 .minStamina(0.5)
-                .timesToCharge(1)
+                .timesPerformedToExhaust(1)
                 .regenDelay(30)
                 .build();
         ActionCostConfig.Builder mine = ActionCostConfig.builder(b, "mine", "Mining: breaking a block (never cancelled)", false)
                 .cost(0.1, "Cost of breaking a block (of hardness 1 with scale_with_hardness)")
                 .minStamina(0.5)
-                .timesToCharge(4)
+                .timesPerformedToExhaust(4)
                 .regenDelay(30);
         MINE_SCALE_WITH_HARDNESS = mine.spec().comment("Whether each block costs the cost times its hardness (dirt 0.5, stone 1.5, obsidian 50; instant blocks are free)")
                 .define("scale_with_hardness", true);
@@ -182,7 +182,7 @@ public final class AoSServerConfig {
         BUILD = ActionCostConfig.builder(b, "build", "Building: placing a block (never refused)", false)
                 .cost(0.1, "Cost of placing a block")
                 .minStamina(0.0)
-                .timesToCharge(4)
+                .timesPerformedToExhaust(4)
                 .regenDelay(30)
                 .build();
         CLIMB = ActionCostConfig.builder(b, "climb", "Climbing: going up a ladder, vines, scaffolding or anything else climbable (down is free)", false)
@@ -214,7 +214,7 @@ public final class AoSServerConfig {
                         "Working a block with a tool: tilling with a hoe, making a path with a shovel, stripping logs and scraping or unwaxing copper with an axe (modded tools with those abilities too)", false)
                 .cost(0.25, "Cost of working a block")
                 .minStamina(0.5)
-                .timesToCharge(2)
+                .timesPerformedToExhaust(2)
                 .regenDelay(30)
                 .build();
         b.pop();

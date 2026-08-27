@@ -121,7 +121,7 @@ public class ActionGateTests {
     public static void aFailedChargeIsTriedAgainNextUse(GameTestHelper helper) {
         ServerPlayer player = survivalPlayer(helper);
         ChargeProbe probe = new ChargeProbe();
-        int times = AoSServerConfig.JUMP.timesToCharge();
+        int times = AoSServerConfig.JUMP.timesPerformedToExhaust();
         for (int i = 1; i < times; i++) assertTrue(helper, probe.perform(player), "use " + i + " before the charge is due");
         assertFalse(helper, probe.perform(player), "the due use, whose charge fails, is refused");
         probe.chargeGoesThrough = true;
