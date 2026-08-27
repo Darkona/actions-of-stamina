@@ -214,8 +214,11 @@ public abstract class Action {
 
         if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "{}::Perform", name());
         if (++timesPerformed >= timesPerformedToExhaust) {
-            timesPerformed = 0;
             allow = charge(player);
+            // A charge that doesn't go through (a Green Feathers cost modifier can raise it past min_stamina) keeps
+            // the count where it was, so the next use tries again instead of waiting for a whole new count.
+            if (allow) timesPerformed = 0;
+            else timesPerformed--;
             charged = allow;
             if (ActionsOfStamina.debugging()) ActionsOfStamina.log("{}::Allowed = {}, cost= {}", name(), allow, cost);
             return allow;
