@@ -35,7 +35,7 @@ public class MineAction extends Action {
 
     /** Server: a block of {@code hardness} was broken. Every {@code times_performed_to_exhaust} blocks, their added-up cost is charged. */
     public void mined(Player player, float hardness) {
-        if (PlayerActions.isNotExhaustable(player)) return;
+        if (PlayerActions.isExempt(player)) return;
         pending += scaleWithHardness ? cost * Math.min(Math.max(hardness, 0.0), maxHardnessMultiplier) : cost;
         if (++timesPerformed < timesPerformedToExhaust) return;
         timesPerformed = 0;

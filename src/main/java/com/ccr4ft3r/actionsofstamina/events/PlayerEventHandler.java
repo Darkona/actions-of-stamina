@@ -69,7 +69,7 @@ public final class PlayerEventHandler {
      */
     @SubscribeEvent
     public static void onAttackEntity(AttackEntityEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isNotExhaustable(player)) return;
+        if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isExempt(player)) return;
         if (!(PlayerActions.get(player).getAction(Action.ATTACK) instanceof AttackAction attack)) return;
         // Better Combat's swings and Epic Fight's battle-mode combo are charged by their compats.
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()) || EpicFightCompat.inBattleMode(player)) return;
@@ -154,7 +154,7 @@ public final class PlayerEventHandler {
     public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
         if (event.isSimulated() || !TillAction.charges(event.getToolAction())) return;
         Player player = event.getPlayer();
-        if (PlayerActions.isNotExhaustable(player)) return;
+        if (PlayerActions.isExempt(player)) return;
         Action till = PlayerActions.get(player).getAction(Action.TILL);
         if (till == null || !TillAction.changesBlock(event)) return;
         if (player.level.isClientSide() ? !till.canPerform(player) : !till.perform(player)) event.setCanceled(true);
@@ -164,7 +164,7 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void blockBroken(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
-        if (player.level.isClientSide() || PlayerActions.isNotExhaustable(player)) return;
+        if (player.level.isClientSide() || PlayerActions.isExempt(player)) return;
         if (PlayerActions.get(player).getAction(Action.MINE) instanceof MineAction mine) {
             mine.mined(player, event.getState().getDestroySpeed(event.getWorld(), event.getPos()));
         }
@@ -177,7 +177,7 @@ public final class PlayerEventHandler {
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void blockPlaced(BlockEvent.EntityPlaceEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isNotExhaustable(player)) return;
+        if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isExempt(player)) return;
         Action build = PlayerActions.get(player).getAction(Action.BUILD);
         if (build == null) return;
         Item placed = event.getPlacedBlock().getBlock().asItem();
@@ -192,7 +192,7 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void breakSpeed(PlayerEvent.BreakSpeed event) {
         Player player = event.getPlayer();
-        if (PlayerActions.isNotExhaustable(player)) return;
+        if (PlayerActions.isExempt(player)) return;
         if (PlayerActions.get(player).getAction(Action.MINE) instanceof MineAction mine) {
             float multiplier = mine.breakSpeedMultiplier(player);
             if (multiplier < 1.0f) event.setNewSpeed(event.getNewSpeed() * multiplier);
@@ -207,7 +207,7 @@ public final class PlayerEventHandler {
     public static void rocketBoost(PlayerInteractEvent.RightClickItem event) {
         if (!(event.getItemStack().getItem() instanceof FireworkRocketItem)) return;
         Player player = event.getPlayer();
-        if (!player.isFallFlying() || PlayerActions.isNotExhaustable(player)) return;
+        if (!player.isFallFlying() || PlayerActions.isExempt(player)) return;
         if (PlayerActions.get(player).getAction(Action.ELYTRA) instanceof ElytraAction elytra) elytra.boost(player, event.getItemStack());
     }
 

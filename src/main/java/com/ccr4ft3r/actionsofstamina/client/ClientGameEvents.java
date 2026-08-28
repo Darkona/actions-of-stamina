@@ -45,7 +45,7 @@ public final class ClientGameEvents {
         if (!event.isAttack()) return;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (PlayerActions.isNotExhaustable(player)) return;
+        if (PlayerActions.isExempt(player)) return;
 
         HitResult hitResult = mc.hitResult;
         boolean isEntityHit = hitResult != null && hitResult.getType() == HitResult.Type.ENTITY;
