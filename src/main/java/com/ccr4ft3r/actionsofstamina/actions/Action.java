@@ -75,7 +75,10 @@ public abstract class Action {
 
     protected String debugInfo;
 
-    public abstract String name();
+    /** For debug output: the action's id, which is also its stamina source. */
+    public String name() {
+        return source.toString();
+    }
 
     /** Slot in {@link PlayerActions#getActions()}: one of the constants above, or an addon type's {@link ActionType#index()}. */
     public abstract int id();

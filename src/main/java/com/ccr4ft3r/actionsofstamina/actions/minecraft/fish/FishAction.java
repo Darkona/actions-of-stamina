@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
  */
 public class FishAction extends Action {
 
-    public static final String actionName = "fish_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("fish");
 
     public FishAction() {
@@ -27,11 +26,6 @@ public class FishAction extends Action {
      */
     public static boolean isRod(ItemStack stack) {
         return stack.getItem() instanceof FishingRodItem;
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

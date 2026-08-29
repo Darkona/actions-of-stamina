@@ -11,18 +11,11 @@ import net.minecraft.world.entity.player.Player;
 
 public class SprintAction extends Action {
 
-    public static final String actionName = "sprint_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("sprint");
 
 
     public SprintAction() {
         super(SOURCE, AoSServerConfig.SPRINT);
-    }
-
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

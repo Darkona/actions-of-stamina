@@ -32,11 +32,6 @@ public class CrankAction extends Action {
     }
 
     @Override
-    public String name() {
-        return "crank_action";
-    }
-
-    @Override
     public int id() {
         return CRANK;
     }

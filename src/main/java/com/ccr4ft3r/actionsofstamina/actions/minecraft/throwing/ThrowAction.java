@@ -19,7 +19,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
  */
 public class ThrowAction extends Action {
 
-    public static final String actionName = "throw_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("throw");
     /** Items whose throw costs stamina; the mod's own tag file holds the vanilla ones, datapacks add others. */
     public static final TagKey<Item> THROWABLES = ItemTags.create(ActionsOfStamina.id("throwables"));
@@ -41,11 +40,6 @@ public class ThrowAction extends Action {
         if (!stack.is(THROWABLES)) return false;
         if (!(stack.getItem() instanceof TridentItem)) return true;
         return stack.getUseDuration() - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME && EnchantmentHelper.getRiptide(stack) <= 0;
-    }
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override

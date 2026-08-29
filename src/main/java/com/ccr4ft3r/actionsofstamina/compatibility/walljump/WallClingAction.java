@@ -16,11 +16,6 @@ public class WallClingAction extends Action {
     }
 
     @Override
-    public String name() {
-        return "wall_cling_action";
-    }
-
-    @Override
     public int id() {
         return WALL_CLING;
     }

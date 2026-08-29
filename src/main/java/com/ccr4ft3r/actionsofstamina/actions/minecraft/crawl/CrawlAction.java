@@ -14,7 +14,6 @@ import java.util.UUID;
 
 public class CrawlAction extends Action {
 
-    public static final String actionName = "crawl_action";
     public static final ResourceLocation SOURCE = ActionsOfStamina.id("crawl");
     private static final UUID CRAWL_SPEED_MODIFIER_ID = UUID.fromString("0d3f6e0a-6c1b-4a8e-b2f1-7e5c9a4d2b18");
     private static final AttributeModifier CRAWL_SPEED_MODIFIER =
@@ -23,12 +22,6 @@ public class CrawlAction extends Action {
 
     public CrawlAction() {
         super(SOURCE, AoSServerConfig.CRAWL);
-    }
-
-
-    @Override
-    public String name() {
-        return actionName;
     }
 
     @Override
