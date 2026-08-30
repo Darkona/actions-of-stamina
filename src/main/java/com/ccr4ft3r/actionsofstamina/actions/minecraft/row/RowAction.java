@@ -33,7 +33,12 @@ public class RowAction extends Action {
 
     /** Whether the player drives {@code vehicle} and it's a boat rowed with stamina. */
     public static boolean drivesRowedBoat(Player player, @Nullable Entity vehicle) {
-        return vehicle instanceof Boat && vehicle.getControllingPassenger() == player && vehicle.getType().is(ROWED_BOATS);
+        return vehicle instanceof Boat boat && vehicle.getControllingPassenger() == player && isRowed(boat);
+    }
+
+    /** Whether {@code boat} is rowed with stamina (entity tag {@code actionsofstamina:rowed_boats}). */
+    public static boolean isRowed(Boat boat) {
+        return boat.getType().is(ROWED_BOATS);
     }
 
     /** Whether the player may paddle the rowed boat they drive (asked on the driver's client, which moves the boat). */
