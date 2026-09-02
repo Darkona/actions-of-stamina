@@ -1,23 +1,14 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.swim;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 public class SwimAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("swim");
-
-    public SwimAction() {
-        super(SOURCE, AoSServerConfig.SWIM);
-    }
-
-    @Override
-    public int id() {
-        return SWIM;
+    public SwimAction(ActionType type) {
+        super(type);
     }
 
     @Override

@@ -1,8 +1,14 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.parcool;
 
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.ModList;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * ParCool 3.x compatibility, safe to load without it: calls into the mod go through {@link ParcoolBridge}.
@@ -23,7 +29,35 @@ public final class ParcoolCompat {
     public static final String MOD_ID = "parcool";
     public static final boolean LOADED = ModList.get().isLoaded(MOD_ID);
 
+    /** One action type per ParCool action AoS charges, in {@link ParcoolConfig}'s order. */
+    private static final ActionType[] TYPES;
+
+    static {
+        ParcoolConfig.Entry[] entries = ParcoolConfig.entries();
+        TYPES = new ActionType[entries.length];
+        for (int i = 0; i < entries.length; i++) {
+            ActionCostConfig costs = entries[i].costs();
+            // A ParCool action that costs nothing is left to ParCool: players don't get it, so it never pauses regeneration.
+            TYPES[i] = ActionTypes.register(ActionsOfStamina.id("parcool/" + entries[i].name()), costs,
+                    () -> isActive() && costs.enabled() && costs.costsAnything(), Action::new);
+        }
+    }
+
     private ParcoolCompat() {
+    }
+
+    /** Mod construction: registers the action types above (set when this class loads). */
+    public static void registerActions() {
+    }
+
+    /** The action type of ParCool action {@code name} (its id path), or null when AoS doesn't charge it. */
+    @Nullable
+    static ActionType typeOf(String name) {
+        ParcoolConfig.Entry[] entries = ParcoolConfig.entries();
+        for (int i = 0; i < entries.length; i++) {
+            if (entries[i].name().equals(name)) return TYPES[i];
+        }
+        return null;
     }
 
     public static boolean isActive() {

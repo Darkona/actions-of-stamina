@@ -1,23 +1,19 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.bettercombat;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleOpenHashMap;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.ComboState;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 /** Direct Better Combat calls (common side); only reached through {@link BetterCombatCompat} when it is loaded. */
 final class BetterCombatBridge {
-
-    static final ResourceLocation SOURCE = ActionsOfStamina.id("bettercombat/swing");
 
     /**
      * Category multiplier per weapon attributes (one instance per weapon in Better Combat's registry, replaced when it
@@ -77,18 +73,16 @@ final class BetterCombatBridge {
         AttackHand hand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
         if (hand == null) return true;
         int cost = swingCost(hand);
-        if (cost <= 0) return true;
-        StaminaBackend backend = StaminaBackends.server();
-        boolean paid = onlyCheck ? backend.canSpend(player, SOURCE, cost)
-                : backend.spend(player, SOURCE, cost, BetterCombatConfig.SWING.regenDelay());
+        Action swing = PlayerActions.get(player).getAction(BetterCombatCompat.SWING);
+        if (cost <= 0 || swing == null) return true;
+        boolean paid = onlyCheck ? swing.canPay(player, cost) : swing.pay(player, cost);
         return paid || !BetterCombatConfig.BLOCK_WHEN_SHORT.get();
     }
 
     /** Client check before a swing starts, against the local player's synced stamina. */
     static boolean canAffordSwing(Player player, AttackHand hand) {
         int cost = swingCost(hand);
-        if (cost <= 0) return true;
-        StaminaBackend backend = StaminaBackends.of(player);
-        return backend.canSpend(player, SOURCE, cost);
+        Action swing = PlayerActions.get(player).getAction(BetterCombatCompat.SWING);
+        return cost <= 0 || swing == null || swing.canPay(player, cost);
     }
 }

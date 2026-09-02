@@ -1,10 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.fish;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
@@ -14,10 +12,8 @@ import net.minecraft.world.item.ItemStack;
  */
 public class FishAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("fish");
-
-    public FishAction() {
-        super(SOURCE, AoSServerConfig.FISH);
+    public FishAction(ActionType type) {
+        super(type);
     }
 
     /**
@@ -26,11 +22,6 @@ public class FishAction extends Action {
      */
     public static boolean isRod(ItemStack stack) {
         return stack.getItem() instanceof FishingRodItem;
-    }
-
-    @Override
-    public int id() {
-        return FISH;
     }
 
     @Override

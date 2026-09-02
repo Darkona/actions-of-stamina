@@ -1,10 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.draw;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
@@ -16,10 +14,8 @@ import net.minecraft.world.item.UseAnim;
  */
 public class DrawAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("draw");
-
-    public DrawAction() {
-        super(SOURCE, AoSServerConfig.DRAW);
+    public DrawAction(ActionType type) {
+        super(type);
     }
 
     /** Whether the item is drawn, loaded or aimed while used (a loaded crossbow fires instead). */
@@ -33,11 +29,6 @@ public class DrawAction extends Action {
         if (!player.isUsingItem()) return false;
         UseAnim anim = player.getUseItem().getUseAnimation();
         return anim == UseAnim.BOW || anim == UseAnim.SPEAR || anim == UseAnim.CROSSBOW;
-    }
-
-    @Override
-    public int id() {
-        return DRAW;
     }
 
     @Override

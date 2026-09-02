@@ -2,9 +2,8 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.throwing;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
@@ -19,12 +18,11 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
  */
 public class ThrowAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("throw");
     /** Items whose throw costs stamina; the mod's own tag file holds the vanilla ones, datapacks add others. */
     public static final TagKey<Item> THROWABLES = ItemTags.create(ActionsOfStamina.id("throwables"));
 
-    public ThrowAction() {
-        super(SOURCE, AoSServerConfig.THROW);
+    public ThrowAction(ActionType type) {
+        super(type);
     }
 
     /** Whether using the item throws it at once (a trident is only thrown when released). */
@@ -40,11 +38,6 @@ public class ThrowAction extends Action {
         if (!stack.is(THROWABLES)) return false;
         if (!(stack.getItem() instanceof TridentItem)) return true;
         return stack.getUseDuration() - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME && EnchantmentHelper.getRiptide(stack) <= 0;
-    }
-
-    @Override
-    public int id() {
-        return THROW;
     }
 
     @Override

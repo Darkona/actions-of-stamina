@@ -1,26 +1,14 @@
 package com.ccr4ft3r.actionsofstamina.actions.minecraft.sprint;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-
-
 
 public class SprintAction extends Action {
 
-    public static final ResourceLocation SOURCE = ActionsOfStamina.id("sprint");
-
-
-    public SprintAction() {
-        super(SOURCE, AoSServerConfig.SPRINT);
-    }
-
-    @Override
-    public int id() {
-        return SPRINT;
+    public SprintAction(ActionType type) {
+        super(type);
     }
 
     @Override
