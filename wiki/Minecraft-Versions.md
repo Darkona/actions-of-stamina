@@ -18,6 +18,10 @@ Each version works with the [Green Feathers](https://github.com/Darkona/green-fe
 - **Mace smash:** 1.20.1 has no mace, so there is no `[vanilla.attack] mace_smash_multiplier` option.
 - **Wind charges:** 1.20.1 has no wind charge.
 
+**Different:**
+
+- **[Addon API](Addon-API):** the same classes and calls. The config section is built on a `ForgeConfigSpec.Builder`, and `ActionPerformedPacket` goes to the server through `PacketHandler.sendToServer`.
+
 **Known issue, not in Actions of Stamina:** ParCool 4.0.0.5, Curios 5.14.1 and Epic Fight 20.14.17 installed together crash the game on joining a world. Any two of the three work. This is a bug between those three mods, not in Actions of Stamina.
 
 **Tested with:** ParCool 4.0.0.5, Paragliders 20.1.3, Better Combat 1.9.0, Combat Roll 1.3.3, Epic Fight 20.14.17, Wall-Jump TXF 1.3.8, Gliders 1.2.0, Create 6.0.8, Curios 5.14.1. ParCool needs Forge 47.4.23 or later.
@@ -34,6 +38,7 @@ Each version works with the [Green Feathers](https://github.com/Darkona/green-fe
 
 - **Paragliders:** Paragliders 1.7 has no stamina API. Actions of Stamina hooks into it differently, with the same result: Paragliders reads its stamina from Actions of Stamina and neither regenerates nor drains its own.
 - ParCool, Curios and Epic Fight work together here.
+- **[Addon API](Addon-API):** as in 1.20.1.
 
 **Tested with:** ParCool 4.0.0.5, Paragliders 1.7.0.5, Better Combat 1.7.1, Combat Roll 1.1.5, Epic Fight 19.5.26, Wall-Jump TXF 1.3.8, Gliders 1.1.4, Create 0.5.1, Curios 5.1.6.
 
@@ -53,5 +58,6 @@ Needs Forge 40.2.4 or later.
 
 - **ParCool 3:** it has no stamina types, so Actions of Stamina's stamina replaces ParCool's own, and ParCool's stamina bar is hidden. A player who picks ParCool's Hunger stamina in ParCool's client options keeps it, and then pays both food (ParCool) and stamina (Actions of Stamina). The costs follow ParCool 3's own: `[parcool]` has `jump_from_bar` and no `grapple` or `castaway`.
 - **Paragliders:** works as in 1.19.2 (Paragliders 1.6).
+- **[Addon API](Addon-API):** as in 1.20.1.
 
 **Tested with:** ParCool 3.4.3.3, Paragliders 1.6.0.6, Better Combat 1.6.2, Combat Roll 1.1.5, Epic Fight 18.5.26, Wall-Jump TXF 1.3.8, Create 0.5.1, Curios 5.0.9.
