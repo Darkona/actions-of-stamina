@@ -33,9 +33,15 @@ public class AttackAction extends Action {
     private final AttributeModifier speedModifier;
 
     public AttackAction(ActionType type) {
+        this(type, AoSServerConfig.EXHAUSTED_MODE.get() == ExhaustedAttackMode.WEAKEN,
+                AoSServerConfig.WEAKEN_NON_WEAPONS.get() || AoSServerConfig.ALSO_FOR_NON_WEAPONS.get());
+    }
+
+    /** With the WEAKEN switches given instead of read from the config (the GameTests use it, the config file reloads under them). */
+    public AttackAction(ActionType type, boolean weakens, boolean weakensFreeAttacks) {
         super(type);
-        this.weakens = AoSServerConfig.EXHAUSTED_MODE.get() == ExhaustedAttackMode.WEAKEN;
-        this.weakensFreeAttacks = AoSServerConfig.WEAKEN_NON_WEAPONS.get() || AoSServerConfig.ALSO_FOR_NON_WEAPONS.get();
+        this.weakens = weakens;
+        this.weakensFreeAttacks = weakensFreeAttacks;
         this.damageModifier = new AttributeModifier(WEAKEN_ID, "actionsofstamina:exhausted_attack", AoSServerConfig.WEAKEN_DAMAGE.get() - 1.0, AttributeModifier.Operation.MULTIPLY_TOTAL);
         this.speedModifier = new AttributeModifier(WEAKEN_ID, "actionsofstamina:exhausted_attack", AoSServerConfig.WEAKEN_SPEED.get() - 1.0, AttributeModifier.Operation.MULTIPLY_TOTAL);
     }
