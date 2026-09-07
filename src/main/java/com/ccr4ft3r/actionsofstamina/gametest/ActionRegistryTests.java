@@ -9,6 +9,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
@@ -75,16 +76,18 @@ public class ActionRegistryTests {
         Action action = actions.getAction(slot);
         assertTrue(helper, action != null && action.type() == TestActionTypes.finishing, "the other mod's action is built");
         StaminaBackend backend = StaminaBackends.server();
-        int finishCost = ParcoolConfig.byName("charge_jump").costs().finishCost();
+        ActionCostConfig costs = ParcoolConfig.byName("charge_jump").costs();
+        int beginCost = costs.cost();
+        int finishCost = costs.finishCost();
         int start = backend.stamina(player);
         actions.setActionState(TestActionTypes.finishing, true);
         action.tick(player, actions);
         assertTrue(helper, action.isPerforming(), "it begins");
-        assertValueEqual(helper, backend.stamina(player), start, "beginning is free");
+        assertValueEqual(helper, backend.stamina(player), start - beginCost, "beginning charges its start cost");
         actions.setActionState(TestActionTypes.finishing, false);
         action.tick(player, actions);
         assertFalse(helper, action.isPerforming(), "it ends");
-        assertValueEqual(helper, backend.stamina(player), start - finishCost, "ending charges the finish cost");
+        assertValueEqual(helper, backend.stamina(player), start - beginCost - finishCost, "ending charges the finish cost");
         helper.succeed();
     }
 

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 
 /**
  * An action type registered the way another mod would, for {@link ActionRegistryTests}; development runs only. It is
- * continuous and costs only when it ends: it borrows ParCool's {@code charge_jump} section (a finish cost, nothing else),
+ * continuous: it borrows ParCool's {@code charge_jump} section (a start cost and a finish cost, whichever the section has),
  * which is in the server config whether ParCool is installed or not. Players only get it while a test turns it on.
  */
 @Mod.EventBusSubscriber(modid = ActionsOfStamina.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
