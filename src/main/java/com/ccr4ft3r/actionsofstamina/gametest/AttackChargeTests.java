@@ -3,7 +3,6 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.ExhaustedAttackMode;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
@@ -73,25 +72,16 @@ public class AttackChargeTests {
 
     /**
      * Whether an exhausted player with {@code stack} in hand ends up weakened after the periodic check, with WEAKEN on and
-     * {@code weaken_non_weapons} as given. The config is set and put back within the test, so no other test sees it.
+     * {@code weaken_non_weapons} as given. The action takes the switches directly: writing them to the config would race
+     * with the reload the file watcher does after every save.
      */
     private static boolean weakenedWith(GameTestHelper helper, ItemStack stack, boolean weakenNonWeapons) {
-        ExhaustedAttackMode mode = AoSServerConfig.EXHAUSTED_MODE.get();
-        boolean nonWeapons = AoSServerConfig.WEAKEN_NON_WEAPONS.get();
-        try {
-            AoSServerConfig.EXHAUSTED_MODE.set(ExhaustedAttackMode.WEAKEN);
-            AoSServerConfig.WEAKEN_NON_WEAPONS.set(weakenNonWeapons);
-            ServerPlayer player = survivalPlayer(helper);
-            exhaust(StaminaBackends.server(), player);
-            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-            PlayerActions actions = PlayerActions.get(player);
-            player.tickCount = 10;
-            actions.getAction(VanillaActions.ATTACK).tick(player, actions);
-            return player.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(AttackAction.WEAKEN_ID);
-        } finally {
-            AoSServerConfig.EXHAUSTED_MODE.set(mode);
-            AoSServerConfig.WEAKEN_NON_WEAPONS.set(nonWeapons);
-        }
+        ServerPlayer player = survivalPlayer(helper);
+        exhaust(StaminaBackends.server(), player);
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        player.tickCount = 10;
+        new AttackAction(VanillaActions.ATTACK, true, weakenNonWeapons).tick(player, PlayerActions.get(player));
+        return player.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(AttackAction.WEAKEN_ID);
     }
 
     @GameTest(template = "empty")
