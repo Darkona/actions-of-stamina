@@ -23,7 +23,7 @@ import net.minecraft.world.entity.player.Player;
  * {@link #end} instead. All amounts are kept in stamina (1/1000 feather), read from the config once, in the constructor
  * (actions are rebuilt whenever the player joins a level).
  * <p>
- * Runs on both sides: on the client the backend only checks (Green Feathers also predicts), the server is
+ * Runs on both sides: on the client the backend only checks (Feathers of Fatigue also predicts), the server is
  * authoritative.
  */
 public class Action {
@@ -103,7 +103,7 @@ public class Action {
 
     /** Refreshes this action's drain for one more tick; false when it can't go on (the drain then stops itself). */
     private boolean drain(Player player, StaminaBackend backend) {
-        // Energized players (Green Feathers) keep regenerating while they act.
+        // Energized players (Feathers of Fatigue) keep regenerating while they act.
         blockingRegen = regenInhibitor && !backend.keepsRegenWhileActing(player);
         return backend.drain(player, source, drainPerTick(player), blockingRegen);
     }
@@ -259,7 +259,7 @@ public class Action {
         if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "{}::Perform", name());
         if (++timesPerformed >= timesPerformedToExhaust) {
             allow = charge(player);
-            // A charge that doesn't go through (a Green Feathers cost modifier can raise it past min_stamina) keeps
+            // A charge that doesn't go through (a Feathers of Fatigue cost modifier can raise it past min_stamina) keeps
             // the count where it was, so the next use tries again instead of waiting for a whole new count.
             if (allow) timesPerformed = 0;
             else timesPerformed--;
