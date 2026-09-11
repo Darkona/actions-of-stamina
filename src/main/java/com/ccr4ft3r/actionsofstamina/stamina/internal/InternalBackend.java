@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.FakePlayer;
 
 /**
- * AoS's own stamina, used when Green Feathers isn't installed (or {@code backend = internal}). Deliberately light:
+ * AoS's own stamina, used when Feathers of Fatigue isn't installed (or {@code backend = internal}). Deliberately light:
  * a bar with a max, regeneration after a delay, exhaustion with a recovery threshold, and per-source continuous
  * drains. Server authoritative; the owning client gets {@link InternalStaminaPacket} only when something visible
  * changed. The client side only checks against those values, it never predicts.

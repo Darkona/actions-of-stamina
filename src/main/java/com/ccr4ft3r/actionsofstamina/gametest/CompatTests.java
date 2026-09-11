@@ -48,7 +48,7 @@ public class CompatTests {
 
     private static final ResourceLocation TEST = ActionsOfStamina.id("test");
 
-    /** Spends in small steps until nothing more can be spent (Green Feathers: through strain too). */
+    /** Spends in small steps until nothing more can be spent (Feathers of Fatigue: through strain too). */
     private static String exhaust(StaminaBackend backend, ServerPlayer player) {
         int spends = 0;
         while (spends < 10000 && backend.spend(player, TEST, 50, 0)) spends++;
@@ -243,7 +243,7 @@ public class CompatTests {
 
         String state = exhaust(backend, player);
         assertFalse(helper, WallJumpCompat.canCling(player), "can't hold on without stamina" + state);
-        // Green Feathers settles a drain in its own tick, after AoS's: it may take one more tick to refuse it.
+        // Feathers of Fatigue settles a drain in its own tick, after AoS's: it may take one more tick to refuse it.
         tickEvent(player, 3);
         assertFalse(helper, cling.isPerforming(), "the cling stops when it can't be paid");
         actions.processFlags((short) 0);

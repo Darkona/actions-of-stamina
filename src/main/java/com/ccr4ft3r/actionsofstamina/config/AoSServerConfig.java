@@ -65,16 +65,16 @@ public final class AoSServerConfig {
 
         b.push("general");
         BACKEND = b.comment("Where stamina comes from:",
-                        " AUTO     - Green Feathers when it is installed, otherwise AoS's internal stamina",
-                        " FEATHERS - Green Feathers (falls back to the internal stamina if it isn't installed)",
-                        " INTERNAL - AoS's internal stamina, even with Green Feathers installed")
+                        " AUTO     - Feathers of Fatigue when it is installed, otherwise AoS's internal stamina",
+                        " FEATHERS - Feathers of Fatigue (falls back to the internal stamina if it isn't installed)",
+                        " INTERNAL - AoS's internal stamina, even with Feathers of Fatigue installed")
                 .defineEnum("backend", BackendMode.AUTO);
         ENABLE_DEBUGGING = b.comment("Log every action change and show the action debug HUD")
                 .define("debugging", false);
         b.pop();
 
-        b.comment("AoS's own stamina bar, used only when the backend is the internal one (no Green Feathers)").push("internal");
-        INTERNAL_ENABLED = b.comment("Whether the internal stamina exists at all; if false, every action is free without Green Feathers")
+        b.comment("AoS's own stamina bar, used only when the backend is the internal one (no Feathers of Fatigue)").push("internal");
+        INTERNAL_ENABLED = b.comment("Whether the internal stamina exists at all; if false, every action is free without Feathers of Fatigue")
                 .define("enabled", true);
         INTERNAL_MAX_FEATHERS = b.comment("Size of the bar, in feathers")
                 .defineInRange("max_feathers", 20, 1, 1000);

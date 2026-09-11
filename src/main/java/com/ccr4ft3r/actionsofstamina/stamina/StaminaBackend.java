@@ -4,7 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * Where AoS takes stamina from: Green Feathers when it is installed ({@link Kind#FEATHERS}), otherwise AoS's own
+ * Where AoS takes stamina from: Feathers of Fatigue when it is installed ({@link Kind#FEATHERS}), otherwise AoS's own
  * light stamina bar ({@link Kind#INTERNAL}). Pick one with {@link StaminaBackends#of(Player)}.
  * <p>
  * <b>Units.</b> Every amount is stamina, a thousandth of a feather ({@link StaminaUnits}).
@@ -55,7 +55,7 @@ public interface StaminaBackend {
     /** Pauses regeneration for {@code ticks}, e.g. after a continuous action ends. */
     void blockRegen(Player player, ResourceLocation source, int ticks);
 
-    /** Whether an effect (Green Feathers' Energized) lets the player keep regenerating while acting. */
+    /** Whether an effect (Feathers of Fatigue's Energized) lets the player keep regenerating while acting. */
     boolean keepsRegenWhileActing(Player player);
 
     /**

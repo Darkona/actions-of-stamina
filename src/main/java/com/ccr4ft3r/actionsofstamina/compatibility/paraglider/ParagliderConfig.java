@@ -22,7 +22,7 @@ public final class ParagliderConfig {
                 .perSecond(0.1)
                 .regenDelay(20)
                 .blocksRegen(true);
-        FEATHERS_PER_VESSEL = paraglide.spec().comment("Max feathers each Stamina Vessel adds (Green Feathers: a max_feathers modifier;"
+        FEATHERS_PER_VESSEL = paraglide.spec().comment("Max feathers each Stamina Vessel adds (Feathers of Fatigue: a max_feathers modifier;"
                         + " the internal stamina: a larger bar). 0 turns vessels off. Applies on joining, respawning, or when the vessel count changes")
                 .defineInRange("feathers_per_vessel", 2, 0, 100);
         PARAGLIDE = paraglide.build();

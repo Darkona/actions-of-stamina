@@ -14,8 +14,8 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 /**
  * Client only. The internal stamina bar, one row above the food bar (it takes a row of {@code gui.rightHeight} so
- * other right-side HUD rows stack above it). Drawn only while the internal backend is in use; with Green Feathers,
- * Green Feathers draws its own HUD.
+ * other right-side HUD rows stack above it). Drawn only while the internal backend is in use; with Feathers of Fatigue,
+ * Feathers of Fatigue draws its own HUD.
  */
 public final class InternalStaminaHud {
 
