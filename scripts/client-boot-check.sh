@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Boots the real client headless (Xvfb + Mesa software GL) into a copy of a superflat test world and reports whether it
 # joined without errors. Leaves a screenshot of the HUD in build/client-boot-check.png.
-# Adapted from Adrift's scripts/client-boot-check.sh, through Green Feathers' 1.18.2 one. Minecraft 1.18.2 can't open
+# Adapted from Adrift's scripts/client-boot-check.sh, through Feathers of Fatigue's 1.18.2 one. Minecraft 1.18.2 can't open
 # a singleplayer world from the command line (no --quickPlaySingleplayer), so a dedicated server of its own
 # (run/bootserver, a free port from 25699) hosts the world and the client connects to it on startup (--server/--port).
 #

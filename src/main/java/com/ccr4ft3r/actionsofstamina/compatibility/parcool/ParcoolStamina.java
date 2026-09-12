@@ -97,7 +97,7 @@ public final class ParcoolStamina extends ParCoolStamina {
         if (!active()) super.updateOldValue();
     }
 
-    /** Whether ParCool's own HUD would show AoS's stamina (it is hidden then: AoS or Green Feathers draw theirs). */
+    /** Whether ParCool's own HUD would show AoS's stamina (it is hidden then: AoS or Feathers of Fatigue draw theirs). */
     boolean standsIn() {
         return active();
     }

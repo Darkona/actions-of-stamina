@@ -1,10 +1,10 @@
 package com.ccr4ft3r.actionsofstamina.stamina;
 
-import com.darkona.feathers.api.DrainOptions;
-import com.darkona.feathers.api.FeathersAPI;
-import com.darkona.feathers.api.SpendOptions;
-import com.darkona.feathers.api.registry.FeathersAttributes;
-import com.darkona.feathers.api.registry.FeathersMobEffects;
+import com.darkona.feathersoffatigue.api.DrainOptions;
+import com.darkona.feathersoffatigue.api.FeathersAPI;
+import com.darkona.feathersoffatigue.api.SpendOptions;
+import com.darkona.feathersoffatigue.api.registry.FeathersAttributes;
+import com.darkona.feathersoffatigue.api.registry.FeathersMobEffects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
- * Green Feathers (API v2). Loaded only when Green Feathers is installed ({@link StaminaBackends}). Green Feathers
+ * Feathers of Fatigue (API v2). Loaded only when Feathers of Fatigue is installed ({@link StaminaBackends}). Feathers of Fatigue
  * itself answers client-side calls with the local player's synced feathers and predictions.
  */
 final class FeathersBackend implements StaminaBackend {

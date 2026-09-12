@@ -9,7 +9,7 @@ displayName = "${mod_name}"
 logoFile = "aos.png"
 authors = "${mod_authors}"
 description = '''
-Actions cost stamina: vanilla actions and other mods' actions (ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Create). Uses Green Feathers when installed, or its own light stamina bar.
+Actions cost stamina: vanilla actions and other mods' actions (ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Create). Uses Feathers of Fatigue when installed, or its own light stamina bar.
 '''
 
 [[dependencies.${mod_id}]]
@@ -27,9 +27,9 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
-modId = "greenfeathers"
+modId = "feathers_of_fatigue"
 mandatory = false
-versionRange = "${greenfeathers_version_range}"
+versionRange = "${feathers_of_fatigue_version_range}"
 ordering = "AFTER"
 side = "BOTH"
 

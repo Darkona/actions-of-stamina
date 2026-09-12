@@ -17,7 +17,7 @@ final class ParcoolClientBridge {
         MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, ParCoolHUDEvent.RenderEvent.class, ParcoolClientBridge::onRenderHud);
     }
 
-    /** ParCool's stamina HUD would show AoS's stamina a second time: AoS's bar or Green Feathers' HUD already do. */
+    /** ParCool's stamina HUD would show AoS's stamina a second time: AoS's bar or Feathers of Fatigue's HUD already do. */
     private static void onRenderHud(ParCoolHUDEvent.RenderEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && IStamina.get(player) instanceof ParcoolStamina stamina && stamina.standsIn()) event.setCanceled(true);

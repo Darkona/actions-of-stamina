@@ -16,7 +16,7 @@ import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.assertFalse;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.assertTrue;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.assertValueEqual;
 
-/** Which backend runs, and that the Green Feathers one really spends feathers when Green Feathers is installed. */
+/** Which backend runs, and that the Feathers of Fatigue one really spends feathers when Feathers of Fatigue is installed. */
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class BackendSelectionTests {
@@ -25,11 +25,11 @@ public class BackendSelectionTests {
 
     @GameTest(template = "empty")
     public static void configChoiceResolves(GameTestHelper helper) {
-        assertValueEqual(helper, StaminaBackends.resolve(BackendMode.AUTO, true), StaminaBackend.Kind.FEATHERS, "auto with Green Feathers");
-        assertValueEqual(helper, StaminaBackends.resolve(BackendMode.AUTO, false), StaminaBackend.Kind.INTERNAL, "auto without Green Feathers");
-        assertValueEqual(helper, StaminaBackends.resolve(BackendMode.INTERNAL, true), StaminaBackend.Kind.INTERNAL, "internal with Green Feathers");
-        assertValueEqual(helper, StaminaBackends.resolve(BackendMode.FEATHERS, false), StaminaBackend.Kind.INTERNAL, "feathers without Green Feathers");
-        assertValueEqual(helper, StaminaBackends.resolve(BackendMode.FEATHERS, true), StaminaBackend.Kind.FEATHERS, "feathers with Green Feathers");
+        assertValueEqual(helper, StaminaBackends.resolve(BackendMode.AUTO, true), StaminaBackend.Kind.FEATHERS, "auto with Feathers of Fatigue");
+        assertValueEqual(helper, StaminaBackends.resolve(BackendMode.AUTO, false), StaminaBackend.Kind.INTERNAL, "auto without Feathers of Fatigue");
+        assertValueEqual(helper, StaminaBackends.resolve(BackendMode.INTERNAL, true), StaminaBackend.Kind.INTERNAL, "internal with Feathers of Fatigue");
+        assertValueEqual(helper, StaminaBackends.resolve(BackendMode.FEATHERS, false), StaminaBackend.Kind.INTERNAL, "feathers without Feathers of Fatigue");
+        assertValueEqual(helper, StaminaBackends.resolve(BackendMode.FEATHERS, true), StaminaBackend.Kind.FEATHERS, "feathers with Feathers of Fatigue");
         helper.succeed();
     }
 
