@@ -100,11 +100,11 @@ configurations {
 }
 
 dependencies {
-    // Green Feathers is optional: AoS compiles against its API only and falls back to its internal stamina
+    // Feathers of Fatigue is optional: AoS compiles against its API only and falls back to its internal stamina
     // without it. Dev runs load the full mod unless -PwithoutFeathers is given.
-    compileOnly "com.darkona.feathers:greenfeathers-api:${greenfeathers_version}"
+    compileOnly "com.darkona.feathersoffatigue:feathers-of-fatigue-api:${feathers_of_fatigue_version}"
     if (!project.hasProperty('withoutFeathers')) {
-        localRuntime "com.darkona.feathers:greenfeathers:${greenfeathers_version}"
+        localRuntime "com.darkona.feathersoffatigue:feathers-of-fatigue:${feathers_of_fatigue_version}"
     }
 
     // Optional compatibility targets. All direct use sits behind ModList checks and bridge classes.
@@ -137,7 +137,7 @@ dependencies {
         localRuntime "maven.modrinth:create:${create_version}"
     }
 
-    // `./gradlew runPlay`: a pack to play with by hand. Green Feathers with its season and thirst compats, and the
+    // `./gradlew runPlay`: a pack to play with by hand. Feathers of Fatigue with its season and thirst compats, and the
     // action mods that sit well together (no ParCool, Epic Fight or Paragliders: they replace too much of the game).
     if (playPack) {
         localRuntime "maven.modrinth:better-combat:${bettercombat_version}"
@@ -168,7 +168,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_license                : mod_license,
             mod_version                : mod_version,
             mod_authors                : mod_authors,
-            greenfeathers_version_range: greenfeathers_version_range,
+            feathers_of_fatigue_version_range: feathers_of_fatigue_version_range,
     ]
     inputs.properties replaceProperties
     expand replaceProperties

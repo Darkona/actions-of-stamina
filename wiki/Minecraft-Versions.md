@@ -1,6 +1,6 @@
 # Minecraft Versions
 
-This wiki describes the newest version of Actions of Stamina, for **Minecraft 1.21.1 (NeoForge)**. The same mod is also made for older Minecraft versions, with the same actions, config options and stamina backends (Green Feathers or its own bar) wherever the game allows it. This page lists only what is different in each of them.
+This wiki describes the newest version of Actions of Stamina, for **Minecraft 1.21.1 (NeoForge)**. The same mod is also made for older Minecraft versions, with the same actions, config options and stamina backends (Feathers of Fatigue or its own bar) wherever the game allows it. This page lists only what is different in each of them.
 
 | Minecraft | Loader | Differences |
 |---|---|---|
@@ -9,7 +9,7 @@ This wiki describes the newest version of Actions of Stamina, for **Minecraft 1.
 | 1.19.2 | Forge 43 | [1.19.2](#1192-forge-43) |
 | 1.18.2 | Forge 40.2.4 or later | [1.18.2](#1182-forge-40) |
 
-Each version works with the [Green Feathers](https://github.com/Darkona/green-feathers) made for the same Minecraft version. The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers; from 0.6 on it is no longer supported.
+Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) made for the same Minecraft version. The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers; from 0.6 on it is no longer supported.
 
 ## 1.20.1 (Forge 47)
 

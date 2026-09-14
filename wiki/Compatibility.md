@@ -32,7 +32,7 @@ Paragliding drains AoS stamina, and Paragliders reads its stamina from AoS. Its 
 own stamina logic is turned off. Because of that, Paragliders never charges running or swimming. AoS's sprint and
 swim actions charge them instead. With `paragliders.enabled = false`, Paragliders keeps its own stamina wheel.
 
-Stamina Vessels (traded for Spirit Orbs at a goddess statue) make the AoS bar larger, as they would make Paragliders' wheel larger: each vessel adds `feathers_per_vessel` max feathers (2 by default, 0 turns this off). With Green Feathers it is a `max_feathers` attribute modifier, `actionsofstamina:paragliders/stamina_vessels`; with the internal stamina the bar itself grows. It is set when you join, respawn or change dimension, and whenever the number of vessels changes. With `paragliders.enabled = false` the vessels only count for Paragliders' own wheel.
+Stamina Vessels (traded for Spirit Orbs at a goddess statue) make the AoS bar larger, as they would make Paragliders' wheel larger: each vessel adds `feathers_per_vessel` max feathers (2 by default, 0 turns this off). With Feathers of Fatigue it is a `max_feathers` attribute modifier, `actionsofstamina:paragliders/stamina_vessels`; with the internal stamina the bar itself grows. It is set when you join, respawn or change dimension, and whenever the number of vessels changes. With `paragliders.enabled = false` the vessels only count for Paragliders' own wheel.
 
 
 ![Paragliding: the drain shows in the feathers](images/paraglider.png)

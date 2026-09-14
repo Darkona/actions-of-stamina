@@ -22,7 +22,7 @@ public final class ParagliderCompat {
 
     public static final String MOD_ID = "paraglider";
     public static final boolean LOADED = ModList.get().isLoaded(MOD_ID);
-    /** Source of the vessels' max stamina bonus (Green Feathers: the id of its {@code max_feathers} modifier). */
+    /** Source of the vessels' max stamina bonus (Feathers of Fatigue: the id of its {@code max_feathers} modifier). */
     public static final ResourceLocation VESSELS = ActionsOfStamina.id("paragliders/stamina_vessels");
 
     private ParagliderCompat() {

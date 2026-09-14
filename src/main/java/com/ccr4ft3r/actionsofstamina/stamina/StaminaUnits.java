@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.stamina;
 
 /**
- * AoS counts stamina in thousandths of a feather on every backend (the same unit Green Feathers uses), so costs can
+ * AoS counts stamina in thousandths of a feather on every backend (the same unit Feathers of Fatigue uses), so costs can
  * be fractions of a feather and slow rates keep their precision. Configs are written in feathers and converted here.
  */
 public final class StaminaUnits {

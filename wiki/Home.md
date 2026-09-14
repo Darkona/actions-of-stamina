@@ -8,14 +8,14 @@ and combat mods. If you don't have enough stamina, the action doesn't happen: yo
 is cancelled, a swing is dropped, a roll isn't available.
 
 AoS only decides **how actions cost stamina**. The stamina bar comes from
-[Green Feathers](https://github.com/Darkona/green-feathers) if it is installed, or from AoS's own simple bar if it
+[Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) if it is installed, or from AoS's own simple bar if it
 isn't.
 
-![Paragliding with Green Feathers and Actions of Stamina](images/paraglider.png)
+![Paragliding with Feathers of Fatigue and Actions of Stamina](images/paraglider.png)
 
 ## Pages
 
-- [Stamina Backends](Stamina-Backends): Green Feathers' feathers, or AoS's own bar.
+- [Stamina Backends](Stamina-Backends): Feathers of Fatigue's feathers, or AoS's own bar.
 - [Vanilla Actions](Vanilla-Actions): what sprinting, jumping, attacking and the rest cost.
 - [Compatibility](Compatibility): ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders, Create.
 - [Configuration](Configuration): every option.

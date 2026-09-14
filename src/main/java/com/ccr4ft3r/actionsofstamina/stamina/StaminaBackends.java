@@ -9,14 +9,14 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 /**
  * Chooses the {@link StaminaBackend}. The server resolves the {@code backend} config when it starts and tells each
- * client which one it uses (so a client with Green Feathers installed still follows a server running the internal
+ * client which one it uses (so a client with Feathers of Fatigue installed still follows a server running the internal
  * stamina); until a client hears from a server it uses its own config.
  * <p>
- * {@link FeathersBackend} is only ever touched when Green Feathers is loaded, so its classes never load without it.
+ * {@link FeathersBackend} is only ever touched when Feathers of Fatigue is loaded, so its classes never load without it.
  */
 public final class StaminaBackends {
 
-    public static final String FEATHERS_MOD_ID = "greenfeathers";
+    public static final String FEATHERS_MOD_ID = "feathers_of_fatigue";
     public static final boolean FEATHERS_LOADED = ModList.get().isLoaded(FEATHERS_MOD_ID);
 
     private static volatile StaminaBackend server;
@@ -41,7 +41,7 @@ public final class StaminaBackends {
         return backend != null ? backend : server();
     }
 
-    /** Pure decision, kept separate for tests. A missing Green Feathers always means the internal stamina. */
+    /** Pure decision, kept separate for tests. A missing Feathers of Fatigue always means the internal stamina. */
     public static StaminaBackend.Kind resolve(BackendMode mode, boolean feathersLoaded) {
         return switch (mode) {
             case AUTO, FEATHERS -> feathersLoaded ? StaminaBackend.Kind.FEATHERS : StaminaBackend.Kind.INTERNAL;
@@ -67,7 +67,7 @@ public final class StaminaBackends {
     public static void onServerStarting() {
         BackendMode mode = configuredMode();
         if (mode == BackendMode.FEATHERS && !FEATHERS_LOADED) {
-            ActionsOfStamina.logger.warn("backend = feathers but Green Feathers isn't installed: using the internal stamina");
+            ActionsOfStamina.logger.warn("backend = feathers but Feathers of Fatigue isn't installed: using the internal stamina");
         }
         server = byKind(resolve(mode, FEATHERS_LOADED));
         ActionsOfStamina.logger.info("Stamina backend: {}", server.kind());
@@ -76,7 +76,7 @@ public final class StaminaBackends {
     /** Client: the server told us which backend it uses. */
     public static void setClient(StaminaBackend.Kind kind) {
         if (kind == StaminaBackend.Kind.FEATHERS && !FEATHERS_LOADED) {
-            ActionsOfStamina.logger.warn("The server uses Green Feathers, which isn't installed here: using the internal stamina");
+            ActionsOfStamina.logger.warn("The server uses Feathers of Fatigue, which isn't installed here: using the internal stamina");
         }
         client = byKind(kind);
     }

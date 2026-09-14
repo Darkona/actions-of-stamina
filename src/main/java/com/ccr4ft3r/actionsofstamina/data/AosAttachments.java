@@ -19,7 +19,7 @@ public final class AosAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<PlayerActions>> PLAYER_ACTIONS =
             ATTACHMENT_TYPES.register("player_actions", () -> AttachmentType.builder(PlayerActions::new).build());
 
-    /** The internal stamina bar (used without Green Feathers). Saved; starts full after death. */
+    /** The internal stamina bar (used without Feathers of Fatigue). Saved; starts full after death. */
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<InternalStamina>> INTERNAL_STAMINA =
             ATTACHMENT_TYPES.register("internal_stamina",
                     () -> AttachmentType.builder(() -> new InternalStamina()).serialize(InternalStamina.CODEC).build());

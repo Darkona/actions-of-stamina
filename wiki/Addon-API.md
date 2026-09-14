@@ -1,6 +1,6 @@
 # Addon API
 
-*For mod developers.* Another mod can add its own stamina-costing actions to Actions of Stamina. They get a config section like the built-in ones, spend through whichever stamina backend is active (Green Feathers or the own bar), and are gated, drained and charged by the same code as sprinting or attacking. Actions of Stamina's own actions, the vanilla ones and those of every supported mod, are registered the same way.
+*For mod developers.* Another mod can add its own stamina-costing actions to Actions of Stamina. They get a config section like the built-in ones, spend through whichever stamina backend is active (Feathers of Fatigue or the own bar), and are gated, drained and charged by the same code as sprinting or attacking. Actions of Stamina's own actions, the vanilla ones and those of every supported mod, are registered the same way.
 
 Everything below is in `com.ccr4ft3r.actionsofstamina` (Minecraft 1.21.1, NeoForge).
 
@@ -38,7 +38,7 @@ public MyMod(IEventBus modBus, ModContainer container) {
 }
 ```
 
-The id is also the stamina source the action spends under, so Green Feathers' cost modifiers and debug output see it by that name. Players get the action while its config section is enabled; the four-argument `register` takes a condition of its own instead (for instance, the section's switch and whether another mod is installed). The last argument builds the action for one player from its type: `Action::new` for an action that only costs, or the constructor of your own subclass. Players get a fresh set of actions every time they join a level (login, respawn, dimension change), so a config change applies from the next one.
+The id is also the stamina source the action spends under, so Feathers of Fatigue's cost modifiers and debug output see it by that name. Players get the action while its config section is enabled; the four-argument `register` takes a condition of its own instead (for instance, the section's switch and whether another mod is installed). The last argument builds the action for one player from its type: `Action::new` for an action that only costs, or the constructor of your own subclass. Players get a fresh set of actions every time they join a level (login, respawn, dimension change), so a config change applies from the next one.
 
 Registration closes when loading completes. Then every type is numbered in the order of its id, so a client and a server with the same mods agree on every number. Registering later, or the same id twice, throws.
 

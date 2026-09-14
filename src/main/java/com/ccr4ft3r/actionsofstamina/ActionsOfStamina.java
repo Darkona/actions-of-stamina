@@ -32,7 +32,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Actions of Stamina: how actions cost stamina, for vanilla actions and other mods' actions. The stamina itself
- * comes from Green Feathers when it is installed, or from AoS's small internal bar otherwise
+ * comes from Feathers of Fatigue when it is installed, or from AoS's small internal bar otherwise
  * ({@code StaminaBackends}).
  */
 @Mod(ActionsOfStamina.MOD_ID)

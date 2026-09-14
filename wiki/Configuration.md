@@ -15,17 +15,17 @@ respawn or dimension change. Changing `backend` needs a server restart.
 ```toml
 [general]
 	#Where stamina comes from:
-	# AUTO     - Green Feathers when it is installed, otherwise AoS's internal stamina
-	# FEATHERS - Green Feathers (falls back to the internal stamina if it isn't installed)
-	# INTERNAL - AoS's internal stamina, even with Green Feathers installed
+	# AUTO     - Feathers of Fatigue when it is installed, otherwise AoS's internal stamina
+	# FEATHERS - Feathers of Fatigue (falls back to the internal stamina if it isn't installed)
+	# INTERNAL - AoS's internal stamina, even with Feathers of Fatigue installed
 	#Allowed Values: AUTO, FEATHERS, INTERNAL
 	backend = "AUTO"
 	#Log every action change and show the action debug HUD
 	debugging = false
 
-#AoS's own stamina bar, used only when the backend is the internal one (no Green Feathers)
+#AoS's own stamina bar, used only when the backend is the internal one (no Feathers of Fatigue)
 [internal]
-	#Whether the internal stamina exists at all; if false, every action is free without Green Feathers
+	#Whether the internal stamina exists at all; if false, every action is free without Feathers of Fatigue
 	enabled = true
 	#Size of the bar, in feathers
 	# Default: 20
@@ -983,7 +983,7 @@ respawn or dimension change. Changing `backend` needs a server restart.
 	regen_delay = 20
 	#Whether regeneration pauses while it lasts
 	blocks_regen = true
-	#Max feathers each Stamina Vessel adds (Green Feathers: a max_feathers modifier; the internal stamina: a larger bar). 0 turns vessels off. Applies on joining, respawning, or when the vessel count changes
+	#Max feathers each Stamina Vessel adds (Feathers of Fatigue: a max_feathers modifier; the internal stamina: a larger bar). 0 turns vessels off. Applies on joining, respawning, or when the vessel count changes
 	# Default: 2
 	# Range: 0 ~ 100
 	feathers_per_vessel = 2
@@ -1211,7 +1211,7 @@ respawn or dimension change. Changing `backend` needs a server restart.
 ## Default `actionsofstamina-client.toml`
 
 ```toml
-#The internal stamina bar, drawn above the food bar when Green Feathers isn't the backend
+#The internal stamina bar, drawn above the food bar when Feathers of Fatigue isn't the backend
 [hud]
 	enabled = true
 	# Default: 0

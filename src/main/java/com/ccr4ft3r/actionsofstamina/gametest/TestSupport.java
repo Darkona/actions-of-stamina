@@ -83,14 +83,14 @@ final class TestSupport {
         }
     }
 
-    /** Spends in small steps until nothing more can be spent (Green Feathers: through strain too). */
+    /** Spends in small steps until nothing more can be spent (Feathers of Fatigue: through strain too). */
     static void exhaust(StaminaBackend backend, ServerPlayer player) {
         int spends = 0;
         while (spends < 10000 && backend.spend(player, TEST, 50, 0)) spends++;
     }
 
     /**
-     * Posts the real server player tick event: AoS's actions and internal stamina, Green Feathers' drains and
+     * Posts the real server player tick event: AoS's actions and internal stamina, Feathers of Fatigue's drains and
      * regeneration, and every other mod's player tick.
      */
     static void tickEvent(ServerPlayer player, int ticks) {

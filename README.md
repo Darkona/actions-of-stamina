@@ -8,7 +8,7 @@ and combat mods. If you don't have enough stamina, the action doesn't happen: yo
 is cancelled, a swing is dropped, a roll isn't available.
 
 AoS only decides **how actions cost stamina**. The stamina bar comes from
-[Green Feathers](https://github.com/Darkona/green-feathers) if it is installed, or from AoS's own simple bar if it
+[Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) if it is installed, or from AoS's own simple bar if it
 isn't.
 
 Supported out of the box, each with its own switch in the config: ParCool, Paragliders, Better Combat, Combat Roll,
@@ -22,7 +22,7 @@ Epic Fight, Wall-Jump TXF, Gliders and Create.
 
 The [wiki](https://github.com/Darkona/actions-of-stamina/wiki) has the details:
 
-- [Stamina Backends](https://github.com/Darkona/actions-of-stamina/wiki/Stamina-Backends): Green Feathers' feathers, or AoS's own bar.
+- [Stamina Backends](https://github.com/Darkona/actions-of-stamina/wiki/Stamina-Backends): Feathers of Fatigue's feathers, or AoS's own bar.
 - [Vanilla Actions](https://github.com/Darkona/actions-of-stamina/wiki/Vanilla-Actions): what each action costs.
 - [Compatibility](https://github.com/Darkona/actions-of-stamina/wiki/Compatibility): what each supported mod's actions cost, and how.
 - [Configuration](https://github.com/Darkona/actions-of-stamina/wiki/Configuration): every option.
@@ -33,7 +33,7 @@ The [wiki](https://github.com/Darkona/actions-of-stamina/wiki) has the details:
 - `./gradlew runGameTestServer` runs the GameTests: the internal backend (spend, drain, regeneration,
   exhaustion), backend selection, and the compats against the real mods: each compat's charges, and its refusals
   when the stamina runs out. A compat's tests pass without doing anything when its mod isn't installed.
-- `-PwithoutFeathers` runs without Green Feathers.
+- `-PwithoutFeathers` runs without Feathers of Fatigue.
 - `-PwithCompat` adds ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders, Create and the
   libraries they need to the dev runs.
 - `scripts/client-boot-check.sh` boots a headless client into a copy of `run/world` and saves a screenshot to
