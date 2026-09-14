@@ -2,7 +2,7 @@
 
 Changes by feature, newest version first.
 
-## 0.6.0 (Minecraft 1.21.1, NeoForge), unreleased
+## 1.21.1-0.6.0 (NeoForge), unreleased
 
 ### Stamina backends
 
