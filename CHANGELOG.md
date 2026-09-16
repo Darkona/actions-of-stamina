@@ -2,7 +2,7 @@
 
 Changes by feature, newest version first.
 
-## 0.6.0 (Minecraft 1.18.2, Forge 40), unreleased
+## 1.18.2-0.6.0 (Forge 40), unreleased
 
 The 1.21.1 version of Actions of Stamina, ported to Forge 1.18.2 (through the 1.20.1 and 1.19.2 ports) with the same actions, config options and stamina backends. It replaces the 0.5.0 code of this branch, which needed Elenai's Feathers: Elenai's Feathers is no longer supported. Needs Forge 40.2.3 or later.
 
