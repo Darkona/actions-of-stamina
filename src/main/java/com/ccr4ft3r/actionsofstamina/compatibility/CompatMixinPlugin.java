@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility;
 
-import net.neoforged.fml.loading.LoadingModList;
+import net.neoforged.fml.loading.FMLLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -30,16 +30,12 @@ public final class CompatMixinPlugin implements IMixinConfigPlugin {
         String mixin = mixinClassName.startsWith(PACKAGE) ? mixinClassName.substring(PACKAGE.length()) : mixinClassName;
         if (mixin.startsWith("BetterCombat")) return isLoaded("bettercombat");
         if (mixin.startsWith("CombatRoll")) return isLoaded("combat_roll");
-        if (mixin.startsWith("Parcool")) return isLoaded("parcool");
         if (mixin.startsWith("WallJump")) return isLoaded("walljump");
-        if (mixin.startsWith("Gliders")) return isLoaded("vc_gliders");
-        if (mixin.startsWith("Create")) return isLoaded("create");
         return false;
     }
 
     private static boolean isLoaded(String modId) {
-        LoadingModList mods = LoadingModList.get();
-        return mods != null && mods.getModFileById(modId) != null;
+        return FMLLoader.getCurrent().getLoadingModList().getModFileById(modId) != null;
     }
 
     @Override

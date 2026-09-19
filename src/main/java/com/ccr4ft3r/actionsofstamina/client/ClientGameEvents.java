@@ -5,12 +5,12 @@ import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.api.distmarker.Dist;
@@ -20,7 +20,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 @EventBusSubscriber(modid = ActionsOfStamina.MOD_ID, value = Dist.CLIENT)
 public final class ClientGameEvents {
@@ -54,8 +54,15 @@ public final class ClientGameEvents {
         if (!(PlayerActions.get(player).getAction(VanillaActions.ATTACK) instanceof AttackAction attack)) return;
         // Better Combat swings these weapons itself and its compat charges each swing.
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem())) return;
-        // Same for Epic Fight's battle mode: its basic attack combo is charged by the Epic Fight compat.
-        if (EpicFightCompat.inBattleMode(player)) return;
+        // A spear's stab is charged by the server when it lands (PiercingWeaponMixin), whatever this client aims at: here
+        // it is only refused, unless it lands weakened instead.
+        if (player.getMainHandItem().has(DataComponents.PIERCING_WEAPON)) {
+            if (!attack.canPerform(player) && !attack.weakens()) {
+                event.setCanceled(true);
+                event.setSwingHand(false);
+            }
+            return;
+        }
         // Only swings at an entity cost, and at air unless only_for_hits: mining fires this every tick a block is hit.
         if (!isEntityHit && !(isMissHit && !AoSServerConfig.ONLY_FOR_HITS.get())) return;
         // A hit on an entity may be a mace smash, charged at its own cost; a swing at air never is.
@@ -63,7 +70,7 @@ public final class ClientGameEvents {
             // The client spend above was only a prediction. Hits are counted and charged by the server itself
             // (AttackEntityEvent); a swing at air never reaches it, so the server is told to count that one, and its
             // own count decides when the charge is due.
-            if (!isEntityHit) PacketDistributor.sendToServer(new ActionPerformedPacket((byte) VanillaActions.ATTACK.index()));
+            if (!isEntityHit) ClientPacketDistributor.sendToServer(new ActionPerformedPacket((byte) VanillaActions.ATTACK.index()));
         } else if (!attack.weakens()) {
             event.setCanceled(true);
             event.setSwingHand(false);

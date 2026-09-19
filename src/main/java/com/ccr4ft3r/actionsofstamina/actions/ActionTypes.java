@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,9 +31,9 @@ public final class ActionTypes {
 
     /**
      * Registers an action type whose players get it while its config section is enabled. See
-     * {@link #register(ResourceLocation, ActionCostConfig, BooleanSupplier, Function)}.
+     * {@link #register(Identifier, ActionCostConfig, BooleanSupplier, Function)}.
      */
-    public static ActionType register(ResourceLocation id, ActionCostConfig config, Function<ActionType, ? extends Action> factory) {
+    public static ActionType register(Identifier id, ActionCostConfig config, Function<ActionType, ? extends Action> factory) {
         return register(id, config, config::enabled, factory);
     }
 
@@ -45,7 +45,7 @@ public final class ActionTypes {
      *
      * @throws IllegalStateException once the registry froze, or when the id is taken
      */
-    public static synchronized ActionType register(ResourceLocation id, ActionCostConfig config, BooleanSupplier enabled,
+    public static synchronized ActionType register(Identifier id, ActionCostConfig config, BooleanSupplier enabled,
                                                    Function<ActionType, ? extends Action> factory) {
         if (types != null) throw new IllegalStateException("Action type " + id + " registered after the action registry froze");
         if (find(id) != null) throw new IllegalStateException("Action type " + id + " registered twice");
@@ -79,7 +79,7 @@ public final class ActionTypes {
     }
 
     @Nullable
-    public static ActionType byId(ResourceLocation id) {
+    public static ActionType byId(Identifier id) {
         for (ActionType type : all()) {
             if (type.id().equals(id)) return type;
         }
@@ -87,7 +87,7 @@ public final class ActionTypes {
     }
 
     @Nullable
-    private static ActionType find(ResourceLocation id) {
+    private static ActionType find(Identifier id) {
         for (ActionType type : REGISTERED) {
             if (type.id().equals(id)) return type;
         }

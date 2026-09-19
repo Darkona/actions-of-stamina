@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.stamina;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 /**
@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
  * <b>Sides.</b> The server is authoritative. On the client, spends and drains of the local player are only checked
  * (and spends predicted) against the last synced values; other players are never charged client side.
  * <p>
- * <b>Sources.</b> Every cost names its source, one constant {@link ResourceLocation} per action: a drain is refreshed
+ * <b>Sources.</b> Every cost names its source, one constant {@link Identifier} per action: a drain is refreshed
  * and stopped by the same source, and regeneration blocks of different sources don't undo each other.
  * <p>
  * Creative and spectator players are exempt: every check and spend succeeds without cost.
@@ -33,14 +33,14 @@ public interface StaminaBackend {
     Kind kind();
 
     /** Whether {@code stamina} could be spent now, without spending it. */
-    boolean canSpend(Player player, ResourceLocation source, int stamina);
+    boolean canSpend(Player player, Identifier source, int stamina);
 
     /**
      * Spends {@code stamina} once, all or nothing, then pauses regeneration for {@code regenDelayTicks}.
      *
      * @return whether the action may go ahead
      */
-    boolean spend(Player player, ResourceLocation source, int stamina, int regenDelayTicks);
+    boolean spend(Player player, Identifier source, int stamina, int regenDelayTicks);
 
     /**
      * Starts or refreshes a continuous drain and pays this tick's share; call it every tick while the activity
@@ -48,12 +48,12 @@ public interface StaminaBackend {
      *
      * @return false when the drain can't be paid any more (it then stops)
      */
-    boolean drain(Player player, ResourceLocation source, double staminaPerTick, boolean blocksRegen);
+    boolean drain(Player player, Identifier source, double staminaPerTick, boolean blocksRegen);
 
-    void stopDrain(Player player, ResourceLocation source);
+    void stopDrain(Player player, Identifier source);
 
     /** Pauses regeneration for {@code ticks}, e.g. after a continuous action ends. */
-    void blockRegen(Player player, ResourceLocation source, int ticks);
+    void blockRegen(Player player, Identifier source, int ticks);
 
     /** Whether an effect (Feathers of Fatigue's Energized) lets the player keep regenerating while acting. */
     boolean keepsRegenWhileActing(Player player);
@@ -62,7 +62,7 @@ public interface StaminaBackend {
      * Server: extra max stamina given by {@code source} (0 takes it away). Transient: kept by this player entity only,
      * so it is set again when the player joins a level.
      */
-    void setMaxBonus(Player player, ResourceLocation source, int stamina);
+    void setMaxBonus(Player player, Identifier source, int stamina);
 
     int stamina(Player player);
 

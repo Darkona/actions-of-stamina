@@ -22,7 +22,7 @@ def summarize(path):
     verdict = "PASS" if passed and not failed_hdr else ("FAIL" if failed_hdr else "NO RESULT")
     out.append(f"{path}: {verdict}" + (f" ({complete} tests)" if complete else ""))
     for l in lines:
-        if "LogTestReporter" in l and "failed!" in l:
+        if "LogTestReporter" in l and re.search(r"failed( at [^!]*)?!", l):
             out.append("  " + l.split("]: ", 1)[-1])
     for l in lines:
         if re.search(r"optional tests failed|required tests failed", l):

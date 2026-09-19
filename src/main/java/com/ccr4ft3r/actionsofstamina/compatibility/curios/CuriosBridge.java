@@ -19,7 +19,8 @@ final class CuriosBridge {
     }
 
     static void register() {
-        NeoForge.EVENT_BUS.addListener(CuriosBridge::onCurioChange);
+        // Only a change of item can put on or take off wings; a count or component change of the same item can't.
+        NeoForge.EVENT_BUS.addListener(CurioChangeEvent.Item.class, CuriosBridge::onCurioChange);
     }
 
     static boolean wearsStaminaWings(Player player) {

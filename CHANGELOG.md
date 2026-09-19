@@ -2,6 +2,32 @@
 
 Changes by feature, newest version first.
 
+## 26.1-0.6.0 (NeoForge), unreleased
+
+Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same actions, config and Addon API as 1.21.1-0.6.0 below, except for what this section lists.
+
+### Vanilla actions
+
+- **Spears:** a spear's stab is an attack. It is charged once per stab, however many creatures it pierces, and counts towards `times_performed_to_exhaust` with the other attacks; a stab that reaches nothing is a swing at the air (`only_for_hits`). Without the stamina, a stab hits nothing, or lands weakened with `exhausted_mode = WEAKEN`. Holding a spear ready to charge is free.
+- **Shields:** a modded shield counts when it blocks attacks (the `minecraft:blocks_attacks` component), the way Minecraft 26.1 defines a shield.
+- **Draw:** counts the bow, crossbow and trident use animations; the spear's is not a draw.
+- **Rowing:** the `actionsofstamina:rowed_boats` tag holds `#minecraft:boat` and every chest boat and chest raft, since each wood type is its own boat in Minecraft 26.1.
+- **Throw:** the `actionsofstamina:throwables` tag holds `#minecraft:eggs`, so blue and brown eggs cost like white ones.
+- **Riptide and trident throws:** follow the trident's own rules: no launch while riding, and no throw or launch from a trident about to break.
+
+### Compatibility
+
+- Tested with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-2.0.0.
+- Each compat accepts its mod from the version tested up to the next major version; a mod outside that range stops the game at load with a message.
+
+### For mod developers
+
+- The Addon API is the same, with Minecraft's renames: `ResourceLocation` is now `Identifier` in every signature. The Maven artifact is `com.ccr4ft3r:actions-of-stamina:26.1-0.6.0`.
+
+### Not in this version
+
+- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1. Their compats and config sections are left out (the code waits in `src/disabled`).
+
 ## 1.21.1-0.6.0 (NeoForge), unreleased
 
 ### Stamina backends
@@ -50,5 +76,5 @@ Changes by feature, newest version first.
 
 ### Ports
 
-- Ports to Minecraft 1.20.1 (Forge 47), 1.19.2 (Forge 43) and 1.18.2 (Forge 40), on Feathers of Fatigue or the own stamina bar, each with the latest stable versions of the supported mods.
-- The wiki gets a section per Minecraft version where the versions differ.
+- Ports to Minecraft 26.2 and 26.3 (NeoForge).
+- ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, once they publish a build for it.

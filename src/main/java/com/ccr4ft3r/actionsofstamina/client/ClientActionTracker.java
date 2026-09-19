@@ -1,20 +1,21 @@
 package com.ccr4ft3r.actionsofstamina.client;
 
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.shield.ShieldAction;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.brush.BrushAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.row.RowAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionStatePacket;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Pose;
-import net.neoforged.neoforge.common.ItemAbilities;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.world.entity.player.Input;
+import net.minecraft.world.phys.Vec2;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 /**
  * Client only. Derives the local player's movement state every tick into a few bits and sends them to the server
@@ -36,7 +37,9 @@ public final class ClientActionTracker {
         // NaN on the first tick: never "moved".
         // From the movement input itself: any move key (or button, or controller) held, whatever else was released.
         boolean onClimbable = player.onClimbable();
-        boolean moving = (player.input.forwardImpulse != 0 || player.input.leftImpulse != 0 || player.input.jumping && (player.isInWater() || onClimbable))
+        Input keys = player.input.keyPresses;
+        Vec2 move = player.input.getMoveVector();
+        boolean moving = (move.x != 0 || move.y != 0 || keys.jump() && (player.isInWater() || onClimbable))
                 && (x != lastX || z != lastZ) && lastX == lastX;
         boolean inFluid = player.isInWater() || player.isInLava();
         boolean crawling = player.onGround() && player.getPose() == Pose.SWIMMING && moving && !inFluid;
@@ -46,23 +49,19 @@ public final class ClientActionTracker {
         // Going down or holding on is free; creative flight is exempt anyway.
         boolean climbingUp = onClimbable && player.getY() - player.yo > CLIMB_EPSILON && !onVehicle && !player.isFallFlying();
         // Only boats from the rowed_boats tag, driven by this player, with a paddle key held (forward, back or turning).
-        boolean rowing = onVehicle && (player.input.up || player.input.down || player.input.left || player.input.right)
+        boolean rowing = onVehicle && (keys.forward() || keys.backward() || keys.left() || keys.right())
                 && RowAction.drivesRowedBoat(player, player.getVehicle());
         boolean swimming = player.isSwimming() && player.getPose() == Pose.SWIMMING && inFluid && !climbing && !onVehicle;
         boolean sprinting = player.isSprinting() && moving && !onVehicle && player.onGround();
         // Only wings from the stamina_wings tag: mechanical or propelled wings of other mods fly for free.
         boolean flying = player.getPose() == Pose.FALL_FLYING && player.isFallFlying() && ElytraAction.wearsStaminaWings(player);
         // Any item that blocks like a shield, not only ShieldItem subclasses: modded shields count too.
-        boolean usingShield = player.isUsingItem() && player.getUseItem().canPerformAction(ItemAbilities.SHIELD_BLOCK);
+        boolean usingShield = player.isUsingItem() && ShieldAction.blocks(player.getUseItem());
         // By the use animation (bow, crossbow, spear), so modded bows and spears count too.
         boolean drawing = DrawAction.isDrawing(player);
         // Same for brushes.
         boolean brushing = BrushAction.isBrushing(player);
 
-        // ParCool's own sprint, swim and crawl are charged by the ParCool compat, not twice.
-        if (sprinting && ParcoolCompat.ownsSprint(player)) sprinting = false;
-        if (swimming && ParcoolCompat.ownsSwim(player)) swimming = false;
-        if (crawling && ParcoolCompat.ownsCrawl(player)) crawling = false;
         boolean paragliding = ParagliderCompat.isParagliding(player);
         boolean wallClinging = actions.getAction(WallJumpCompat.WALL_CLING) != null && WallJumpCompat.isClinging(player);
 
@@ -84,7 +83,7 @@ public final class ClientActionTracker {
         if (actions.applyClientState(flags)) {
             if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "Change detected! Moving: {}, Sprinting: {}, Crawling: {}, Flying: {}, Swimming: {}, Shield: {}, Drawing: {}, Climbing: {}, Rowing: {}, Brushing: {}",
                     moving, sprinting, crawling, flying, swimming, usingShield, drawing, climbingUp, rowing, brushing);
-            PacketDistributor.sendToServer(new ActionStatePacket((short) flags));
+            ClientPacketDistributor.sendToServer(new ActionStatePacket((short) flags));
         }
     }
 }

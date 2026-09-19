@@ -1,6 +1,5 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.climb.ClimbAction;
@@ -8,7 +7,6 @@ import com.ccr4ft3r.actionsofstamina.actions.minecraft.row.RowAction;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -19,8 +17,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
@@ -30,8 +26,6 @@ import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
  * player can afford goes ahead, one they can't is refused, exempt players and disabled actions are never refused.
  * Default config (shield, draw and throw on; climb and row off).
  */
-@GameTestHolder(ActionsOfStamina.MOD_ID)
-@PrefixGameTestTemplate(false)
 public class ActionGateTests {
 
     /** Whether right-clicking {@code item} in the main hand is refused. */

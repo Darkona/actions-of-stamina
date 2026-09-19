@@ -20,14 +20,14 @@ public class RiptideAction extends Action {
 
     /**
      * Whether releasing the item with {@code remainingTicks} of use left launches the player, as the trident itself
-     * decides it: a trident (modded ones extending it too) with Riptide, a full aim, in water or rain, and not about to
-     * break.
+     * decides it: a trident (modded ones extending it too) with Riptide, a full aim, in water or rain, not riding
+     * anything, and not about to break.
      */
     public static boolean launchesOnRelease(ItemStack stack, Player player, int remainingTicks) {
         if (!(stack.getItem() instanceof TridentItem)) return false;
         return stack.getUseDuration(player) - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME
                 && EnchantmentHelper.getTridentSpinAttackStrength(stack, player) > 0 && player.isInWaterOrRain()
-                && stack.getDamageValue() < stack.getMaxDamage() - 1;
+                && !player.isPassenger() && !stack.nextDamageWillBreak();
     }
 
     @Override

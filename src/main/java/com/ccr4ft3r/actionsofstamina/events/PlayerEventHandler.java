@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.events;
 
+import com.ccr4ft3r.actionsofstamina.actions.minecraft.shield.ShieldAction;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
@@ -14,7 +15,6 @@ import com.ccr4ft3r.actionsofstamina.actions.minecraft.riptide.RiptideAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.throwing.ThrowAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.till.TillAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
@@ -29,14 +29,14 @@ import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.ItemAbilities;
-import net.neoforged.neoforge.common.util.TriState;
+import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -72,8 +72,8 @@ public final class PlayerEventHandler {
     public static void onAttackEntity(AttackEntityEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isExempt(player)) return;
         if (!(PlayerActions.get(player).getAction(VanillaActions.ATTACK) instanceof AttackAction attack)) return;
-        // Better Combat's swings and Epic Fight's battle-mode combo are charged by their compats.
-        if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()) || EpicFightCompat.inBattleMode(player)) return;
+        // Better Combat's swings are charged by its compat.
+        if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem())) return;
         // The modifiers follow the item in hand right away, not at the next periodic check (weaken_non_weapons off).
         if (attack.weakens()) attack.refreshWeakened(player);
         if (attack.performHit(player)) return;
@@ -81,10 +81,10 @@ public final class PlayerEventHandler {
         else event.setCanceled(true);
     }
 
-    /** Raising a shield the player can't afford is refused; modded shields are found by their shield-block ability. */
+    /** Raising a shield the player can't afford is refused; modded shields are found by their blocks_attacks component. */
     @SubscribeEvent
     public static void shieldUsage(PlayerInteractEvent.RightClickItem event) {
-        if (event.getItemStack().canPerformAction(ItemAbilities.SHIELD_BLOCK) && !PlayerActions.canPerform(event.getEntity(), VanillaActions.SHIELD)) {
+        if (ShieldAction.blocks(event.getItemStack()) && !PlayerActions.canPerform(event.getEntity(), VanillaActions.SHIELD)) {
             event.setCanceled(true);
         }
     }
@@ -175,7 +175,7 @@ public final class PlayerEventHandler {
 
     /** Server: a block broken by a player (after every other mod had its say: a cancelled break isn't charged). */
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void blockBroken(BlockEvent.BreakEvent event) {
+    public static void blockBroken(BreakBlockEvent event) {
         Player player = event.getPlayer();
         if (player.level().isClientSide() || PlayerActions.isExempt(player)) return;
         if (PlayerActions.get(player).getAction(VanillaActions.MINE) instanceof MineAction mine) {

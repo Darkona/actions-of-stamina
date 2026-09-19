@@ -1,18 +1,14 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
@@ -22,8 +18,6 @@ import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.tickEvent;
  * A continuous action through the real server player tick, on whichever backend is active: it begins when its flag
  * arrives, drains while it lasts, ends when the flag goes, and costs nothing while idle. Default sprint config.
  */
-@GameTestHolder(ActionsOfStamina.MOD_ID)
-@PrefixGameTestTemplate(false)
 public class ActionTickTests {
 
     @GameTest(template = "empty")

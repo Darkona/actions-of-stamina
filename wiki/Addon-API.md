@@ -2,7 +2,7 @@
 
 *For mod developers.* Another mod can add its own stamina-costing actions to Actions of Stamina. They get a config section like the built-in ones, spend through whichever stamina backend is active (Feathers of Fatigue or the own bar), and are gated, drained and charged by the same code as sprinting or attacking. Actions of Stamina's own actions, the vanilla ones and those of every supported mod, are registered the same way.
 
-Everything below is in `com.ccr4ft3r.actionsofstamina` (Minecraft 1.21.1, NeoForge).
+Everything below is in `com.ccr4ft3r.actionsofstamina` (Minecraft 26.1, NeoForge). On Minecraft 1.21.1, ids are `ResourceLocation` where this page says `Identifier`.
 
 ## Asking whether a player can do something
 
@@ -31,7 +31,7 @@ The builder offers `cost`, `minStamina`, `perSecond`, `finishCost`, `regenDelay`
 The type is registered while your mod is constructed, or in `FMLCommonSetupEvent`:
 
 ```java
-public static final ActionType DASH = ActionTypes.register(ResourceLocation.fromNamespaceAndPath("mymod", "dash"), DASH_COSTS, Action::new);
+public static final ActionType DASH = ActionTypes.register(Identifier.fromNamespaceAndPath("mymod", "dash"), DASH_COSTS, Action::new);
 
 public MyMod(IEventBus modBus, ModContainer container) {
     container.registerConfig(ModConfig.Type.SERVER, SPEC);
@@ -60,4 +60,4 @@ A continuous action (gliding, channelling) drains stamina while it lasts. There 
 
 A subclass of `Action` can add effects: `performingEffects` runs every tick the action is going on and paid for, and `notPerformingEffects` runs every tick the state is on but the stamina can't pay (stop the action there: fold the glider, drop the channel). Override `cleanUp` to remove anything the action leaves on the player, such as attribute modifiers: it runs when the action ends for an exempt player and when the actions are rebuilt.
 
-**By events.** When another mod already tells you when the action starts, ticks and ends (ParCool's actions are driven this way), call the player's action at each point instead of setting its state: `canBegin(player)` before it starts (refuse the start when false), `begin(player)` when it starts, `canContinue(player)` and `continueTick(player)` on each tick while `drains()` is true, and `end(player)` when it ends. Do this on the server; on the deciding client, only the `canBegin` and `canContinue` checks.
+**By events.** When another mod already tells you when the action starts, ticks and ends (the ParCool compat of Minecraft 1.21.1 works this way), call the player's action at each point instead of setting its state: `canBegin(player)` before it starts (refuse the start when false), `begin(player)` when it starts, `canContinue(player)` and `continueTick(player)` on each tick while `drains()` is true, and `end(player)` when it ends. Do this on the server; on the deciding client, only the `canBegin` and `canContinue` checks.

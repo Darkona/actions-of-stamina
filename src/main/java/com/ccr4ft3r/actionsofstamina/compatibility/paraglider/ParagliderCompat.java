@@ -5,7 +5,7 @@ import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModList;
@@ -23,7 +23,7 @@ public final class ParagliderCompat {
     public static final String MOD_ID = "paraglider";
     public static final boolean LOADED = ModList.get().isLoaded(MOD_ID);
     /** Source of the vessels' max stamina bonus (Feathers of Fatigue: the id of its {@code max_feathers} modifier). */
-    public static final ResourceLocation VESSELS = ActionsOfStamina.id("paragliders/stamina_vessels");
+    public static final Identifier VESSELS = ActionsOfStamina.id("paragliders/stamina_vessels");
 
     private ParagliderCompat() {
     }

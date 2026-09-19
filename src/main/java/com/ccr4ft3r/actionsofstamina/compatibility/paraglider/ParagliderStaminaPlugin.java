@@ -13,7 +13,7 @@ import tictim.paraglider.api.stamina.StaminaPlugin;
 import tictim.paraglider.impl.stamina.BotWStamina;
 
 /**
- * Paragliders (21.1.x) stamina plugin, discovered by Paragliders' own annotation scan (so it only loads when
+ * Paragliders stamina plugin, discovered by Paragliders' own annotation scan (so it only loads when
  * Paragliders is present). While {@link ParagliderConfig#PARAGLIDE} is enabled, Paragliders reads its stamina from
  * the AoS {@link StaminaBackend} (1000 per feather, the same scale as Paragliders' 1000 per wheel) and neither
  * regenerates nor drains its own: the paragliding cost is AoS's {@link ParaglideAction} drain, and running or
@@ -46,6 +46,16 @@ public class ParagliderStaminaPlugin implements StaminaPlugin {
             return new AoSParagliderStamina(player, false);
         }
 
+        /** Only asked on the client, for the local player; {@link LocalFactory} loads with that call. */
+        @Override
+        @NotNull
+        public ClientFactory clientFactory() {
+            return new LocalFactory();
+        }
+    }
+
+    /** The local player's stamina. Loaded only on the client. */
+    public static class LocalFactory implements StaminaFactory.ClientFactory {
         @Override
         @NotNull
         public Stamina createLocalClientInstance(@NotNull LocalPlayer player) {
@@ -54,7 +64,7 @@ public class ParagliderStaminaPlugin implements StaminaPlugin {
 
         /**
          * Takes {@link Object} so the verifier never checks {@link LocalPlayer} against {@link Player}: that check
-         * would load the client-only class when this factory loads on a dedicated server.
+         * would load the client-only class with this one.
          */
         private static Stamina localStamina(Object player) {
             return new AoSParagliderStamina((Player) player, true);

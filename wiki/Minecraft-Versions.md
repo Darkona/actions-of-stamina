@@ -1,19 +1,42 @@
 # Minecraft Versions
 
-This wiki describes the newest version of Actions of Stamina, for **Minecraft 1.21.1 (NeoForge)**. The same mod is also made for older Minecraft versions, with the same actions, config options and stamina backends (Feathers of Fatigue or its own bar) wherever the game allows it. This page lists only what is different in each of them.
+This wiki describes the newest version of Actions of Stamina, for **Minecraft 26.1 (NeoForge)**. The same mod is also made for older Minecraft versions, with the same actions, config options and stamina backends (Feathers of Fatigue or its own bar) wherever the game allows it. This page lists only what is different in each of them.
 
 | Minecraft | Loader | Differences |
 |---|---|---|
-| 1.21.1 | NeoForge 21.1 | None: this whole wiki |
+| 26.1 | NeoForge 26.1.2.109 or later | None: this whole wiki |
+| 1.21.1 | NeoForge 21.1 | [1.21.1](#1211-neoforge-211) |
 | 1.20.1 | Forge 47 | [1.20.1](#1201-forge-47) |
 | 1.19.2 | Forge 43 | [1.19.2](#1192-forge-43) |
 | 1.18.2 | Forge 40.2.4 or later | [1.18.2](#1182-forge-40) |
 
 Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) made for the same Minecraft version. The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers; from 0.6 on it is no longer supported.
 
-## 1.20.1 (Forge 47)
+## 26.1 (NeoForge 26.1.2)
 
 **Missing:**
+
+- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1, so their compats and config sections are left out.
+
+**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1-2.0.0.
+
+## 1.21.1 (NeoForge 21.1)
+
+**Has, on top of 26.1:** ParCool, Epic Fight, Gliders and Create, with their sections in the server config (see [Configuration](Configuration#sections-only-on-minecraft-1211-and-older) and [Compatibility](Compatibility#on-minecraft-1211-and-older)).
+
+**Different:**
+
+- **Spears:** 1.21.1 has none. The draw action counts the spear use animation, which there is the trident's.
+- **Shields:** a modded shield counts when it has NeoForge's `shield_block` item ability (26.1 looks for the `minecraft:blocks_attacks` component).
+- **Boats:** the `actionsofstamina:rowed_boats` tag holds `minecraft:boat` and `minecraft:chest_boat`, which cover every wood type and the bamboo raft.
+- **Eggs:** there is only the white egg.
+- **[Addon API](Addon-API):** ids are `ResourceLocation`.
+
+**Tested with:** ParCool 4.0.0.5, Paragliders 21.1.5, Better Combat 2.4.0, Combat Roll 2.0.6, Epic Fight 21.17.3.1, Wall-Jump TXF 1.21.1-1.3.8, Gliders 1.1.8, Create 6.0.10, Curios 9.5.1.
+
+## 1.20.1 (Forge 47)
+
+**Missing, compared with 1.21.1:**
 
 - **Mace smash:** 1.20.1 has no mace, so there is no `[vanilla.attack] mace_smash_multiplier` option.
 - **Wind charges:** 1.20.1 has no wind charge.

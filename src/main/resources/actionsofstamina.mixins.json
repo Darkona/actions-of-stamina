@@ -2,11 +2,13 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.ccr4ft3r.actionsofstamina.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
     "BoatMixin",
     "LivingEntityMixin",
-    "PlayerMixin"
+    "PiercingWeaponMixin",
+    "PlayerMixin",
+    "ServerPlayerMixin"
   ],
   "client": [
     "LocalPlayerMixin"

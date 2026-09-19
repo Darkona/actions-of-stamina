@@ -5,7 +5,6 @@ import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
@@ -118,11 +117,6 @@ public class PlayerActions {
             setActionState(VanillaActions.BRUSH, ActionFlags.has(f, ActionFlags.BRUSHING));
             changed = false;
         }
-        // Gliders keeps its glide state on the item, synced to both sides: each side reads it itself.
-        // Nobody glides on the ground: the Curios lookup behind isGliding only runs in the air.
-        Action glide = getAction(GlidersCompat.GLIDE);
-        if (glide != null) glide.setActionState(!player.onGround() && GlidersCompat.isGliding(player));
-
         // Each action spends and pauses regeneration through the stamina backend under its own source.
         Action[] ticking = this.ticking;
         for (int i = 0, n = tickingCount; i < n; i++) ticking[i].tick(player, this);

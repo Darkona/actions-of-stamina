@@ -1,22 +1,24 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
-import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
+import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import net.minecraft.world.phys.Vec3;
 
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
@@ -27,8 +29,6 @@ import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
  * default attack config (1 feather every 3 attacks). Also which attacks WEAKEN weakens, with and without
  * {@code weaken_non_weapons}.
  */
-@GameTestHolder(ActionsOfStamina.MOD_ID)
-@PrefixGameTestTemplate(false)
 public class AttackChargeTests {
 
     /** The player's attack action, with a sword in hand so the attacks count. */
@@ -95,6 +95,52 @@ public class AttackChargeTests {
     public static void weakenSparesFreeAttacksWhenOff(GameTestHelper helper) {
         helper.assertFalse(weakenedWith(helper, ItemStack.EMPTY, false), "bare hands are not weakened (weaken_non_weapons off)");
         helper.assertTrue(weakenedWith(helper, new ItemStack(Items.IRON_SWORD), false), "a sword is still weakened (weaken_non_weapons off)");
+        helper.succeed();
+    }
+
+    /** A zombie three blocks in front of the player's eyes, within a spear's reach, that stays where it is. */
+    private static Zombie stabTarget(GameTestHelper helper, ServerPlayer player) {
+        Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, new Vec3(0.5, 3, 3.5));
+        zombie.setNoGravity(true);
+        player.setYRot(0);
+        player.setXRot(0);
+        return zombie;
+    }
+
+    /** One stab of the spear in hand, as the server runs it for the stab packet. */
+    private static void stab(ServerPlayer player) {
+        player.getMainHandItem().get(DataComponents.PIERCING_WEAPON).attack(player, EquipmentSlot.MAINHAND);
+    }
+
+    @GameTest(template = "empty")
+    public static void spearStabsAreChargedAsAttacks(GameTestHelper helper) {
+        ServerPlayer player = survivalPlayer(helper);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_SPEAR));
+        // Better Combat swings spears itself, charged by its compat (CompatTests).
+        if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem())) {
+            helper.succeed();
+            return;
+        }
+        StaminaBackend backend = StaminaBackends.server();
+        int cost = AoSServerConfig.ATTACK.cost();
+        int start = backend.stamina(player);
+        stab(player);
+        helper.assertValueEqual(backend.stamina(player), start, "a stab at the air is free (only_for_hits)");
+
+        Zombie zombie = stabTarget(helper, player);
+        for (int i = 0; i < 3; i++) {
+            zombie.invulnerableTime = 0;
+            stab(player);
+        }
+        helper.assertValueEqual(backend.stamina(player), start - cost, "the third stab that lands is charged");
+        helper.assertTrue(zombie.getHealth() < zombie.getMaxHealth(), "the stabs hurt the target");
+
+        exhaust(backend, player);
+        zombie.setHealth(zombie.getMaxHealth());
+        zombie.invulnerableTime = 0;
+        stab(player);
+        helper.assertValueEqual(zombie.getHealth(), zombie.getMaxHealth(), "a stab that can't be paid hits nothing");
+        zombie.discard();
         helper.succeed();
     }
 }

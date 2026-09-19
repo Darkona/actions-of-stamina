@@ -5,7 +5,7 @@ import com.darkona.feathersoffatigue.api.FeathersAPI;
 import com.darkona.feathersoffatigue.api.SpendOptions;
 import com.darkona.feathersoffatigue.api.registry.FeathersAttributes;
 import com.darkona.feathersoffatigue.api.registry.FeathersMobEffects;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -43,27 +43,27 @@ final class FeathersBackend implements StaminaBackend {
     }
 
     @Override
-    public boolean canSpend(Player player, ResourceLocation source, int stamina) {
+    public boolean canSpend(Player player, Identifier source, int stamina) {
         return FeathersAPI.spend(player, source, stamina, SIMULATED).allowed();
     }
 
     @Override
-    public boolean spend(Player player, ResourceLocation source, int stamina, int regenDelayTicks) {
+    public boolean spend(Player player, Identifier source, int stamina, int regenDelayTicks) {
         return FeathersAPI.spend(player, source, stamina, spendOptions(regenDelayTicks)).allowed();
     }
 
     @Override
-    public boolean drain(Player player, ResourceLocation source, double staminaPerTick, boolean blocksRegen) {
+    public boolean drain(Player player, Identifier source, double staminaPerTick, boolean blocksRegen) {
         return FeathersAPI.startDrain(player, source, staminaPerTick, blocksRegen ? DRAIN_BLOCKING_REGEN : DRAIN_KEEPING_REGEN).allowed();
     }
 
     @Override
-    public void stopDrain(Player player, ResourceLocation source) {
+    public void stopDrain(Player player, Identifier source) {
         FeathersAPI.stopDrain(player, source);
     }
 
     @Override
-    public void blockRegen(Player player, ResourceLocation source, int ticks) {
+    public void blockRegen(Player player, Identifier source, int ticks) {
         FeathersAPI.blockRegen(player, source, ticks);
     }
 
@@ -74,7 +74,7 @@ final class FeathersBackend implements StaminaBackend {
 
     /** A transient {@code max_feathers} modifier named after the source; Feathers of Fatigue picks the new max up itself. */
     @Override
-    public void setMaxBonus(Player player, ResourceLocation source, int stamina) {
+    public void setMaxBonus(Player player, Identifier source, int stamina) {
         AttributeInstance maxFeathers = player.getAttribute(FeathersAttributes.MAX_FEATHERS);
         if (maxFeathers == null) return;
         if (stamina <= 0) {

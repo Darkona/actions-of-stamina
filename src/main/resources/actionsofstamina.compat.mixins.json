@@ -3,13 +3,9 @@
   "minVersion": "0.8",
   "package": "com.ccr4ft3r.actionsofstamina.compatmixin",
   "plugin": "com.ccr4ft3r.actionsofstamina.compatibility.CompatMixinPlugin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "BetterCombatServerNetworkMixin",
-    "CreateHandCrankBlockMixin",
-    "CreateValveHandleBlockMixin",
-    "GlidersToggleGlideMixin",
-    "ParcoolConfigServerMixin"
+    "BetterCombatServerNetworkMixin"
   ],
   "client": [
     "CombatRollManagerMixin",

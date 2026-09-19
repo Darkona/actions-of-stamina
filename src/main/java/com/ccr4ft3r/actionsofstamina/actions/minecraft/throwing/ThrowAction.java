@@ -31,13 +31,13 @@ public class ThrowAction extends Action {
     }
 
     /**
-     * Whether releasing the item with {@code remainingTicks} of use left throws it. A trident needs a full aim and no Riptide (a
-     * Riptide launch isn't a throw); other throwables used over time throw on every release.
+     * Whether releasing the item with {@code remainingTicks} of use left throws it. A trident needs a full aim, no Riptide (a
+     * Riptide launch isn't a throw) and to not be about to break; other throwables used over time throw on every release.
      */
     public static boolean throwsOnRelease(ItemStack stack, Player player, int remainingTicks) {
         if (!stack.is(THROWABLES)) return false;
         if (!(stack.getItem() instanceof TridentItem)) return true;
-        return stack.getUseDuration(player) - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME && EnchantmentHelper.getTridentSpinAttackStrength(stack, player) <= 0;
+        return stack.getUseDuration(player) - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME && EnchantmentHelper.getTridentSpinAttackStrength(stack, player) <= 0 && !stack.nextDamageWillBreak();
     }
 
     @Override

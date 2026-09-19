@@ -2,7 +2,7 @@
   "replace": false,
   "values": [
     "minecraft:snowball",
-    "minecraft:egg",
+    "#minecraft:eggs",
     "minecraft:ender_pearl",
     "minecraft:splash_potion",
     "minecraft:lingering_potion",

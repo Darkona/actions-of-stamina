@@ -6,18 +6,13 @@ import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
@@ -27,8 +22,6 @@ import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
  * by its id; another mod's action is built, gated and charged like Actions of Stamina's own, finish cost included. On
  * whichever backend is active.
  */
-@GameTestHolder(ActionsOfStamina.MOD_ID)
-@PrefixGameTestTemplate(false)
 public class ActionRegistryTests {
 
     @GameTest(template = "empty")
@@ -39,10 +32,9 @@ public class ActionRegistryTests {
             if (i > 0) helper.assertTrue(types[i - 1].id().compareTo(types[i].id()) < 0, "types sorted by id at " + types[i]);
         }
         helper.assertValueEqual(VanillaActions.ATTACK.id(), ActionsOfStamina.id("attack"), "attack id");
-        helper.assertValueEqual(CreateCompat.CRANK.id(), ActionsOfStamina.id("create/crank"), "crank id");
         helper.assertValueEqual(CombatRollCompat.ROLL.id(), ActionsOfStamina.id("combat_roll/roll"), "roll id");
         helper.assertValueEqual(WallJumpCompat.DOUBLE_JUMP.id(), ActionsOfStamina.id("walljump/double_jump"), "double jump id");
-        helper.assertTrue(ActionTypes.byId(ActionsOfStamina.id("parcool/dodge")) != null, "a ParCool action is a type");
+        helper.assertTrue(ActionTypes.byId(ActionsOfStamina.id("paraglide")) != null, "a Paragliders action is a type");
         helper.assertValueEqual(ActionTypes.byId(TestActionTypes.FINISHING_ID), TestActionTypes.finishing, "another mod's type by id");
         boolean refused = false;
         try {
@@ -72,7 +64,7 @@ public class ActionRegistryTests {
         Action action = actions.getAction(slot);
         helper.assertTrue(action != null && action.type() == TestActionTypes.finishing, "the other mod's action is built");
         StaminaBackend backend = StaminaBackends.server();
-        int finishCost = ParcoolConfig.byName("charge_jump").costs().finishCost();
+        int finishCost = TestActionTypes.finishingCosts.finishCost();
         int start = backend.stamina(player);
         actions.setActionState(TestActionTypes.finishing, true);
         action.tick(player, actions);

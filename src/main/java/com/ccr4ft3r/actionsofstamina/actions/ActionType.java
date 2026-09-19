@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
@@ -13,20 +13,20 @@ import java.util.function.Function;
  */
 public final class ActionType {
 
-    private final ResourceLocation id;
+    private final Identifier id;
     private final ActionCostConfig config;
     private final BooleanSupplier enabled;
     private final Function<ActionType, ? extends Action> factory;
     int index = -1;
 
-    ActionType(ResourceLocation id, ActionCostConfig config, BooleanSupplier enabled, Function<ActionType, ? extends Action> factory) {
+    ActionType(Identifier id, ActionCostConfig config, BooleanSupplier enabled, Function<ActionType, ? extends Action> factory) {
         this.id = id;
         this.config = config;
         this.enabled = enabled;
         this.factory = factory;
     }
 
-    public ResourceLocation id() {
+    public Identifier id() {
         return id;
     }
 

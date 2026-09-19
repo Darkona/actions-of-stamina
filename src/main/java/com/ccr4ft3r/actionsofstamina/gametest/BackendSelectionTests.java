@@ -7,15 +7,12 @@ import com.ccr4ft3r.actionsofstamina.stamina.BackendMode;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.configuration.ServerConfigurationPacketListener;
 import net.minecraft.server.network.ConfigurationTask;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 
 import java.lang.reflect.Proxy;
@@ -24,11 +21,9 @@ import java.util.List;
 import java.util.Queue;
 
 /** Which backend runs, and that the Feathers of Fatigue one really spends feathers when Feathers of Fatigue is installed. */
-@GameTestHolder(ActionsOfStamina.MOD_ID)
-@PrefixGameTestTemplate(false)
 public class BackendSelectionTests {
 
-    private static final ResourceLocation TEST = ActionsOfStamina.id("test");
+    private static final Identifier TEST = ActionsOfStamina.id("test");
 
     @GameTest(template = "empty")
     public static void configChoiceResolves(GameTestHelper helper) {

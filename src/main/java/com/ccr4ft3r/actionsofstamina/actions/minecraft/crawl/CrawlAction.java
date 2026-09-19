@@ -4,14 +4,14 @@ import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
 public class CrawlAction extends Action {
 
-    private static final ResourceLocation CRAWL_SPEED_MODIFIER_ID = ActionsOfStamina.id("crawling_speed");
+    private static final Identifier CRAWL_SPEED_MODIFIER_ID = ActionsOfStamina.id("crawling_speed");
     private static final AttributeModifier CRAWL_SPEED_MODIFIER =
             new AttributeModifier(CRAWL_SPEED_MODIFIER_ID, -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 

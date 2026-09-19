@@ -1,8 +1,9 @@
 package com.ccr4ft3r.actionsofstamina.stamina.internal;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * One player's internal stamina, a NeoForge data attachment ({@code AosAttachments.INTERNAL_STAMINA}). On the
@@ -12,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 public final class InternalStamina {
 
     /** Saved state; drains and delays start fresh after a load. */
-    public static final Codec<InternalStamina> CODEC = RecordCodecBuilder.create(i -> i.group(
+    public static final MapCodec<InternalStamina> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             Codec.INT.fieldOf("stamina").forGetter(s -> s.stamina),
             Codec.BOOL.fieldOf("exhausted").forGetter(s -> s.exhausted)
     ).apply(i, InternalStamina::new));
@@ -71,7 +72,7 @@ public final class InternalStamina {
         syncedBucket = UNSET;
     }
 
-    Drain drain(ResourceLocation source) {
+    Drain drain(Identifier source) {
         for (int i = 0; i < drainCount; i++) {
             if (drains[i].source.equals(source)) return drains[i];
         }
@@ -85,13 +86,13 @@ public final class InternalStamina {
 
     /** A continuous drain; kept (inactive) after it stops so restarting the same source allocates nothing. */
     static final class Drain {
-        final ResourceLocation source;
+        final Identifier source;
         boolean active;
         boolean blocksRegen;
         double carry;
         int lastRefreshTick;
 
-        Drain(ResourceLocation source) {
+        Drain(Identifier source) {
             this.source = source;
         }
     }

@@ -7,6 +7,8 @@
 #        scripts/client-boot-check.sh [TIMEOUT_SECONDS]
 #   GRADLE_ARGS  extra Gradle flags (see build.gradle); COMMANDS typed into chat after joining, ';'-separated.
 # Generates its own superflat world (run/bootworld) the first time. Every run: noon, clear weather, no mob spawns.
+# The client runs on X display :97; while another check holds it (/tmp/.X97-lock), this one waits. Log lines listed in
+# scripts/boot-check-known.txt are not counted as errors.
 set -u
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 TIMEOUT="${1:-300}"
@@ -40,7 +42,7 @@ online-mode=false
 server-port=25699
 PROPS_EOF
     GEN_LOG="build/client-boot-check-world.log"; mkdir -p build
-    ./gradlew runServer --no-configuration-cache > "$GEN_LOG" 2>&1 &
+    ./gradlew runServer --no-configuration-cache ${GRADLE_ARGS:-} > "$GEN_LOG" 2>&1 &
     GEN=$!
     for _ in $(seq 1 300); do grep -qE 'Done \(' "$GEN_LOG" && break; kill -0 $GEN 2>/dev/null || break; sleep 1; done
     kill $(own_processes) 2>/dev/null
@@ -76,10 +78,18 @@ sed -i "/^onboardAccessibility:/d" "$OPTS"; echo "onboardAccessibility:false" >>
 sed -i "/^guiScale:/d" "$OPTS"; echo "guiScale:${GUI_SCALE:-2}" >> "$OPTS"
 # No tutorial toast ("Move with W, A, S and D") over the screenshot.
 sed -i "/^tutorialStep:/d" "$OPTS"; echo "tutorialStep:none" >> "$OPTS"
+# NeoForge opens a screen that waits for a click when mods load with warnings, and quick play never starts. The
+# warnings are still logged.
+NEO_CLIENT="$RUN/config/neoforge-client.toml"; mkdir -p "$RUN/config"; touch "$NEO_CLIENT"
+sed -i "/^showLoadWarnings *=/d" "$NEO_CLIENT"; echo "showLoadWarnings = false" >> "$NEO_CLIENT"
 
 LOG="build/client-boot-check.log"; mkdir -p build; : > "$LOG"
 GAME_LOG="$RUN/logs/latest.log"; rm -f "$GAME_LOG"
 SHOT="${SHOT:-build/client-boot-check.png}"; rm -f "$SHOT"
+
+# One check at a time on display :97: wait for the one holding it to end.
+for _ in $(seq 1 1800); do [ -e /tmp/.X97-lock ] || break; sleep 1; done
+[ -e /tmp/.X97-lock ] && { echo "BOOTCHECK: display :97 still taken after 30 minutes"; exit 2; }
 
 export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe MESA_GL_VERSION_OVERRIDE=3.3 MESA_GLSL_VERSION_OVERRIDE=330
 XAUTH="$DIR/build/$BOOTCHECK_TAG.xauth"
@@ -87,7 +97,8 @@ xvfb-run -n 97 -f "$XAUTH" -s "-screen 0 1920x1080x24" ./gradlew runBootCheck --
 PID=$!
 logs() { cat "$LOG" "$GAME_LOG" 2>/dev/null; }
 
-FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load builder \(actionsofstamina'
+# Fatal log lines, including a chat command the game rejected: the setup and COMMANDS must all run.
+FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load .*actionsofstamina|ClientModLoader/LOADING\]: Mod actionsofstamina |\[CHAT\] (Incorrect argument for command|Unknown or incomplete command)'
 OK_RE='joined the game'
 verdict="TIMEOUT after ${TIMEOUT}s"
 for _ in $(seq 1 "$TIMEOUT"); do
@@ -95,7 +106,7 @@ for _ in $(seq 1 "$TIMEOUT"); do
     if logs | grep -qE "$OK_RE"; then
         sleep 20
         X="env DISPLAY=:97 XAUTHORITY=$XAUTH xdotool"
-        SETUP='gamerule sendCommandFeedback false;difficulty peaceful;time set noon;weather clear;gamerule doDaylightCycle false;gamerule doWeatherCycle false;gamerule doMobSpawning false'
+        SETUP='gamerule send_command_feedback false;difficulty peaceful;time set noon;weather clear;gamerule advance_time false;gamerule advance_weather false;gamerule spawn_mobs false'
         IFS=';' read -ra CMDS <<< "$SETUP;${COMMANDS:-}"
         for cmd in "${CMDS[@]}"; do
             [ -z "$cmd" ] && continue
@@ -134,8 +145,14 @@ done
 
 kill $(own_processes) 2>/dev/null; sleep 3; kill -9 $(own_processes) 2>/dev/null
 rm -f "$XAUTH"
+
+# Suspicious lines: ERROR level, an exception or error class starting a line, uncaught exceptions; minus known ones.
+KNOWN="$DIR/scripts/boot-check-known.txt"
+problems=$(logs | grep -E '/ERROR\]|^[A-Za-z_$][A-Za-z0-9_$.]*(Exception|Error)(:|$)|Exception in thread' \
+    | { if [ -f "$KNOWN" ]; then grep -vEf <(grep -vE '^[[:space:]]*(#|$)' "$KNOWN"); else cat; fi; } | sort -u)
+[ "$verdict" = PASS ] && [ -n "$problems" ] && verdict="FAIL (errors in the log)"
 echo "BOOTCHECK: $verdict"
-logs | grep -E "$FAIL_RE" | head -5
+[ -n "$problems" ] && echo "$problems" | head -20
 logs | grep -E "$OK_RE" | head -2
 [ -f "$SHOT" ] && echo "screenshot: $SHOT"
 exit $([ "$verdict" = PASS ] && echo 0 || echo 1)

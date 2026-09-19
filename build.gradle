@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.141'
+    id 'net.neoforged.moddev' version '2.0.148'
     id 'idea'
 }
 
@@ -16,8 +16,11 @@ base {
     archivesName = archive_name
 }
 
-// Mojang ships Java 21 to end users in 1.21.1, so mods should target Java 21.
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+// Minecraft 26.1 runs on Java 25.
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+// src/disabled keeps the compats of mods without a NeoForge build for this Minecraft version (see its README). It is not
+// a source set: nothing there is compiled or packaged.
 
 repositories {
     mavenLocal()
@@ -41,15 +44,9 @@ repositories {
 neoForge {
     version = project.neo_version
 
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
-
     runs {
         client {
             client()
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
         // A normal client with the play pack, in its own game dir so test runs never touch its worlds.
@@ -68,13 +65,13 @@ neoForge {
         server {
             server()
             programArgument '--nogui'
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
         gameTestServer {
             type = 'gameTestServer'
             gameDirectory = project.file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // Only this mod's tests: the game test server runs every test in the registry unless told which.
+            programArguments.addAll '--tests', "${project.mod_id}:*"
         }
 
         configureEach {
@@ -109,47 +106,34 @@ dependencies {
 
     // Optional compatibility targets. All direct use sits behind ModList checks and bridge classes.
     compileOnly "maven.modrinth:paragliders:${paragliders_version}"
-    compileOnly "maven.modrinth:parcool:${parcool_version}"
     compileOnly "maven.modrinth:better-combat:${bettercombat_version}"
     compileOnly "maven.modrinth:combat-roll:${combatroll_version}"
-    compileOnly "maven.modrinth:epic-fight:${epicfight_version}"
     compileOnly "maven.modrinth:wall-jump-txf:${walljump_version}"
-    compileOnly "maven.modrinth:gliders:${gliders_version}"
-    compileOnly "maven.modrinth:common-network:${commonnetwork_version}"
     compileOnly "maven.modrinth:curios:${curios_version}"
-    compileOnly "maven.modrinth:create:${create_version}"
 
     // -PwithCompat: boot dev runs with the compat targets and their required libraries.
     if (project.hasProperty('withCompat')) {
         localRuntime "maven.modrinth:paragliders:${paragliders_version}"
-        localRuntime "maven.modrinth:parcool:${parcool_version}"
         localRuntime "maven.modrinth:better-combat:${bettercombat_version}"
         localRuntime "maven.modrinth:combat-roll:${combatroll_version}"
-        localRuntime "maven.modrinth:epic-fight:${epicfight_version}"
         localRuntime "maven.modrinth:wall-jump-txf:${walljump_version}"
-        localRuntime "maven.modrinth:gliders:${gliders_version}"
-        localRuntime "maven.modrinth:common-network:${commonnetwork_version}"
-        localRuntime "maven.modrinth:playeranimator:${playeranimator_version}"
+        localRuntime "maven.modrinth:player-animation-library:${playeranimation_version}"
         localRuntime "maven.modrinth:cloth-config:${clothconfig_version}"
-        // ParCool 4.0.0.5 marks Curios "mandatory = false", a key NeoForge ignores: it is required in practice.
         localRuntime "maven.modrinth:curios:${curios_version}"
-        // Create carries its libraries (Flywheel, Ponder, Registrate) inside its own jar.
-        localRuntime "maven.modrinth:create:${create_version}"
     }
 
     // `./gradlew runPlay`: a pack to play with by hand. Feathers of Fatigue with its season and thirst compats, and the
-    // action mods that sit well together (no ParCool, Epic Fight or Paragliders: they replace too much of the game).
+    // action mods that sit well together (no Paragliders: it replaces too much of the game).
     if (playPack) {
         localRuntime "maven.modrinth:better-combat:${bettercombat_version}"
         localRuntime "maven.modrinth:combat-roll:${combatroll_version}"
         localRuntime "maven.modrinth:wall-jump-txf:${walljump_version}"
-        localRuntime "maven.modrinth:common-network:${commonnetwork_version}"
-        localRuntime "maven.modrinth:playeranimator:${playeranimator_version}"
+        localRuntime "maven.modrinth:player-animation-library:${playeranimation_version}"
         localRuntime "maven.modrinth:cloth-config:${clothconfig_version}"
         localRuntime "maven.modrinth:curios:${curios_version}"
         localRuntime "maven.modrinth:serene-seasons:${serene_seasons_version}"
         localRuntime "maven.modrinth:glitchcore:${glitchcore_version}"
-        localRuntime "maven.modrinth:thirst-was-taken:${thirst_was_taken_version}"
+        localRuntime "com.darkona.dropletsofthirst:droplets-of-thirst:${droplets_of_thirst_version}"
         localRuntime "maven.modrinth:appleskin:${appleskin_version}"
         localRuntime "maven.modrinth:jade:${jade_version}"
     }
@@ -169,6 +153,11 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_version                : project.version.toString(),
             mod_authors                : mod_authors,
             feathers_of_fatigue_version_range: feathers_of_fatigue_version_range,
+            paragliders_range          : paragliders_range,
+            bettercombat_range         : bettercombat_range,
+            combatroll_range           : combatroll_range,
+            walljump_range             : walljump_range,
+            curios_range               : curios_range,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
@@ -180,6 +169,7 @@ neoForge.ideSyncTask generateModMetadata
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+    options.compilerArgs.addAll(['-Xmaxerrs', '2000'])
 }
 
 tasks.named('jar', Jar) {

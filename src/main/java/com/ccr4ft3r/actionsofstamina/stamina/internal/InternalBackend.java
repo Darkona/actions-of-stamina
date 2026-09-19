@@ -4,7 +4,7 @@ import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.AosAttachments;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.util.FakePlayer;
@@ -63,14 +63,14 @@ public final class InternalBackend implements StaminaBackend {
     }
 
     @Override
-    public boolean canSpend(Player player, ResourceLocation source, int stamina) {
+    public boolean canSpend(Player player, Identifier source, int stamina) {
         if (exempt(player)) return true;
         InternalStamina s = data(player);
         return !s.exhausted && stamina <= current(s);
     }
 
     @Override
-    public boolean spend(Player player, ResourceLocation source, int stamina, int regenDelayTicks) {
+    public boolean spend(Player player, Identifier source, int stamina, int regenDelayTicks) {
         if (exempt(player)) return true;
         InternalStamina s = data(player);
         int current = current(s);
@@ -90,7 +90,7 @@ public final class InternalBackend implements StaminaBackend {
     }
 
     @Override
-    public boolean drain(Player player, ResourceLocation source, double staminaPerTick, boolean blocksRegen) {
+    public boolean drain(Player player, Identifier source, double staminaPerTick, boolean blocksRegen) {
         if (exempt(player)) return true;
         InternalStamina s = data(player);
         if (player.level().isClientSide()) return !s.exhausted && current(s) > 0;
@@ -126,7 +126,7 @@ public final class InternalBackend implements StaminaBackend {
     }
 
     @Override
-    public void stopDrain(Player player, ResourceLocation source) {
+    public void stopDrain(Player player, Identifier source) {
         if (player.level().isClientSide()) return;
         InternalStamina s = data(player);
         for (int i = 0; i < s.drainCount; i++) {
@@ -139,7 +139,7 @@ public final class InternalBackend implements StaminaBackend {
     }
 
     @Override
-    public void blockRegen(Player player, ResourceLocation source, int ticks) {
+    public void blockRegen(Player player, Identifier source, int ticks) {
         if (player.level().isClientSide() || exempt(player)) return;
         InternalStamina s = data(player);
         if (ticks > s.regenDelay) s.regenDelay = ticks;
@@ -152,7 +152,7 @@ public final class InternalBackend implements StaminaBackend {
 
     /** One bonus at a time (vessels are its only source): the bar grows now, or shrinks and clamps on the next tick. */
     @Override
-    public void setMaxBonus(Player player, ResourceLocation source, int stamina) {
+    public void setMaxBonus(Player player, Identifier source, int stamina) {
         if (player.level().isClientSide()) return;
         data(player).bonusMax = Math.max(0, stamina);
     }

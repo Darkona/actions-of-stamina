@@ -7,9 +7,9 @@ import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalStamina;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 
 /**
  * Client only. The internal stamina bar, one row above the food bar (it takes a row of {@code gui.rightHeight} so
@@ -26,12 +26,12 @@ public final class InternalStaminaHud {
     private static final int FILL_EXHAUSTED = 0xFFC44A4A;
     private static final int FILL_EDGE = 0xFF8BE884;
 
-    public static final LayeredDraw.Layer LAYER = (graphics, deltaTracker) -> render(graphics);
+    public static final GuiLayer LAYER = (graphics, deltaTracker) -> render(graphics);
 
     private InternalStaminaHud() {
     }
 
-    private static void render(GuiGraphics graphics) {
+    private static void render(GuiGraphicsExtractor graphics) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || mc.options.hideGui || mc.gameMode == null || !mc.gameMode.canHurtPlayer()) return;

@@ -5,7 +5,7 @@ import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 
 /** Brushing: using any item whose use animation is {@code BRUSH}, modded brushes included. */
 public class BrushAction extends Action {
@@ -16,7 +16,7 @@ public class BrushAction extends Action {
 
     /** Whether using the item brushes. */
     public static boolean brushes(ItemStack stack) {
-        return stack.getUseAnimation() == UseAnim.BRUSH;
+        return stack.getUseAnimation() == ItemUseAnimation.BRUSH;
     }
 
     /** Whether the player is brushing right now. */

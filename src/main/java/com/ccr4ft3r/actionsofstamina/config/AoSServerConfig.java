@@ -3,11 +3,7 @@ package com.ccr4ft3r.actionsofstamina.config;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.ExhaustedAttackMode;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.BackendMode;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -231,14 +227,10 @@ public final class AoSServerConfig {
                 .build();
         b.pop();
 
-        ParcoolConfig.init();
         ParagliderConfig.init();
         BetterCombatConfig.init();
         CombatRollConfig.init();
-        EpicFightConfig.init();
         WallJumpConfig.init();
-        GlidersConfig.init();
-        CreateConfig.init();
 
         SPEC = b.build();
     }

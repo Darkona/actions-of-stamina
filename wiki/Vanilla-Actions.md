@@ -8,7 +8,7 @@
 | Crawling | Drain while moving in the crawl pose on land; you move slower when you can't pay | 0.1 feathers/s |
 | Holding up a shield | Cost to raise it, then a drain | 1 feather, then 0.2/s |
 | Jumping | Charged once every few jumps | 1 feather every 4 jumps |
-| Attacking | Charged once every few attacks | 1 feather every 3 attacks |
+| Attacking, spear stabs included | Charged once every few attacks | 1 feather every 3 attacks |
 | Drawing a bow, loading a crossbow, aiming a trident | Cost to start, then a drain while drawn | 0.5 feathers, then 0.5/s |
 | Throwing (snowball, egg, ender pearl, splash or lingering potion, wind charge, trident) | Charged per throw | 0.5 feathers |
 | Mining (off by default) | Charged once every few blocks, scaled by the block's hardness | 0.1 feathers × hardness every 4 blocks |
@@ -23,22 +23,23 @@
 
 Sprinting and swimming need the stamina to begin (`min_stamina`), as sprinting needs food: holding the sprint key without it does nothing until the stamina is back, and they stop when it runs out.
 
-Attacks with non-weapons (bare hands, tools without attack damage) are free unless `also_for_non_weapons = true`.
-By default only attacks that hit an entity are charged (`only_for_hits`); with it off, swings at the air count like hits towards the charge.
+Attacks with non-weapons (bare hands, tools without attack damage) are free unless `also_for_non_weapons = true`. By default only attacks that hit an entity are charged (`only_for_hits`); with it off, swings at the air count like hits towards the charge.
 
 Without the stamina for an attack, the attack is cancelled: no swing, no hit (`exhausted_mode = "CANCEL"`). With `exhausted_mode = "WEAKEN"` it lands anyway, but weakened: while your stamina is short, your attack damage and attack speed drop to `weaken_damage` and `weaken_speed` of their normal values (half, by default). They come back as soon as you have the stamina to attack again.
 
 **Girl mode** (`weaken_non_weapons`, on by default): WEAKEN also weakens attacks with non-weapons, such as bare hands, while your stamina is short, even though those attacks cost nothing. Turn it off and only attacks that cost stamina are weakened: an empty hand or a tool without attack damage hits at full strength.
 
+A spear's stab is an attack: it is charged once per stab, however many creatures it pierces, and counts with the other attacks. A stab that reaches nothing is a swing at the air. Without the stamina for it, a stab hits nothing, or lands weakened with `WEAKEN`. Holding a spear ready to charge at a target is free.
+
 A mace smash, a mace hit while you fall, isn't counted with the other attacks: it is charged on its own, right away, at the attack's `cost` times `mace_smash_multiplier` (2 by default, so 2 feathers). Without the stamina for it, the smash is cancelled or lands weakened, as `exhausted_mode` says. A swing at air is never a smash.
 
 ## Bows, crossbows and throwables
 
-Drawing counts any item used with the bow, crossbow or spear animation: drawing a bow, loading a crossbow, aiming a trident, and modded items that use the same animations. Firing a loaded crossbow is free. You can't start drawing without the stamina to begin, and when the stamina runs out mid-draw the draw is dropped without a shot.
+Drawing counts any item used with the bow, crossbow or trident animation: drawing a bow, loading a crossbow, aiming a trident, and modded items that use the same animations. Firing a loaded crossbow is free. You can't start drawing without the stamina to begin, and when the stamina runs out mid-draw the draw is dropped without a shot.
 
-Throws cost for the items in the item tag `actionsofstamina:throwables`: snowballs, eggs, ender pearls, splash and lingering potions, wind charges, and the trident. Datapacks can add others. A snowball, egg, pearl, potion or wind charge is charged when thrown; a trident when you release it after a full aim (a Riptide launch isn't a throw). A throw you can't afford doesn't happen.
+Throws cost for the items in the item tag `actionsofstamina:throwables`: snowballs, eggs (`#minecraft:eggs`: white, blue and brown), ender pearls, splash and lingering potions, wind charges, and the trident. Datapacks can add others. A snowball, egg, pearl, potion or wind charge is charged when thrown; a trident when you release it after a full aim (a Riptide launch isn't a throw). A throw you can't afford doesn't happen.
 
-A Riptide launch is its own action, off by default (`[vanilla.riptide]`, `enabled = true` to turn it on). It is charged when you release the trident and it would launch you (a full aim, in water or rain). A launch you can't afford doesn't happen: the aim just ends.
+A Riptide launch is its own action, off by default (`[vanilla.riptide]`, `enabled = true` to turn it on). It is charged when you release the trident and it would launch you (a full aim, in water or rain, not riding anything). A launch you can't afford doesn't happen: the aim just ends.
 
 ## Mining and building
 
@@ -54,7 +55,7 @@ When the stamina runs out, you can't go up any more. You stay on the climbable: 
 
 ## Rowing
 
-Off by default (`[vanilla.row]`, `enabled = true` to turn it on). Only boats in the entity tag `actionsofstamina:rowed_boats` cost stamina, and only for the player who drives. The mod's tag holds the vanilla boat and chest boat, which covers every wood type and the bamboo raft. Sail or motor boats from other mods move for free unless a datapack adds them to the tag.
+Off by default (`[vanilla.row]`, `enabled = true` to turn it on). Only boats in the entity tag `actionsofstamina:rowed_boats` cost stamina, and only for the player who drives. The mod's tag holds every vanilla boat and raft (`#minecraft:boat`) and every chest boat and chest raft. Sail or motor boats from other mods move for free unless a datapack adds them to the tag.
 
 It drains while you paddle forward or back, or turn. When the stamina runs out, the paddles stop and the boat drifts: it doesn't speed up or turn until you have the stamina to start again.
 

@@ -6,13 +6,10 @@ import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalStaminaPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.player;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.tick;
@@ -21,11 +18,9 @@ import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.tick;
  * The internal stamina, called directly (whichever backend is active). Default config: 20 feathers, 0.5 feathers
  * per second of regeneration, a 30-tick minimum regen delay after spending, 30% to recover from exhaustion.
  */
-@GameTestHolder(ActionsOfStamina.MOD_ID)
-@PrefixGameTestTemplate(false)
 public class InternalBackendTests {
 
-    private static final ResourceLocation TEST = ActionsOfStamina.id("test");
+    private static final Identifier TEST = ActionsOfStamina.id("test");
     private static final InternalBackend BACKEND = InternalBackend.INSTANCE;
     private static final int FULL = StaminaUnits.ofFeathers(20);
 

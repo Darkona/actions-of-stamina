@@ -10,7 +10,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 public class RowAction extends Action {
 
     /**
-     * Boats that cost stamina to row; the mod's own tag file holds the vanilla boat and chest boat (every wood type and
-     * the bamboo raft are variants of these two).
+     * Boats that cost stamina to row; the mod's own tag file holds every vanilla boat and raft ({@code #minecraft:boat})
+     * and every chest boat and chest raft.
      */
     public static final TagKey<EntityType<?>> ROWED_BOATS = TagKey.create(Registries.ENTITY_TYPE, ActionsOfStamina.id("rowed_boats"));
 
@@ -32,12 +32,12 @@ public class RowAction extends Action {
 
     /** Whether the player drives {@code vehicle} and it's a boat rowed with stamina. */
     public static boolean drivesRowedBoat(Player player, @Nullable Entity vehicle) {
-        return vehicle instanceof Boat boat && vehicle.getControllingPassenger() == player && isRowed(boat);
+        return vehicle instanceof AbstractBoat boat && vehicle.getControllingPassenger() == player && isRowed(boat);
     }
 
     /** Whether {@code boat} is rowed with stamina (entity tag {@code actionsofstamina:rowed_boats}). */
-    public static boolean isRowed(Boat boat) {
-        return boat.getType().is(ROWED_BOATS);
+    public static boolean isRowed(AbstractBoat boat) {
+        return boat.is(ROWED_BOATS);
     }
 
     /** Whether the player may paddle the rowed boat they drive (asked on the driver's client, which moves the boat). */

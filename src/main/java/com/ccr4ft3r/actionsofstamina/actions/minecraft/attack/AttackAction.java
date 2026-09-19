@@ -3,12 +3,16 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.attack;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -16,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -27,7 +32,7 @@ import java.util.List;
 public class AttackAction extends Action {
 
     /** Id of both WEAKEN modifiers (one per attribute). */
-    public static final ResourceLocation WEAKEN_ID = ActionsOfStamina.id("exhausted_attack");
+    public static final Identifier WEAKEN_ID = ActionsOfStamina.id("exhausted_attack");
     /** Ticks between checks of whether the WEAKEN modifiers still belong on the player. */
     private static final int WEAKEN_CHECK_INTERVAL = 10;
 
@@ -143,6 +148,45 @@ public class AttackAction extends Action {
         charged = StaminaBackends.of(player).spend(player, source, smashCost, cooldown);
         if (ActionsOfStamina.debugging()) ActionsOfStamina.log("{}::Smash allowed = {}, cost= {}", name(), charged, smashCost);
         return charged;
+    }
+
+    /** {@link #chargeStab}: the stab has not reached anything yet, or isn't a player's to charge. */
+    public static final int STAB_UNCHARGED = 0;
+    /** {@link #chargeStab}: the stab goes ahead, paid, free or weakened. */
+    public static final int STAB_PAID = 1;
+    /** {@link #chargeStab}: the stab can't be paid and hits nothing. */
+    public static final int STAB_REFUSED = 2;
+
+    /** Server, a spear's stab begins: WEAKEN's modifiers follow the stamina and the item in hand right away. */
+    public static void stabStarts(LivingEntity attacker) {
+        if (attacker instanceof ServerPlayer player && stabAction(player) instanceof AttackAction attack && attack.weakens()) {
+            attack.refreshWeakened(player);
+        }
+    }
+
+    /**
+     * Server, a spear's stab reaches its first entity: charged as a hit, once per stab. Returns {@link #STAB_PAID}
+     * or {@link #STAB_REFUSED}; never {@link #STAB_UNCHARGED}, so the stab's other entities aren't charged again.
+     */
+    public static int chargeStab(LivingEntity attacker) {
+        if (!(attacker instanceof ServerPlayer player) || !(stabAction(player) instanceof AttackAction attack)) return STAB_PAID;
+        if (attack.performHit(player)) return STAB_PAID;
+        if (!attack.weakens()) return STAB_REFUSED;
+        attack.weaken(player);
+        return STAB_PAID;
+    }
+
+    /** Server, a spear's stab reached no entity: a miss, counted unless {@code only_for_hits}. Nothing to refuse. */
+    public static void stabMissed(LivingEntity attacker) {
+        if (AoSServerConfig.ONLY_FOR_HITS.getAsBoolean()) return;
+        if (attacker instanceof ServerPlayer player && stabAction(player) instanceof AttackAction attack) attack.perform(player);
+    }
+
+    /** The attack action of a player whose stabs AoS charges (Better Combat charges the weapons it swings). */
+    @Nullable
+    private static Action stabAction(ServerPlayer player) {
+        if (PlayerActions.isExempt(player) || BetterCombatCompat.handlesAttacksWith(player.getMainHandItem())) return null;
+        return PlayerActions.get(player).getAction(VanillaActions.ATTACK);
     }
 
     @Override

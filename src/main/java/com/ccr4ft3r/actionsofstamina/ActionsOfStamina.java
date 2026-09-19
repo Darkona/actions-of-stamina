@@ -4,19 +4,16 @@ import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.AosAttachments;
+import com.ccr4ft3r.actionsofstamina.gametest.AosGameTests;
 import com.ccr4ft3r.actionsofstamina.network.BackendSyncTask;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
@@ -49,40 +46,33 @@ public class ActionsOfStamina {
         // Every action type, Minecraft's and each compat's, whether or not that mod is installed: the indices then don't
         // depend on which mods are there.
         VanillaActions.register();
-        ParcoolCompat.registerActions();
         ParagliderCompat.registerActions();
         BetterCombatCompat.registerActions();
         CombatRollCompat.registerActions();
-        EpicFightCompat.registerActions();
         WallJumpCompat.registerActions();
-        GlidersCompat.registerActions();
-        CreateCompat.registerActions();
         AosAttachments.ATTACHMENT_TYPES.register(modBus);
         modBus.addListener(PacketHandler::register);
         modBus.addListener(BackendSyncTask::register);
         modBus.addListener(ActionsOfStamina::commonSetup);
+        AosGameTests.register(modBus);
         // Other mods register their action types while constructed or in common setup; the slots are fixed after that.
         modBus.addListener(FMLLoadCompleteEvent.class, event -> ActionTypes.freeze());
         // Parsed config lists and the caches built from them follow config and datapack reloads.
         modBus.addListener(ModConfigEvent.Loading.class, BetterCombatCompat::onConfigLoad);
         modBus.addListener(ModConfigEvent.Reloading.class, BetterCombatCompat::onConfigLoad);
         NeoForge.EVENT_BUS.addListener(BetterCombatCompat::onTagsUpdated);
-        // ParCool registers stamina types on its own mod bus while it is constructed (AoS is ordered before it).
-        ParcoolCompat.registerStaminaType();
     }
 
     private static void commonSetup(FMLCommonSetupEvent event) {
         // The compat hooks are plain listener lists or event-bus registrations: not thread safe, so on the main thread.
         event.enqueueWork(() -> {
-            ParcoolCompat.init();
             CombatRollCompat.init();
-            EpicFightCompat.init();
             CuriosCompat.init();
         });
     }
 
-    public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
     /** Call sites that pass arguments check this first: the varargs array and the boxing cost even when off. */

@@ -9,7 +9,7 @@ import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 /**
  * Wall-Jump TXF compatibility, safe to load without it: the only calls into the mod are the client mixins
@@ -84,7 +84,7 @@ public final class WallJumpCompat {
         ActionCostConfig costs = move.config();
         if (!costs.enabled() || costs.cost() <= 0) return true;
         if (!PlayerActions.canPerform(player, move)) return false;
-        PacketDistributor.sendToServer(new ActionPerformedPacket((byte) move.index()));
+        ClientPacketDistributor.sendToServer(new ActionPerformedPacket((byte) move.index()));
         return true;
     }
 

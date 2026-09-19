@@ -1,15 +1,10 @@
 # Actions of Stamina
 
-*Minecraft 1.21.1 · NeoForge 21.1. Also for 1.20.1, 1.19.2 and 1.18.2 (Forge): see [Minecraft Versions](Minecraft-Versions) for what differs.*
+*Minecraft 26.1 · NeoForge 26.1.2. Also for 1.21.1 (NeoForge) and 1.20.1, 1.19.2 and 1.18.2 (Forge): see [Minecraft Versions](Minecraft-Versions) for what differs.*
 
-Actions of Stamina (AoS) makes player actions cost stamina. Sprinting, jumping, attacking, swimming, crawling,
-flying with an elytra and raising a shield all cost stamina, and so do the actions of several popular movement
-and combat mods. If you don't have enough stamina, the action doesn't happen: you can't start sprinting, a jump
-is cancelled, a swing is dropped, a roll isn't available.
+Actions of Stamina (AoS) makes player actions cost stamina. Sprinting, jumping, attacking, swimming, crawling, flying with an elytra and raising a shield all cost stamina, and so do the actions of several popular movement and combat mods. If you don't have enough stamina, the action doesn't happen: you can't start sprinting, a jump is cancelled, a swing is dropped, a roll isn't available.
 
-AoS only decides **how actions cost stamina**. The stamina bar comes from
-[Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) if it is installed, or from AoS's own simple bar if it
-isn't.
+AoS only decides **how actions cost stamina**. The stamina bar comes from [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) if it is installed, or from AoS's own simple bar if it isn't.
 
 ![Paragliding with Feathers of Fatigue and Actions of Stamina](images/paraglider.png)
 
@@ -17,7 +12,7 @@ isn't.
 
 - [Stamina Backends](Stamina-Backends): Feathers of Fatigue's feathers, or AoS's own bar.
 - [Vanilla Actions](Vanilla-Actions): what sprinting, jumping, attacking and the rest cost.
-- [Compatibility](Compatibility): ParCool, Paragliders, Better Combat, Combat Roll, Epic Fight, Wall-Jump TXF, Gliders, Create.
+- [Compatibility](Compatibility): Paragliders, Better Combat, Combat Roll, Wall-Jump TXF, Curios (and ParCool, Epic Fight, Gliders and Create on 1.21.1 and older).
 - [Configuration](Configuration): every option.
-- [Minecraft Versions](Minecraft-Versions): what is different on 1.20.1, 1.19.2 and 1.18.2.
+- [Minecraft Versions](Minecraft-Versions): what is different on 1.21.1, 1.20.1, 1.19.2 and 1.18.2.
 - [Addon API](Addon-API): for mod developers, adding stamina-costing actions of your own.
