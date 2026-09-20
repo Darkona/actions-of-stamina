@@ -23,7 +23,7 @@ public final class AoSHudDebugOverlay {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         // The player first: the server config behind the switch is only loaded while there is one.
-        if (player == null || mc.options.hideGui || !AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean()) return;
+        if (player == null || mc.gui.hud.isHidden() || !AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean()) return;
 
         PlayerActions playerActions = PlayerActions.get(player);
         Font font = mc.font;

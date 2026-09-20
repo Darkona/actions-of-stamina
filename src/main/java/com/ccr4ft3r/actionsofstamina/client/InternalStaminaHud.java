@@ -6,13 +6,13 @@ import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalStamina;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.player.LocalPlayer;
 import net.neoforged.neoforge.client.gui.GuiLayer;
 
 /**
- * Client only. The internal stamina bar, one row above the food bar (it takes a row of {@code gui.rightHeight} so
+ * Client only. The internal stamina bar, one row above the food bar (it takes a row of {@code hud.rightHeight} so
  * other right-side HUD rows stack above it). Drawn only while the internal backend is in use; with Feathers of Fatigue,
  * Feathers of Fatigue draws its own HUD.
  */
@@ -34,7 +34,7 @@ public final class InternalStaminaHud {
     private static void render(GuiGraphicsExtractor graphics) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (player == null || mc.options.hideGui || mc.gameMode == null || !mc.gameMode.canHurtPlayer()) return;
+        if (player == null || mc.gui.hud.isHidden() || mc.gameMode == null || !mc.gameMode.canHurtPlayer()) return;
         if (!AoSClientConfig.SHOW_HUD.getAsBoolean() || !InternalBackend.enabled()) return;
         if (StaminaBackends.client().kind() != StaminaBackend.Kind.INTERNAL) return;
 
@@ -43,10 +43,10 @@ public final class InternalStaminaHud {
         if (max <= 0) return;
         int stamina = InternalBackend.INSTANCE.stamina(player);
 
-        Gui gui = mc.gui;
+        Hud hud = mc.gui.hud;
         int x = graphics.guiWidth() / 2 + 91 - WIDTH + AoSClientConfig.HUD_X_OFFSET.getAsInt();
-        int y = graphics.guiHeight() - gui.rightHeight + 2 + AoSClientConfig.HUD_Y_OFFSET.getAsInt();
-        gui.rightHeight += ROW;
+        int y = graphics.guiHeight() - hud.rightHeight + 2 + AoSClientConfig.HUD_Y_OFFSET.getAsInt();
+        hud.rightHeight += ROW;
 
         int filled = (int) ((long) Math.min(stamina, max) * (WIDTH - 2) / max);
         graphics.fill(x, y, x + WIDTH, y + HEIGHT, BACKGROUND);

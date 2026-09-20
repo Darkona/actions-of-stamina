@@ -12,7 +12,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -98,9 +98,9 @@ public class AttackChargeTests {
         helper.succeed();
     }
 
-    /** A zombie three blocks in front of the player's eyes, within a spear's reach, that stays where it is. */
+    /** A zombie three blocks in front of the player's eyes, within a spear's reach and the test's room, that stays where it is. */
     private static Zombie stabTarget(GameTestHelper helper, ServerPlayer player) {
-        Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, new Vec3(0.5, 3, 3.5));
+        Zombie zombie = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, new Vec3(0.5, 3, 3.5));
         zombie.setNoGravity(true);
         player.setYRot(0);
         player.setXRot(0);
@@ -112,7 +112,8 @@ public class AttackChargeTests {
         player.getMainHandItem().get(DataComponents.PIERCING_WEAPON).attack(player, EquipmentSlot.MAINHAND);
     }
 
-    @GameTest(template = "empty")
+    /** Room for the stab, so no block or creature of a neighbouring test is in its line. */
+    @GameTest(template = "spear_range")
     public static void spearStabsAreChargedAsAttacks(GameTestHelper helper) {
         ServerPlayer player = survivalPlayer(helper);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_SPEAR));

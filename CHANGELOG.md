@@ -2,6 +2,19 @@
 
 Changes by feature, newest version first.
 
+## 26.2-0.6.0 (NeoForge), unreleased
+
+Actions of Stamina for Minecraft 26.2, on NeoForge 26.2.0.88 or later. Same actions, config and Addon API as 26.1-0.6.0 below.
+
+### Compatibility
+
+- Tested with Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0 and Feathers of Fatigue 26.2-2.0.0.
+- Paragliders 26.2.1 can't read its own loot modifiers on Minecraft 26.2 (it logs an error at load), so elder guardians drop no Spirit Orbs and the wither no Stamina Vessel. Vessels from goddess statues still add max stamina.
+
+### Not in this version
+
+- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.2. Their compats and config sections are left out (the code waits in `src/disabled`).
+
 ## 26.1-0.6.0 (NeoForge), unreleased
 
 Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same actions, config and Addon API as 1.21.1-0.6.0 below, except for what this section lists.
@@ -76,5 +89,5 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same a
 
 ### Ports
 
-- Ports to Minecraft 26.2 and 26.3 (NeoForge).
+- A port to Minecraft 26.3 (NeoForge).
 - ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, once they publish a build for it.

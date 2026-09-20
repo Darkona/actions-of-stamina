@@ -37,7 +37,7 @@ Wings from other mods cost stamina only when a datapack adds them to the item ta
 
 Shields from other mods cost like the vanilla shield, as long as they block like one (the `minecraft:blocks_attacks` component, which every item that blocks attacks has). They count in either hand.
 
-Bows, crossbows and tridents from other mods cost like the vanilla ones when they use the same use animation (drawing a bow, loading a crossbow, aiming a trident). Spears (the melee weapons Minecraft 26.1 added) are not drawn: holding one ready is free, and their thrusts cost like any attack. Throwables from other mods cost only when a datapack adds them to the item tag `actionsofstamina:throwables`.
+Bows, crossbows and tridents from other mods cost like the vanilla ones when they use the same use animation (drawing a bow, loading a crossbow, aiming a trident). Spears are not drawn: holding one ready is free, and their stabs cost like any attack. Throwables from other mods cost only when a datapack adds them to the item tag `actionsofstamina:throwables`.
 
 With `vanilla.attack.also_for_non_weapons = false`, an item is a weapon when it adds attack damage in the main hand, however it gets it: its own attribute modifiers, ones worked out for that very stack, or ones added by other mods through NeoForge's attribute modifier event. Modular weapons that build their damage from their parts (as Tetra's do) count as weapons.
 
@@ -49,14 +49,14 @@ Stamina wings (the item tag `actionsofstamina:stamina_wings`) worn in a curio sl
 
 Actions of Stamina calls into these mods directly, so it accepts the versions it was tested with, up to the next major version. With a version outside that range, the game stops at load and names the mod and the range, instead of crashing later in the middle of play.
 
-| Mod | Accepted versions (26.1) |
+| Mod | Accepted versions (26.2) |
 |---|---|
-| Paragliders | 26.1.2 up to 26.2 |
+| Paragliders | 26.2 up to 26.3 |
 | Better Combat | 3.2 up to 4 |
 | Combat Roll | 3.0 up to 4 |
-| Wall-Jump TXF | 26.1.2-1.3 up to 26.2 |
-| Curios | 15.0.0 up to 16 |
-| Feathers of Fatigue | 26.1-2.0.0 up to 26.1-3 |
+| Wall-Jump TXF | 26.2-1.3 up to 26.3 |
+| Curios | 16.0.0 up to 17 |
+| Feathers of Fatigue | 26.2-2.0.0 up to 26.2-3 |
 
 ## On Minecraft 1.21.1 and older
 

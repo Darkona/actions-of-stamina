@@ -2,7 +2,7 @@
 
 *For mod developers.* Another mod can add its own stamina-costing actions to Actions of Stamina. They get a config section like the built-in ones, spend through whichever stamina backend is active (Feathers of Fatigue or the own bar), and are gated, drained and charged by the same code as sprinting or attacking. Actions of Stamina's own actions, the vanilla ones and those of every supported mod, are registered the same way.
 
-Everything below is in `com.ccr4ft3r.actionsofstamina` (Minecraft 26.1, NeoForge). On Minecraft 1.21.1, ids are `ResourceLocation` where this page says `Identifier`.
+Everything below is in `com.ccr4ft3r.actionsofstamina` (Minecraft 26.2, NeoForge). On Minecraft 1.21.1, ids are `ResourceLocation` where this page says `Identifier`.
 
 ## Asking whether a player can do something
 
