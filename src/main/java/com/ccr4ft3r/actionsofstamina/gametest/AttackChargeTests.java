@@ -98,7 +98,7 @@ public class AttackChargeTests {
         helper.succeed();
     }
 
-    /** A zombie three blocks in front of the player's eyes, within a spear's reach, that stays where it is. */
+    /** A zombie three blocks in front of the player's eyes, within a spear's reach and the test's room, that stays where it is. */
     private static Zombie stabTarget(GameTestHelper helper, ServerPlayer player) {
         Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, new Vec3(0.5, 3, 3.5));
         zombie.setNoGravity(true);
@@ -112,7 +112,8 @@ public class AttackChargeTests {
         player.getMainHandItem().get(DataComponents.PIERCING_WEAPON).attack(player, EquipmentSlot.MAINHAND);
     }
 
-    @GameTest(template = "empty")
+    /** Room for the stab, so no block or creature of a neighbouring test is in its line. */
+    @GameTest(template = "spear_range")
     public static void spearStabsAreChargedAsAttacks(GameTestHelper helper) {
         ServerPlayer player = survivalPlayer(helper);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_SPEAR));
