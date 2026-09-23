@@ -1,4 +1,4 @@
-# Optional dependencies of the compats in src/disabled, as they are in neoforge.mods.toml for Minecraft 1.21.1.
+# Optional dependencies of the compats in src/disabled, as they are in neoforge.mods.toml for Minecraft 1.21.1 (Paragliders: for 26.2).
 
 [[dependencies.${mod_id}]]
 modId = "parcool"
@@ -27,5 +27,12 @@ side = "BOTH"
 modId = "create"
 type = "optional"
 versionRange = "[6.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "paraglider"
+type = "optional"
+versionRange = "[26.2,26.3)"
 ordering = "NONE"
 side = "BOTH"

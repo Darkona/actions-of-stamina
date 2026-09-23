@@ -2,15 +2,6 @@
 
 Every compatibility is optional and only active when that mod is installed. Each has its own section in the config, with an `enabled` switch.
 
-## Paragliders
-
-Paragliding drains AoS stamina, and Paragliders reads its stamina from AoS. Its stamina wheel is hidden, and its own stamina logic is turned off. Because of that, Paragliders never charges running or swimming. AoS's sprint and swim actions charge them instead. With `paragliders.enabled = false`, Paragliders keeps its own stamina wheel.
-
-Stamina Vessels (traded for Spirit Orbs at a goddess statue) make the AoS bar larger, as they would make Paragliders' wheel larger: each vessel adds `feathers_per_vessel` max feathers (2 by default, 0 turns this off). With Feathers of Fatigue it is a `max_feathers` attribute modifier, `actionsofstamina:paragliders/stamina_vessels`; with the internal stamina the bar itself grows. It is set when you join, respawn or change dimension, and whenever the number of vessels changes. With `paragliders.enabled = false` the vessels only count for Paragliders' own wheel.
-
-
-![Paragliding: the drain shows in the feathers](images/paraglider.png)
-
 ## Better Combat
 
 Every Better Combat weapon swing costs stamina. The server charges each swing when Better Combat's attack request arrives, and drops a swing it can't pay for. The client cancels a swing you can't afford as soon as its upswing starts. You can tune the cost with multipliers for two-handed weapons, off-hand swings and the last swing of a combo. Weapons that Better Combat swings use this cost instead of the vanilla attack cost.
@@ -49,18 +40,26 @@ Stamina wings (the item tag `actionsofstamina:stamina_wings`) worn in a curio sl
 
 Actions of Stamina calls into these mods directly, so it accepts the versions it was tested with, up to the next major version. With a version outside that range, the game stops at load and names the mod and the range, instead of crashing later in the middle of play.
 
-| Mod | Accepted versions (26.2) |
+| Mod | Accepted versions (26.3) |
 |---|---|
-| Paragliders | 26.2 up to 26.3 |
 | Better Combat | 3.2 up to 4 |
 | Combat Roll | 3.0 up to 4 |
-| Wall-Jump TXF | 26.2-1.3 up to 26.3 |
-| Curios | 16.0.0 up to 17 |
-| Feathers of Fatigue | 26.2-2.0.0 up to 26.2-3 |
+| Wall-Jump TXF | 26.3-1.3 up to 26.4 |
+| Curios | 17.0.0-beta.2 up to 18 |
+| Feathers of Fatigue | 26.3-2.0.0 up to 26.3-3 |
 
-## On Minecraft 1.21.1 and older
+## On older Minecraft versions
 
-ParCool, Epic Fight, Gliders and Create have no build for Minecraft 26.x, so their compats are only in Actions of Stamina for Minecraft 1.21.1 and older. [Minecraft Versions](Minecraft-Versions) lists what each version supports and was tested with.
+These mods have no build for Minecraft 26.3, so their compats are only in Actions of Stamina for older versions: Paragliders on Minecraft 26.2 and older, ParCool, Epic Fight, Gliders and Create on Minecraft 1.21.1 and older. [Minecraft Versions](Minecraft-Versions) lists what each version supports and was tested with.
+
+### Paragliders
+
+Paragliding drains AoS stamina, and Paragliders reads its stamina from AoS. Its stamina wheel is hidden, and its own stamina logic is turned off. Because of that, Paragliders never charges running or swimming. AoS's sprint and swim actions charge them instead. With `paragliders.enabled = false`, Paragliders keeps its own stamina wheel.
+
+Stamina Vessels (traded for Spirit Orbs at a goddess statue) make the AoS bar larger, as they would make Paragliders' wheel larger: each vessel adds `feathers_per_vessel` max feathers (2 by default, 0 turns this off). With Feathers of Fatigue it is a `max_feathers` attribute modifier, `actionsofstamina:paragliders/stamina_vessels`; with the internal stamina the bar itself grows. It is set when you join, respawn or change dimension, and whenever the number of vessels changes. With `paragliders.enabled = false` the vessels only count for Paragliders' own wheel.
+
+
+![Paragliding: the drain shows in the feathers](images/paraglider.png)
 
 ### ParCool
 

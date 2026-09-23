@@ -3,7 +3,6 @@ package com.ccr4ft3r.actionsofstamina.config;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.ExhaustedAttackMode;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.BackendMode;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -212,7 +211,7 @@ public final class AoSServerConfig {
                 .regenDelay(20)
                 .build();
         TILL = ActionCostConfig.builder(b, "till",
-                        "Working a block with a tool: tilling with a hoe, making a path with a shovel, stripping logs and scraping or unwaxing copper with an axe (modded tools with those abilities too)", false)
+                        "Working a block with a tool: tilling with a hoe, making a path with a shovel, stripping logs and scraping or unwaxing copper with an axe (any tool whose block transformer does it, modded ones too)", false)
                 .cost(0.25, "Cost of working a block")
                 .minStamina(0.5)
                 .timesPerformedToExhaust(2)
@@ -227,7 +226,6 @@ public final class AoSServerConfig {
                 .build();
         b.pop();
 
-        ParagliderConfig.init();
         BetterCombatConfig.init();
         CombatRollConfig.init();
         WallJumpConfig.init();

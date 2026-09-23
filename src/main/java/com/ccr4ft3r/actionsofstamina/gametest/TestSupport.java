@@ -8,18 +8,22 @@ import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.embedded.EmbeddedChannel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.commands.FillBiomeCommand;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
@@ -41,6 +45,7 @@ final class TestSupport {
     }
 
     static ServerPlayer player(GameTestHelper helper) {
+        plains(helper);
         ServerPlayer player = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), "aos-test"));
         player.snapTo(helper.absoluteVec(Vec3.ZERO));
         return player;
@@ -52,6 +57,7 @@ final class TestSupport {
      */
     static ServerPlayer survivalPlayer(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
+        plains(helper);
         ServerPlayer player = new ServerPlayer(level.getServer(), level, new GameProfile(UUID.randomUUID(), "aos-test-player"),
                 ClientInformation.createDefault());
         new SilentListener(level.getServer(), player);
@@ -60,6 +66,20 @@ final class TestSupport {
         player.snapTo(helper.absoluteVec(new Vec3(0.5, 3, 0.5)));
         ActionProvider.addEnabledActions(PlayerActions.get(player));
         return player;
+    }
+
+    /**
+     * Plains around the test, from below it to the open sky above: the game test world is a desert, whose heat under the
+     * sun doubles every Feathers of Fatigue cost.
+     */
+    static void plains(GameTestHelper helper) {
+        BlockPos origin = helper.absolutePos(BlockPos.ZERO);
+        FillBiomeCommand.fill(helper.getLevel(), origin.offset(-8, -4, -8), origin.offset(8, 100, 8),
+                        helper.getLevel().registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS))
+                .ifRight(e -> {
+                    // Already plains: a test with several players.
+                    if (e.getType() != FillBiomeCommand.ERROR_NO_BIOMES_SET) throw new IllegalStateException("No plains for the test: " + e.getMessage());
+                });
     }
 
     /**

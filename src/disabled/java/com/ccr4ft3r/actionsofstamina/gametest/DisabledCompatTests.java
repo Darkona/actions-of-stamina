@@ -5,6 +5,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersConfig;
+import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
@@ -20,7 +21,7 @@ import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.tickEvent;
 
 /**
- * The tests of {@code CompatTests} for the compats in src/disabled (ParCool, Epic Fight, Gliders), as they are for
+ * The tests of {@code CompatTests} for the compats in src/disabled (ParCool, Epic Fight, Gliders, Paragliders), as they are for
  * Minecraft 1.21.1. They go back into {@code CompatTests} with their compat. {@code exhaust} and {@code TEST} are that
  * class's.
  */
@@ -163,6 +164,20 @@ public class DisabledCompatTests {
         helper.assertFalse(GlidersTestHooks.gliderOpen(player), "the glider folds when the stamina runs out");
         GlidersTestHooks.pressDeployKey(player);
         helper.assertFalse(GlidersTestHooks.gliderOpen(player), "a glider can't be opened without stamina");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void paraglidersReadsAoSStamina(GameTestHelper helper) {
+        if (!ParagliderCompat.LOADED) {
+            helper.succeed();
+            return;
+        }
+        ServerPlayer player = player(helper);
+        StaminaBackend backend = StaminaBackends.server();
+        backend.spend(player, TEST, StaminaUnits.ofFeathers(3), 0);
+        helper.assertTrue(ParagliderTestHooks.usesAoSStamina(player), "Paragliders' stamina is AoS's");
+        helper.assertValueEqual((int) ParagliderTestHooks.stamina(player), backend.availableStamina(player), "Paragliders reads the backend");
         helper.succeed();
     }
 }

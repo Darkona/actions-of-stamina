@@ -11,6 +11,7 @@ public final class ActionFlags {
     public static final int SWIMMING = 1 << 3;
     public static final int ELYTRA = 1 << 4;
     public static final int HOLDING_SHIELD = 1 << 5;
+    /** Set by the Paragliders compat, which waits in src/disabled on this Minecraft version; the bit stays reserved. */
     public static final int PARAGLIDING = 1 << 7;
     /** Wall-Jump TXF's wall cling (and the slide down the wall that follows it). */
     public static final int WALL_CLINGING = 1 << 8;

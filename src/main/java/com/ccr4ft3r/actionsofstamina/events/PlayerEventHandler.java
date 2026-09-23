@@ -13,9 +13,7 @@ import com.ccr4ft3r.actionsofstamina.actions.minecraft.fish.FishAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.mine.MineAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.riptide.RiptideAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.throwing.ThrowAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.till.TillAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
@@ -158,21 +156,6 @@ public final class PlayerEventHandler {
         }
     }
 
-    /**
-     * Tilling, making a path, stripping a log, scraping or unwaxing copper (after every other mod had its say; a
-     * simulated check is never charged nor refused). The server charges it and refuses it without the stamina; the
-     * client only refuses it, so it doesn't show a change the server won't make.
-     */
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
-        if (event.isSimulated() || !TillAction.charges(event.getItemAbility())) return;
-        Player player = event.getPlayer();
-        if (PlayerActions.isExempt(player)) return;
-        Action till = PlayerActions.get(player).getAction(VanillaActions.TILL);
-        if (till == null || !TillAction.changesBlock(event)) return;
-        if (player.level().isClientSide() ? !till.canPerform(player) : !till.perform(player)) event.setCanceled(true);
-    }
-
     /** Server: a block broken by a player (after every other mod had its say: a cancelled break isn't charged). */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void blockBroken(BreakBlockEvent event) {
@@ -237,9 +220,6 @@ public final class PlayerEventHandler {
         actions.clearActions(player);
         ActionProvider.addEnabledActions(actions);
         actions.refreshCurioWings(player);
-        if (player instanceof ServerPlayer serverPlayer) {
-            InternalBackend.data(player).markForSync();
-            ParagliderCompat.onJoin(serverPlayer);
-        }
+        if (player instanceof ServerPlayer) InternalBackend.data(player).markForSync();
     }
 }

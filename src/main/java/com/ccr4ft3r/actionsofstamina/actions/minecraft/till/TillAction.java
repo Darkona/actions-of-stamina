@@ -2,17 +2,16 @@ package com.ccr4ft3r.actionsofstamina.actions.minecraft.till;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.ItemAbilities;
-import net.neoforged.neoforge.common.ItemAbility;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Working a block with a tool: tilling, making a path, stripping a log, scraping or unwaxing copper, charged once every
- * few blocks. Found by the tool's ability, so modded tools and blocks count too. A change the player can't afford
- * doesn't happen.
+ * few blocks. Any item whose block transformer (the {@code minecraft:block_transformer} component, or one a data map
+ * adds) changes the block counts, so modded tools and blocks count too ({@code BlockTransformerMixin}). A change the
+ * player can't afford doesn't happen.
  */
 public class TillAction extends Action {
 
@@ -20,23 +19,15 @@ public class TillAction extends Action {
         super(type);
     }
 
-    /** Whether the ability is one of the block changes charged here (dousing a campfire, trimming or lighting aren't). */
-    public static boolean charges(ItemAbility ability) {
-        return ability == ItemAbilities.HOE_TILL || ability == ItemAbilities.SHOVEL_FLATTEN || ability == ItemAbilities.AXE_STRIP
-                || ability == ItemAbilities.AXE_SCRAPE || ability == ItemAbilities.AXE_WAX_OFF;
-    }
-
     /**
-     * Whether the tool use will really change the block. The event fires before the block's own answer is known (and
-     * for every ability an axe tries in turn), so, unless another mod already set the result, it is asked for here,
-     * simulated. A path also needs air above, which the shovel checks only afterwards.
+     * Whether the player may change the block now. The server charges it and refuses it without the stamina; the client
+     * only refuses it, so it doesn't show a change the server won't make. Dispensers and other non-players always may.
      */
-    public static boolean changesBlock(BlockEvent.BlockToolModificationEvent event) {
-        BlockState original = event.getState();
-        BlockState result = event.getFinalState();
-        if (result == original) result = original.getBlock().getToolModifiedState(original, event.getContext(), event.getItemAbility(), true);
-        if (result == null || result == original) return false;
-        return event.getItemAbility() != ItemAbilities.SHOVEL_FLATTEN || event.getLevel().getBlockState(event.getPos().above()).isAir();
+    public static boolean mayWork(@Nullable Player player) {
+        if (player == null || PlayerActions.isExempt(player)) return true;
+        Action till = PlayerActions.get(player).getAction(VanillaActions.TILL);
+        if (till == null) return true;
+        return player.level().isClientSide() ? till.canPerform(player) : till.perform(player);
     }
 
     @Override

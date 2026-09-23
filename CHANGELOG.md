@@ -2,6 +2,23 @@
 
 Changes by feature, newest version first.
 
+## 26.3-0.6.0 (NeoForge), unreleased
+
+Actions of Stamina for Minecraft 26.3, on NeoForge 26.3.0.36-beta exactly (26.3.0.37-beta changes the config types, and a mod built for one side of that change does not load on the other). Same actions, config and Addon API as 26.2-0.6.0 below, except for what this section lists.
+
+### Vanilla actions
+
+- **Farming tools:** Minecraft 26.3 changes blocks with tools through the item's block transformer (the `minecraft:block_transformer` component), not through item abilities. Any item whose block transformer changes the clicked block counts, data map transformers of other mods too; the hoe, shovel and axe of vanilla do as before.
+
+### Compatibility
+
+- Tested with Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.3-1.3.8, Curios 17.0.0-beta.2 (the only Curios builds for 26.3 are betas) and Feathers of Fatigue 26.3-2.0.0.
+
+### Not in this version
+
+- **Paragliders:** it has no build for Minecraft 26.3. Its compat and `[paragliders]` section are left out (the code waits in `src/disabled`).
+- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.3 either.
+
 ## 26.2-0.6.0 (NeoForge), unreleased
 
 Actions of Stamina for Minecraft 26.2, on NeoForge 26.2.0.88 or later. Same actions, config and Addon API as 26.1-0.6.0 below.
@@ -87,7 +104,6 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same a
 
 ## Planned
 
-### Ports
+### Compatibility
 
-- A port to Minecraft 26.3 (NeoForge).
-- ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, once they publish a build for it.
+- Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, once they publish a build for it.

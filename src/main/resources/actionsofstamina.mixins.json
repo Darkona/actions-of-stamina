@@ -4,6 +4,7 @@
   "package": "com.ccr4ft3r.actionsofstamina.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "BlockTransformerMixin",
     "BoatMixin",
     "LivingEntityMixin",
     "PiercingWeaponMixin",

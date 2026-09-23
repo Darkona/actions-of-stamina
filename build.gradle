@@ -105,7 +105,6 @@ dependencies {
     }
 
     // Optional compatibility targets. All direct use sits behind ModList checks and bridge classes.
-    compileOnly "maven.modrinth:paragliders:${paragliders_version}"
     compileOnly "maven.modrinth:better-combat:${bettercombat_version}"
     compileOnly "maven.modrinth:combat-roll:${combatroll_version}"
     compileOnly "maven.modrinth:wall-jump-txf:${walljump_version}"
@@ -113,7 +112,6 @@ dependencies {
 
     // -PwithCompat: boot dev runs with the compat targets and their required libraries.
     if (project.hasProperty('withCompat')) {
-        localRuntime "maven.modrinth:paragliders:${paragliders_version}"
         localRuntime "maven.modrinth:better-combat:${bettercombat_version}"
         localRuntime "maven.modrinth:combat-roll:${combatroll_version}"
         localRuntime "maven.modrinth:wall-jump-txf:${walljump_version}"
@@ -123,7 +121,7 @@ dependencies {
     }
 
     // `./gradlew runPlay`: a pack to play with by hand. Feathers of Fatigue with its season and thirst compats, and the
-    // action mods that sit well together (no Paragliders: it replaces too much of the game).
+    // action mods that sit well together.
     if (playPack) {
         localRuntime "maven.modrinth:better-combat:${bettercombat_version}"
         localRuntime "maven.modrinth:combat-roll:${combatroll_version}"
@@ -153,7 +151,6 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_version                : project.version.toString(),
             mod_authors                : mod_authors,
             feathers_of_fatigue_version_range: feathers_of_fatigue_version_range,
-            paragliders_range          : paragliders_range,
             bettercombat_range         : bettercombat_range,
             combatroll_range           : combatroll_range,
             walljump_range             : walljump_range,

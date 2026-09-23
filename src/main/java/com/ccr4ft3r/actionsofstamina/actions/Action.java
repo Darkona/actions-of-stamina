@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
  * under its type's id (its {@link #source}). Every action, Actions of Stamina's own and other mods' alike, is registered
  * in {@link ActionTypes} and built per player from its type.
  * <p>
- * Continuous actions (sprint, swim, elytra, shield, crawl, draw, paraglide, wall cling, climb, row, brush) run a drain
+ * Continuous actions (sprint, swim, elytra, shield, crawl, draw, wall cling, climb, row, brush) run a drain
  * refreshed every tick while performing, and may charge a finish cost when they end; one-off actions (attack, jump,
  * throw, mine, build, riptide, fish, till, rolls, swings, wall and double jumps) {@link #perform} a spend. A continuous action
  * follows the state {@link #setActionState} gives it every tick; one whose start, ticks and end come from another mod's

@@ -6,7 +6,6 @@ import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatComp
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
@@ -59,20 +58,6 @@ public class CompatTests {
 
         String state = exhaust(backend, player);
         helper.assertFalse(BetterCombatCompat.chargeSwing(player, 0, false), "a swing is dropped when it can't be paid" + state);
-        helper.succeed();
-    }
-
-    @GameTest(template = "empty")
-    public static void paraglidersReadsAoSStamina(GameTestHelper helper) {
-        if (!ParagliderCompat.LOADED) {
-            helper.succeed();
-            return;
-        }
-        ServerPlayer player = player(helper);
-        StaminaBackend backend = StaminaBackends.server();
-        backend.spend(player, TEST, StaminaUnits.ofFeathers(3), 0);
-        helper.assertTrue(ParagliderTestHooks.usesAoSStamina(player), "Paragliders' stamina is AoS's");
-        helper.assertValueEqual((int) ParagliderTestHooks.stamina(player), backend.availableStamina(player), "Paragliders reads the backend");
         helper.succeed();
     }
 

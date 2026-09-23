@@ -5,7 +5,6 @@ import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
 import net.minecraft.world.entity.player.Player;
@@ -35,9 +34,6 @@ public class PlayerActions {
 
     /** Whether stamina wings are worn in a curio slot; cached, see {@link CuriosCompat}. */
     private boolean curioWings;
-    /** Paragliders' vessel container already listened to for this player (a Paragliders object: kept untyped here). */
-    @Nullable
-    private Object vesselListenerTarget;
 
     private double lastX = Double.NaN;
     private double lastZ = Double.NaN;
@@ -110,7 +106,6 @@ public class PlayerActions {
             setActionState(VanillaActions.SWIM, ActionFlags.has(f, ActionFlags.SWIMMING));
             setActionState(VanillaActions.SHIELD, ActionFlags.has(f, ActionFlags.HOLDING_SHIELD));
             setActionState(VanillaActions.DRAW, ActionFlags.has(f, ActionFlags.DRAWING));
-            setActionState(ParagliderCompat.PARAGLIDE, ActionFlags.has(f, ActionFlags.PARAGLIDING));
             setActionState(WallJumpCompat.WALL_CLING, ActionFlags.has(f, ActionFlags.WALL_CLINGING));
             setActionState(VanillaActions.CLIMB, ActionFlags.has(f, ActionFlags.CLIMBING));
             setActionState(VanillaActions.ROW, ActionFlags.has(f, ActionFlags.ROWING));
@@ -136,15 +131,6 @@ public class PlayerActions {
     /** Looks the player's curios up again (allocates: on a change, on join, or at an interval, never every tick). */
     public void refreshCurioWings(Player player) {
         curioWings = CuriosCompat.wearsStaminaWings(player);
-    }
-
-    @Nullable
-    public Object vesselListenerTarget() {
-        return vesselListenerTarget;
-    }
-
-    public void setVesselListenerTarget(@Nullable Object target) {
-        vesselListenerTarget = target;
     }
 
     @SuppressWarnings("unused") // for addons

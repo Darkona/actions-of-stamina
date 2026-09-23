@@ -1,10 +1,11 @@
 # Minecraft Versions
 
-This wiki describes the newest version of Actions of Stamina, for **Minecraft 26.2 (NeoForge)**. The same mod is also made for older Minecraft versions, with the same actions, config options and stamina backends (Feathers of Fatigue or its own bar) wherever the game allows it. This page lists only what is different in each of them.
+This wiki describes the newest version of Actions of Stamina, for **Minecraft 26.3 (NeoForge)**. The same mod is also made for older Minecraft versions, with the same actions, config options and stamina backends (Feathers of Fatigue or its own bar) wherever the game allows it. This page lists only what is different in each of them.
 
 | Minecraft | Loader | Differences |
 |---|---|---|
-| 26.2 | NeoForge 26.2.0.88 or later | None: this whole wiki |
+| 26.3 | NeoForge 26.3.0.36-beta | None: this whole wiki |
+| 26.2 | NeoForge 26.2.0.88 or later | [26.2](#262-neoforge-262) |
 | 26.1 | NeoForge 26.1.2.109 or later | [26.1](#261-neoforge-2612) |
 | 1.21.1 | NeoForge 21.1 | [1.21.1](#1211-neoforge-211) |
 | 1.20.1 | Forge 47 | [1.20.1](#1201-forge-47) |
@@ -13,11 +14,24 @@ This wiki describes the newest version of Actions of Stamina, for **Minecraft 26
 
 Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) made for the same Minecraft version. The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers; from 0.6 on it is no longer supported.
 
-## 26.2 (NeoForge 26.2)
+## 26.3 (NeoForge 26.3.0.36-beta)
+
+Needs exactly NeoForge 26.3.0.36-beta: NeoForge 26.3 is in beta, and 26.3.0.37-beta changes the config types, so a mod built for one side of that change does not load on the other.
 
 **Missing:**
 
-- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.x, so their compats and config sections are left out.
+- **Paragliders:** it has no build for Minecraft 26.3, so its compat and config section are left out.
+- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.x either.
+
+**Tested with:** Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.3-1.3.8, Curios 17.0.0-beta.2 (the only Curios builds for 26.3 are betas), Feathers of Fatigue 26.3-2.0.0.
+
+## 26.2 (NeoForge 26.2)
+
+**Has, on top of 26.3:** Paragliders, with its `[paragliders]` section in the server config (see [Configuration](Configuration#sections-only-on-older-minecraft-versions) and [Compatibility](Compatibility#paragliders)).
+
+**Different:**
+
+- **Farming tools:** a tool counts by NeoForge's item abilities for tilling, making paths, stripping, scraping and unwaxing (26.3 looks at the item's block transformer).
 
 **Known issue, not in Actions of Stamina:** Paragliders 26.2.1 can't read its own loot modifiers, so elder guardians drop no Spirit Orbs and the wither no Stamina Vessel.
 
@@ -31,7 +45,7 @@ The same as 26.2.
 
 ## 1.21.1 (NeoForge 21.1)
 
-**Has, on top of 26.x:** ParCool, Epic Fight, Gliders and Create, with their sections in the server config (see [Configuration](Configuration#sections-only-on-minecraft-1211-and-older) and [Compatibility](Compatibility#on-minecraft-1211-and-older)).
+**Has, on top of 26.x:** ParCool, Epic Fight, Gliders and Create, with their sections in the server config (see [Configuration](Configuration#sections-only-on-older-minecraft-versions) and [Compatibility](Compatibility#on-older-minecraft-versions)).
 
 **Different:**
 

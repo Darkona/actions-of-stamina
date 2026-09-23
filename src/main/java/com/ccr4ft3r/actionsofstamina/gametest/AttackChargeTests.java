@@ -130,7 +130,7 @@ public class AttackChargeTests {
 
         Zombie zombie = stabTarget(helper, player);
         for (int i = 0; i < 3; i++) {
-            zombie.invulnerableTime = 0;
+            zombie.setInvulnerableTime(0);
             stab(player);
         }
         helper.assertValueEqual(backend.stamina(player), start - cost, "the third stab that lands is charged");
@@ -138,7 +138,7 @@ public class AttackChargeTests {
 
         exhaust(backend, player);
         zombie.setHealth(zombie.getMaxHealth());
-        zombie.invulnerableTime = 0;
+        zombie.setInvulnerableTime(0);
         stab(player);
         helper.assertValueEqual(zombie.getHealth(), zombie.getMaxHealth(), "a stab that can't be paid hits nothing");
         zombie.discard();

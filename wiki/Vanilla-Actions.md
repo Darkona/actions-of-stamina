@@ -65,7 +65,7 @@ Off by default (`[vanilla.fish]`, `enabled = true` to turn it on). Casting a rod
 
 ## Farming tools
 
-Off by default (`[vanilla.till]`, `enabled = true` to turn it on). Working a block with a tool costs: tilling with a hoe, making a path with a shovel, stripping a log, scraping or unwaxing copper with an axe. Modded tools and blocks with the same abilities count too. Dousing a campfire is free. It is charged once every `times_performed_to_exhaust` blocks. A block you can't afford stays as it is.
+Off by default (`[vanilla.till]`, `enabled = true` to turn it on). Working a block with a tool costs: tilling with a hoe, making a path with a shovel, stripping a log, scraping or unwaxing copper with an axe. Any item whose block transformer (the `minecraft:block_transformer` component, or one a data map adds) changes the block counts, so modded tools and blocks count too. Dousing a campfire is free. It is charged once every `times_performed_to_exhaust` blocks. A block you can't afford stays as it is.
 
 ## Brushing
 

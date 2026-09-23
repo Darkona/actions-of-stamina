@@ -6,7 +6,6 @@ import com.ccr4ft3r.actionsofstamina.actions.minecraft.brush.BrushAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.row.RowAction;
-import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionStatePacket;
@@ -62,7 +61,6 @@ public final class ClientActionTracker {
         // Same for brushes.
         boolean brushing = BrushAction.isBrushing(player);
 
-        boolean paragliding = ParagliderCompat.isParagliding(player);
         boolean wallClinging = actions.getAction(WallJumpCompat.WALL_CLING) != null && WallJumpCompat.isClinging(player);
 
         // Only what the server acts on: moving alone would send a packet at every start and stop.
@@ -74,7 +72,6 @@ public final class ClientActionTracker {
         flags = ActionFlags.with(flags, ActionFlags.SWIMMING, swimming);
         flags = ActionFlags.with(flags, ActionFlags.HOLDING_SHIELD, usingShield);
         flags = ActionFlags.with(flags, ActionFlags.DRAWING, drawing);
-        flags = ActionFlags.with(flags, ActionFlags.PARAGLIDING, paragliding);
         flags = ActionFlags.with(flags, ActionFlags.WALL_CLINGING, wallClinging);
         flags = ActionFlags.with(flags, ActionFlags.CLIMBING, climbingUp);
         flags = ActionFlags.with(flags, ActionFlags.ROWING, rowing);

@@ -5,7 +5,6 @@ import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
@@ -46,7 +45,6 @@ public class ActionsOfStamina {
         // Every action type, Minecraft's and each compat's, whether or not that mod is installed: the indices then don't
         // depend on which mods are there.
         VanillaActions.register();
-        ParagliderCompat.registerActions();
         BetterCombatCompat.registerActions();
         CombatRollCompat.registerActions();
         WallJumpCompat.registerActions();
