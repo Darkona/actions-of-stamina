@@ -1,0 +1,16 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.ccr4ft3r.actionsofstamina.compatmixin",
+  "plugin": "com.ccr4ft3r.actionsofstamina.compatibility.CompatMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BetterCombatServerNetworkMixin"
+  ],
+  "client": [
+    "CombatRollManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

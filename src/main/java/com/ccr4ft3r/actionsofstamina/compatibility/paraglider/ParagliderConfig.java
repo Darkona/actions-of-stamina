@@ -1,45 +1,28 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
 
-public class ParagliderConfig {
+/**
+ * {@code [paragliders]}: paragliding drains AoS stamina and Paragliders' own stamina wheel is replaced by the AoS
+ * backend. No Paragliders classes here.
+ */
+public final class ParagliderConfig {
 
-    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    /** {@code enabled} turns the whole integration on; off, Paragliders keeps its own stamina wheel. */
+    public static final ActionCostConfig PARAGLIDE = ActionCostConfig.builder(AoSCommonConfig.BUILDER, "paragliders",
+                    "Paragliders: paragliding costs AoS stamina and Paragliders reads its stamina from AoS (only when Paragliders is installed)", true)
+            .cost(0.0, "Cost to open the paraglider")
+            .minStamina(1.0)
+            .perSecond(0.1)
+            .regenDelay(20)
+            .blocksRegen(true)
+            .build();
 
-    public static final ForgeConfigSpec SPEC;
+    private ParagliderConfig() {
+    }
 
-    public static final ForgeConfigSpec.ConfigValue<Boolean> PARAGLIDING_ENABLED;
-    public static final ForgeConfigSpec.ConfigValue<Boolean> INHIBIT_REGEN_WHEN_PARAGLIDING;
-    public static final ForgeConfigSpec.ConfigValue<Integer> PARAGLIDING_COST;
-    public static final ForgeConfigSpec.ConfigValue<Integer> PARAGLIDING_MINIMUM_COST;
-    public static final ForgeConfigSpec.ConfigValue<Integer> PARAGLIDING_COOLDOWN;
-    public static final ForgeConfigSpec.ConfigValue<Double> PARAGLIDING_FEATHERS_PER_SECOND;
-
-
-    static {
-        BUILDER.comment("Paraglider settings").push("paraglider");
-
-        PARAGLIDING_ENABLED = BUILDER.comment("Enable paragliding")
-                .define("paraglidingEnabled", true);
-
-        INHIBIT_REGEN_WHEN_PARAGLIDING = BUILDER.comment("Inhibit regeneration when paragliding")
-                .define("inhibitRegenWhenParagliding", true);
-
-        PARAGLIDING_COST = BUILDER.comment("Cost of paragliding")
-                .defineInRange("paraglidingCost", 0, 0, Integer.MAX_VALUE);
-
-        PARAGLIDING_MINIMUM_COST = BUILDER.comment("Minimum cost of paragliding")
-                .defineInRange("paraglidingMinimumCost", 1, 0, Integer.MAX_VALUE);
-
-        PARAGLIDING_COOLDOWN = BUILDER.comment("Cooldown of paragliding")
-                .defineInRange("paraglidingCooldown", 20, 0, Integer.MAX_VALUE);
-
-        PARAGLIDING_FEATHERS_PER_SECOND = BUILDER.comment("Feathers per second of paragliding")
-                .defineInRange("paraglidingFeathersPerSecond", 0.1, 0.0, Double.MAX_VALUE);
-
-        BUILDER.pop();
-        SPEC = BUILDER.build();
-
-
+    /** Called by {@link AoSCommonConfig} to define this section in order. */
+    public static void init() {
     }
 }

@@ -1,126 +1,74 @@
 package com.ccr4ft3r.actionsofstamina.events;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.shield.ShieldAction;
-import com.ccr4ft3r.actionsofstamina.capability.AosCapabilityProvider;
-import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.client.AoSHudDebugOverlay;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
+import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.network.BackendSyncPacket;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ShieldItem;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.glfw.GLFW;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.function.Predicate;
+/**
+ * Common (both-sides) game-bus handlers. The client-side counterpart (local player tick, key input, attack key)
+ * is {@code ClientGameEvents}.
+ */
+@EventBusSubscriber(modid = ActionsOfStamina.MOD_ID)
+public final class PlayerEventHandler {
 
+    private PlayerEventHandler() {
+    }
 
-@Mod.EventBusSubscriber(modid = ActionsOfStamina.MOD_ID)
-public class PlayerEventHandler {
+    @SubscribeEvent
+    public static void serverAboutToStart(ServerAboutToStartEvent event) {
+        StaminaBackends.onServerStarting();
+    }
 
+    /** Server-side action tick, then the internal stamina's own tick. The local player's client tick is elsewhere. */
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void playerTickEvent(TickEvent.PlayerTickEvent event) {
-        var player = event.player;
-
-        if (event.phase == TickEvent.Phase.END) {
-            player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> a.tick(player));
-        }
+    public static void playerTickEvent(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        PlayerActions.get(player).tick(player);
+        if (StaminaBackends.server().kind() == StaminaBackend.Kind.INTERNAL) InternalBackend.INSTANCE.tick(player);
     }
 
     @SubscribeEvent
     public static void shieldUsage(PlayerInteractEvent.RightClickItem event) {
-        if (event.getItemStack().getItem() instanceof ShieldItem) {
-            event.getEntity().getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(c -> {
-                c.getAction(ShieldAction.actionName).ifPresent(a -> {
-                    if (!PlayerActions.isNotExhaustable(event.getEntity()) && !a.canPerform(event.getEntity())) {
-                        event.setCanceled(true);
-                    }
-                });
-            });
+        if (!(event.getItemStack().getItem() instanceof ShieldItem)) return;
+        Player player = event.getEntity();
+        if (PlayerActions.isNotExhaustable(player)) return;
+        Action shield = PlayerActions.get(player).getAction(Action.SHIELD);
+        if (shield != null && !shield.canPerform(player)) {
+            event.setCanceled(true);
         }
     }
 
-    @SubscribeEvent
-    public static void attachCapabilityToPlayer(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof Player) {
-            if (!event.getObject().getCapability(AosCapabilityProvider.PLAYER_ACTIONS).isPresent()) {
-                event.addCapability(new ResourceLocation(ActionsOfStamina.MOD_ID, "properties"), new AosCapabilityProvider());
-            }
-        }
-    }
-
+    /** Login, respawn and dimension change: rebuild the actions from the current config and resync the bar. */
     @SubscribeEvent
     public static void onPlayerJoin(EntityJoinLevelEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(a -> {
-                ActionProvider.getInstance().addEnabledActions(player, a);
-            });
-            if (player.level().isClientSide) {
-                assert Minecraft.getInstance().player != null;
-                AoSHudDebugOverlay.playerActions = Minecraft.getInstance().player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).orElse(null);
-            }
-        }
+        if (!(event.getEntity() instanceof Player player)) return;
+        PlayerActions actions = PlayerActions.get(player);
+        actions.clearActions();
+        ActionProvider.addEnabledActions(actions);
+        if (player instanceof ServerPlayer) InternalBackend.data(player).markForSync();
     }
 
     @SubscribeEvent
-    public static void onPlayerCloned(PlayerEvent.Clone event) {
-        if (!event.isWasDeath() && !event.getEntity().level().isClientSide) {
-            Player original = event.getOriginal();
-            original.reviveCaps();
-
-            event.getOriginal().getCapability(AosCapabilityProvider.PLAYER_ACTIONS)
-                 .ifPresent(oldStore -> event.getEntity().getCapability(AosCapabilityProvider.PLAYER_ACTIONS)
-                                             .ifPresent(newStore -> newStore.copyFrom(oldStore)));
-
-            original.invalidateCaps();
+    public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            PacketDistributor.sendToPlayer(player, new BackendSyncPacket(StaminaBackends.server().kind()));
         }
     }
-
-    @SubscribeEvent
-    public static void onKeyInput(InputEvent.Key event) {
-        Predicate<LocalPlayer> notJumpable = (player) -> player.isInWater() || player.onClimbable();
-        boolean isPressed = event.getAction() == GLFW.GLFW_PRESS;
-        boolean isReleased = event.getAction() == GLFW.GLFW_RELEASE;
-
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return;
-        player.getCapability(AosCapabilityProvider.PLAYER_ACTIONS).ifPresent(actions -> {
-            Options options = Minecraft.getInstance().options;
-
-            boolean isJumpKey = event.getKey() == options.keyJump.getKey().getValue() && !notJumpable.test(player);
-            boolean isMoveKey =
-                    event.getKey() == options.keyUp.getKey().getValue() ||
-                            event.getKey() == options.keyDown.getKey().getValue() ||
-                            event.getKey() == options.keyLeft.getKey().getValue() ||
-                            event.getKey() == options.keyRight.getKey().getValue() ||
-                            event.getKey() == options.keyJump.getKey().getValue() && notJumpable.test(player);
-
-            if (!isMoveKey && !isJumpKey) return;
-
-            if (isMoveKey && isPressed) {
-                actions.setMoveKeyPressed(true);
-            } else if (isMoveKey && isReleased) {
-                actions.setMoveKeyPressed(false);
-            }
-
-            if (isJumpKey && isPressed) {
-                actions.setJumping(true);
-            } else if (isMoveKey && isReleased) {
-                actions.setJumping(false);
-            }
-        });
-    }
-
 }

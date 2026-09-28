@@ -2,83 +2,116 @@ package com.ccr4ft3r.actionsofstamina.actions;
 
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.capability.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSCommonConfig;
-import com.darkona.feathers.api.FeathersAPI;
-import com.darkona.feathers.api.StaminaAPI;
-import com.darkona.feathers.util.Calculations;
-import net.minecraft.nbt.CompoundTag;
+import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * One stamina-costing player action, spending through the active {@link StaminaBackend} under its own
+ * {@link #source}.
+ * <p>
+ * Continuous actions (sprint, swim, elytra, shield, crawl, paraglide) run a drain refreshed every tick while
+ * performing; one-off actions (attack, jump) {@link #perform} a spend. All amounts are kept in stamina (1/1000
+ * feather), read from the config once, in the constructor (actions are rebuilt whenever the player joins a level).
+ * <p>
+ * Runs on both sides: on the client the backend only checks (Green Feathers also predicts), the server is
+ * authoritative.
+ */
 public abstract class Action {
 
+    // Fixed slots in PlayerActions' action array.
+    public static final int ATTACK = 0;
+    public static final int SPRINT = 1;
+    public static final int JUMP = 2;
+    public static final int CRAWL = 3;
+    public static final int ELYTRA = 4;
+    public static final int SHIELD = 5;
+    public static final int SWIM = 6;
+    public static final int PARAGLIDE = 7;
+    public static final int COUNT = 8;
+
+    protected final ResourceLocation source;
+    /** One-off cost, in stamina: per {@link #perform}, or when a continuous action begins. */
     protected final int cost;
+    /** Stamina that must be affordable to perform or begin the action. */
     protected final int minCost;
+    /** Ticks without regeneration after spending (and after a continuous action ends). */
     protected final int cooldown;
-    protected final double featherCostPerSecond;
-    protected final int staminaCostPerTick;
+    protected final double staminaPerTick;
+    /** Stamina one drain tick may take at most: what must stay affordable to keep performing. */
+    protected final int tickCost;
     protected final boolean regenInhibitor;
     protected boolean wasPerforming = false;
     protected boolean actionState = false;
     protected boolean prevActionState = false;
     protected int timesPerformed = 0;
-    protected int timesPerformedToExhaust = 0;
+    protected final int timesPerformedToExhaust;
+    /** Whether the last {@link #perform} actually charged {@link #cost}. */
+    protected boolean charged;
+    private boolean blockingRegen;
 
     protected String debugInfo;
 
     public abstract String name();
 
-    public Action(int cost, int minCost, int cooldown, double featherCostPerSecond, boolean regenInhibitor, int timesPerformedToExhaust) {
-        this.cost = cost;
-        this.minCost = minCost;
-        this.cooldown = cooldown;
-        this.featherCostPerSecond = featherCostPerSecond;
-        this.staminaCostPerTick = Calculations.calculateStaminaPerTick(featherCostPerSecond);
-        this.regenInhibitor = regenInhibitor;
-        this.timesPerformedToExhaust = timesPerformedToExhaust;
+    /** Slot in {@link PlayerActions#getActions()}; one of the constants above. */
+    public abstract int id();
+
+    public Action(ResourceLocation source, ActionCostConfig config) {
+        this.source = source;
+        this.cost = config.cost();
+        this.minCost = config.minStamina();
+        this.cooldown = config.regenDelay();
+        this.staminaPerTick = config.perTick();
+        this.tickCost = (int) Math.ceil(staminaPerTick);
+        this.regenInhibitor = config.blocksRegen();
+        this.timesPerformedToExhaust = config.timesToCharge();
+    }
+
+    public ResourceLocation source() {
+        return source;
     }
 
     public String debugString() {
         return debugInfo;
     }
 
-    public boolean isInhibitingCooldown() {
-        return actionState;
-    }
-
     public boolean canPerform(Player player) {
-        return PlayerActions.isNotExhaustable(player) ||
-                (wasPerforming && StaminaAPI.canUseStamina(player, staminaCostPerTick)) ||
-                (!wasPerforming && FeathersAPI.canSpendFeathers(player, minCost));
+        return PlayerActions.isNotExhaustable(player) || canAfford(player, wasPerforming ? tickCost : minCost);
     }
 
-    private boolean useStamina(Player player) {
-        return StaminaAPI.useStamina(player, staminaCostPerTick);
+    private boolean canAfford(Player player, int stamina) {
+        return StaminaBackends.of(player).canSpend(player, source, stamina);
     }
 
-    private boolean canBeginPerforming(Player player) {
-        return FeathersAPI.canSpendFeathers(player, minCost);
+    /** Refreshes this action's drain for one more tick; false when it can't go on (the drain then stops itself). */
+    private boolean drain(Player player, StaminaBackend backend) {
+        // Energized players (Green Feathers) keep regenerating, as with the old regen inhibitor.
+        blockingRegen = regenInhibitor && !backend.keepsRegenWhileActing(player);
+        return backend.drain(player, source, staminaPerTick, blockingRegen);
     }
 
     public void tick(Player p, PlayerActions a) {
 
         boolean performing = wasPerforming;
 
-        if(PlayerActions.isNotExhaustable(p)){
+        if (PlayerActions.isNotExhaustable(p)) {
             wasPerforming = actionState;
             return;
         }
 
-
         if (actionState) {
-            var allowed = useStamina(p);
-
-            if (!wasPerforming && canBeginPerforming(p) && allowed) {
-                beginPerforming(p, a);
-                performing = true;
-            }
-
-            if (wasPerforming && !allowed) {
+            StaminaBackend backend = StaminaBackends.of(p);
+            if (!wasPerforming) {
+                if (backend.canSpend(p, source, minCost) && drain(p, backend)) {
+                    beginPerforming(p, a);
+                    performing = true;
+                }
+            } else if (!drain(p, backend)) {
                 finishPerforming(p, a);
                 performing = false;
             }
@@ -88,19 +121,15 @@ public abstract class Action {
             } else {
                 notPerformingEffects(p, a);
             }
-        } else {
-
-            if (wasPerforming) {
-                finishPerforming(p, a);
-                performing = false;
-            }
-
+        } else if (wasPerforming) {
+            finishPerforming(p, a);
+            performing = false;
         }
 
         boolean changeDetected = wasPerforming != performing || actionState != prevActionState;
 
-        if (AoSCommonConfig.ENABLE_DEBUGGING.get() && (debugInfo == null || changeDetected))
-            debugInfo = String.format("%s: WasPerforming: %s, Performing: %s, ActionState: %s, Allow: %s, Inhibiting regen: %s", name(), wasPerforming, performing, actionState, canPerform(p), a.isInhibitRegen());
+        if (AoSCommonConfig.ENABLE_DEBUGGING.getAsBoolean() && (debugInfo == null || changeDetected))
+            debugInfo = String.format("%s: WasPerforming: %s, Performing: %s, ActionState: %s, Allow: %s, Inhibiting regen: %s", name(), wasPerforming, performing, actionState, canPerform(p), performing && blockingRegen);
 
         prevActionState = actionState;
         wasPerforming = performing;
@@ -112,16 +141,26 @@ public abstract class Action {
     protected abstract void notPerformingEffects(Player player, PlayerActions a);
 
     protected void beginPerforming(Player p, PlayerActions a) {
-        ActionsOfStamina.sideLog(p, name() + "::beginPerforming");
-        FeathersAPI.spendFeathers(p, cost, cooldown);
+        ActionsOfStamina.sideLog(p, "{}::beginPerforming", name());
+        StaminaBackend backend = StaminaBackends.of(p);
+        if (cost > 0) backend.spend(p, source, cost, cooldown);
+        else if (cooldown > 0) backend.blockRegen(p, source, cooldown);
     }
 
+    /**
+     * Stops the drain right away (it would otherwise run until its timeout) and delays regeneration by the
+     * cooldown.
+     */
     protected void finishPerforming(Player p, PlayerActions a) {
-        ActionsOfStamina.sideLog(p, name() + "::finishPerforming");
-        FeathersAPI.spendFeathers(p, 0, 0);
+        ActionsOfStamina.sideLog(p, "{}::finishPerforming", name());
+        StaminaBackend backend = StaminaBackends.of(p);
+        backend.stopDrain(p, source);
+        if (cooldown > 0 && !backend.keepsRegenWhileActing(p)) backend.blockRegen(p, source, cooldown);
     }
 
+    /** One-off use: charges {@link #cost} every {@code timesPerformedToExhaust} uses. */
     public boolean perform(Player player) {
+        charged = false;
         if (PlayerActions.isNotExhaustable(player)) return true;
         boolean allow = canPerform(player);
         if (!allow) {
@@ -129,42 +168,25 @@ public abstract class Action {
             return false;
         }
 
-        ActionsOfStamina.sideLog(player, name() + "::Perform");
-        if (++timesPerformed == timesPerformedToExhaust) {
+        ActionsOfStamina.sideLog(player, "{}::Perform", name());
+        if (++timesPerformed >= timesPerformedToExhaust) {
             timesPerformed = 0;
-            allow = FeathersAPI.spendFeathers(player, cost, cooldown);
+            allow = charge(player);
+            charged = allow;
             ActionsOfStamina.log("{}::Allowed = {}, cost= {}", name(), allow, cost);
             return allow;
         }
         return true;
     }
 
-    public CompoundTag saveNBTData() {
-        var nbt = new CompoundTag();
-        nbt.putBoolean("performing", wasPerforming);
-        nbt.putBoolean("actionState", actionState);
-        nbt.putDouble("featherCostPerSecond", featherCostPerSecond);
-        nbt.putInt("cost", cost);
-        nbt.putInt("minCost", minCost);
-        nbt.putInt("cooldown", cooldown);
-        nbt.putInt("staminaCostPerTick", staminaCostPerTick);
-        nbt.putBoolean("regenInhibitor", regenInhibitor);
-        nbt.putInt("timesPerformed", timesPerformed);
-        nbt.putInt("timesPerformedToExhaust", timesPerformedToExhaust);
-        return nbt;
+    /** Spends {@link #cost} once with this action's regen delay. */
+    public boolean charge(Player player) {
+        return StaminaBackends.of(player).spend(player, source, cost, cooldown);
     }
 
-    public Action(CompoundTag nbt) {
-        actionState = nbt.getBoolean("actionState");
-        featherCostPerSecond = nbt.getDouble("featherCostPerSecond");
-        cost = nbt.getInt("cost");
-        minCost = nbt.getInt("minCost");
-        cooldown = nbt.getInt("cooldown");
-        staminaCostPerTick = nbt.getInt("staminaCostPerTick");
-        regenInhibitor = nbt.getBoolean("regenInhibitor");
-        timesPerformed = nbt.getInt("timesPerformed");
-        timesPerformedToExhaust = nbt.getInt("timesPerformedToExhaust");
-        wasPerforming = nbt.getBoolean("performing");
+    /** Whether the last {@link #perform} charged the cost (client side: only checked, the server must charge). */
+    public boolean hasJustCharged() {
+        return charged;
     }
 
     public boolean isPerforming() {
