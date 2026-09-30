@@ -7,6 +7,7 @@ This wiki describes the newest version of Actions of Stamina, for **Minecraft 26
 | 26.3 | NeoForge 26.3.0.36-beta | None: this whole wiki |
 | 26.2 | NeoForge 26.2.0.88 or later | [26.2](#262-neoforge-262) |
 | 26.1 | NeoForge 26.1.2.109 or later | [26.1](#261-neoforge-2612) |
+| 1.21.11 | NeoForge 21.11.42 or later | [1.21.11](#12111-neoforge-2111) |
 | 1.21.1 | NeoForge 21.1 | [1.21.1](#1211-neoforge-211) |
 | 1.20.1 | Forge 47 | [1.20.1](#1201-forge-47) |
 | 1.19.2 | Forge 43 | [1.19.2](#1192-forge-43) |
@@ -43,9 +44,19 @@ The same as 26.2.
 
 **Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1-2.0.0.
 
+## 1.21.11 (NeoForge 21.11)
+
+The same as 26.1, and:
+
+**Has, on top of 26.x:** ParCool 3, with its `[parcool]` section in the server config (see [Configuration](Configuration#sections-only-on-older-minecraft-versions) and [Compatibility](Compatibility#on-older-minecraft-versions)). It works as on 1.18.2, which has ParCool 3 too: ParCool's own stamina (its client option `used_stamina = PARCOOL`, or the server's `forced_stamina`) shows Actions of Stamina's stamina and charges nothing, and ParCool's stamina bar is hidden. A player who picks `used_stamina = HUNGER` pays both food (ParCool) and stamina (Actions of Stamina). `[parcool]` has `jump_from_bar` and no `grapple` or `castaway`.
+
+**Missing:** Epic Fight, Gliders and Create have no build for Minecraft 1.21.11.
+
+**Tested with:** ParCool 3.4.3.3, Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, Feathers of Fatigue 1.21.11-2.0.0.
+
 ## 1.21.1 (NeoForge 21.1)
 
-**Has, on top of 26.x:** ParCool, Epic Fight, Gliders and Create, with their sections in the server config (see [Configuration](Configuration#sections-only-on-older-minecraft-versions) and [Compatibility](Compatibility#on-older-minecraft-versions)).
+**Has, on top of 26.x:** ParCool (version 4, with Actions of Stamina's own ParCool stamina type), Epic Fight, Gliders and Create, with their sections in the server config (see [Configuration](Configuration#sections-only-on-older-minecraft-versions) and [Compatibility](Compatibility#on-older-minecraft-versions)).
 
 **Different:**
 

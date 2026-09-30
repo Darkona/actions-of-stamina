@@ -548,7 +548,7 @@ The actions are rebuilt from the config whenever a player joins a level, so most
 
 ## Sections only on older Minecraft versions
 
-These mods have no build for Minecraft 26.3, so their sections are only in the server config of Actions of Stamina for older versions (see [Minecraft Versions](Minecraft-Versions)): Paragliders on Minecraft 26.2 and older; ParCool, Epic Fight, Gliders and Create on Minecraft 1.21.1 and older.
+These mods have no build for Minecraft 26.3, so their sections are only in the server config of Actions of Stamina for older versions (see [Minecraft Versions](Minecraft-Versions)): Paragliders on Minecraft 26.2 and older; ParCool on Minecraft 1.21.11 and older; Epic Fight, Gliders and Create on Minecraft 1.21.1 and older.
 
 ```toml
 #Paragliders: paragliding costs AoS stamina and Paragliders reads its stamina from AoS (only when Paragliders is installed)

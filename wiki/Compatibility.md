@@ -50,7 +50,7 @@ Actions of Stamina calls into these mods directly, so it accepts the versions it
 
 ## On older Minecraft versions
 
-These mods have no build for Minecraft 26.3, so their compats are only in Actions of Stamina for older versions: Paragliders on Minecraft 26.2 and older, ParCool, Epic Fight, Gliders and Create on Minecraft 1.21.1 and older. [Minecraft Versions](Minecraft-Versions) lists what each version supports and was tested with.
+These mods have no build for Minecraft 26.3, so their compats are only in Actions of Stamina for older versions: Paragliders on Minecraft 26.2 and older, ParCool on Minecraft 1.21.11 and older, Epic Fight, Gliders and Create on Minecraft 1.21.1 and older. [Minecraft Versions](Minecraft-Versions) lists what each version supports and was tested with.
 
 ### Paragliders
 
