@@ -9,7 +9,7 @@ displayName = "${mod_name}"
 logoFile = "aos.png"
 authors = "${mod_authors}"
 description = '''
-Actions cost stamina: vanilla actions and other mods' actions (Paragliders, Better Combat, Combat Roll, Wall-Jump TXF). Uses Feathers of Fatigue when installed, or its own light stamina bar.
+Actions cost stamina: vanilla actions and other mods' actions (Paragliders, Better Combat, Combat Roll, Wall-Jump TXF, ParCool). Uses Feathers of Fatigue when installed, or its own light stamina bar.
 '''
 
 [[mixins]]
@@ -71,5 +71,12 @@ side = "BOTH"
 modId = "curios"
 type = "optional"
 versionRange = "${curios_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "parcool"
+type = "optional"
+versionRange = "${parcool_range}"
 ordering = "NONE"
 side = "BOTH"

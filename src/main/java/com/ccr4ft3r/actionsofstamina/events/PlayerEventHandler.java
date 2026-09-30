@@ -36,7 +36,6 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -175,7 +174,7 @@ public final class PlayerEventHandler {
 
     /** Server: a block broken by a player (after every other mod had its say: a cancelled break isn't charged). */
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void blockBroken(BreakBlockEvent event) {
+    public static void blockBroken(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
         if (player.level().isClientSide() || PlayerActions.isExempt(player)) return;
         if (PlayerActions.get(player).getAction(VanillaActions.MINE) instanceof MineAction mine) {

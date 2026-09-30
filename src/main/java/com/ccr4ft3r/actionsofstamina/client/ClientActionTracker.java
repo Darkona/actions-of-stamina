@@ -7,6 +7,7 @@ import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
 import com.ccr4ft3r.actionsofstamina.actions.minecraft.row.RowAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionStatePacket;
@@ -62,6 +63,10 @@ public final class ClientActionTracker {
         // Same for brushes.
         boolean brushing = BrushAction.isBrushing(player);
 
+        // ParCool's own sprint, swim and crawl are charged by the ParCool compat, not twice.
+        if (sprinting && ParcoolCompat.ownsSprint(player)) sprinting = false;
+        if (swimming && ParcoolCompat.ownsSwim(player)) swimming = false;
+        if (crawling && ParcoolCompat.ownsCrawl(player)) crawling = false;
         boolean paragliding = ParagliderCompat.isParagliding(player);
         boolean wallClinging = actions.getAction(WallJumpCompat.WALL_CLING) != null && WallJumpCompat.isClinging(player);
 

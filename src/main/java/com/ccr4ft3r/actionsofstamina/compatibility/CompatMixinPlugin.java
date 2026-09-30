@@ -31,6 +31,7 @@ public final class CompatMixinPlugin implements IMixinConfigPlugin {
         if (mixin.startsWith("BetterCombat")) return isLoaded("bettercombat");
         if (mixin.startsWith("CombatRoll")) return isLoaded("combat_roll");
         if (mixin.startsWith("WallJump")) return isLoaded("walljump");
+        if (mixin.startsWith("Parcool")) return isLoaded("parcool");
         return false;
     }
 

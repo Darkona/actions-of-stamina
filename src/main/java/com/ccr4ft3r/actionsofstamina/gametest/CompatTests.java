@@ -7,6 +7,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatConf
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
@@ -40,6 +41,45 @@ public class CompatTests {
         while (spends < 10000 && backend.spend(player, TEST, 50, 0)) spends++;
         return " (after " + spends + " spends: stamina " + backend.stamina(player) + ", available "
                 + backend.availableStamina(player) + ", exhausted " + backend.exhausted(player) + ")";
+    }
+
+    @GameTest(template = "empty")
+    public static void parcoolActionsAreChargedAndBlocked(GameTestHelper helper) {
+        if (!ParcoolCompat.LOADED) {
+            helper.succeed();
+            return;
+        }
+        ServerPlayer player = survivalPlayer(helper);
+        StaminaBackend backend = StaminaBackends.server();
+        int before = backend.stamina(player);
+        helper.assertFalse(ParcoolTestHooks.dodgeStartCancelled(player), "dodge may start with a full bar");
+        ParcoolTestHooks.postDodgeStarted(player);
+        helper.assertValueEqual(backend.stamina(player), before - StaminaUnits.ofFeathers(0.8), "stamina after a dodge");
+
+        String state = exhaust(backend, player);
+        helper.assertTrue(ParcoolTestHooks.dodgeStartCancelled(player), "dodge can't start when exhausted" + state);
+        helper.assertTrue(ParcoolTestHooks.breakfallReadyCancelled(player), "a breakfall can't be readied when exhausted");
+        helper.assertFalse(ParcoolTestHooks.breakfallRollCancelled(player), "a landed breakfall's roll is never refused");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void parcoolStaminaIsAoSStamina(GameTestHelper helper) {
+        if (!ParcoolCompat.LOADED) {
+            helper.succeed();
+            return;
+        }
+        ServerPlayer player = player(helper);
+        StaminaBackend backend = StaminaBackends.server();
+        String problem = ParcoolTestHooks.checkReplacement();
+        helper.assertTrue(problem == null, "ParCool stamina replacement: " + problem);
+        backend.spend(player, TEST, StaminaUnits.ofFeathers(3), 0);
+        problem = ParcoolTestHooks.checkStaminaMirrorsBackend(player, backend);
+        helper.assertTrue(problem == null, "ParCool stamina: " + problem);
+        exhaust(backend, player);
+        problem = ParcoolTestHooks.checkStaminaMirrorsBackend(player, backend);
+        helper.assertTrue(problem == null, "ParCool stamina when exhausted: " + problem);
+        helper.succeed();
     }
 
     @GameTest(template = "empty")

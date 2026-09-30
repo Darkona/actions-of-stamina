@@ -6,33 +6,29 @@ import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * ParCool 4.x compatibility, safe to load without it: calls into the mod go through {@link ParcoolBridge}.
+ * ParCool 3.x compatibility, safe to load without it: calls into the mod go through {@link ParcoolBridge}.
  * <p>
- * ParCool fires its action events on the side that decides the action (usually the local client) and replays
- * start/finish on the server when the client's state packet arrives. So AoS charges server side only (start cost on
+ * ParCool 3 decides its actions on the local client, posting its action events there, and replays start/finish on
+ * the server when the client's state packet arrives. So AoS charges server side only (start cost on
  * {@code Start.Post}, a drain on {@code Tick.Post} while a continuous action is doing, the finish cost on
- * {@code Finish.Post}), and blocks on whichever side decides ({@code TryToStart}/{@code TryToContinue}) against
- * that side's view of the stamina.
+ * {@code Finish.Post}), and blocks on the client ({@code TryToStart}/{@code TryToContinue}) against its view of the
+ * stamina.
  * <p>
- * AoS also registers its own ParCool stamina type, {@link #STAMINA_TYPE}, which shows AoS's stamina to ParCool and
- * swallows ParCool's own costs, so the actions are charged once, by AoS. It is ParCool's default {@code stamina_type}
- * when AoS is installed, and while this compat is enabled it also stands in for ParCool's own {@code parcool:parcool}
- * (see {@link #effectiveStaminaType}).
+ * ParCool 3 has no stamina type registry: the local player's stamina handler is picked by ParCool's client option
+ * {@code used_stamina} (PARCOOL, HUNGER or NONE) or the server's {@code forced_stamina}. A mixin swaps ParCool's own
+ * (PARCOOL) handler for {@link ParcoolStamina}, which shows AoS's stamina to ParCool, swallows ParCool's own costs and
+ * hides ParCool's stamina HUD while this compat is enabled, so the actions are charged once, by AoS. HUNGER is kept: it
+ * charges food, not stamina.
  */
 public final class ParcoolCompat {
 
     public static final String MOD_ID = "parcool";
     public static final boolean LOADED = ModList.get().isLoaded(MOD_ID);
-    /** AoS's ParCool stamina type. */
-    public static final ResourceLocation STAMINA_TYPE = ActionsOfStamina.id("stamina");
-    /** ParCool's own stamina type (its default), which would charge ParCool's actions a second time. */
-    public static final ResourceLocation PARCOOL_STAMINA_TYPE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "parcool");
 
     /** One action type per ParCool action AoS charges, in {@link ParcoolConfig}'s order. */
     private static final ActionType[] TYPES;
@@ -66,22 +62,8 @@ public final class ParcoolCompat {
     }
 
     public static boolean isActive() {
-        // ParCool may ask for its stamina type before a world (and so the server config) is loaded.
+        // ParCool asks for its stamina before a world (and so the server config) is loaded.
         return LOADED && AoSServerConfig.SPEC.isLoaded() && ParcoolConfig.ENABLED.getAsBoolean();
-    }
-
-    /** AoS's mod constructor, which runs before ParCool's: registers AoS's stamina type on ParCool's mod bus. */
-    public static void registerStaminaType() {
-        if (LOADED) ParcoolStaminaType.register();
-    }
-
-    /**
-     * From the mixin on ParCool's server config: the stamina type ParCool uses for {@code configured}. While this
-     * compat is enabled, ParCool's own stamina ({@link #PARCOOL_STAMINA_TYPE}) would charge every action a second
-     * time, so AoS's type replaces it; any other choice is kept.
-     */
-    public static ResourceLocation effectiveStaminaType(ResourceLocation configured) {
-        return PARCOOL_STAMINA_TYPE.equals(configured) && AoSServerConfig.SPEC.isLoaded() && isActive() ? STAMINA_TYPE : configured;
     }
 
     /** Common setup: hooks ParCool's action events. */

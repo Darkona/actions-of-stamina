@@ -16,8 +16,8 @@ base {
     archivesName = archive_name
 }
 
-// Minecraft 26.1 runs on Java 25.
-java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+// Minecraft 1.21.11 runs on Java 21.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 // src/disabled keeps the compats of mods without a NeoForge build for this Minecraft version (see its README). It is not
 // a source set: nothing there is compiled or packaged.
@@ -43,6 +43,11 @@ repositories {
 
 neoForge {
     version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
 
     runs {
         client {
@@ -110,6 +115,7 @@ dependencies {
     compileOnly "maven.modrinth:combat-roll:${combatroll_version}"
     compileOnly "maven.modrinth:wall-jump-txf:${walljump_version}"
     compileOnly "maven.modrinth:curios:${curios_version}"
+    compileOnly "curse.maven:parcool-${parcool_version}"
 
     // -PwithCompat: boot dev runs with the compat targets and their required libraries.
     if (project.hasProperty('withCompat')) {
@@ -120,6 +126,7 @@ dependencies {
         localRuntime "maven.modrinth:player-animation-library:${playeranimation_version}"
         localRuntime "maven.modrinth:cloth-config:${clothconfig_version}"
         localRuntime "maven.modrinth:curios:${curios_version}"
+        localRuntime "curse.maven:parcool-${parcool_version}"
     }
 
     // `./gradlew runPlay`: a pack to play with by hand. Feathers of Fatigue with its season and thirst compats, and the
@@ -158,6 +165,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             combatroll_range           : combatroll_range,
             walljump_range             : walljump_range,
             curios_range               : curios_range,
+            parcool_range              : parcool_range,
     ]
     inputs.properties replaceProperties
     expand replaceProperties

@@ -6,6 +6,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatComp
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
@@ -46,6 +47,7 @@ public class ActionsOfStamina {
         // Every action type, Minecraft's and each compat's, whether or not that mod is installed: the indices then don't
         // depend on which mods are there.
         VanillaActions.register();
+        ParcoolCompat.registerActions();
         ParagliderCompat.registerActions();
         BetterCombatCompat.registerActions();
         CombatRollCompat.registerActions();
@@ -66,6 +68,7 @@ public class ActionsOfStamina {
     private static void commonSetup(FMLCommonSetupEvent event) {
         // The compat hooks are plain listener lists or event-bus registrations: not thread safe, so on the main thread.
         event.enqueueWork(() -> {
+            ParcoolCompat.init();
             CombatRollCompat.init();
             CuriosCompat.init();
         });

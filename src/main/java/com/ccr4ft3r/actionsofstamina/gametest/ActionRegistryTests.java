@@ -35,6 +35,7 @@ public class ActionRegistryTests {
         helper.assertValueEqual(CombatRollCompat.ROLL.id(), ActionsOfStamina.id("combat_roll/roll"), "roll id");
         helper.assertValueEqual(WallJumpCompat.DOUBLE_JUMP.id(), ActionsOfStamina.id("walljump/double_jump"), "double jump id");
         helper.assertTrue(ActionTypes.byId(ActionsOfStamina.id("paraglide")) != null, "a Paragliders action is a type");
+        helper.assertTrue(ActionTypes.byId(ActionsOfStamina.id("parcool/dodge")) != null, "a ParCool action is a type");
         helper.assertValueEqual(ActionTypes.byId(TestActionTypes.FINISHING_ID), TestActionTypes.finishing, "another mod's type by id");
         boolean refused = false;
         try {

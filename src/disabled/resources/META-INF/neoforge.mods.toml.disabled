@@ -1,15 +1,6 @@
 # Optional dependencies of the compats in src/disabled, as they are in neoforge.mods.toml for Minecraft 1.21.1.
 
 [[dependencies.${mod_id}]]
-modId = "parcool"
-type = "optional"
-versionRange = "[4.0,)"
-# BEFORE: ParCool posts its stamina type registration event from its constructor, so AoS must be constructed first
-# to add its listener to ParCool's mod bus.
-ordering = "BEFORE"
-side = "BOTH"
-
-[[dependencies.${mod_id}]]
 modId = "epicfight"
 type = "optional"
 versionRange = "[21.17,)"

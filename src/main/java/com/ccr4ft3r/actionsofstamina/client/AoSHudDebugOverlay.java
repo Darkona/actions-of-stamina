@@ -5,7 +5,7 @@ import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.neoforged.neoforge.client.gui.GuiLayer;
 
@@ -19,7 +19,7 @@ public final class AoSHudDebugOverlay {
     private AoSHudDebugOverlay() {
     }
 
-    private static void render(GuiGraphicsExtractor guiGraphics) {
+    private static void render(GuiGraphics guiGraphics) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         // The player first: the server config behind the switch is only loaded while there is one.
@@ -30,12 +30,12 @@ public final class AoSHudDebugOverlay {
         int screenWidth = guiGraphics.guiWidth();
         int titleX = screenWidth - 5 - font.width(TITLE);
         int y = 11;
-        guiGraphics.text(font, TITLE, titleX, y, 0xFFFFFFFF);
+        guiGraphics.drawString(font, TITLE, titleX, y, 0xFFFFFFFF);
         for (Action action : playerActions.getActions()) {
             if (action == null) continue;
             String actionInfo = action.debugString();
             if (actionInfo == null) continue;
-            guiGraphics.text(font, actionInfo, screenWidth - 5 - font.width(actionInfo), y += 10, 0xFFFFFFFF);
+            guiGraphics.drawString(font, actionInfo, screenWidth - 5 - font.width(actionInfo), y += 10, 0xFFFFFFFF);
         }
     }
 }

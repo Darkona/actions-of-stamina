@@ -7,7 +7,7 @@ import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalStamina;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.neoforged.neoforge.client.gui.GuiLayer;
 
@@ -31,7 +31,7 @@ public final class InternalStaminaHud {
     private InternalStaminaHud() {
     }
 
-    private static void render(GuiGraphicsExtractor graphics) {
+    private static void render(GuiGraphics graphics) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || mc.options.hideGui || mc.gameMode == null || !mc.gameMode.canHurtPlayer()) return;
