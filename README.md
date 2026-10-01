@@ -10,7 +10,7 @@ The stamina bar comes from [Feathers of Fatigue](https://github.com/Darkona/feat
 
 It works with Better Combat, Combat Roll, Wall-Jump TXF and Curios, and on older Minecraft versions also with ParCool, Paragliders, Epic Fight, Gliders and Create. Every action and every mod has its own switch and cost in the config.
 
-**Minecraft versions:** 26.3, 26.2, 26.1, 1.21.11 and 1.21.1 on NeoForge, and 1.20.1, 1.19.2 and 1.18.2 on Forge. The [wiki](https://github.com/Darkona/actions-of-stamina/wiki) has the cost of each action, the configuration, and what each [Minecraft version](https://github.com/Darkona/actions-of-stamina/wiki/Minecraft-Versions) supports.
+**Minecraft versions:** 26.3, 26.2, 26.1.2, 1.21.11 and 1.21.1 on NeoForge, and 1.20.1, 1.19.2 and 1.18.2 on Forge. The [wiki](https://github.com/Darkona/actions-of-stamina/wiki) has the cost of each action, the configuration, and what each [Minecraft version](https://github.com/Darkona/actions-of-stamina/wiki/Minecraft-Versions) supports.
 
 ## Credits and license
 
