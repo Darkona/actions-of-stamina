@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches: ['1.*', '2*']
+  pull_request:
+    branches: ['1.*', '2*']
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Java version of this branch
+        run: echo "JAVA_VERSION=$(grep '^java_version=' gradle.properties | cut -d= -f2)" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - uses: gradle/actions/setup-gradle@v5
+        with:
+          validate-wrappers: true
+
+      - name: Sibling mods
+        run: .github/ci-deps.sh dev
+
+      - name: Build and GameTests
+        run: ./gradlew build runGameTestServer
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: jars
+          path: build/libs/*.jar
