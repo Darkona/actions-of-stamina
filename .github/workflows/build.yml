@@ -1,10 +1,23 @@
 name: Build
 
+# A push or PR that only touches documentation does not build. One that mixes docs and code does.
 on:
   push:
     branches: ['1.*', '2*']
+    paths-ignore:
+      - '**.md'
+      - 'wiki/**'
+      - 'art/**'
+      - 'LICENSE'
+      - '.gitignore'
   pull_request:
     branches: ['1.*', '2*']
+    paths-ignore:
+      - '**.md'
+      - 'wiki/**'
+      - 'art/**'
+      - 'LICENSE'
+      - '.gitignore'
 
 concurrency:
   group: build-${{ github.ref }}
