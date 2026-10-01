@@ -25,7 +25,7 @@ Actions of Stamina for Minecraft 26.3, on NeoForge 26.3.0.36-beta exactly (26.3.
 
 ### Not in this version
 
-- **Paragliders:** it has no build for Minecraft 26.3. Its compat and `[paragliders]` section are left out (the code waits in `src/disabled`).
+- **Paragliders:** it has no build for Minecraft 26.3. Its compat and `[paragliders]` section are left out.
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.3 either.
 
 ## 26.2-1.0.0 (NeoForge), 2026-10-01
@@ -39,7 +39,7 @@ Actions of Stamina for Minecraft 26.2, on NeoForge 26.2.0.88 or later. Same acti
 
 ### Not in this version
 
-- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.2. Their compats and config sections are left out (the code waits in `src/disabled`).
+- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.2. Their compats and config sections are left out.
 
 ## 26.1.2-1.0.1 (NeoForge), 2026-10-01
 
@@ -61,7 +61,7 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.112 or later. Same a
 ### Compatibility
 
 - Works with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
-- Each compat accepts its mod from the version tested up to the next major version; a mod outside that range stops the game at load with a message.
+- Each compat accepts its mod from the version it works with up to the next major version; a mod outside that range stops the game at load with a message.
 
 ### For mod developers
 
@@ -69,7 +69,7 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.112 or later. Same a
 
 ### Not in this version
 
-- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1. Their compats and config sections are left out (the code waits in `src/disabled`).
+- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1. Their compats and config sections are left out.
 
 ## 1.21.1-1.0.0 (NeoForge), 2026-10-01
 
