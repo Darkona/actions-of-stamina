@@ -26,7 +26,7 @@ Actions of Stamina for Minecraft 1.21.11, on NeoForge 21.11.45 or later. It is b
 
 ### Not in this version
 
-- **Epic Fight, Gliders, Create:** none of them has a build for Minecraft 1.21.11. Their compats and config sections are left out (the code waits in `src/disabled`).
+- **Epic Fight, Gliders, Create:** none of them has a build for Minecraft 1.21.11. Their compats and config sections are left out.
 
 ## 26.1.2-1.0.1 (NeoForge), 2026-10-01
 
@@ -48,7 +48,7 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.112 or later. Same a
 ### Compatibility
 
 - Works with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
-- Each compat accepts its mod from the version tested up to the next major version; a mod outside that range stops the game at load with a message.
+- Each compat accepts its mod from the version it works with up to the next major version; a mod outside that range stops the game at load with a message.
 
 ### For mod developers
 
@@ -56,7 +56,7 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.112 or later. Same a
 
 ### Not in this version
 
-- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1. Their compats and config sections are left out (the code waits in `src/disabled`).
+- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1. Their compats and config sections are left out.
 
 ## 1.21.1-1.0.0 (NeoForge), 2026-10-01
 
