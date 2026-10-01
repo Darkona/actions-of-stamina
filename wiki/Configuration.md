@@ -1,0 +1,1229 @@
+# Configuration
+
+The costs live in `config/actionsofstamina-server.toml`. It is a server config: the server sends its copy to each player who joins, so all clients charge the same costs. Modpacks put their defaults in `defaultconfigs/`. Costs are in feathers, and one feather is half a HUD icon. The defaults suit a 20-feather bar. Delays are in ticks (20 ticks = 1 second).
+
+The mod builds the actions of a player from the config each time that player joins a level. Most edits therefore apply at the next respawn or dimension change. A change to `backend` needs a server restart.
+
+`config/actionsofstamina-client.toml` controls the internal stamina bar: `hud.enabled`, `hud.x_offset` and `hud.y_offset`.
+
+## Default `actionsofstamina-server.toml`
+
+```toml
+[general]
+	#Where stamina comes from:
+	# AUTO     - Feathers of Fatigue when it is installed, otherwise AoS's internal stamina
+	# FEATHERS - Feathers of Fatigue (falls back to the internal stamina if it isn't installed)
+	# INTERNAL - AoS's internal stamina, even with Feathers of Fatigue installed
+	#Allowed Values: AUTO, FEATHERS, INTERNAL
+	backend = "AUTO"
+	#Log every action change and show the action debug HUD
+	debugging = false
+
+#AoS's own stamina bar, used only when the backend is the internal one (no Feathers of Fatigue)
+[internal]
+	#Whether the internal stamina exists at all; if false, every action is free without Feathers of Fatigue
+	enabled = true
+	#Size of the bar, in feathers
+	# Default: 20
+	# Range: 1 ~ 1000
+	max_feathers = 20
+	#Feathers regenerated per second
+	# Default: 0.5
+	# Range: 0.0 ~ 100.0
+	regen_per_second = 0.5
+	#Minimum ticks without regeneration after any spend (actions may ask for longer)
+	# Default: 30
+	# Range: 0 ~ 1200
+	regen_delay = 30
+	#After running out, the share of the bar to regain before acting again (0-1)
+	# Default: 0.3
+	# Range: 0.0 ~ 1.0
+	exhaustion_recovery = 0.3
+
+#Vanilla actions
+[vanilla]
+
+	#Attacking
+	[vanilla.attack]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of an attack (feathers)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		cost = 1.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Charge the cost once every this many uses
+		# Default: 3
+		# Range: 1 ~ 100
+		times_performed_to_exhaust = 3
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 70
+		# Range: 0 ~ 1200
+		regen_delay = 70
+		#Whether attacks with non-weapons (bare hands, tools without attack damage) cost too
+		also_for_non_weapons = false
+		#Whether only attacks that hit an entity cost (misses stay free)
+		only_for_hits = true
+		#What an attack without the stamina for it does:
+		# CANCEL - it doesn't happen (no swing, no hit)
+		# WEAKEN - it lands, with less damage and a slower attack speed until the stamina is back
+		#Allowed Values: CANCEL, WEAKEN
+		exhausted_mode = "CANCEL"
+		#WEAKEN: share of the attack damage left while the stamina is short (0-1)
+		# Default: 0.5
+		# Range: 0.0 ~ 1.0
+		weaken_damage = 0.5
+		#WEAKEN: share of the attack speed left while the stamina is short (0.05-1)
+		# Default: 0.5
+		# Range: 0.05 ~ 1.0
+		weaken_speed = 0.5
+		#Girl mode. WEAKEN: whether attacks with non-weapons (bare hands, tools without attack damage) are weakened too
+		# while the stamina is short, even when also_for_non_weapons leaves them free (false: only attacks that cost are weakened)
+		weaken_non_weapons = true
+		#A mace smash (a mace hit while falling) is charged on its own, right away: the cost times this (0 makes it free)
+		# Default: 2.0
+		# Range: 0.0 ~ 10.0
+		mace_smash_multiplier = 2.0
+
+	#Jumping
+	[vanilla.jump]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of a jump (feathers)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		cost = 1.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Charge the cost once every this many uses
+		# Default: 4
+		# Range: 1 ~ 100
+		times_performed_to_exhaust = 4
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 40
+		# Range: 0 ~ 1200
+		regen_delay = 40
+
+	#Sprinting
+	[vanilla.sprint]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 2.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 2.0
+		#Feathers drained per second while it lasts
+		# Default: 0.25
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.25
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 40
+		# Range: 0 ~ 1200
+		regen_delay = 40
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#Swimming (the fast, sprint-swimming pose)
+	[vanilla.swim]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 2.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 2.0
+		#Feathers drained per second while it lasts
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 80
+		# Range: 0 ~ 1200
+		regen_delay = 80
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#Flying with wings from the item tag actionsofstamina:stamina_wings (the elytra; datapacks add other mods' wings)
+	[vanilla.elytra]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 2.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 2.0
+		#Feathers drained per second while it lasts
+		# Default: 0.05
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.05
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+		#Whether flight keeps draining while a firework rocket boosts it
+		rocket_boost_costs = false
+
+	#Crawling (moving in the swimming pose on land)
+	[vanilla.crawl]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Feathers drained per second while it lasts
+		# Default: 0.1
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.1
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 40
+		# Range: 0 ~ 1200
+		regen_delay = 40
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#Holding up a shield
+	[vanilla.shield]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to raise it (feathers)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		cost = 1.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.2
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.2
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#Drawing a bow, loading a crossbow or aiming a trident (any item used with their animation)
+	[vanilla.draw]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start drawing (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Feathers drained per second while it lasts
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#Throwing an item from the item tag actionsofstamina:throwables (snowball, egg, ender pearl, splash and lingering potions, wind charge, trident on release)
+	[vanilla.throw]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of a throw (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Charge the cost once every this many uses
+		# Default: 1
+		# Range: 1 ~ 100
+		times_performed_to_exhaust = 1
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+
+	#Mining: breaking a block (never cancelled)
+	[vanilla.mine]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost of breaking a block (of hardness 1 with scale_with_hardness) (feathers)
+		# Default: 0.1
+		# Range: 0.0 ~ 1000.0
+		cost = 0.1
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Charge the cost once every this many uses
+		# Default: 4
+		# Range: 1 ~ 100
+		times_performed_to_exhaust = 4
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether each block costs the cost times its hardness (dirt 0.5, stone 1.5, obsidian 50; instant blocks are free)
+		scale_with_hardness = true
+		#scale_with_hardness: the most a single block's hardness multiplies the cost by
+		# Default: 10.0
+		# Range: 0.0 ~ 100.0
+		max_hardness_multiplier = 10.0
+		#Whether mining gets slower while the player can't afford it (min_stamina); it is never cancelled
+		block_when_exhausted = false
+		#block_when_exhausted: share of the normal break speed left while the stamina is short (0.01-1)
+		# Default: 0.3
+		# Range: 0.01 ~ 1.0
+		exhausted_break_speed = 0.3
+
+	#Building: placing a block (never refused)
+	[vanilla.build]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost of placing a block (feathers)
+		# Default: 0.1
+		# Range: 0.0 ~ 1000.0
+		cost = 0.1
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.0
+		#Charge the cost once every this many uses
+		# Default: 4
+		# Range: 1 ~ 100
+		times_performed_to_exhaust = 4
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+
+	#Climbing: going up a ladder, vines, scaffolding or anything else climbable (down is free)
+	[vanilla.climb]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Feathers drained per second while it lasts
+		# Default: 0.3
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.3
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#Rowing a boat from the entity tag actionsofstamina:rowed_boats as its driver (vanilla boats, chest boats and rafts; datapacks add other mods' boats)
+	[vanilla.row]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Feathers drained per second while it lasts
+		# Default: 0.15
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.15
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#Launching with a Riptide trident, charged on release
+	[vanilla.riptide]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost of a launch (feathers)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		cost = 1.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 40
+		# Range: 0 ~ 1200
+		regen_delay = 40
+
+	#Fishing: casting a rod and reeling it in, each charged (any item with the fishing rod's cast ability)
+	[vanilla.fish]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost of a cast or a reel (feathers)
+		# Default: 0.25
+		# Range: 0.0 ~ 1000.0
+		cost = 0.25
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+
+	#Working a block with a tool: tilling with a hoe, making a path with a shovel, stripping logs and scraping or unwaxing copper with an axe (any tool whose block transformer does it, modded ones too)
+	[vanilla.till]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost of working a block (feathers)
+		# Default: 0.25
+		# Range: 0.0 ~ 1000.0
+		cost = 0.25
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Charge the cost once every this many uses
+		# Default: 2
+		# Range: 1 ~ 100
+		times_performed_to_exhaust = 2
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+
+	#Brushing (any item used with the brush animation)
+	[vanilla.brush]
+		#Whether this action costs stamina.
+		enabled = false
+		#Cost to start brushing (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Feathers drained per second while it lasts
+		# Default: 0.2
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.2
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+#Better Combat: weapon swings cost stamina (only when Better Combat is installed). Swings of weapons with Better Combat attributes replace the vanilla attack cost.
+[bettercombat]
+	#Whether this action costs stamina.
+	enabled = true
+	#Cost of one swing (feathers)
+	# Default: 0.4
+	# Range: 0.0 ~ 1000.0
+	cost = 0.4
+	#Ticks without regeneration after it (20 ticks = 1 second)
+	# Default: 40
+	# Range: 0 ~ 1200
+	regen_delay = 40
+	#Cost multiplier for two-handed weapons
+	# Default: 1.5
+	# Range: 0.0 ~ 10.0
+	two_handed_multiplier = 1.5
+	#Cost multiplier for off-hand swings while dual wielding
+	# Default: 0.75
+	# Range: 0.0 ~ 10.0
+	off_hand_multiplier = 0.75
+	#Cost multiplier for the last swing of a weapon's combo
+	# Default: 1.25
+	# Range: 0.0 ~ 10.0
+	combo_finisher_multiplier = 1.25
+	#Whether swings are stopped when the stamina can't pay for them (otherwise they are just free)
+	block_when_short = true
+	#Cost multipliers by the weapon's Better Combat category ("category=multiplier", 0-10), on top of the others; categories not listed cost 1x. Better Combat's own categories: sword, claymore, dagger, axe, heavy_axe, double_axe, mace, hammer, spear, trident, glaive, halberd, scythe, sickle, katana, rapier, cutlass, twin_blade, claw, fist, lance, anchor, staff, battlestaff, wand, pickaxe, coral_blade, soul_knife
+	category_multipliers = ["dagger=0.6", "fist=0.6", "claw=0.7", "sickle=0.7", "rapier=0.8", "spear=0.9", "axe=1.2", "claymore=1.2", "double_axe=1.2", "heavy_axe=1.3", "hammer=1.3", "mace=1.3", "anchor=1.4"]
+
+#Combat Roll: each roll costs stamina (only when Combat Roll is installed)
+[combat_roll]
+	#Whether this action costs stamina.
+	enabled = true
+	#Cost of a roll (feathers)
+	# Default: 1.5
+	# Range: 0.0 ~ 1000.0
+	cost = 1.5
+	#Ticks without regeneration after it (20 ticks = 1 second)
+	# Default: 30
+	# Range: 0 ~ 1200
+	regen_delay = 30
+
+#Wall-Jump TXF (only when it is installed). A jump or a grip that can't be paid for doesn't happen,
+# and a player clinging to a wall lets go when the stamina runs out.
+[walljump]
+	#Whether Wall-Jump TXF's moves cost stamina
+	enabled = true
+
+	#Jumping off a wall
+	[walljump.wall_jump]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of a wall jump (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+
+	#Jumping again in mid-air
+	[walljump.double_jump]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of a double jump (on its own: it doesn't also pay for a normal jump) (feathers)
+		# Default: 1.5
+		# Range: 0.0 ~ 1000.0
+		cost = 1.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+
+	#Clinging to a wall, and sliding down it afterwards
+	[walljump.wall_cling]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to grab the wall (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 0.5
+		#Feathers drained per second while it lasts
+		# Default: 0.4
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.4
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+```
+
+## Sections only on older Minecraft versions
+
+These mods have no build for Minecraft 26.3. Their sections exist only in the server config of Actions of Stamina for older versions (see [Minecraft Versions](Minecraft-Versions)):
+
+- **Paragliders:** Minecraft 26.2 and older.
+- **ParCool:** Minecraft 1.21.11 and older.
+- **Epic Fight, Gliders and Create:** Minecraft 1.21.1 and older.
+
+```toml
+#Paragliders: paragliding costs AoS stamina and Paragliders reads its stamina from AoS (only when Paragliders is installed)
+[paragliders]
+	#Whether this action costs stamina.
+	enabled = true
+	#Cost to open the paraglider (feathers)
+	# Default: 0.0
+	# Range: 0.0 ~ 1000.0
+	cost = 0.0
+	#Feathers needed to begin (at least the cost)
+	# Default: 1.0
+	# Range: 0.0 ~ 1000.0
+	min_stamina = 1.0
+	#Feathers drained per second while it lasts
+	# Default: 0.1
+	# Range: 0.0 ~ 1000.0
+	per_second = 0.1
+	#Ticks without regeneration after it (20 ticks = 1 second)
+	# Default: 20
+	# Range: 0 ~ 1200
+	regen_delay = 20
+	#Whether regeneration pauses while it lasts
+	blocks_regen = true
+	#Max feathers each Stamina Vessel adds (Feathers of Fatigue: a max_feathers modifier; the internal stamina: a larger bar). 0 turns vessels off. Applies on joining, respawning, or when the vessel count changes
+	# Default: 2
+	# Range: 0 ~ 100
+	feathers_per_vessel = 2
+
+#ParCool (parkour) actions. AoS charges them server side and blocks starting or continuing them
+# when stamina runs short. ParCool's stamina is AoS's own stamina type, "actionsofstamina:stamina",
+# which replaces ParCool's default "parcool:parcool" while this is enabled.
+[parcool]
+	#Whether ParCool actions cost stamina (only when ParCool is installed)
+	enabled = true
+
+	#ParCool fast_run
+	[parcool.fast_run]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.4
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.4
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool fast_swim
+	[parcool.fast_swim]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.4
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.4
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool horizontal_wall_run
+	[parcool.horizontal_wall_run]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.6
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.6
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool hang_on
+	[parcool.hang_on]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.6
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.6
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool hang_down
+	[parcool.hang_down]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool pole_climb
+	[parcool.pole_climb]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.2
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.2
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool slide_down
+	[parcool.slide_down]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.2
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.2
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool ride_zipline
+	[parcool.ride_zipline]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.4
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.4
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool crawl
+	[parcool.crawl]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool slide
+	[parcool.slide]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool dive
+	[parcool.dive]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool skydive
+	[parcool.skydive]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool hide_in_block
+	[parcool.hide_in_block]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool grapple
+	[parcool.grapple]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool vault
+	[parcool.vault]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool climb_up
+	[parcool.climb_up]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool castaway
+	[parcool.castaway]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.2
+		# Range: 0.0 ~ 1000.0
+		cost = 0.2
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool dodge
+	[parcool.dodge]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool charge_jump
+	[parcool.charge_jump]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers drained per second while it lasts
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.0
+		#Feathers charged when it ends
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		finish_cost = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+
+	#ParCool wall_jump
+	[parcool.wall_jump]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of the action (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+
+	#ParCool wall_run
+	[parcool.wall_run]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of the action (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+
+	#ParCool long_jump
+	[parcool.long_jump]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of the action (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+
+	#ParCool trick_jump
+	[parcool.trick_jump]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of the action (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+
+	#ParCool breakfall
+	[parcool.breakfall]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of the action (feathers)
+		# Default: 0.5
+		# Range: 0.0 ~ 1000.0
+		cost = 0.5
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 20
+		# Range: 0 ~ 1200
+		regen_delay = 20
+
+#Epic Fight skills (only when Epic Fight is installed). A skill that can't be paid for fails, as it would
+# without Epic Fight stamina.
+[epicfight]
+	#Whether Epic Fight skills cost AoS stamina
+	enabled = true
+
+	#Dodge skills (step, roll)
+	[epicfight.dodge]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of one use (feathers)
+		# Default: 2.0
+		# Range: 0.0 ~ 1000.0
+		cost = 2.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+
+	#Guard skills, charged per blocked hit
+	[epicfight.guard]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of one use (feathers)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		cost = 1.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+
+	#Weapon innate skills that use stamina
+	[epicfight.innate]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of one use (feathers)
+		# Default: 3.0
+		# Range: 0.0 ~ 1000.0
+		cost = 3.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+
+	#Mover skills (e.g. double jump, demolition leap)
+	[epicfight.mover]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of one use (feathers)
+		# Default: 2.0
+		# Range: 0.0 ~ 1000.0
+		cost = 2.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+
+	#Each swing of Epic Fight's basic attack combo in its battle mode. While in battle mode this replaces AoS's vanilla attack cost, so a swing is only charged once
+	[epicfight.basic_attack]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost of one use (feathers)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		cost = 1.0
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+
+#Gliders: gliding drains stamina (you hold on to the glider). A glider can't be deployed without the stamina to begin, and closes when the stamina runs out (only when Gliders is installed)
+[gliders]
+	#Whether this action costs stamina.
+	enabled = true
+	#Cost to deploy the glider (feathers)
+	# Default: 0.0
+	# Range: 0.0 ~ 1000.0
+	cost = 0.0
+	#Feathers needed to begin (at least the cost)
+	# Default: 1.0
+	# Range: 0.0 ~ 1000.0
+	min_stamina = 1.0
+	#Feathers drained per second while it lasts
+	# Default: 0.1
+	# Range: 0.0 ~ 1000.0
+	per_second = 0.1
+	#Ticks without regeneration after it (20 ticks = 1 second)
+	# Default: 20
+	# Range: 0 ~ 1200
+	regen_delay = 20
+	#Whether regeneration pauses while it lasts
+	blocks_regen = true
+
+#Create (only when it is installed)
+[create]
+
+	#Turning a hand crank (holding the use key on it). Without the stamina it doesn't turn, and it stops when the stamina runs out
+	[create.crank]
+		#Whether this action costs stamina.
+		enabled = true
+		#Cost to start turning (feathers)
+		# Default: 0.0
+		# Range: 0.0 ~ 1000.0
+		cost = 0.0
+		#Feathers needed to begin (at least the cost)
+		# Default: 1.0
+		# Range: 0.0 ~ 1000.0
+		min_stamina = 1.0
+		#Feathers drained per second while it lasts
+		# Default: 0.25
+		# Range: 0.0 ~ 1000.0
+		per_second = 0.25
+		#Ticks without regeneration after it (20 ticks = 1 second)
+		# Default: 30
+		# Range: 0 ~ 1200
+		regen_delay = 30
+		#Whether regeneration pauses while it lasts
+		blocks_regen = true
+		#Whether turning a valve handle costs the same (each turn drains while the player works it)
+		valve_handles = true
+```
+
+## Default `actionsofstamina-client.toml`
+
+```toml
+#The internal stamina bar, drawn above the food bar when Feathers of Fatigue isn't the backend
+[hud]
+	enabled = true
+	# Default: 0
+	# Range: -1000 ~ 1000
+	x_offset = 0
+	# Default: 0
+	# Range: -1000 ~ 1000
+	y_offset = 0
+```
