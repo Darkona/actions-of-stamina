@@ -2,7 +2,7 @@
 
 Changes by feature, newest version first.
 
-## 1.20.1-0.6.0 (Forge 47), unreleased
+## 1.20.1-1.0.0 (Forge 47), unreleased
 
 The 1.21.1 version of Actions of Stamina, ported to Forge 1.20.1 with the same actions, config options and stamina backends. It replaces the earlier 0.6.0 code of this branch, which needed Green Feathers 1.3.0.
 
