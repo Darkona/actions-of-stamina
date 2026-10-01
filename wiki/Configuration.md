@@ -1,8 +1,8 @@
 # Configuration
 
-`config/actionsofstamina-server.toml`, a server config: a server sends its own to every player who joins, so every client charges the same costs (modpacks set their defaults in `defaultconfigs/`). Costs are in feathers, and a feather is half a HUD icon. The defaults are tuned for a 20-feather bar. Delays are in ticks (20 ticks = 1 second).
+The costs live in `config/actionsofstamina-server.toml`. It is a server config: the server sends its copy to each player who joins, so all clients charge the same costs. Modpacks put their defaults in `defaultconfigs/`. Costs are in feathers, and one feather is half a HUD icon. The defaults suit a 20-feather bar. Delays are in ticks (20 ticks = 1 second).
 
-The actions are rebuilt from the config whenever a player joins a level, so most edits apply on the next respawn or dimension change. Changing `backend` needs a server restart.
+The mod builds the actions of a player from the config each time that player joins a level. Most edits therefore apply at the next respawn or dimension change. A change to `backend` needs a server restart.
 
 `config/actionsofstamina-client.toml` controls the internal stamina bar: `hud.enabled`, `hud.x_offset` and `hud.y_offset`.
 
@@ -548,7 +548,11 @@ The actions are rebuilt from the config whenever a player joins a level, so most
 
 ## Sections only on older Minecraft versions
 
-These mods have no build for Minecraft 26.3, so their sections are only in the server config of Actions of Stamina for older versions (see [Minecraft Versions](Minecraft-Versions)): Paragliders on Minecraft 26.2 and older; ParCool on Minecraft 1.21.11 and older; Epic Fight, Gliders and Create on Minecraft 1.21.1 and older.
+These mods have no build for Minecraft 26.3. Their sections exist only in the server config of Actions of Stamina for older versions (see [Minecraft Versions](Minecraft-Versions)):
+
+- **Paragliders:** Minecraft 26.2 and older.
+- **ParCool:** Minecraft 1.21.11 and older.
+- **Epic Fight, Gliders and Create:** Minecraft 1.21.1 and older.
 
 ```toml
 #Paragliders: paragliding costs AoS stamina and Paragliders reads its stamina from AoS (only when Paragliders is installed)

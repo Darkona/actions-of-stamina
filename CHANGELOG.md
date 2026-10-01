@@ -2,7 +2,7 @@
 
 Changes by feature, newest version first.
 
-## 26.3-1.0.0-beta.1 (NeoForge), unreleased
+## 26.3-1.0.0-beta.1 (NeoForge), 2026-10-01
 
 Actions of Stamina for Minecraft 26.3, on NeoForge 26.3.0.36-beta exactly (26.3.0.37-beta changes the config types, and a mod built for one side of that change does not load on the other). Same actions, config and Addon API as 26.2-1.0.0 below, except for what this section lists.
 
@@ -19,7 +19,7 @@ Actions of Stamina for Minecraft 26.3, on NeoForge 26.3.0.36-beta exactly (26.3.
 - **Paragliders:** it has no build for Minecraft 26.3. Its compat and `[paragliders]` section are left out (the code waits in `src/disabled`).
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.3 either.
 
-## 26.2-1.0.0 (NeoForge), unreleased
+## 26.2-1.0.0 (NeoForge), 2026-10-01
 
 Actions of Stamina for Minecraft 26.2, on NeoForge 26.2.0.88 or later. Same actions, config and Addon API as 26.1-1.0.0 below.
 
@@ -32,9 +32,13 @@ Actions of Stamina for Minecraft 26.2, on NeoForge 26.2.0.88 or later. Same acti
 
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.2. Their compats and config sections are left out (the code waits in `src/disabled`).
 
-## 26.1-1.0.0 (NeoForge), unreleased
+## 26.1.2-1.0.1 (NeoForge), 2026-10-01
 
-Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same actions, config and Addon API as 1.21.1-1.0.0 below, except for what this section lists.
+The Minecraft 26.1.2 build is now labeled 26.1.2: the jar, the Maven artifact (`com.ccr4ft3r:actions-of-stamina:26.1.2-1.0.1`) and the branch say 26.1.2 instead of 26.1. Same actions, config and Addon API as 26.1-1.0.0. Tested with Feathers of Fatigue 26.1.2-1.0.1.
+
+## 26.1-1.0.0 (NeoForge), 2026-10-01
+
+Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.112 or later. Same actions, config and Addon API as 1.21.1-1.0.0 below, except for what this section lists.
 
 ### Vanilla actions
 
@@ -58,7 +62,9 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same a
 
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1. Their compats and config sections are left out (the code waits in `src/disabled`).
 
-## 1.21.1-1.0.0 (NeoForge), unreleased
+## 1.21.1-1.0.0 (NeoForge), 2026-10-01
+
+The mod list spells the name Actions of Stamina (older versions said Actions Of Stamina). The mod id `actionsofstamina` is unchanged.
 
 ### Stamina backends
 
