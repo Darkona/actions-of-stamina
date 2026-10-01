@@ -18,7 +18,7 @@ Each version works with the [Feathers of Fatigue](https://github.com/Darkona/fea
 
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1, so their compats and config sections are left out.
 
-**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1-2.0.0.
+**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1-1.0.0.
 
 ## 1.21.1 (NeoForge 21.1)
 

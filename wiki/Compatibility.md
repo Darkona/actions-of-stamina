@@ -56,7 +56,7 @@ Actions of Stamina calls into these mods directly, so it accepts the versions it
 | Combat Roll | 3.0 up to 4 |
 | Wall-Jump TXF | 26.1.2-1.3 up to 26.2 |
 | Curios | 15.0.0 up to 16 |
-| Feathers of Fatigue | 26.1-2.0.0 up to 26.1-3 |
+| Feathers of Fatigue | 26.1-1.0.0 up to 26.1-2 |
 
 ## On Minecraft 1.21.1 and older
 

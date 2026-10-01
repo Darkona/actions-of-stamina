@@ -17,7 +17,7 @@ base {
 }
 
 // Minecraft 1.21.11 runs on Java 21.
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
 
 // src/disabled keeps the compats of mods without a NeoForge build for this Minecraft version (see its README). It is not
 // a source set: nothing there is compiled or packaged.
@@ -217,4 +217,10 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
+}
+
+// The toolchain is Java 25 (java_version), which runs the game and the GameTests; the jar stays Java 21
+// (java_release), so it still loads for players on Java 21.
+tasks.withType(JavaCompile).configureEach {
+    options.release = java_release as int
 }

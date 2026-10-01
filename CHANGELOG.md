@@ -2,26 +2,26 @@
 
 Changes by feature, newest version first.
 
-## 1.21.11-0.6.0 (NeoForge), unreleased
+## 1.21.11-1.0.0 (NeoForge), unreleased
 
-Actions of Stamina for Minecraft 1.21.11, on NeoForge 21.11.42 or later. It is built from 26.1-0.6.0 below and has the same actions, config and Addon API, with the vanilla actions of 26.1 (spear stabs as attacks, shields by the `minecraft:blocks_attacks` component, every boat and raft in `rowed_boats`, colored eggs in `throwables`). Only what this section lists is different.
+Actions of Stamina for Minecraft 1.21.11, on NeoForge 21.11.42 or later. It is built from 26.1-1.0.0 below and has the same actions, config and Addon API, with the vanilla actions of 26.1 (spear stabs as attacks, shields by the `minecraft:blocks_attacks` component, every boat and raft in `rowed_boats`, colored eggs in `throwables`). Only what this section lists is different.
 
 ### Compatibility
 
-- Tested with Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, ParCool 1.21.11-3.4.3.3 and Feathers of Fatigue 1.21.11-2.0.0.
+- Tested with Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, ParCool 1.21.11-2.4.3.3 and Feathers of Fatigue 1.21.11-1.0.0.
 - **ParCool 3.4.3.3:** parkour actions cost stamina again (`[parcool]`, one section per action), with the same sections and defaults as the ParCool 3 compat of Minecraft 1.18.2. ParCool's own stamina (its client option `used_stamina = PARCOOL`, or the server's `forced_stamina`) shows AoS's stamina and charges nothing, and its stamina HUD is hidden, so each action is charged once. ParCool 3 has no grapple or castaway, so there are no sections for them; it has a jump from a bar (`jump_from_bar`). A breakfall is charged when it lands (as a roll or a tap), and can't be readied without its cost.
 
 ### For mod developers
 
-- The Addon API is the one of 26.1, with `Identifier` in every signature. The Maven artifact is `com.ccr4ft3r:actions-of-stamina:1.21.11-0.6.0`.
+- The Addon API is the one of 26.1, with `Identifier` in every signature. The Maven artifact is `com.ccr4ft3r:actions-of-stamina:1.21.11-1.0.0`.
 
 ### Not in this version
 
 - **Epic Fight, Gliders, Create:** none of them has a build for Minecraft 1.21.11. Their compats and config sections are left out (the code waits in `src/disabled`).
 
-## 26.1-0.6.0 (NeoForge), unreleased
+## 26.1-1.0.0 (NeoForge), unreleased
 
-Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same actions, config and Addon API as 1.21.1-0.6.0 below, except for what this section lists.
+Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same actions, config and Addon API as 1.21.1-1.0.0 below, except for what this section lists.
 
 ### Vanilla actions
 
@@ -34,18 +34,18 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same a
 
 ### Compatibility
 
-- Tested with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-2.0.0.
+- Tested with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
 - Each compat accepts its mod from the version tested up to the next major version; a mod outside that range stops the game at load with a message.
 
 ### For mod developers
 
-- The Addon API is the same, with Minecraft's renames: `ResourceLocation` is now `Identifier` in every signature. The Maven artifact is `com.ccr4ft3r:actions-of-stamina:26.1-0.6.0`.
+- The Addon API is the same, with Minecraft's renames: `ResourceLocation` is now `Identifier` in every signature. The Maven artifact is `com.ccr4ft3r:actions-of-stamina:26.1-1.0.0`.
 
 ### Not in this version
 
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1. Their compats and config sections are left out (the code waits in `src/disabled`).
 
-## 1.21.1-0.6.0 (NeoForge), unreleased
+## 1.21.1-1.0.0 (NeoForge), unreleased
 
 ### Stamina backends
 
