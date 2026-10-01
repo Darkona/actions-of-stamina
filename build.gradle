@@ -17,7 +17,7 @@ base {
 }
 
 // Minecraft 26.1 runs on Java 25.
-java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+java.toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
 
 // src/disabled keeps the compats of mods without a NeoForge build for this Minecraft version (see its README). It is not
 // a source set: nothing there is compiled or packaged.
