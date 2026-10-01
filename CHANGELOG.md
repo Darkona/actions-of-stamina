@@ -2,9 +2,15 @@
 
 All notable changes to Actions of Stamina are in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and each change has its date.
 
-Each Minecraft version has its own build, named `<minecraft>-<mod>`: 1.21.1-1.0.0, 26.1-1.0.0 (relabeled 26.1.2-1.0.1), 26.2-1.0.0 and 26.3-1.0.0-beta.1 are on NeoForge. An entry that starts with a Minecraft version applies only from that version on. All of them were released on 2026-10-01. The builds 1.21.11-1.0.0 (NeoForge) and 1.20.1-1.0.0, 1.19.2-1.0.0 and 1.18.2-1.0.0 (Forge) were released on the same day, and their changes are in the changelog of their own branch.
+Each Minecraft version has its own build, named `<minecraft>-<mod>`: 1.21.1-1.0.0, 26.1-1.0.0 (relabeled 26.1.2-1.0.1), 26.2-1.0.0 and 26.3-1.0.0-beta.1 are on NeoForge. An entry that starts with a Minecraft version applies only from that version on. All of them were released on 2026-10-01. The builds 1.21.11-1.0.0 (NeoForge) and 1.20.1-1.0.0, 1.19.2-1.0.0 and 1.18.2-1.0.0 (Forge) were released on the same day, and their changes are in the changelog of their own branch. Later the same day, 1.0.1 followed on each Minecraft version (26.1.2-1.0.2 on 26.1.2, 26.3-1.0.0-beta.2 on 26.3).
 
 Planned: Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, when they publish a build for it.
+
+## [1.0.0-beta.2] - 2026-10-01
+
+### Changed
+- 2026-10-01: With Feathers of Fatigue installed, AoS turns off the basic exertion of Feathers of Fatigue (its own sprint and jump costs) through the Feathers of Fatigue API, so a player never pays twice for the same action. Before, Feathers of Fatigue looked for AoS itself; the result is the same. AoS now needs Feathers of Fatigue 26.3-1.0.0-beta.2 or later. The same change is in the 1.0.1 builds of the other Minecraft versions (26.1.2-1.0.2 on 26.1.2), each with the Feathers of Fatigue 1.0.1 of the same Minecraft version or later (26.1.2-1.0.2 on 26.1.2).
+- 2026-10-01: **Minecraft 26.1.2:** 26.1.2-1.0.2 requires NeoForge 26.1.2.109 or later (it was 26.1.2.112), like Feathers of Fatigue and Droplets of Thirst 26.1.2-1.0.2: KubeJS 8.0.6 only loads on NeoForge 26.1.2.109.
 
 ## [1.0.0-beta.1] - 2026-10-01
 
