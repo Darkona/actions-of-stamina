@@ -9,7 +9,7 @@ Same as 26.2-1.0.0 below, except for what this section lists.
 ### Feathers of Fatigue
 
 - AoS turns off the basic exertion of Feathers of Fatigue (its own sprint and jump costs) through the Feathers of Fatigue API, so a player never pays twice for the same action. The result is the same as before.
-- Needs Feathers of Fatigue 26.2-1.0.1 or later, the first with that API (the accepted range is now `[26.2-1.0.1,26.2-2)`). Tested with Feathers of Fatigue 26.2-1.0.1.
+- Needs Feathers of Fatigue 26.2-1.0.1 or later, the first with that API (the accepted range is now `[26.2-1.0.1,26.2-2)`). Works with Feathers of Fatigue 26.2-1.0.1.
 
 ## 26.2-1.0.0 (NeoForge), 2026-10-01
 
@@ -17,7 +17,7 @@ Actions of Stamina for Minecraft 26.2, on NeoForge 26.2.0.88 or later. Same acti
 
 ### Compatibility
 
-- Tested with Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0 and Feathers of Fatigue 26.2-1.0.0.
+- Works with Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0 and Feathers of Fatigue 26.2-1.0.0.
 - Paragliders 26.2.1 can't read its own loot modifiers on Minecraft 26.2 (it logs an error at load), so elder guardians drop no Spirit Orbs and the wither no Stamina Vessel. Vessels from goddess statues still add max stamina.
 
 ### Not in this version
@@ -26,7 +26,7 @@ Actions of Stamina for Minecraft 26.2, on NeoForge 26.2.0.88 or later. Same acti
 
 ## 26.1.2-1.0.1 (NeoForge), 2026-10-01
 
-The Minecraft 26.1.2 build is now labeled 26.1.2: the jar, the Maven artifact (`com.ccr4ft3r:actions-of-stamina:26.1.2-1.0.1`) and the branch say 26.1.2 instead of 26.1. Same actions, config and Addon API as 26.1-1.0.0. Tested with Feathers of Fatigue 26.1.2-1.0.1.
+The Minecraft 26.1.2 build is now labeled 26.1.2: the jar, the Maven artifact (`com.ccr4ft3r:actions-of-stamina:26.1.2-1.0.1`) and the branch say 26.1.2 instead of 26.1. Same actions, config and Addon API as 26.1-1.0.0. Works with Feathers of Fatigue 26.1.2-1.0.1.
 
 ## 26.1-1.0.0 (NeoForge), 2026-10-01
 
@@ -43,7 +43,7 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.112 or later. Same a
 
 ### Compatibility
 
-- Tested with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
+- Works with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
 - Each compat accepts its mod from the version tested up to the next major version; a mod outside that range stops the game at load with a message.
 
 ### For mod developers
