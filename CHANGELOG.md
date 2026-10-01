@@ -22,7 +22,7 @@ Planned: Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Cre
 - 2026-09-19: Minecraft 26.1.2 version (26.1-1.0.0), on NeoForge 26.1.2.112 or later. It has the same actions, config and Addon API as 1.21.1-1.0.0, except for the 26.1 entries in this file.
 - 2026-09-19: **Minecraft 26.1, spears:** a spear stab is an attack. It costs once per stab, however many creatures it pierces, and counts towards `times_performed_to_exhaust` with the other attacks. A stab that reaches nothing is a swing at the air (`only_for_hits`). Without the stamina, a stab hits nothing, or lands weakened with `exhausted_mode = WEAKEN`. To hold a spear ready to charge is free.
 - 2026-09-19: **Minecraft 26.1:** works with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
-- 2026-09-19: **Minecraft 26.1:** each compat accepts its mod from the tested version up to the next major version. A mod outside that range stops the game at load with a message.
+- 2026-09-19: **Minecraft 26.1:** each compat accepts its mod from the version it works with up to the next major version. A mod outside that range stops the game at load with a message.
 - 2026-07-05: **Addon API:** other mods can add their own actions, with an `ActionCostConfig` section, an `Action` subclass and a type registered in `ActionTypes`. A continuous action can charge a `finish_cost` when it ends. See the Addon API page of the wiki.
 - 2026-07-02: **Attack:** girl mode (`weaken_non_weapons`, on by default). While the stamina is short, WEAKEN also weakens bare-handed and other non-weapon attacks, even when they are free.
 - 2026-05-19: **Throwables (throw):** wind charges cost stamina to throw.
@@ -75,6 +75,6 @@ Planned: Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Cre
 - 2026-05-10: **Attack:** the server charges attacks, so a client cannot skip the payment.
 
 ### Removed
-- 2026-09-23: **Minecraft 26.3:** no Paragliders compat, because Paragliders has no build for Minecraft 26.3. Its compat and `[paragliders]` section wait in `src/disabled`. ParCool, Epic Fight, Gliders and Create have no build for Minecraft 26.3 either.
-- 2026-09-20: **Minecraft 26.2:** no ParCool, Epic Fight, Gliders or Create compat, because none of these mods has a build for Minecraft 26.2. Their compats and config sections wait in `src/disabled`.
-- 2026-09-19: **Minecraft 26.1:** no ParCool, Epic Fight, Gliders or Create compat, because none of these mods has a build for Minecraft 26.1. Their compats and config sections wait in `src/disabled`.
+- 2026-09-23: **Minecraft 26.3:** no Paragliders compat, because Paragliders has no build for Minecraft 26.3. Its compat and `[paragliders]` section are left out. ParCool, Epic Fight, Gliders and Create have no build for Minecraft 26.3 either.
+- 2026-09-20: **Minecraft 26.2:** no ParCool, Epic Fight, Gliders or Create compat, because none of these mods has a build for Minecraft 26.2. Their compats and config sections are left out.
+- 2026-09-19: **Minecraft 26.1:** no ParCool, Epic Fight, Gliders or Create compat, because none of these mods has a build for Minecraft 26.1. Their compats and config sections are left out.
