@@ -9,7 +9,7 @@ Same as 1.21.1-1.0.0 below, except for what this section lists.
 ### Feathers of Fatigue
 
 - AoS turns off the basic exertion of Feathers of Fatigue (its own sprint and jump costs) through the Feathers of Fatigue API, so a player never pays twice for the same action. The result is the same as before.
-- Needs Feathers of Fatigue 1.21.1-1.0.1 or later, the first with that API (the accepted range is now `[1.21.1-1.0.1,1.21.1-2)`). Tested with Feathers of Fatigue 1.21.1-1.0.1.
+- Needs Feathers of Fatigue 1.21.1-1.0.1 or later, the first with that API (the accepted range is now `[1.21.1-1.0.1,1.21.1-2)`). Works with Feathers of Fatigue 1.21.1-1.0.1.
 
 ## 1.21.1-1.0.0 (NeoForge), 2026-10-01
 
