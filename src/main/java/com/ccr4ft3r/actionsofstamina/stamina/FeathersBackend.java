@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.stamina;
 
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.darkona.feathersoffatigue.api.DrainOptions;
 import com.darkona.feathersoffatigue.api.FeathersAPI;
 import com.darkona.feathersoffatigue.api.SpendOptions;
@@ -28,6 +29,11 @@ final class FeathersBackend implements StaminaBackend {
 
     static StaminaBackend create() {
         return new FeathersBackend();
+    }
+
+    /** Feathers of Fatigue's own sprint and jump costs go off: AoS charges player actions itself. */
+    static void takeOverPlayerActions() {
+        FeathersAPI.takeOverPlayerActions(ActionsOfStamina.MOD_ID);
     }
 
     private static SpendOptions spendOptions(int regenDelayTicks) {

@@ -62,6 +62,17 @@ public class BackendSelectionTests {
         helper.succeed();
     }
 
+    /** With Feathers of Fatigue, AoS takes over player actions: its basic exertion is off, so nothing is charged twice. */
+    @GameTest(template = "empty")
+    public static void feathersLeavesPlayerActionsToAos(GameTestHelper helper) {
+        if (!StaminaBackends.FEATHERS_LOADED) {
+            helper.succeed();
+            return;
+        }
+        helper.assertTrue(FeathersTestHooks.playerActionOwners().contains(ActionsOfStamina.MOD_ID), "AoS took over player actions");
+        helper.succeed();
+    }
+
     /**
      * A configuration listener that only answers {@code hasChannel} (with {@code channel}) and records the tasks it is
      * told are finished; every other call does nothing.
