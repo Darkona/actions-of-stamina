@@ -1,8 +1,8 @@
 # Configuration
 
-`config/actionsofstamina-server.toml`, a server config: a server sends its own to every player who joins, so every client charges the same costs (modpacks set their defaults in `defaultconfigs/`). Costs are in feathers, and a feather is half a HUD icon. The defaults are tuned for a 20-feather bar. Delays are in ticks (20 ticks = 1 second).
+The costs live in `config/actionsofstamina-server.toml`. It is a server config: the server sends its copy to each player who joins, so all clients charge the same costs. Modpacks put their defaults in `defaultconfigs/`. Costs are in feathers, and one feather is half a HUD icon. The defaults suit a 20-feather bar. Delays are in ticks (20 ticks = 1 second).
 
-The actions are rebuilt from the config whenever a player joins a level, so most edits apply on the next respawn or dimension change. Changing `backend` needs a server restart.
+The mod builds the actions of a player from the config each time that player joins a level. Most edits therefore apply at the next respawn or dimension change. A change to `backend` needs a server restart.
 
 `config/actionsofstamina-client.toml` controls the internal stamina bar: `hud.enabled`, `hud.x_offset` and `hud.y_offset`.
 
@@ -404,7 +404,7 @@ The actions are rebuilt from the config whenever a player joins a level, so most
 		# Range: 0 ~ 1200
 		regen_delay = 20
 
-	#Working a block with a tool: tilling with a hoe, making a path with a shovel, stripping logs and scraping or unwaxing copper with an axe (modded tools with those abilities too)
+	#Working a block with a tool: tilling with a hoe, making a path with a shovel, stripping logs and scraping or unwaxing copper with an axe (any tool whose block transformer does it, modded ones too)
 	[vanilla.till]
 		#Whether this action costs stamina.
 		enabled = false
@@ -447,33 +447,6 @@ The actions are rebuilt from the config whenever a player joins a level, so most
 		regen_delay = 30
 		#Whether regeneration pauses while it lasts
 		blocks_regen = true
-
-#Paragliders: paragliding costs AoS stamina and Paragliders reads its stamina from AoS (only when Paragliders is installed)
-[paragliders]
-	#Whether this action costs stamina.
-	enabled = true
-	#Cost to open the paraglider (feathers)
-	# Default: 0.0
-	# Range: 0.0 ~ 1000.0
-	cost = 0.0
-	#Feathers needed to begin (at least the cost)
-	# Default: 1.0
-	# Range: 0.0 ~ 1000.0
-	min_stamina = 1.0
-	#Feathers drained per second while it lasts
-	# Default: 0.1
-	# Range: 0.0 ~ 1000.0
-	per_second = 0.1
-	#Ticks without regeneration after it (20 ticks = 1 second)
-	# Default: 20
-	# Range: 0 ~ 1200
-	regen_delay = 20
-	#Whether regeneration pauses while it lasts
-	blocks_regen = true
-	#Max feathers each Stamina Vessel adds (Feathers of Fatigue: a max_feathers modifier; the internal stamina: a larger bar). 0 turns vessels off. Applies on joining, respawning, or when the vessel count changes
-	# Default: 2
-	# Range: 0 ~ 100
-	feathers_per_vessel = 2
 
 #Better Combat: weapon swings cost stamina (only when Better Combat is installed). Swings of weapons with Better Combat attributes replace the vanilla attack cost.
 [bettercombat]
@@ -573,11 +546,42 @@ The actions are rebuilt from the config whenever a player joins a level, so most
 		blocks_regen = true
 ```
 
-## Sections only on Minecraft 1.21.1 and older
+## Sections only on older Minecraft versions
 
-ParCool, Epic Fight, Gliders and Create have no build for Minecraft 26.x, so these sections are only in the server config of Actions of Stamina for Minecraft 1.21.1 and older (see [Minecraft Versions](Minecraft-Versions)).
+These mods have no build for Minecraft 26.3. Their sections exist only in the server config of Actions of Stamina for older versions (see [Minecraft Versions](Minecraft-Versions)):
+
+- **Paragliders:** Minecraft 26.2 and older.
+- **ParCool:** Minecraft 1.21.11 and older.
+- **Epic Fight, Gliders and Create:** Minecraft 1.21.1 and older.
 
 ```toml
+#Paragliders: paragliding costs AoS stamina and Paragliders reads its stamina from AoS (only when Paragliders is installed)
+[paragliders]
+	#Whether this action costs stamina.
+	enabled = true
+	#Cost to open the paraglider (feathers)
+	# Default: 0.0
+	# Range: 0.0 ~ 1000.0
+	cost = 0.0
+	#Feathers needed to begin (at least the cost)
+	# Default: 1.0
+	# Range: 0.0 ~ 1000.0
+	min_stamina = 1.0
+	#Feathers drained per second while it lasts
+	# Default: 0.1
+	# Range: 0.0 ~ 1000.0
+	per_second = 0.1
+	#Ticks without regeneration after it (20 ticks = 1 second)
+	# Default: 20
+	# Range: 0 ~ 1200
+	regen_delay = 20
+	#Whether regeneration pauses while it lasts
+	blocks_regen = true
+	#Max feathers each Stamina Vessel adds (Feathers of Fatigue: a max_feathers modifier; the internal stamina: a larger bar). 0 turns vessels off. Applies on joining, respawning, or when the vessel count changes
+	# Default: 2
+	# Range: 0 ~ 100
+	feathers_per_vessel = 2
+
 #ParCool (parkour) actions. AoS charges them server side and blocks starting or continuing them
 # when stamina runs short. ParCool's stamina is AoS's own stamina type, "actionsofstamina:stamina",
 # which replaces ParCool's default "parcool:parcool" while this is enabled.

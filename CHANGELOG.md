@@ -2,13 +2,13 @@
 
 Changes by feature, newest version first.
 
-## 1.21.11-1.0.0 (NeoForge), unreleased
+## 1.21.11-1.0.0 (NeoForge), 2026-10-01
 
-Actions of Stamina for Minecraft 1.21.11, on NeoForge 21.11.42 or later. It is built from 26.1-1.0.0 below and has the same actions, config and Addon API, with the vanilla actions of 26.1 (spear stabs as attacks, shields by the `minecraft:blocks_attacks` component, every boat and raft in `rowed_boats`, colored eggs in `throwables`). Only what this section lists is different.
+Actions of Stamina for Minecraft 1.21.11, on NeoForge 21.11.45 or later. It is built from 26.1-1.0.0 below and has the same actions, config and Addon API, with the vanilla actions of 26.1 (spear stabs as attacks, shields by the `minecraft:blocks_attacks` component, every boat and raft in `rowed_boats`, colored eggs in `throwables`). Only what this section lists is different.
 
 ### Compatibility
 
-- Tested with Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, ParCool 1.21.11-2.4.3.3 and Feathers of Fatigue 1.21.11-1.0.0.
+- Tested with Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, ParCool 1.21.11-3.4.3.3 and Feathers of Fatigue 1.21.11-1.0.0.
 - **ParCool 3.4.3.3:** parkour actions cost stamina again (`[parcool]`, one section per action), with the same sections and defaults as the ParCool 3 compat of Minecraft 1.18.2. ParCool's own stamina (its client option `used_stamina = PARCOOL`, or the server's `forced_stamina`) shows AoS's stamina and charges nothing, and its stamina HUD is hidden, so each action is charged once. ParCool 3 has no grapple or castaway, so there are no sections for them; it has a jump from a bar (`jump_from_bar`). A breakfall is charged when it lands (as a roll or a tap), and can't be readied without its cost.
 
 ### For mod developers
@@ -19,9 +19,13 @@ Actions of Stamina for Minecraft 1.21.11, on NeoForge 21.11.42 or later. It is b
 
 - **Epic Fight, Gliders, Create:** none of them has a build for Minecraft 1.21.11. Their compats and config sections are left out (the code waits in `src/disabled`).
 
-## 26.1-1.0.0 (NeoForge), unreleased
+## 26.1.2-1.0.1 (NeoForge), 2026-10-01
 
-Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same actions, config and Addon API as 1.21.1-1.0.0 below, except for what this section lists.
+The Minecraft 26.1.2 build is now labeled 26.1.2: the jar, the Maven artifact (`com.ccr4ft3r:actions-of-stamina:26.1.2-1.0.1`) and the branch say 26.1.2 instead of 26.1. Same actions, config and Addon API as 26.1-1.0.0. Tested with Feathers of Fatigue 26.1.2-1.0.1.
+
+## 26.1-1.0.0 (NeoForge), 2026-10-01
+
+Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.112 or later. Same actions, config and Addon API as 1.21.1-1.0.0 below, except for what this section lists.
 
 ### Vanilla actions
 
@@ -45,7 +49,9 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same a
 
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1. Their compats and config sections are left out (the code waits in `src/disabled`).
 
-## 1.21.1-1.0.0 (NeoForge), unreleased
+## 1.21.1-1.0.0 (NeoForge), 2026-10-01
+
+The mod list spells the name Actions of Stamina (older versions said Actions Of Stamina). The mod id `actionsofstamina` is unchanged.
 
 ### Stamina backends
 
@@ -91,7 +97,6 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same a
 
 ## Planned
 
-### Ports
+### Compatibility
 
-- Ports to Minecraft 26.2 and 26.3 (NeoForge).
-- ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, once they publish a build for it.
+- Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, once they publish a build for it.
