@@ -9,7 +9,7 @@ Same as 1.19.2-1.0.0 below, except for what this section lists.
 ### Feathers of Fatigue
 
 - AoS turns off the basic exertion of Feathers of Fatigue (its own sprint and jump costs) through the Feathers of Fatigue API, so a player never pays twice for the same action. The result is the same as before.
-- Needs Feathers of Fatigue 1.19.2-1.0.1 or later, the first with that API (the accepted range is now `[1.19.2-1.0.1,1.19.2-2)`). Tested with Feathers of Fatigue 1.19.2-1.0.1.
+- Needs Feathers of Fatigue 1.19.2-1.0.1 or later, the first with that API (the accepted range is now `[1.19.2-1.0.1,1.19.2-2)`). Works with Feathers of Fatigue 1.19.2-1.0.1.
 
 ## 1.19.2-1.0.0 (Forge 43), 2026-10-01
 
@@ -39,7 +39,7 @@ The 1.21.1 version of Actions of Stamina, ported to Forge 1.19.2 (through the 1.
 
 ### Compatibility
 
-Each one only does something when its mod is installed, and can be turned off in the config. Tested with these 1.19.2 Forge builds:
+Each one only does something when its mod is installed, and can be turned off in the config. Works with these 1.19.2 Forge builds:
 
 - **ParCool 4.0.0.5:** parkour actions cost stamina, and ParCool reads its stamina from Actions of Stamina. This ParCool build needs Forge 43.3 or later.
 - **Paragliders 1.7.0.5:** paragliding costs stamina, and Paragliders reads its stamina from Actions of Stamina (its stamina wheel is hidden). Stamina Vessels add maximum stamina (`feathers_per_vessel`).
