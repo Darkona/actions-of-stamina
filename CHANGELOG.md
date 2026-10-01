@@ -2,7 +2,9 @@
 
 Changes by feature, newest version first.
 
-## 1.21.1-1.0.0 (NeoForge), unreleased
+## 1.21.1-1.0.0 (NeoForge), 2026-10-01
+
+The mod list spells the name Actions of Stamina (older versions said Actions Of Stamina). The mod id `actionsofstamina` is unchanged.
 
 ### Stamina backends
 
@@ -48,7 +50,6 @@ Changes by feature, newest version first.
 
 ## Planned
 
-### Ports
+### Compatibility
 
-- Ports to Minecraft 1.20.1 (Forge 47), 1.19.2 (Forge 43) and 1.18.2 (Forge 40), on Feathers of Fatigue or the own stamina bar, each with the latest stable versions of the supported mods.
-- The wiki gets a section per Minecraft version where the versions differ.
+- Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, once they publish a build for it.
