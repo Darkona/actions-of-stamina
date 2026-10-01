@@ -1,44 +1,71 @@
 # Minecraft Versions
 
-This wiki describes the newest version of Actions of Stamina, for **Minecraft 26.2 (NeoForge)**. The same mod is also made for older Minecraft versions, with the same actions, config options and stamina backends (Feathers of Fatigue or its own bar) wherever the game allows it. This page lists only what is different in each of them.
+This wiki describes the newest version of Actions of Stamina, for **Minecraft 26.3 (NeoForge)**. The mod also exists for older Minecraft versions, with the same actions, config options and stamina backends (Feathers of Fatigue or the own bar) where the game allows it. This page lists only the differences of each version.
 
 | Minecraft | Loader | Differences |
 |---|---|---|
-| 26.2 | NeoForge 26.2.0.88 or later | None: this whole wiki |
-| 26.1 | NeoForge 26.1.2.109 or later | [26.1](#261-neoforge-2612) |
-| 1.21.1 | NeoForge 21.1 | [1.21.1](#1211-neoforge-211) |
-| 1.20.1 | Forge 47 | [1.20.1](#1201-forge-47) |
-| 1.19.2 | Forge 43 | [1.19.2](#1192-forge-43) |
-| 1.18.2 | Forge 40.2.4 or later | [1.18.2](#1182-forge-40) |
+| 26.3 | NeoForge 26.3.0.36-beta | None: this whole wiki |
+| 26.2 | NeoForge 26.2.0.88 or later | [26.2](#262-neoforge-262) |
+| 26.1.2 | NeoForge 26.1.2.112 or later | [26.1.2](#2612-neoforge-2612) |
+| 1.21.11 | NeoForge 21.11.45 or later | [1.21.11](#12111-neoforge-2111) |
+| 1.21.1 | NeoForge 21.1.252 or later | [1.21.1](#1211-neoforge-211) |
+| 1.20.1 | Forge 47.4.23 or later | [1.20.1](#1201-forge-47) |
+| 1.19.2 | Forge 43.5.2 or later | [1.19.2](#1192-forge-43) |
+| 1.18.2 | Forge 40.3.12 or later | [1.18.2](#1182-forge-40) |
 
-Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) made for the same Minecraft version. The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers; from 0.6 on it is no longer supported.
+Each build is named `<minecraft>-<mod>`, for example `1.21.1-1.0.0`, and the [releases](https://github.com/Darkona/actions-of-stamina/releases) have one jar for each Minecraft version. The 26.3 build is `26.3-1.0.0-beta.1`, because NeoForge 26.3 is in beta. The 26.1.2 build is `26.1.2-1.0.1`: it is the same mod as `26.1-1.0.0`, with the full Minecraft version in its name.
 
-## 26.2 (NeoForge 26.2)
+Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) for the same Minecraft version, 1.0.0 or later (for example `1.21.1-1.0.0` on Minecraft 1.21.1, `26.3-1.0.0-beta.1` on 26.3). The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers. From 1.0.0 on, the mod does not support it.
+
+## 26.3 (NeoForge 26.3.0.36-beta)
+
+Needs exactly NeoForge 26.3.0.36-beta. NeoForge 26.3 is in beta, and 26.3.0.37-beta changes the config types. A mod built for one side of that change does not load on the other.
 
 **Missing:**
 
-- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.x, so their compats and config sections are left out.
+- **Paragliders:** it has no build for Minecraft 26.3, so its compat and config section are not in this version.
+- **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.x either.
 
-**Known issue, not in Actions of Stamina:** Paragliders 26.2.1 can't read its own loot modifiers, so elder guardians drop no Spirit Orbs and the wither no Stamina Vessel.
+**Tested with:** Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.3-1.3.8, Curios 17.0.0-beta.2 (the only Curios builds for 26.3 are betas), Feathers of Fatigue 26.3-1.0.0-beta.1.
 
-**Tested with:** Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0, Feathers of Fatigue 26.2-1.0.0.
+## 26.2 (NeoForge 26.2)
 
-## 26.1 (NeoForge 26.1.2)
-
-The same as 26.2.
-
-**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1-1.0.0.
-
-## 1.21.1 (NeoForge 21.1)
-
-**Has, on top of 26.x:** ParCool, Epic Fight, Gliders and Create, with their sections in the server config (see [Configuration](Configuration#sections-only-on-minecraft-1211-and-older) and [Compatibility](Compatibility#on-minecraft-1211-and-older)).
+**Has, on top of 26.3:** Paragliders, with its `[paragliders]` section in the server config (see [Configuration](Configuration#sections-only-on-older-minecraft-versions) and [Compatibility](Compatibility#paragliders)).
 
 **Different:**
 
-- **Spears:** 1.21.1 has none. The draw action counts the spear use animation, which there is the trident's.
-- **Shields:** a modded shield counts when it has NeoForge's `shield_block` item ability (26.x looks for the `minecraft:blocks_attacks` component).
-- **Boats:** the `actionsofstamina:rowed_boats` tag holds `minecraft:boat` and `minecraft:chest_boat`, which cover every wood type and the bamboo raft.
-- **Eggs:** there is only the white egg.
+- **Farming tools:** a tool counts by the NeoForge item abilities for tilling, making paths, stripping, scraping and unwaxing. On 26.3, the mod looks at the block transformer of the item.
+
+**Known issue, not in Actions of Stamina:** Paragliders 26.2.1 cannot read its own loot modifiers. Elder guardians therefore drop no Spirit Orbs, and the wither drops no Stamina Vessel.
+
+**Tested with:** Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0, Feathers of Fatigue 26.2-1.0.0.
+
+## 26.1.2 (NeoForge 26.1.2)
+
+The same as 26.2.
+
+**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1.2-1.0.1.
+
+## 1.21.11 (NeoForge 21.11)
+
+The same as 26.1.2, and:
+
+**Has, on top of 26.x:** ParCool 3, with its `[parcool]` section in the server config (see [Configuration](Configuration#sections-only-on-older-minecraft-versions) and [Compatibility](Compatibility#on-older-minecraft-versions)). It works as on 1.18.2, which has ParCool 3 too. The own stamina of ParCool (its client option `used_stamina = PARCOOL`, or the `forced_stamina` of the server) shows the stamina of Actions of Stamina and charges nothing. The stamina bar of ParCool is hidden. A player who selects `used_stamina = HUNGER` pays both food (ParCool) and stamina (Actions of Stamina). `[parcool]` has `jump_from_bar` and no `grapple` or `castaway`.
+
+**Missing:** Epic Fight, Gliders and Create have no build for Minecraft 1.21.11.
+
+**Tested with:** ParCool 3.4.3.3, Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, Feathers of Fatigue 1.21.11-1.0.0.
+
+## 1.21.1 (NeoForge 21.1)
+
+**Has, on top of 26.x:** ParCool (version 4, with the own ParCool stamina type of Actions of Stamina), Epic Fight, Gliders and Create, with their sections in the server config (see [Configuration](Configuration#sections-only-on-older-minecraft-versions) and [Compatibility](Compatibility#on-older-minecraft-versions)).
+
+**Different:**
+
+- **Spears:** 1.21.1 has no spears. The draw action counts the spear use animation, which on 1.21.1 belongs to the trident.
+- **Shields:** a modded shield counts when it has the NeoForge `shield_block` item ability. On 26.x, the mod looks for the `minecraft:blocks_attacks` component.
+- **Boats:** the `actionsofstamina:rowed_boats` tag holds `minecraft:boat` and `minecraft:chest_boat`. These two cover all wood types and the bamboo raft.
+- **Eggs:** only the white egg exists.
 - **[Addon API](Addon-API):** ids are `ResourceLocation`.
 
 **Tested with:** ParCool 4.0.0.5, Paragliders 21.1.5, Better Combat 2.4.0, Combat Roll 2.0.6, Epic Fight 21.17.3.1, Wall-Jump TXF 1.21.1-1.3.8, Gliders 1.1.8, Create 6.0.10, Curios 9.5.1.
@@ -47,48 +74,48 @@ The same as 26.2.
 
 **Missing, compared with 1.21.1:**
 
-- **Mace smash:** 1.20.1 has no mace, so there is no `[vanilla.attack] mace_smash_multiplier` option.
+- **Mace smash:** 1.20.1 has no mace, so the `[vanilla.attack] mace_smash_multiplier` option does not exist.
 - **Wind charges:** 1.20.1 has no wind charge.
 
 **Different:**
 
 - **[Addon API](Addon-API):** the same classes and calls. The config section is built on a `ForgeConfigSpec.Builder`, and `ActionPerformedPacket` goes to the server through `PacketHandler.sendToServer`.
 
-**Known issue, not in Actions of Stamina:** ParCool 4.0.0.5, Curios 5.14.1 and Epic Fight 20.14.17 installed together crash the game on joining a world. Any two of the three work. This is a bug between those three mods, not in Actions of Stamina.
+**Known issue, not in Actions of Stamina:** ParCool 4.0.0.5, Curios 5.14.1 and Epic Fight 20.14.17 together crash the game when you join a world. Any two of the three work. The bug is between those three mods.
 
 **Tested with:** ParCool 4.0.0.5, Paragliders 20.1.3, Better Combat 1.9.0, Combat Roll 1.3.3, Epic Fight 20.14.17, Wall-Jump TXF 1.3.8, Gliders 1.2.0, Create 6.0.8, Curios 5.14.1. ParCool needs Forge 47.4.23 or later.
 
 ## 1.19.2 (Forge 43)
 
-**Missing:** everything missing in 1.20.1, and:
+**Missing:** all that is missing in 1.20.1, and:
 
-- **Brushing:** 1.19.2 has no brush (archaeology came in 1.20), so there is no `[vanilla.brush]` section.
-- **Bamboo rafts:** they don't exist; the `actionsofstamina:rowed_boats` tag holds boats and chest boats.
-- **Epic Fight guard:** Epic Fight 19 takes a blocked hit's stamina from its own bar without telling other mods, so `[epicfight.guard]` does nothing.
+- **Brushing:** 1.19.2 has no brush (archaeology came in 1.20), so the `[vanilla.brush]` section does not exist.
+- **Bamboo rafts:** they do not exist. The `actionsofstamina:rowed_boats` tag holds boats and chest boats.
+- **Epic Fight guard:** Epic Fight 19 takes the stamina of a blocked hit from its own bar and does not tell other mods. `[epicfight.guard]` therefore does nothing.
 
 **Different:**
 
-- **Paragliders:** Paragliders 1.7 has no stamina API. Actions of Stamina hooks into it differently, with the same result: Paragliders reads its stamina from Actions of Stamina and neither regenerates nor drains its own.
-- ParCool, Curios and Epic Fight work together here.
+- **Paragliders:** Paragliders 1.7 has no stamina API. Actions of Stamina connects to it in a different way, with the same result: Paragliders reads its stamina from Actions of Stamina, and its own stamina does not regenerate or drain.
+- ParCool, Curios and Epic Fight work together on this version.
 - **[Addon API](Addon-API):** as in 1.20.1.
 
 **Tested with:** ParCool 4.0.0.5, Paragliders 1.7.0.5, Better Combat 1.7.1, Combat Roll 1.1.5, Epic Fight 19.5.26, Wall-Jump TXF 1.3.8, Gliders 1.1.4, Create 0.5.1, Curios 5.1.6.
 
 ## 1.18.2 (Forge 40)
 
-Needs Forge 40.2.4 or later.
+Needs Forge 40.3.12 or later.
 
-**Missing:** everything missing in 1.19.2, and:
+**Missing:** all that is missing in 1.19.2, and:
 
-- **Chest boats:** they don't exist either; the `actionsofstamina:rowed_boats` tag holds the boat only.
-- **Gliders:** it has no 1.18.2 build, so there is no `[gliders]` section.
-- **ParCool grapple and castaway:** ParCool 3 doesn't have them.
-- **Better Combat `lance`:** Better Combat 1.6 has no lance category; the other 27 are the same.
+- **Chest boats:** they do not exist either. The `actionsofstamina:rowed_boats` tag holds only the boat.
+- **Gliders:** it has no 1.18.2 build, so the `[gliders]` section does not exist.
+- **ParCool grapple and castaway:** ParCool 3 does not have them.
+- **Better Combat `lance`:** Better Combat 1.6 has no lance category. The other 27 categories are the same.
 - **Fishing rods by tool action:** a modded rod counts only when it is built on the vanilla fishing rod.
 
 **Different:**
 
-- **ParCool 3:** it has no stamina types, so Actions of Stamina's stamina replaces ParCool's own, and ParCool's stamina bar is hidden. A player who picks ParCool's Hunger stamina in ParCool's client options keeps it, and then pays both food (ParCool) and stamina (Actions of Stamina). The costs follow ParCool 3's own: `[parcool]` has `jump_from_bar` and no `grapple` or `castaway`.
+- **ParCool 3:** it has no stamina types. The stamina of Actions of Stamina replaces the own stamina of ParCool, and the stamina bar of ParCool is hidden. A player who selects the Hunger stamina in the client options of ParCool keeps it, and then pays both food (ParCool) and stamina (Actions of Stamina). The costs follow the costs of ParCool 3: `[parcool]` has `jump_from_bar` and no `grapple` or `castaway`.
 - **Paragliders:** works as in 1.19.2 (Paragliders 1.6).
 - **[Addon API](Addon-API):** as in 1.20.1.
 
