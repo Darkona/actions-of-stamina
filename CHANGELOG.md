@@ -2,13 +2,13 @@
 
 Changes by feature, newest version first.
 
-## 1.20.1-1.0.0 (Forge 47), unreleased
+## 1.20.1-1.0.0 (Forge 47), 2026-10-01
 
-The 1.21.1 version of Actions of Stamina, ported to Forge 1.20.1 with the same actions, config options and stamina backends. It replaces the earlier 0.6.0 code of this branch, which needed Green Feathers 1.3.0.
+The 1.21.1 version of Actions of Stamina, ported to Forge 1.20.1 with the same actions, config options and stamina backends. It replaces the earlier 0.6.0 code of this branch, which needed Green Feathers 1.3.0. Needs Forge 47.4.23 or later. The mod list spells the name Actions of Stamina (older versions said Actions Of Stamina). The mod id `actionsofstamina` is unchanged.
 
 ### Stamina backends
 
-- Actions spend Feathers of Fatigue (2.0.0 for 1.20.1) when it is installed, or Actions of Stamina's own stamina bar without it.
+- Actions spend Feathers of Fatigue (1.20.1-1.0.0 or later) when it is installed, or Actions of Stamina's own stamina bar without it.
 - The optional dependency is now Feathers of Fatigue, the new name of Green Feathers: the mod id is `feathers_of_fatigue` (it was `greenfeathers`) and the API package is `com.darkona.feathersoffatigue.api`. The `backend` option and its `FEATHERS` value, which names the mechanic, are unchanged. Packs and servers must install Feathers of Fatigue in place of Green Feathers.
 - Every action has its own config section: cost per use, how many uses each charge covers (`times_performed_to_exhaust`), drain per second, stamina needed to start, regeneration pause, and an on/off switch. All in the server config, synced to clients. Option names are the same as in 1.21.1.
 
@@ -57,7 +57,6 @@ Each one only does something when its mod is installed, and can be turned off in
 
 ## Planned
 
-### Ports
+### Compatibility
 
-- Ports to Minecraft 1.19.2 (Forge 43) and 1.18.2 (Forge 40), on Feathers of Fatigue or the own stamina bar, each with the latest stable versions of the supported mods.
-- The wiki gets a section per Minecraft version where the versions differ.
+- Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, once they publish a build for it.
