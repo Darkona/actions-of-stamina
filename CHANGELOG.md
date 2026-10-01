@@ -2,7 +2,7 @@
 
 Changes by feature, newest version first.
 
-## 1.21.1-0.6.0 (NeoForge), unreleased
+## 1.21.1-1.0.0 (NeoForge), unreleased
 
 ### Stamina backends
 
