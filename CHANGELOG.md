@@ -9,7 +9,7 @@ Same as 1.21.11-1.0.0 below, except for what this section lists.
 ### Feathers of Fatigue
 
 - AoS turns off the basic exertion of Feathers of Fatigue (its own sprint and jump costs) through the Feathers of Fatigue API, so a player never pays twice for the same action. The result is the same as before.
-- Needs Feathers of Fatigue 1.21.11-1.0.1 or later, the first with that API (the accepted range is now `[1.21.11-1.0.1,1.21.11-2)`). Tested with Feathers of Fatigue 1.21.11-1.0.1.
+- Needs Feathers of Fatigue 1.21.11-1.0.1 or later, the first with that API (the accepted range is now `[1.21.11-1.0.1,1.21.11-2)`). Works with Feathers of Fatigue 1.21.11-1.0.1.
 
 ## 1.21.11-1.0.0 (NeoForge), 2026-10-01
 
@@ -17,7 +17,7 @@ Actions of Stamina for Minecraft 1.21.11, on NeoForge 21.11.45 or later. It is b
 
 ### Compatibility
 
-- Tested with Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, ParCool 1.21.11-3.4.3.3 and Feathers of Fatigue 1.21.11-1.0.0.
+- Works with Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, ParCool 1.21.11-3.4.3.3 and Feathers of Fatigue 1.21.11-1.0.0.
 - **ParCool 3.4.3.3:** parkour actions cost stamina again (`[parcool]`, one section per action), with the same sections and defaults as the ParCool 3 compat of Minecraft 1.18.2. ParCool's own stamina (its client option `used_stamina = PARCOOL`, or the server's `forced_stamina`) shows AoS's stamina and charges nothing, and its stamina HUD is hidden, so each action is charged once. ParCool 3 has no grapple or castaway, so there are no sections for them; it has a jump from a bar (`jump_from_bar`). A breakfall is charged when it lands (as a roll or a tap), and can't be readied without its cost.
 
 ### For mod developers
@@ -30,7 +30,7 @@ Actions of Stamina for Minecraft 1.21.11, on NeoForge 21.11.45 or later. It is b
 
 ## 26.1.2-1.0.1 (NeoForge), 2026-10-01
 
-The Minecraft 26.1.2 build is now labeled 26.1.2: the jar, the Maven artifact (`com.ccr4ft3r:actions-of-stamina:26.1.2-1.0.1`) and the branch say 26.1.2 instead of 26.1. Same actions, config and Addon API as 26.1-1.0.0. Tested with Feathers of Fatigue 26.1.2-1.0.1.
+The Minecraft 26.1.2 build is now labeled 26.1.2: the jar, the Maven artifact (`com.ccr4ft3r:actions-of-stamina:26.1.2-1.0.1`) and the branch say 26.1.2 instead of 26.1. Same actions, config and Addon API as 26.1-1.0.0. Works with Feathers of Fatigue 26.1.2-1.0.1.
 
 ## 26.1-1.0.0 (NeoForge), 2026-10-01
 
@@ -47,7 +47,7 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.112 or later. Same a
 
 ### Compatibility
 
-- Tested with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
+- Works with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
 - Each compat accepts its mod from the version tested up to the next major version; a mod outside that range stops the game at load with a message.
 
 ### For mod developers
