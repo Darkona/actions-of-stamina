@@ -2,6 +2,19 @@
 
 Changes by feature, newest version first.
 
+## 26.1.2-1.0.2 (NeoForge), 2026-10-01
+
+Same as 26.1.2-1.0.1 below, except for what this section lists.
+
+### Feathers of Fatigue
+
+- AoS turns off the basic exertion of Feathers of Fatigue (its own sprint and jump costs) through the Feathers of Fatigue API, so a player never pays twice for the same action. The result is the same as before.
+- Needs Feathers of Fatigue 26.1.2-1.0.2 or later, the first with that API (the accepted range is now `[26.1.2-1.0.2,26.1.2-2)`). Tested with Feathers of Fatigue 26.1.2-1.0.2.
+
+### Compatibility
+
+- Requires NeoForge 26.1.2.109 or newer (it was 26.1.2.112), like Feathers of Fatigue 26.1.2-1.0.2 and Droplets of Thirst 26.1.2-1.0.2: KubeJS 8.0.6 only loads on NeoForge 26.1.2.109. Tested on NeoForge 26.1.2.109 and 26.1.2.112.
+
 ## 26.1.2-1.0.1 (NeoForge), 2026-10-01
 
 The Minecraft 26.1.2 build is now labeled 26.1.2: the jar, the Maven artifact (`com.ccr4ft3r:actions-of-stamina:26.1.2-1.0.1`) and the branch say 26.1.2 instead of 26.1. Same actions, config and Addon API as 26.1-1.0.0. Tested with Feathers of Fatigue 26.1.2-1.0.1.
