@@ -2,6 +2,15 @@
 
 Changes by feature, newest version first.
 
+## 26.2-1.0.1 (NeoForge), 2026-10-01
+
+Same as 26.2-1.0.0 below, except for what this section lists.
+
+### Feathers of Fatigue
+
+- AoS turns off the basic exertion of Feathers of Fatigue (its own sprint and jump costs) through the Feathers of Fatigue API, so a player never pays twice for the same action. The result is the same as before.
+- Needs Feathers of Fatigue 26.2-1.0.1 or later, the first with that API (the accepted range is now `[26.2-1.0.1,26.2-2)`). Tested with Feathers of Fatigue 26.2-1.0.1.
+
 ## 26.2-1.0.0 (NeoForge), 2026-10-01
 
 Actions of Stamina for Minecraft 26.2, on NeoForge 26.2.0.88 or later. Same actions, config and Addon API as 26.1-1.0.0 below.
