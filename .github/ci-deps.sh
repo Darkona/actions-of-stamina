@@ -23,11 +23,12 @@ case "$(prop mod_id)" in
     feathers_of_fatigue)
         clone droplets-of-thirst "$(prop droplets_of_thirst_version)"
         publish droplets-of-thirst ;;
-    actionsofstamina)
-        # The Droplets of Thirst that this branch's Feathers of Fatigue asks for: one source of truth.
+    *)
+        # A mod built on Feathers of Fatigue, with the Droplets of Thirst that this Feathers of Fatigue asks for: one
+        # source of truth.
+        grep -q '^feathers_of_fatigue_version=' gradle.properties || { echo "::error::unknown mod_id"; exit 1; }
         clone feathers-of-fatigue "$(prop feathers_of_fatigue_version)"
         clone droplets-of-thirst "$(prop droplets_of_thirst_version deps/feathers-of-fatigue/gradle.properties)"
         publish droplets-of-thirst
         publish feathers-of-fatigue ;;
-    *) echo "::error::unknown mod_id"; exit 1 ;;
 esac
