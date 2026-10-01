@@ -1,63 +1,19 @@
 # Actions of Stamina
 
-*Minecraft 1.21.11 · NeoForge 21.11.42 or later*
+**Player actions cost stamina.** Sprinting, jumping, attacking, swimming, crawling, elytra flight and a raised shield all cost stamina, and so do the actions of popular movement and combat mods. Without enough stamina the action does not happen: you cannot start to sprint, the jump is cancelled, the swing is dropped.
 
-Actions of Stamina (AoS) makes player actions cost stamina. Sprinting, jumping, attacking, swimming, crawling, elytra flight and a raised shield all cost stamina, and so do the actions of several popular movement and combat mods. Without enough stamina, the action does not happen: you cannot start to sprint, the jump is cancelled, the swing is dropped, the roll is not available.
-
-AoS only decides **how actions cost stamina**. The stamina bar comes from [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) for Minecraft 1.21.11 when it is installed. Without it, AoS uses its own simple bar.
-
-| ![Paragliding](wiki/images/paraglider.png) | ![A Better Combat swing](wiki/images/bettercombat.png) |
+| ![A Combat Roll roll](https://raw.githubusercontent.com/Darkona/actions-of-stamina/master/wiki/images/combatroll.png) | ![A Better Combat swing](https://raw.githubusercontent.com/Darkona/actions-of-stamina/master/wiki/images/bettercombat.png) |
 |---|---|
-| Paragliding | A Better Combat swing |
+| A Combat Roll roll | A Better Combat swing |
 
-## Supported mods
+The stamina bar comes from [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) when it is installed, with its strain, weather and potions. Without it, Actions of Stamina uses its own simple bar.
 
-Each one is optional and has its own section in the server config, with an `enabled` switch.
+It works with Better Combat, Combat Roll, Wall-Jump TXF and Curios, and on older Minecraft versions also with ParCool, Paragliders, Epic Fight, Gliders and Create. Every action and every mod has its own switch and cost in the config.
 
-| Mod | Versions | What costs stamina |
-|---|---|---|
-| ParCool | 3.4.3 up to 3.5 | All parkour actions. The stamina of AoS replaces the own stamina of ParCool. |
-| Paragliders | 21.11.0-beta.6 up to 21.12 | Paragliding. Paragliders reads its stamina from AoS, and Stamina Vessels make the stamina bar larger. |
-| Better Combat | 3.1 up to 4 | Each weapon swing, with multipliers by weapon category. |
-| Combat Roll | 3.0 up to 4 | Each roll. |
-| Wall-Jump TXF | 1.21.11-1.3 up to 1.21.12 | Wall jumps, double jumps and wall clinging. |
-| Curios | 14.0.0 up to 15 | Wings in a curio slot cost like wings in the chest slot. |
+**Minecraft versions:** 26.3, 26.2, 26.1, 1.21.11 and 1.21.1 on NeoForge, and 1.20.1, 1.19.2 and 1.18.2 on Forge. The [wiki](https://github.com/Darkona/actions-of-stamina/wiki) has the cost of each action, the configuration, and what each [Minecraft version](https://github.com/Darkona/actions-of-stamina/wiki/Minecraft-Versions) supports.
 
-## This version
+## Credits and license
 
-The [wiki](https://github.com/Darkona/actions-of-stamina/wiki) describes the newest version of AoS. On Minecraft 1.21.11:
-
-- **Paragliders and ParCool:** this version has them, and the newest version does not.
-- **ParCool 3:** it has no grapple or castaway, and it has a jump from a bar (`jump_from_bar`). A player who selects `used_stamina = HUNGER` in ParCool pays both food and stamina.
-- **No Epic Fight, Gliders or Create:** these mods have no build for Minecraft 1.21.11.
-
-[Minecraft Versions](https://github.com/Darkona/actions-of-stamina/wiki/Minecraft-Versions#12111-neoforge-2111) has the full list and the mod versions that AoS was tested with.
-
-## Documentation
-
-- [Stamina Backends](https://github.com/Darkona/actions-of-stamina/wiki/Stamina-Backends): the feathers of Feathers of Fatigue, or the own bar of AoS.
-- [Vanilla Actions](https://github.com/Darkona/actions-of-stamina/wiki/Vanilla-Actions): the cost of each action.
-- [Compatibility](https://github.com/Darkona/actions-of-stamina/wiki/Compatibility): the cost of the actions of each supported mod, and how AoS charges them.
-- [Configuration](https://github.com/Darkona/actions-of-stamina/wiki/Configuration): all the options.
-- [Addon API](https://github.com/Darkona/actions-of-stamina/wiki/Addon-API): for mod developers who want to add stamina-costing actions of their own.
-
-## For developers
-
-- `./gradlew build` builds the mod.
-- `./gradlew runGameTestServer` runs the GameTests. They cover the internal backend (spend, drain, regeneration, exhaustion), the backend selection, and each compat against the real mod: its charges, and its refusals when the stamina runs out. The tests of a compat pass and do nothing when its mod is not installed.
-- `-PwithoutFeathers` runs without Feathers of Fatigue.
-- `-PwithCompat` adds ParCool, Paragliders, Better Combat, Combat Roll, Wall-Jump TXF, Curios and their libraries to the dev runs.
-- `scripts/client-boot-check.sh` starts a headless client in a copy of a superflat test world and saves a screenshot to `build/`. Use `GRADLE_ARGS="-PwithCompat"` to add the compat mods.
-- `xvfb-run -a ./gradlew runBootCheck` starts a headless client directly in `run/saves/aosboot`.
-
-AoS compiles against the other mods only (`compileOnly`) and bundles none of their code. Each call into another mod goes through a bridge class, and that class loads only when the mod is present. The mixins into other mods are in `actionsofstamina.compat.mixins.json`, which applies each one only when its mod is loaded. When the Modrinth maven would resolve a version number to the file of another loader, the build pins that dependency by its Modrinth version id.
-
-The compats of mods without a build for this Minecraft version (Epic Fight, Gliders, Create) wait in `src/disabled`. Gradle does not compile that folder. Its README tells how to bring a compat back.
-
-## Credits
-
-CCr4ft3r made the original mod. Thanks to muraokun for the idea and to ElenaiDev for the feather icon. Darkona ported it to 1.21.1, 1.21.11 and 26.x and extended it.
-
-## License
+**CCr4ft3r** made the original mod. Thanks to **muraokun** for the idea and to **ElenaiDev** for the feather icon. Ported and extended by **Darkona**.
 
 See [LICENSE](LICENSE).
