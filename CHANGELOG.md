@@ -2,18 +2,18 @@
 
 All notable changes to Actions of Stamina are in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and each change has its date.
 
-Each Minecraft version has its own build, named `<minecraft>-<mod>`: 1.21.1-1.0.0, 26.1-1.0.0, 26.2-1.0.0 and 26.3-1.0.0-beta.1 are on NeoForge. An entry that starts with a Minecraft version applies only from that version on. All builds are unreleased.
+Each Minecraft version has its own build, named `<minecraft>-<mod>`: 1.21.1-1.0.0, 26.1-1.0.0 (relabeled 26.1.2-1.0.1), 26.2-1.0.0 and 26.3-1.0.0-beta.1 are on NeoForge. An entry that starts with a Minecraft version applies only from that version on. All of them were released on 2026-10-01. The builds 1.21.11-1.0.0 (NeoForge) and 1.20.1-1.0.0, 1.19.2-1.0.0 and 1.18.2-1.0.0 (Forge) were released on the same day, and their changes are in the changelog of their own branch.
 
 Planned: Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, when they publish a build for it.
 
-## [1.0.0-beta.1] - 2026-09-23
+## [1.0.0-beta.1] - 2026-10-01
 
 ### Added
 - 2026-09-23: Minecraft 26.3 version (26.3-1.0.0-beta.1), on NeoForge 26.3.0.36-beta exactly. NeoForge 26.3.0.37-beta changes the config types, and a mod built for one side of that change does not load on the other. It has the same actions, config and Addon API as 26.2-1.0.0, except for the 26.3 entries in this file.
 - 2026-09-23: **Minecraft 26.3:** tested with Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.3-1.3.8, Curios 17.0.0-beta.2 (the only Curios builds for 26.3 are betas) and Feathers of Fatigue 26.3-1.0.0-beta.1.
 - 2026-09-20: Minecraft 26.2 version (26.2-1.0.0), on NeoForge 26.2.0.88 or later. It has the same actions, config and Addon API as 26.1-1.0.0.
 - 2026-09-20: **Minecraft 26.2:** tested with Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0 and Feathers of Fatigue 26.2-1.0.0. Paragliders 26.2.1 cannot read its own loot modifiers on Minecraft 26.2 and logs an error at load, so elder guardians drop no Spirit Orbs and the wither no Stamina Vessel. Vessels from goddess statues still add max stamina.
-- 2026-09-19: Minecraft 26.1.2 version (26.1-1.0.0), on NeoForge 26.1.2.109 or later. It has the same actions, config and Addon API as 1.21.1-1.0.0, except for the 26.1 entries in this file.
+- 2026-09-19: Minecraft 26.1.2 version (26.1-1.0.0), on NeoForge 26.1.2.112 or later. It has the same actions, config and Addon API as 1.21.1-1.0.0, except for the 26.1 entries in this file.
 - 2026-09-19: **Minecraft 26.1, spears:** a spear stab is an attack. It costs once per stab, however many creatures it pierces, and counts towards `times_performed_to_exhaust` with the other attacks. A stab that reaches nothing is a swing at the air (`only_for_hits`). Without the stamina, a stab hits nothing, or lands weakened with `exhausted_mode = WEAKEN`. To hold a spear ready to charge is free.
 - 2026-09-19: **Minecraft 26.1:** tested with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
 - 2026-09-19: **Minecraft 26.1:** each compat accepts its mod from the tested version up to the next major version. A mod outside that range stops the game at load with a message.
@@ -51,6 +51,8 @@ Planned: Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Cre
 - 2026-05-01: Weapons that get their damage from the modifiers of other mods (such as modular weapons) count as weapons.
 
 ### Changed
+- 2026-10-01: **Minecraft 26.1.2:** the build is now labeled 26.1.2-1.0.1. The jar, the Maven artifact (`com.ccr4ft3r:actions-of-stamina:26.1.2-1.0.1`) and the branch say 26.1.2 in place of 26.1. It has the same actions, config and Addon API as 26.1-1.0.0, and was tested with Feathers of Fatigue 26.1.2-1.0.1.
+- 2026-10-01: The mod list spells the name Actions of Stamina (older versions said Actions Of Stamina). The mod id `actionsofstamina` does not change.
 - 2026-09-23: **Minecraft 26.3, farming tools:** Minecraft 26.3 changes blocks with tools through the block transformer of the item (the `minecraft:block_transformer` component), not through item abilities. Any item whose block transformer changes the clicked block counts, data map transformers of other mods too. The vanilla hoe, shovel and axe count as before.
 - 2026-09-19: **Minecraft 26.1, shields:** a modded shield counts when it blocks attacks (the `minecraft:blocks_attacks` component), as Minecraft 26.1 defines a shield.
 - 2026-09-19: **Minecraft 26.1, draw:** counts the bow, crossbow and trident use animations. The spear animation is not a draw.

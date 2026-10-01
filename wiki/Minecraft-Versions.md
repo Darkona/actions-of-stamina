@@ -6,14 +6,16 @@ This wiki describes the newest version of Actions of Stamina, for **Minecraft 26
 |---|---|---|
 | 26.3 | NeoForge 26.3.0.36-beta | None: this whole wiki |
 | 26.2 | NeoForge 26.2.0.88 or later | [26.2](#262-neoforge-262) |
-| 26.1.2 | NeoForge 26.1.2.109 or later | [26.1.2](#2612-neoforge-2612) |
-| 1.21.11 | NeoForge 21.11.42 or later | [1.21.11](#12111-neoforge-2111) |
-| 1.21.1 | NeoForge 21.1 | [1.21.1](#1211-neoforge-211) |
-| 1.20.1 | Forge 47 | [1.20.1](#1201-forge-47) |
-| 1.19.2 | Forge 43 | [1.19.2](#1192-forge-43) |
-| 1.18.2 | Forge 40.2.4 or later | [1.18.2](#1182-forge-40) |
+| 26.1.2 | NeoForge 26.1.2.112 or later | [26.1.2](#2612-neoforge-2612) |
+| 1.21.11 | NeoForge 21.11.45 or later | [1.21.11](#12111-neoforge-2111) |
+| 1.21.1 | NeoForge 21.1.252 or later | [1.21.1](#1211-neoforge-211) |
+| 1.20.1 | Forge 47.4.23 or later | [1.20.1](#1201-forge-47) |
+| 1.19.2 | Forge 43.5.2 or later | [1.19.2](#1192-forge-43) |
+| 1.18.2 | Forge 40.3.12 or later | [1.18.2](#1182-forge-40) |
 
-Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) for the same Minecraft version. The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers. From 0.6 on, the mod does not support it.
+Each build is named `<minecraft>-<mod>`, for example `1.21.1-1.0.0`, and the [releases](https://github.com/Darkona/actions-of-stamina/releases) have one jar for each Minecraft version. The 26.3 build is `26.3-1.0.0-beta.1`, because NeoForge 26.3 is in beta. The 26.1.2 build is `26.1.2-1.0.1`: it is the same mod as `26.1-1.0.0`, with the full Minecraft version in its name.
+
+Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) for the same Minecraft version, 1.0.0 or later (for example `1.21.1-1.0.0` on Minecraft 1.21.1, `26.3-1.0.0-beta.1` on 26.3). The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers. From 1.0.0 on, the mod does not support it.
 
 ## 26.3 (NeoForge 26.3.0.36-beta)
 
@@ -101,7 +103,7 @@ The same as 26.1.2, and:
 
 ## 1.18.2 (Forge 40)
 
-Needs Forge 40.2.4 or later.
+Needs Forge 40.3.12 or later.
 
 **Missing:** all that is missing in 1.19.2, and:
 
