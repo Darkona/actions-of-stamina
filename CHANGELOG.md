@@ -2,20 +2,20 @@
 
 All notable changes to Actions of Stamina are in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and each change has its date.
 
-Each Minecraft version has its own build, named `<minecraft>-<mod>`: 1.21.1-0.6.0, 26.1-0.6.0, 26.2-0.6.0 and 26.3-0.6.0 are on NeoForge. An entry that starts with a Minecraft version applies only from that version on. All builds are unreleased.
+Each Minecraft version has its own build, named `<minecraft>-<mod>`: 1.21.1-1.0.0, 26.1-1.0.0, 26.2-1.0.0 and 26.3-1.0.0-beta.1 are on NeoForge. An entry that starts with a Minecraft version applies only from that version on. All builds are unreleased.
 
 Planned: Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Create on Minecraft 26.x, when they publish a build for it.
 
-## [0.6.0] - 2026-09-23
+## [1.0.0-beta.1] - 2026-09-23
 
 ### Added
-- 2026-09-23: Minecraft 26.3 version (26.3-0.6.0), on NeoForge 26.3.0.36-beta exactly. NeoForge 26.3.0.37-beta changes the config types, and a mod built for one side of that change does not load on the other. It has the same actions, config and Addon API as 26.2-0.6.0, except for the 26.3 entries in this file.
-- 2026-09-23: **Minecraft 26.3:** tested with Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.3-1.3.8, Curios 17.0.0-beta.2 (the only Curios builds for 26.3 are betas) and Feathers of Fatigue 26.3-2.0.0.
-- 2026-09-20: Minecraft 26.2 version (26.2-0.6.0), on NeoForge 26.2.0.88 or later. It has the same actions, config and Addon API as 26.1-0.6.0.
-- 2026-09-20: **Minecraft 26.2:** tested with Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0 and Feathers of Fatigue 26.2-2.0.0. Paragliders 26.2.1 cannot read its own loot modifiers on Minecraft 26.2 and logs an error at load, so elder guardians drop no Spirit Orbs and the wither no Stamina Vessel. Vessels from goddess statues still add max stamina.
-- 2026-09-19: Minecraft 26.1.2 version (26.1-0.6.0), on NeoForge 26.1.2.109 or later. It has the same actions, config and Addon API as 1.21.1-0.6.0, except for the 26.1 entries in this file.
+- 2026-09-23: Minecraft 26.3 version (26.3-1.0.0-beta.1), on NeoForge 26.3.0.36-beta exactly. NeoForge 26.3.0.37-beta changes the config types, and a mod built for one side of that change does not load on the other. It has the same actions, config and Addon API as 26.2-1.0.0, except for the 26.3 entries in this file.
+- 2026-09-23: **Minecraft 26.3:** tested with Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.3-1.3.8, Curios 17.0.0-beta.2 (the only Curios builds for 26.3 are betas) and Feathers of Fatigue 26.3-1.0.0-beta.1.
+- 2026-09-20: Minecraft 26.2 version (26.2-1.0.0), on NeoForge 26.2.0.88 or later. It has the same actions, config and Addon API as 26.1-1.0.0.
+- 2026-09-20: **Minecraft 26.2:** tested with Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0 and Feathers of Fatigue 26.2-1.0.0. Paragliders 26.2.1 cannot read its own loot modifiers on Minecraft 26.2 and logs an error at load, so elder guardians drop no Spirit Orbs and the wither no Stamina Vessel. Vessels from goddess statues still add max stamina.
+- 2026-09-19: Minecraft 26.1.2 version (26.1-1.0.0), on NeoForge 26.1.2.109 or later. It has the same actions, config and Addon API as 1.21.1-1.0.0, except for the 26.1 entries in this file.
 - 2026-09-19: **Minecraft 26.1, spears:** a spear stab is an attack. It costs once per stab, however many creatures it pierces, and counts towards `times_performed_to_exhaust` with the other attacks. A stab that reaches nothing is a swing at the air (`only_for_hits`). Without the stamina, a stab hits nothing, or lands weakened with `exhausted_mode = WEAKEN`. To hold a spear ready to charge is free.
-- 2026-09-19: **Minecraft 26.1:** tested with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-2.0.0.
+- 2026-09-19: **Minecraft 26.1:** tested with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
 - 2026-09-19: **Minecraft 26.1:** each compat accepts its mod from the tested version up to the next major version. A mod outside that range stops the game at load with a message.
 - 2026-07-05: **Addon API:** other mods can add their own actions, with an `ActionCostConfig` section, an `Action` subclass and a type registered in `ActionTypes`. A continuous action can charge a `finish_cost` when it ends. See the Addon API page of the wiki.
 - 2026-07-02: **Attack:** girl mode (`weaken_non_weapons`, on by default). While the stamina is short, WEAKEN also weakens bare-handed and other non-weapon attacks, even when they are free.
@@ -57,7 +57,7 @@ Planned: Paragliders on Minecraft 26.3, and ParCool, Epic Fight, Gliders and Cre
 - 2026-09-19: **Minecraft 26.1, rowing:** the `actionsofstamina:rowed_boats` tag holds `#minecraft:boat` and all chest boats and chest rafts, because each wood type is its own boat in Minecraft 26.1.
 - 2026-09-19: **Minecraft 26.1, throw:** the `actionsofstamina:throwables` tag holds `#minecraft:eggs`, so blue and brown eggs cost like white ones.
 - 2026-09-19: **Minecraft 26.1, Riptide and trident throws:** they follow the rules of the trident. There is no launch while you ride, and no throw or launch from a trident that is about to break.
-- 2026-09-19: **Minecraft 26.1, Addon API:** the same API, with the Minecraft renames: `ResourceLocation` is now `Identifier` in all signatures. The Maven artifact is `com.ccr4ft3r:actions-of-stamina:26.1-0.6.0`.
+- 2026-09-19: **Minecraft 26.1, Addon API:** the same API, with the Minecraft renames: `ResourceLocation` is now `Identifier` in all signatures. The Maven artifact is `com.ccr4ft3r:actions-of-stamina:26.1-1.0.0`.
 - 2026-09-10: The optional dependency is now Feathers of Fatigue, the new name of Green Feathers. The mod id is `feathers_of_fatigue` (it was `greenfeathers`) and the API package is `com.darkona.feathersoffatigue.api`. The `backend` option and its `FEATHERS` value, which names the mechanic, do not change. Packs and servers must install Feathers of Fatigue in place of Green Feathers.
 - 2026-07-29: **Addon API:** each action is a type registered in `ActionTypes`: the Minecraft actions, the actions of each supported mod, and the actions of other mods. The actions of other mods only need an `ActionCostConfig` section and, for effects, an `Action` subclass. The same code gates, drains and charges all of them.
 - 2026-07-29: Fake players (machines that act as players) never pay stamina, for the actions of the supported mods too.

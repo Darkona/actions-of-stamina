@@ -24,7 +24,7 @@ Needs exactly NeoForge 26.3.0.36-beta. NeoForge 26.3 is in beta, and 26.3.0.37-b
 - **Paragliders:** it has no build for Minecraft 26.3, so its compat and config section are not in this version.
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.x either.
 
-**Tested with:** Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.3-1.3.8, Curios 17.0.0-beta.2 (the only Curios builds for 26.3 are betas), Feathers of Fatigue 26.3-2.0.0.
+**Tested with:** Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.3-1.3.8, Curios 17.0.0-beta.2 (the only Curios builds for 26.3 are betas), Feathers of Fatigue 26.3-1.0.0-beta.1.
 
 ## 26.2 (NeoForge 26.2)
 
@@ -36,13 +36,13 @@ Needs exactly NeoForge 26.3.0.36-beta. NeoForge 26.3 is in beta, and 26.3.0.37-b
 
 **Known issue, not in Actions of Stamina:** Paragliders 26.2.1 cannot read its own loot modifiers. Elder guardians therefore drop no Spirit Orbs, and the wither drops no Stamina Vessel.
 
-**Tested with:** Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0, Feathers of Fatigue 26.2-2.0.0.
+**Tested with:** Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0, Feathers of Fatigue 26.2-1.0.0.
 
 ## 26.1 (NeoForge 26.1.2)
 
 The same as 26.2.
 
-**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1-2.0.0.
+**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1-1.0.0.
 
 ## 1.21.11 (NeoForge 21.11)
 
@@ -52,7 +52,7 @@ The same as 26.1, and:
 
 **Missing:** Epic Fight, Gliders and Create have no build for Minecraft 1.21.11.
 
-**Tested with:** ParCool 3.4.3.3, Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, Feathers of Fatigue 1.21.11-2.0.0.
+**Tested with:** ParCool 3.4.3.3, Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, Feathers of Fatigue 1.21.11-1.0.0.
 
 ## 1.21.1 (NeoForge 21.1)
 
