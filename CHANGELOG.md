@@ -9,7 +9,7 @@ Same as 1.18.2-1.0.0 below, except for what this section lists.
 ### Feathers of Fatigue
 
 - AoS turns off the basic exertion of Feathers of Fatigue (its own sprint and jump costs) through the Feathers of Fatigue API, so a player never pays twice for the same action. The result is the same as before.
-- Needs Feathers of Fatigue 1.18.2-1.0.1 or later, the first with that API (the accepted range is now `[1.18.2-1.0.1,1.18.2-2)`). Tested with Feathers of Fatigue 1.18.2-1.0.1.
+- Needs Feathers of Fatigue 1.18.2-1.0.1 or later, the first with that API (the accepted range is now `[1.18.2-1.0.1,1.18.2-2)`). Works with Feathers of Fatigue 1.18.2-1.0.1.
 
 ## 1.18.2-1.0.0 (Forge 40), 2026-10-01
 
@@ -39,7 +39,7 @@ The 1.21.1 version of Actions of Stamina, ported to Forge 1.18.2 (through the 1.
 
 ### Compatibility
 
-Each one only does something when its mod is installed, and can be turned off in the config. Tested with these 1.18.2 Forge builds:
+Each one only does something when its mod is installed, and can be turned off in the config. Works with these 1.18.2 Forge builds:
 
 - **ParCool 3.4.3.3:** parkour actions cost stamina (`[parcool]`, one section per action). ParCool's own stamina (its client option `used_stamina = Default`) shows AoS's stamina and charges nothing, and its stamina HUD is hidden, so each action is charged once. ParCool 3 has no grapple or castaway, so there are no sections for them; it has a jump from a bar (`jump_from_bar`). Defaults are ParCool 3's own costs. A breakfall is charged when it lands (as a roll or a tap), and can't be readied without its cost.
 - **Paragliders 1.6.0.6:** paragliding costs stamina, and Paragliders reads its stamina from Actions of Stamina (its stamina wheel is hidden). Stamina Vessels add maximum stamina (`feathers_per_vessel`).
