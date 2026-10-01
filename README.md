@@ -1,42 +1,62 @@
 # Actions of Stamina
 
-*Minecraft 1.21.11 · NeoForge 21.11*
+*Minecraft 1.21.11 · NeoForge 21.11.42 or later*
 
-Actions of Stamina (AoS) makes player actions cost stamina. Sprinting, jumping, attacking, swimming, crawling, flying with an elytra and raising a shield all cost stamina, and so do the actions of several popular movement and combat mods. If you don't have enough stamina, the action doesn't happen: you can't start sprinting, a jump is cancelled, a swing is dropped, a roll isn't available.
+Actions of Stamina (AoS) makes player actions cost stamina. Sprinting, jumping, attacking, swimming, crawling, elytra flight and a raised shield all cost stamina, and so do the actions of several popular movement and combat mods. Without enough stamina, the action does not happen: you cannot start to sprint, the jump is cancelled, the swing is dropped, the roll is not available.
 
-AoS only decides **how actions cost stamina**. The stamina bar comes from [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) if it is installed, or from AoS's own simple bar if it isn't.
-
-Supported out of the box, each with its own switch in the config: Paragliders, Better Combat, Combat Roll, Wall-Jump TXF and ParCool; with Curios, wings in a curio slot count too. On Minecraft 1.21.1 and older also Epic Fight, Gliders and Create, which have no build for Minecraft 1.21.11 (see [Minecraft Versions](https://github.com/Darkona/actions-of-stamina/wiki/Minecraft-Versions)).
+AoS only decides **how actions cost stamina**. The stamina bar comes from [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) for Minecraft 1.21.11 when it is installed. Without it, AoS uses its own simple bar.
 
 | ![Paragliding](wiki/images/paraglider.png) | ![A Better Combat swing](wiki/images/bettercombat.png) |
 |---|---|
 | Paragliding | A Better Combat swing |
 
+## Supported mods
+
+Each one is optional and has its own section in the server config, with an `enabled` switch.
+
+| Mod | Versions | What costs stamina |
+|---|---|---|
+| ParCool | 3.4.3 up to 3.5 | All parkour actions. The stamina of AoS replaces the own stamina of ParCool. |
+| Paragliders | 21.11.0-beta.6 up to 21.12 | Paragliding. Paragliders reads its stamina from AoS, and Stamina Vessels make the stamina bar larger. |
+| Better Combat | 3.1 up to 4 | Each weapon swing, with multipliers by weapon category. |
+| Combat Roll | 3.0 up to 4 | Each roll. |
+| Wall-Jump TXF | 1.21.11-1.3 up to 1.21.12 | Wall jumps, double jumps and wall clinging. |
+| Curios | 14.0.0 up to 15 | Wings in a curio slot cost like wings in the chest slot. |
+
+## This version
+
+The [wiki](https://github.com/Darkona/actions-of-stamina/wiki) describes the newest version of AoS. On Minecraft 1.21.11:
+
+- **Paragliders and ParCool:** this version has them, and the newest version does not.
+- **ParCool 3:** it has no grapple or castaway, and it has a jump from a bar (`jump_from_bar`). A player who selects `used_stamina = HUNGER` in ParCool pays both food and stamina.
+- **No Epic Fight, Gliders or Create:** these mods have no build for Minecraft 1.21.11.
+
+[Minecraft Versions](https://github.com/Darkona/actions-of-stamina/wiki/Minecraft-Versions#12111-neoforge-2111) has the full list and the mod versions that AoS was tested with.
+
 ## Documentation
 
-The [wiki](https://github.com/Darkona/actions-of-stamina/wiki) has the details:
-
-- [Stamina Backends](https://github.com/Darkona/actions-of-stamina/wiki/Stamina-Backends): Feathers of Fatigue's feathers, or AoS's own bar.
-- [Vanilla Actions](https://github.com/Darkona/actions-of-stamina/wiki/Vanilla-Actions): what each action costs.
-- [Compatibility](https://github.com/Darkona/actions-of-stamina/wiki/Compatibility): what each supported mod's actions cost, and how.
-- [Configuration](https://github.com/Darkona/actions-of-stamina/wiki/Configuration): every option.
+- [Stamina Backends](https://github.com/Darkona/actions-of-stamina/wiki/Stamina-Backends): the feathers of Feathers of Fatigue, or the own bar of AoS.
+- [Vanilla Actions](https://github.com/Darkona/actions-of-stamina/wiki/Vanilla-Actions): the cost of each action.
+- [Compatibility](https://github.com/Darkona/actions-of-stamina/wiki/Compatibility): the cost of the actions of each supported mod, and how AoS charges them.
+- [Configuration](https://github.com/Darkona/actions-of-stamina/wiki/Configuration): all the options.
+- [Addon API](https://github.com/Darkona/actions-of-stamina/wiki/Addon-API): for mod developers who want to add stamina-costing actions of their own.
 
 ## For developers
 
 - `./gradlew build` builds the mod.
-- `./gradlew runGameTestServer` runs the GameTests: the internal backend (spend, drain, regeneration, exhaustion), backend selection, and the compats against the real mods: each compat's charges, and its refusals when the stamina runs out. A compat's tests pass without doing anything when its mod isn't installed.
+- `./gradlew runGameTestServer` runs the GameTests. They cover the internal backend (spend, drain, regeneration, exhaustion), the backend selection, and each compat against the real mod: its charges, and its refusals when the stamina runs out. The tests of a compat pass and do nothing when its mod is not installed.
 - `-PwithoutFeathers` runs without Feathers of Fatigue.
-- `-PwithCompat` adds Paragliders, Better Combat, Combat Roll, Wall-Jump TXF, Curios, ParCool and the libraries they need to the dev runs.
-- `scripts/client-boot-check.sh` boots a headless client into a copy of a superflat test world and saves a screenshot to `build/` (`GRADLE_ARGS="-PwithCompat"` for the compat mods).
-- `xvfb-run -a ./gradlew runBootCheck` starts a headless client straight into `run/saves/aosboot`.
+- `-PwithCompat` adds ParCool, Paragliders, Better Combat, Combat Roll, Wall-Jump TXF, Curios and their libraries to the dev runs.
+- `scripts/client-boot-check.sh` starts a headless client in a copy of a superflat test world and saves a screenshot to `build/`. Use `GRADLE_ARGS="-PwithCompat"` to add the compat mods.
+- `xvfb-run -a ./gradlew runBootCheck` starts a headless client directly in `run/saves/aosboot`.
 
-AoS compiles against the other mods only (`compileOnly`) and bundles none of their code. Every call into another mod goes through a bridge class that loads only when that mod is present. Mixins into other mods live in `actionsofstamina.compat.mixins.json`, which applies them only when their mod is loaded. The Modrinth dependencies are pinned by Modrinth version id where Modrinth's maven would resolve a version number to another loader's file.
+AoS compiles against the other mods only (`compileOnly`) and bundles none of their code. Each call into another mod goes through a bridge class, and that class loads only when the mod is present. The mixins into other mods are in `actionsofstamina.compat.mixins.json`, which applies each one only when its mod is loaded. When the Modrinth maven would resolve a version number to the file of another loader, the build pins that dependency by its Modrinth version id.
 
-The compats of mods without a build for this Minecraft version (Epic Fight, Gliders, Create) wait in `src/disabled`, which is not compiled; its README says how to bring one back.
+The compats of mods without a build for this Minecraft version (Epic Fight, Gliders, Create) wait in `src/disabled`. Gradle does not compile that folder. Its README tells how to bring a compat back.
 
 ## Credits
 
-Originally created by CCr4ft3r, with thanks to muraokun for the idea and ElenaiDev for the feather icon. Ported to 1.21.1, 1.21.11 and 26.x and extended by Darkona.
+CCr4ft3r made the original mod. Thanks to muraokun for the idea and to ElenaiDev for the feather icon. Darkona ported it to 1.21.1, 1.21.11 and 26.x and extended it.
 
 ## License
 
