@@ -13,7 +13,7 @@ Same as 26.1.2-1.0.1 below, except for what this section lists.
 
 ### Compatibility
 
-- Requires NeoForge 26.1.2.109 or newer (it was 26.1.2.112), like Feathers of Fatigue 26.1.2-1.0.2 and Droplets of Thirst 26.1.2-1.0.2: KubeJS 8.0.6 only loads on NeoForge 26.1.2.109. Tested on NeoForge 26.1.2.109 and 26.1.2.112.
+- Requires NeoForge 26.1.2.109 or newer (it was 26.1.2.112), like Feathers of Fatigue 26.1.2-1.0.2 and Droplets of Thirst 26.1.2-1.0.2: KubeJS 8.0.6 only loads on NeoForge 26.1.2.109.
 
 ## 26.1.2-1.0.1 (NeoForge), 2026-10-01
 
