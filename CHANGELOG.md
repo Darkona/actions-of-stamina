@@ -2,22 +2,22 @@
 
 Changes by feature, newest version first.
 
-## 26.2-0.6.0 (NeoForge), unreleased
+## 26.2-1.0.0 (NeoForge), unreleased
 
-Actions of Stamina for Minecraft 26.2, on NeoForge 26.2.0.88 or later. Same actions, config and Addon API as 26.1-0.6.0 below.
+Actions of Stamina for Minecraft 26.2, on NeoForge 26.2.0.88 or later. Same actions, config and Addon API as 26.1-1.0.0 below.
 
 ### Compatibility
 
-- Tested with Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0 and Feathers of Fatigue 26.2-2.0.0.
+- Tested with Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0 and Feathers of Fatigue 26.2-1.0.0.
 - Paragliders 26.2.1 can't read its own loot modifiers on Minecraft 26.2 (it logs an error at load), so elder guardians drop no Spirit Orbs and the wither no Stamina Vessel. Vessels from goddess statues still add max stamina.
 
 ### Not in this version
 
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.2. Their compats and config sections are left out (the code waits in `src/disabled`).
 
-## 26.1-0.6.0 (NeoForge), unreleased
+## 26.1-1.0.0 (NeoForge), unreleased
 
-Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same actions, config and Addon API as 1.21.1-0.6.0 below, except for what this section lists.
+Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same actions, config and Addon API as 1.21.1-1.0.0 below, except for what this section lists.
 
 ### Vanilla actions
 
@@ -30,18 +30,18 @@ Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same a
 
 ### Compatibility
 
-- Tested with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-2.0.0.
+- Tested with Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0 and Feathers of Fatigue 26.1-1.0.0.
 - Each compat accepts its mod from the version tested up to the next major version; a mod outside that range stops the game at load with a message.
 
 ### For mod developers
 
-- The Addon API is the same, with Minecraft's renames: `ResourceLocation` is now `Identifier` in every signature. The Maven artifact is `com.ccr4ft3r:actions-of-stamina:26.1-0.6.0`.
+- The Addon API is the same, with Minecraft's renames: `ResourceLocation` is now `Identifier` in every signature. The Maven artifact is `com.ccr4ft3r:actions-of-stamina:26.1-1.0.0`.
 
 ### Not in this version
 
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.1. Their compats and config sections are left out (the code waits in `src/disabled`).
 
-## 1.21.1-0.6.0 (NeoForge), unreleased
+## 1.21.1-1.0.0 (NeoForge), unreleased
 
 ### Stamina backends
 

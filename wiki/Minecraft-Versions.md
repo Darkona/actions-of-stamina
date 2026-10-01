@@ -21,13 +21,13 @@ Each version works with the [Feathers of Fatigue](https://github.com/Darkona/fea
 
 **Known issue, not in Actions of Stamina:** Paragliders 26.2.1 can't read its own loot modifiers, so elder guardians drop no Spirit Orbs and the wither no Stamina Vessel.
 
-**Tested with:** Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0, Feathers of Fatigue 26.2-2.0.0.
+**Tested with:** Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0, Feathers of Fatigue 26.2-1.0.0.
 
 ## 26.1 (NeoForge 26.1.2)
 
 The same as 26.2.
 
-**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1-2.0.0.
+**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1-1.0.0.
 
 ## 1.21.1 (NeoForge 21.1)
 
