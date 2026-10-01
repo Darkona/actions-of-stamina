@@ -14,6 +14,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.network.PacketHandler;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -60,6 +61,8 @@ public class ActionsOfStamina {
         CreateCompat.registerActions();
         PacketHandler.register();
         modBus.addListener(ActionsOfStamina::commonSetup);
+        // Before any player ticks: Feathers of Fatigue's own sprint and jump costs step aside for AoS's.
+        StaminaBackends.takeOverPlayerActions();
         // Other mods register their action types while constructed or in common setup; the slots are fixed after that.
         modBus.addListener((FMLLoadCompleteEvent event) -> ActionTypes.freeze());
         // Parsed config lists and the caches built from them follow config and datapack reloads.

@@ -2,6 +2,15 @@
 
 Changes by feature, newest version first.
 
+## 1.20.1-1.0.1 (Forge 47), 2026-10-01
+
+Same as 1.20.1-1.0.0 below, except for what this section lists.
+
+### Feathers of Fatigue
+
+- AoS turns off the basic exertion of Feathers of Fatigue (its own sprint and jump costs) through the Feathers of Fatigue API, so a player never pays twice for the same action. The result is the same as before.
+- Needs Feathers of Fatigue 1.20.1-1.0.1 or later, the first with that API (the accepted range is now `[1.20.1-1.0.1,1.20.1-2)`). Tested with Feathers of Fatigue 1.20.1-1.0.1.
+
 ## 1.20.1-1.0.0 (Forge 47), 2026-10-01
 
 The 1.21.1 version of Actions of Stamina, ported to Forge 1.20.1 with the same actions, config options and stamina backends. It replaces the earlier 0.6.0 code of this branch, which needed Green Feathers 1.3.0. Needs Forge 47.4.23 or later. The mod list spells the name Actions of Stamina (older versions said Actions Of Stamina). The mod id `actionsofstamina` is unchanged.
