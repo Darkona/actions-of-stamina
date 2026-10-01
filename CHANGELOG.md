@@ -2,6 +2,10 @@
 
 Changes by feature, newest version first.
 
+## 26.1.2-1.0.1 (NeoForge)
+
+The Minecraft 26.1.2 build is now labeled 26.1.2: the jar, the Maven artifact (`com.ccr4ft3r:actions-of-stamina:26.1.2-1.0.1`) and the branch say 26.1.2 instead of 26.1. Same actions, config and Addon API as 26.1-1.0.0. Tested with Feathers of Fatigue 26.1.2-1.0.1.
+
 ## 26.1-1.0.0 (NeoForge), unreleased
 
 Actions of Stamina for Minecraft 26.1.2, on NeoForge 26.1.2.109 or later. Same actions, config and Addon API as 1.21.1-1.0.0 below, except for what this section lists.

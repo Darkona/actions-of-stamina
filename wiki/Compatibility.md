@@ -49,14 +49,14 @@ Stamina wings (the item tag `actionsofstamina:stamina_wings`) worn in a curio sl
 
 Actions of Stamina calls into these mods directly, so it accepts the versions it was tested with, up to the next major version. With a version outside that range, the game stops at load and names the mod and the range, instead of crashing later in the middle of play.
 
-| Mod | Accepted versions (26.1) |
+| Mod | Accepted versions (26.1.2) |
 |---|---|
 | Paragliders | 26.1.2 up to 26.2 |
 | Better Combat | 3.2 up to 4 |
 | Combat Roll | 3.0 up to 4 |
 | Wall-Jump TXF | 26.1.2-1.3 up to 26.2 |
 | Curios | 15.0.0 up to 16 |
-| Feathers of Fatigue | 26.1-1.0.0 up to 26.1-2 |
+| Feathers of Fatigue | 26.1.2-1.0.0 up to 26.1.2-2 |
 
 ## On Minecraft 1.21.1 and older
 
