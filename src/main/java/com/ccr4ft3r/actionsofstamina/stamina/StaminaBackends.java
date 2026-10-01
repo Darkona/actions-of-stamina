@@ -41,6 +41,15 @@ public final class StaminaBackends {
         return backend != null ? backend : server();
     }
 
+    /**
+     * Mod construction: with Feathers of Fatigue installed, AoS takes over player actions through its API, which turns
+     * off Feathers of Fatigue's basic exertion so sprinting and jumping are not charged twice. Whatever the backend:
+     * AoS charges those actions either way.
+     */
+    public static void takeOverPlayerActions() {
+        if (FEATHERS_LOADED) FeathersBackend.takeOverPlayerActions();
+    }
+
     /** Pure decision, kept separate for tests. A missing Feathers of Fatigue always means the internal stamina. */
     public static StaminaBackend.Kind resolve(BackendMode mode, boolean feathersLoaded) {
         return switch (mode) {

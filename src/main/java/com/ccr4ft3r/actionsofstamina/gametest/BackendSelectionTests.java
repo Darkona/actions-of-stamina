@@ -54,4 +54,15 @@ public class BackendSelectionTests {
         assertValueEqual(helper, feathers.stamina(player), before - StaminaUnits.ofFeathers(2), "feathers after spending 2");
         helper.succeed();
     }
+
+    /** With Feathers of Fatigue, AoS takes over player actions: its basic exertion is off, so nothing is charged twice. */
+    @GameTest(template = "empty")
+    public static void feathersLeavesPlayerActionsToAos(GameTestHelper helper) {
+        if (!StaminaBackends.FEATHERS_LOADED) {
+            helper.succeed();
+            return;
+        }
+        assertTrue(helper, FeathersTestHooks.playerActionOwners().contains(ActionsOfStamina.MOD_ID), "AoS took over player actions");
+        helper.succeed();
+    }
 }
