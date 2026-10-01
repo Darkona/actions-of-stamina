@@ -31,8 +31,13 @@ jobs:
       - name: Sibling mods
         run: .github/ci-deps.sh dev
 
-      - name: Build and GameTests
-        run: ./gradlew build runGameTestServer
+      # Two invocations: a GameTest task in the same invocation adds the test data to the resources, and the
+      # sources jar would then pack it twice.
+      - name: Build
+        run: ./gradlew build
+
+      - name: GameTests
+        run: ./gradlew runGameTestServer
 
       - uses: actions/upload-artifact@v6
         with:
