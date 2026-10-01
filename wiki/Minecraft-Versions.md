@@ -6,16 +6,16 @@ This wiki describes the newest version of Actions of Stamina, for **Minecraft 26
 |---|---|---|
 | 26.3 | NeoForge 26.3.0.36-beta | None: this whole wiki |
 | 26.2 | NeoForge 26.2.0.88 or later | [26.2](#262-neoforge-262) |
-| 26.1.2 | NeoForge 26.1.2.112 or later | [26.1.2](#2612-neoforge-2612) |
+| 26.1.2 | NeoForge 26.1.2.109 or later | [26.1.2](#2612-neoforge-2612) |
 | 1.21.11 | NeoForge 21.11.45 or later | [1.21.11](#12111-neoforge-2111) |
 | 1.21.1 | NeoForge 21.1.252 or later | [1.21.1](#1211-neoforge-211) |
 | 1.20.1 | Forge 47.4.23 or later | [1.20.1](#1201-forge-47) |
 | 1.19.2 | Forge 43.5.2 or later | [1.19.2](#1192-forge-43) |
 | 1.18.2 | Forge 40.3.12 or later | [1.18.2](#1182-forge-40) |
 
-Each build is named `<minecraft>-<mod>`, for example `1.21.1-1.0.0`, and the [releases](https://github.com/Darkona/actions-of-stamina/releases) have one jar for each Minecraft version. The 26.3 build is `26.3-1.0.0-beta.1`, because NeoForge 26.3 is in beta. The 26.1.2 build is `26.1.2-1.0.1`: it is the same mod as `26.1-1.0.0`, with the full Minecraft version in its name.
+Each build is named `<minecraft>-<mod>`, for example `1.21.1-1.0.0`, and the [releases](https://github.com/Darkona/actions-of-stamina/releases) have one jar for each Minecraft version. The 26.3 builds are betas (`26.3-1.0.0-beta.2`), because NeoForge 26.3 is in beta. The 26.1.2 builds start at `26.1.2-1.0.1`, the same mod as `26.1-1.0.0` with the full Minecraft version in its name, so the newest is `26.1.2-1.0.2`.
 
-Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) for the same Minecraft version, 1.0.0 or later (for example `1.21.1-1.0.0` on Minecraft 1.21.1, `26.3-1.0.0-beta.1` on 26.3). The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers. From 1.0.0 on, the mod does not support it.
+Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) for the same Minecraft version, 1.0.1 or later (for example `1.21.1-1.0.1` on Minecraft 1.21.1, `26.1.2-1.0.2` on 26.1.2, `26.3-1.0.0-beta.2` on 26.3). Through its API, AoS turns off the basic exertion of Feathers of Fatigue (see [Stamina Backends](Stamina-Backends)). The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers. From 1.0.0 on, the mod does not support it.
 
 ## 26.3 (NeoForge 26.3.0.36-beta)
 
@@ -26,7 +26,7 @@ Needs exactly NeoForge 26.3.0.36-beta. NeoForge 26.3 is in beta, and 26.3.0.37-b
 - **Paragliders:** it has no build for Minecraft 26.3, so its compat and config section are not in this version.
 - **ParCool, Epic Fight, Gliders, Create:** none of them has a build for Minecraft 26.x either.
 
-**Tested with:** Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.3-1.3.8, Curios 17.0.0-beta.2 (the only Curios builds for 26.3 are betas), Feathers of Fatigue 26.3-1.0.0-beta.1.
+**Tested with:** Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.3-1.3.8, Curios 17.0.0-beta.2 (the only Curios builds for 26.3 are betas), Feathers of Fatigue 26.3-1.0.0-beta.2.
 
 ## 26.2 (NeoForge 26.2)
 
@@ -38,13 +38,13 @@ Needs exactly NeoForge 26.3.0.36-beta. NeoForge 26.3 is in beta, and 26.3.0.37-b
 
 **Known issue, not in Actions of Stamina:** Paragliders 26.2.1 cannot read its own loot modifiers. Elder guardians therefore drop no Spirit Orbs, and the wither drops no Stamina Vessel.
 
-**Tested with:** Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0, Feathers of Fatigue 26.2-1.0.0.
+**Tested with:** Paragliders 26.2.1, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.2-1.3.8, Curios 16.0.0, Feathers of Fatigue 26.2-1.0.1.
 
 ## 26.1.2 (NeoForge 26.1.2)
 
 The same as 26.2.
 
-**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1.2-1.0.1.
+**Tested with:** Paragliders 26.1.2, Better Combat 3.2.2, Combat Roll 3.0.1, Wall-Jump TXF 26.1.2-1.3.8, Curios 15.0.0, Feathers of Fatigue 26.1.2-1.0.2, on NeoForge 26.1.2.109 and 26.1.2.112.
 
 ## 1.21.11 (NeoForge 21.11)
 
@@ -54,7 +54,7 @@ The same as 26.1.2, and:
 
 **Missing:** Epic Fight, Gliders and Create have no build for Minecraft 1.21.11.
 
-**Tested with:** ParCool 3.4.3.3, Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, Feathers of Fatigue 1.21.11-1.0.0.
+**Tested with:** ParCool 3.4.3.3, Paragliders 21.11.0-beta.6, Better Combat 3.1.0, Combat Roll 3.0.1, Wall-Jump TXF 1.21.11-1.3.8, Curios 14.0.0, Feathers of Fatigue 1.21.11-1.0.1.
 
 ## 1.21.1 (NeoForge 21.1)
 
