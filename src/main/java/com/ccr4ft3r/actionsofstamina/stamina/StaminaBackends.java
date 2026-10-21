@@ -4,20 +4,13 @@ import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.ModList;
+import dev.darkona.jdlib.api.compat.Bridges;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-/**
- * Chooses the {@link StaminaBackend}. The server resolves the {@code backend} config when it starts and tells each
- * client which one it uses (so a client with Feathers of Fatigue installed still follows a server running the internal
- * stamina); until a client hears from a server it uses its own config.
- * <p>
- * {@link FeathersBackend} is only ever touched when Feathers of Fatigue is loaded, so its classes never load without it.
- */
 public final class StaminaBackends {
 
     public static final String FEATHERS_MOD_ID = "feathers_of_fatigue";
-    public static final boolean FEATHERS_LOADED = ModList.get().isLoaded(FEATHERS_MOD_ID);
+    public static final boolean FEATHERS_LOADED = Bridges.isLoaded(FEATHERS_MOD_ID);
 
     private static volatile StaminaBackend server;
     private static volatile StaminaBackend client;
@@ -26,7 +19,6 @@ public final class StaminaBackends {
     private StaminaBackends() {
     }
 
-    /** The backend for this side of {@code player}. Cheap: no lookup beyond a side check. */
     public static StaminaBackend of(Player player) {
         return player.level().isClientSide() ? client() : server();
     }
@@ -41,16 +33,10 @@ public final class StaminaBackends {
         return backend != null ? backend : server();
     }
 
-    /**
-     * Mod construction: with Feathers of Fatigue installed, AoS takes over player actions through its API, which turns
-     * off Feathers of Fatigue's basic exertion so sprinting and jumping are not charged twice. Whatever the backend:
-     * AoS charges those actions either way.
-     */
     public static void takeOverPlayerActions() {
         if (FEATHERS_LOADED) FeathersBackend.takeOverPlayerActions();
     }
 
-    /** Pure decision, kept separate for tests. A missing Feathers of Fatigue always means the internal stamina. */
     public static StaminaBackend.Kind resolve(BackendMode mode, boolean feathersLoaded) {
         return switch (mode) {
             case AUTO, FEATHERS -> feathersLoaded ? StaminaBackend.Kind.FEATHERS : StaminaBackend.Kind.INTERNAL;
@@ -72,7 +58,6 @@ public final class StaminaBackends {
         return AoSServerConfig.SPEC.isLoaded() ? AoSServerConfig.BACKEND.get() : BackendMode.AUTO;
     }
 
-    /** Server starting: re-read the config (it may have changed since the last world). */
     public static void onServerStarting() {
         BackendMode mode = configuredMode();
         if (mode == BackendMode.FEATHERS && !FEATHERS_LOADED) {
@@ -82,7 +67,6 @@ public final class StaminaBackends {
         ActionsOfStamina.logger.info("Stamina backend: {}", server.kind());
     }
 
-    /** Client: the server told us which backend it uses. */
     public static void setClient(StaminaBackend.Kind kind) {
         if (kind == StaminaBackend.Kind.FEATHERS && !FEATHERS_LOADED) {
             ActionsOfStamina.logger.warn("The server uses Feathers of Fatigue, which isn't installed here: using the internal stamina");
@@ -90,10 +74,6 @@ public final class StaminaBackends {
         client = byKind(kind);
     }
 
-    /**
-     * Client left the server. Without an integrated server still running, the server backend this client resolved for
-     * itself goes too: it came from the last server's synced config, and the next server's may differ.
-     */
     public static void clearClient() {
         client = null;
         if (ServerLifecycleHooks.getCurrentServer() == null) server = null;
