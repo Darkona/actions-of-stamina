@@ -1,60 +1,66 @@
 package com.ccr4ft3r.actionsofstamina.client;
 
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalStamina;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import dev.darkona.jdlib.api.hud.HudFrame;
+import dev.darkona.jdlib.api.hud.HudGate;
+import dev.darkona.jdlib.api.hud.HudSide;
+import dev.darkona.jdlib.api.hud.JDHudBars;
+import dev.darkona.jdlib.api.hud.VanillaLayer;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 
-/**
- * Client only. The internal stamina bar, one row above the food bar (it takes a row of {@code gui.rightHeight} so
- * other right-side HUD rows stack above it). Drawn only while the internal backend is in use; with Feathers of Fatigue,
- * Feathers of Fatigue draws its own HUD.
- */
 public final class InternalStaminaHud {
 
-    private static final int WIDTH = 81;
-    private static final int HEIGHT = 5;
-    private static final int ROW = 10;
+    static final int WIDTH = 81;
+    static final int HEIGHT = 5;
+    static final int ROW = 10;
+    static final int TOP_GAP = 2;
     private static final int BACKGROUND = 0xA0000000;
     private static final int FILL = 0xFF52C44A;
     private static final int FILL_EXHAUSTED = 0xFFC44A4A;
     private static final int FILL_EDGE = 0xFF8BE884;
 
-    public static final LayeredDraw.Layer LAYER = (graphics, deltaTracker) -> render(graphics);
+    private static final HudGate GATE = HudGate.standard().and(mc -> AoSClientConfig.SHOW_HUD.getAsBoolean()
+            && InternalBackend.enabled() && StaminaBackends.client().kind() == StaminaBackend.Kind.INTERNAL);
 
     private InternalStaminaHud() {
     }
 
-    private static void render(GuiGraphics graphics) {
-        Minecraft mc = Minecraft.getInstance();
-        LocalPlayer player = mc.player;
-        if (player == null || mc.options.hideGui || mc.gameMode == null || !mc.gameMode.canHurtPlayer()) return;
-        if (!AoSClientConfig.SHOW_HUD.getAsBoolean() || !InternalBackend.enabled()) return;
-        if (StaminaBackends.client().kind() != StaminaBackend.Kind.INTERNAL) return;
+    public static void register() {
+        JDHudBars.register(spec());
+    }
 
-        InternalStamina s = InternalBackend.data(player);
+    static JDHudBars.Spec spec() {
+        return new JDHudBars.Spec(ActionsOfStamina.id("internal_stamina"), VanillaLayer.FOOD_LEVEL, JDHudBars.Order.ABOVE,
+                HudSide.RIGHT, 0, GATE, () -> true, AoSClientConfig.HUD_X_OFFSET::getAsInt, AoSClientConfig.HUD_Y_OFFSET::getAsInt,
+                0, InternalStaminaHud::paint);
+    }
+
+    static int fillWidth(int stamina, int max) {
+        return (int) ((long) Math.min(stamina, max) * (WIDTH - 2) / max);
+    }
+
+    private static int paint(HudFrame frame) {
+        LocalPlayer player = frame.player();
         int max = InternalBackend.INSTANCE.maxStamina(player);
-        if (max <= 0) return;
-        int stamina = InternalBackend.INSTANCE.stamina(player);
+        if (max <= 0) return 0;
+        InternalStamina s = InternalBackend.data(player);
+        int filled = fillWidth(InternalBackend.INSTANCE.stamina(player), max);
 
-        Gui gui = mc.gui;
-        int x = graphics.guiWidth() / 2 + 91 - WIDTH + AoSClientConfig.HUD_X_OFFSET.getAsInt();
-        int y = graphics.guiHeight() - gui.rightHeight + 2 + AoSClientConfig.HUD_Y_OFFSET.getAsInt();
-        gui.rightHeight += ROW;
-
-        int filled = (int) ((long) Math.min(stamina, max) * (WIDTH - 2) / max);
+        GuiGraphics graphics = frame.graphics();
+        int x = frame.edgeX() - WIDTH;
+        int y = frame.topY() + TOP_GAP;
         graphics.fill(x, y, x + WIDTH, y + HEIGHT, BACKGROUND);
         if (filled > 0) {
-            // Fills from the right, like the food bar.
             int right = x + WIDTH - 1;
             graphics.fill(right - filled, y + 1, right, y + HEIGHT - 1, s.exhausted() ? FILL_EXHAUSTED : FILL);
             if (!s.exhausted()) graphics.fill(right - filled, y + 1, right - filled + 1, y + HEIGHT - 1, FILL_EDGE);
         }
+        return ROW;
     }
 }

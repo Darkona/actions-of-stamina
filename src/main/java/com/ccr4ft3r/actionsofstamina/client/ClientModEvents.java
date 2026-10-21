@@ -22,7 +22,6 @@ public final class ClientModEvents {
 
     @SubscribeEvent
     public static void registerGuiLayers(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, ActionsOfStamina.id("internal_stamina"), InternalStaminaHud.LAYER);
         event.registerAbove(VanillaGuiLayers.PLAYER_HEALTH, ActionsOfStamina.id("debug"), AoSHudDebugOverlay.LAYER);
     }
 }
