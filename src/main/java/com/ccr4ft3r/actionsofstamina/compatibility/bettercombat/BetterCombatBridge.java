@@ -13,13 +13,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-/** Direct Better Combat calls (common side); only reached through {@link BetterCombatCompat} when it is loaded. */
 final class BetterCombatBridge {
 
-    /**
-     * Category multiplier per weapon attributes (one instance per weapon type in Better Combat's registry, replaced
-     * when it reloads). Cleared on config and datapack reloads. Locked: the server, network and client threads read it.
-     */
     private static final Reference2DoubleOpenHashMap<WeaponAttributes> CATEGORY_CACHE = new Reference2DoubleOpenHashMap<>();
 
     static {
@@ -41,7 +36,6 @@ final class BetterCombatBridge {
         }
     }
 
-    /** The weapon's category multiplier, looked up once per weapon type. */
     private static double categoryMultiplier(WeaponAttributes attributes) {
         synchronized (CATEGORY_CACHE) {
             double multiplier = CATEGORY_CACHE.getDouble(attributes);
@@ -53,7 +47,6 @@ final class BetterCombatBridge {
         }
     }
 
-    /** Stamina one swing costs, with the category, two-handed, off-hand and combo-finisher multipliers. */
     static int swingCost(AttackHand hand) {
         double multiplier = 1.0;
         if (hand.isOffHand()) multiplier *= BetterCombatConfig.OFF_HAND_MULTIPLIER.getAsDouble();
@@ -80,7 +73,6 @@ final class BetterCombatBridge {
         return paid || !BetterCombatConfig.BLOCK_WHEN_SHORT.getAsBoolean();
     }
 
-    /** Client check before a swing starts, against the local player's synced stamina. */
     static boolean canAffordSwing(Player player, AttackHand hand) {
         int cost = swingCost(hand);
         Action swing = PlayerActions.get(player).getAction(BetterCombatCompat.SWING);

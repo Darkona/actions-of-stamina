@@ -7,19 +7,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 
-/** Brushing: using any item whose use animation is {@code BRUSH}, modded brushes included. */
 public class BrushAction extends Action {
 
     public BrushAction(ActionType type) {
         super(type);
     }
 
-    /** Whether using the item brushes. */
     public static boolean brushes(ItemStack stack) {
         return stack.getUseAnimation() == UseAnim.BRUSH;
     }
 
-    /** Whether the player is brushing right now. */
     public static boolean isBrushing(Player player) {
         return player.isUsingItem() && brushes(player.getUseItem());
     }
@@ -29,7 +26,6 @@ public class BrushAction extends Action {
 
     }
 
-    /** Out of stamina mid-brush: brushing stops (starting again is refused by the right click). */
     @Override
     public void notPerformingEffects(Player player, PlayerActions a) {
         if (isBrushing(player)) player.stopUsingItem();

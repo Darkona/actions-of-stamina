@@ -11,16 +11,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 
-/**
- * Feathers of Fatigue (API v2). Loaded only when Feathers of Fatigue is installed ({@link StaminaBackends}). Feathers of Fatigue
- * itself answers client-side calls with the local player's synced feathers and predictions.
- */
 final class FeathersBackend implements StaminaBackend {
 
     private static final SpendOptions SIMULATED = SpendOptions.DEFAULT.simulated();
     private static final DrainOptions DRAIN_BLOCKING_REGEN = DrainOptions.DEFAULT;
     private static final DrainOptions DRAIN_KEEPING_REGEN = DrainOptions.DEFAULT.keepingRegen();
-    /** Spend options per regen delay, built once each (actions reuse a handful of delays). Benign races only. */
     private static final int CACHED_DELAYS = 256;
     private static final SpendOptions[] SPEND_BY_DELAY = new SpendOptions[CACHED_DELAYS];
 
@@ -31,7 +26,6 @@ final class FeathersBackend implements StaminaBackend {
         return new FeathersBackend();
     }
 
-    /** Feathers of Fatigue's own sprint and jump costs go off: AoS charges player actions itself. */
     static void takeOverPlayerActions() {
         FeathersAPI.takeOverPlayerActions(ActionsOfStamina.MOD_ID);
     }
@@ -78,7 +72,6 @@ final class FeathersBackend implements StaminaBackend {
         return player.hasEffect(FeathersMobEffects.ENERGIZED);
     }
 
-    /** A transient {@code max_feathers} modifier named after the source; Feathers of Fatigue picks the new max up itself. */
     @Override
     public void setMaxBonus(Player player, ResourceLocation source, int stamina) {
         AttributeInstance maxFeathers = player.getAttribute(FeathersAttributes.MAX_FEATHERS);

@@ -18,13 +18,10 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import org.jetbrains.annotations.Nullable;
 
-/** Direct ParCool calls; only reached through {@link ParcoolCompat} when ParCool is loaded. */
 final class ParcoolBridge {
 
-    /** ParCool's stamina type that charges nothing: fine next to AoS, it just doesn't show AoS's stamina to ParCool. */
     private static final ResourceLocation PARCOOL_NONE_STAMINA = ResourceLocation.fromNamespaceAndPath(ParcoolCompat.MOD_ID, "none");
 
-    /** Keyed by ParCool's singleton action entries; filled once at setup, read-only afterwards (both sides). */
     private static final Reference2ObjectOpenHashMap<ActionEntry<?>, ActionType> TYPES = new Reference2ObjectOpenHashMap<>();
 
     private ParcoolBridge() {
@@ -73,10 +70,6 @@ final class ParcoolBridge {
         TYPES.put(entry, type);
     }
 
-    /**
-     * The player's AoS action for the ParCool action of {@code event}, or null when AoS doesn't charge it (the section
-     * is off, or the action costs nothing). ParCool drives it: the start, each tick and the end come from its events.
-     */
     @Nullable
     private static Action actionOf(ParCoolActionEvent event, Player player) {
         if (!ParcoolConfig.ENABLED.getAsBoolean()) return null;
@@ -84,7 +77,6 @@ final class ParcoolBridge {
         return type != null && type.config().enabled() ? PlayerActions.get(player).getAction(type) : null;
     }
 
-    /** On the deciding side (the local client, or the server for server-triggered actions). */
     private static void onTryToStart(ParCoolActionEvent.TryToStart event) {
         Player player = event.getPlayer();
         Action action = actionOf(event, player);
@@ -104,7 +96,6 @@ final class ParcoolBridge {
         if (action != null) action.begin(player);
     }
 
-    /** Fires for every ParCool action of every player every tick: the cheap checks come first. */
     private static void onTick(ParCoolActionEvent.Tick.Post event) {
         Player player = event.getPlayer();
         if (player.level().isClientSide()) return;
@@ -120,7 +111,6 @@ final class ParcoolBridge {
         if (action != null) action.end(player);
     }
 
-    /** Only a stamina type other than AoS's own, ParCool's own (replaced by AoS's) or none charges twice. */
     private static void onServerStarted(ServerStartedEvent event) {
         if (!ParcoolConfig.ENABLED.getAsBoolean()) return;
         if (!ParcoolStaminaType.isRegistered()) {

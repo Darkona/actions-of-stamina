@@ -4,10 +4,6 @@ import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-/**
- * {@code [epicfight]}: Epic Fight skills of these categories that would spend Epic Fight stamina spend AoS stamina
- * instead. Other categories keep Epic Fight's own stamina. No Epic Fight classes here.
- */
 public final class EpicFightConfig {
 
     public static final ModConfigSpec.BooleanValue ENABLED;
@@ -34,7 +30,6 @@ public final class EpicFightConfig {
     private EpicFightConfig() {
     }
 
-    /** Called by {@link AoSServerConfig} to define this section in order. */
     public static void init() {
     }
 

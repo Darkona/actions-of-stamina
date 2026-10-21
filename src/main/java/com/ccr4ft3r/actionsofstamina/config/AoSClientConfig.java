@@ -2,7 +2,6 @@ package com.ccr4ft3r.actionsofstamina.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-/** {@code config/actionsofstamina-client.toml}: the internal stamina HUD (not used with Feathers of Fatigue). */
 public final class AoSClientConfig {
 
     public static final ModConfigSpec.BooleanValue SHOW_HUD;

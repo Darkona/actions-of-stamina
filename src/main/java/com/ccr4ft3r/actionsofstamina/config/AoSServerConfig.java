@@ -12,11 +12,6 @@ import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.BackendMode;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-/**
- * {@code config/actionsofstamina-server.toml}: the stamina backend, AoS's internal stamina, vanilla actions and one
- * section per supported mod. A mod's section only does something when that mod is installed. Costs are in feathers
- * (defaults tuned for a 20-feather bar), delays in ticks.
- */
 public final class AoSServerConfig {
 
     public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();

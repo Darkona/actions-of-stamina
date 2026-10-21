@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-/** {@code [bettercombat]}: every Better Combat weapon swing costs stamina. No Better Combat classes here. */
 public final class BetterCombatConfig {
 
     public static final ActionCostConfig SWING;
@@ -20,7 +19,6 @@ public final class BetterCombatConfig {
     public static final ModConfigSpec.ConfigValue<List<? extends String>> CATEGORY_MULTIPLIERS;
 
     private static final double MAX_MULTIPLIER = 10.0;
-    /** {@link #CATEGORY_MULTIPLIERS} parsed (lower-case category to multiplier); replaced whole on every config load. */
     private static volatile Object2DoubleOpenHashMap<String> categories = categoryMap();
 
     static {
@@ -52,16 +50,13 @@ public final class BetterCombatConfig {
     private BetterCombatConfig() {
     }
 
-    /** Called by {@link AoSServerConfig} to define this section in order. */
     public static void init() {
     }
 
-    /** The multiplier for a Better Combat category (1 when it isn't listed, or the weapon has none). */
     public static double categoryMultiplier(@Nullable String category) {
         return category == null ? 1.0 : categories.getDouble(category.toLowerCase(Locale.ROOT));
     }
 
-    /** Re-reads {@link #CATEGORY_MULTIPLIERS}; on every load or reload of the server config. */
     static void reloadCategories() {
         Object2DoubleOpenHashMap<String> parsed = categoryMap();
         for (String entry : CATEGORY_MULTIPLIERS.get()) {

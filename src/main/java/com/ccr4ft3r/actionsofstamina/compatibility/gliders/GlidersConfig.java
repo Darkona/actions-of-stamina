@@ -3,7 +3,6 @@ package com.ccr4ft3r.actionsofstamina.compatibility.gliders;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 
-/** {@code [gliders]}: holding on to a Gliders glider drains stamina. No Gliders classes here. */
 public final class GlidersConfig {
 
     public static final ActionCostConfig GLIDE = ActionCostConfig.builder(AoSServerConfig.BUILDER, "gliders",
@@ -19,7 +18,6 @@ public final class GlidersConfig {
     private GlidersConfig() {
     }
 
-    /** Called by {@link AoSServerConfig} to define this section in order. */
     public static void init() {
     }
 }

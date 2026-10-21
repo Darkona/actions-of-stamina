@@ -21,7 +21,6 @@ import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 
 import static com.ccr4ft3r.actionsofstamina.ActionsOfStamina.id;
 
-/** Minecraft's own actions, registered in {@link ActionTypes} like any other mod's. */
 public final class VanillaActions {
 
     public static final ActionType ATTACK = ActionTypes.register(id("attack"), AoSServerConfig.ATTACK, AttackAction::new);
@@ -45,7 +44,6 @@ public final class VanillaActions {
     private VanillaActions() {
     }
 
-    /** Mod construction: registers the types above (their fields are set when this class loads). */
     public static void register() {
     }
 }

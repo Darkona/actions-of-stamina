@@ -18,10 +18,6 @@ import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.tickEvent;
 
-/**
- * A continuous action through the real server player tick, on whichever backend is active: it begins when its flag
- * arrives, drains while it lasts, ends when the flag goes, and costs nothing while idle. Default sprint config.
- */
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class ActionTickTests {
@@ -63,10 +59,6 @@ public class ActionTickTests {
         helper.succeed();
     }
 
-    /**
-     * Default swim config. The server sets the swimming pose from the sprint flag on every tick, so a refused swim
-     * has to stop the sprint behind it, or the player swims on for free.
-     */
     @GameTest(template = "empty")
     public static void refusedSwimStopsTheSprintBehindIt(GameTestHelper helper) {
         ServerPlayer player = survivalPlayer(helper);

@@ -9,7 +9,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-/** Server → client during the configuration phase ({@link BackendSyncTask}): which stamina backend the server uses, so the client checks against the same one. */
 public record BackendSyncPacket(byte kind) implements CustomPacketPayload {
 
     public static final Type<BackendSyncPacket> TYPE = new Type<>(ActionsOfStamina.id("backend"));

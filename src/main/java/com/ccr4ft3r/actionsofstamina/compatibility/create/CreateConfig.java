@@ -4,7 +4,6 @@ import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-/** {@code [create]}: Create's hand-powered kinetic sources. No Create classes here. */
 public final class CreateConfig {
 
     public static final ActionCostConfig CRANK;
@@ -29,7 +28,6 @@ public final class CreateConfig {
     private CreateConfig() {
     }
 
-    /** Called by {@link AoSServerConfig} to define this section in order. */
     public static void init() {
     }
 }

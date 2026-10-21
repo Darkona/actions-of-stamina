@@ -4,11 +4,6 @@ import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * The config subsection of one stamina-costing action: a toggle plus whichever costs apply to it. Costs are in
- * feathers (a 20-feather bar by default), delays in ticks. Getters return stamina units and read cached config
- * values, so they are cheap enough for per-tick use.
- */
 public final class ActionCostConfig {
 
     public static final double MAX_FEATHERS = 1000.0;
@@ -33,7 +28,6 @@ public final class ActionCostConfig {
         this.timesPerformedToExhaust = b.timesPerformedToExhaust;
     }
 
-    /** Pushes {@code path}; define the fields in order, then {@link Builder#build()} pops it. */
     public static Builder builder(ModConfigSpec.Builder spec, String path, String description, boolean enabledByDefault) {
         return new Builder(spec, path, description, enabledByDefault);
     }
@@ -42,12 +36,10 @@ public final class ActionCostConfig {
         return enabled.getAsBoolean();
     }
 
-    /** One-off cost: per use, or when a continuous action starts. */
     public int cost() {
         return cost == null ? 0 : StaminaUnits.ofFeathers(cost.getAsDouble());
     }
 
-    /** Stamina needed to begin; at least the one-off cost. */
     public int minStamina() {
         return Math.max(cost(), minStamina == null ? 0 : StaminaUnits.ofFeathers(minStamina.getAsDouble()));
     }
@@ -56,7 +48,7 @@ public final class ActionCostConfig {
         return perSecond == null ? 0 : StaminaUnits.perTick(perSecond.getAsDouble());
     }
 
-    @SuppressWarnings("unused") // for addons
+    @SuppressWarnings("unused")
     public double perSecondFeathers() {
         return perSecond == null ? 0 : perSecond.getAsDouble();
     }
@@ -77,7 +69,6 @@ public final class ActionCostConfig {
         return timesPerformedToExhaust == null ? 1 : timesPerformedToExhaust.getAsInt();
     }
 
-    /** Whether this action costs anything at all. */
     public boolean costsAnything() {
         return cost() > 0 || perTick() > 0 || finishCost() > 0;
     }
@@ -140,7 +131,6 @@ public final class ActionCostConfig {
             return this;
         }
 
-        /** Room for action-specific options before {@link #build()}. */
         public ModConfigSpec.Builder spec() {
             return spec;
         }

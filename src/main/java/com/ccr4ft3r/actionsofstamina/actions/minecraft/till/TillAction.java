@@ -9,28 +9,17 @@ import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
-/**
- * Working a block with a tool: tilling, making a path, stripping a log, scraping or unwaxing copper, charged once every
- * few blocks. Found by the tool's ability, so modded tools and blocks count too. A change the player can't afford
- * doesn't happen.
- */
 public class TillAction extends Action {
 
     public TillAction(ActionType type) {
         super(type);
     }
 
-    /** Whether the ability is one of the block changes charged here (dousing a campfire, trimming or lighting aren't). */
     public static boolean charges(ItemAbility ability) {
         return ability == ItemAbilities.HOE_TILL || ability == ItemAbilities.SHOVEL_FLATTEN || ability == ItemAbilities.AXE_STRIP
                 || ability == ItemAbilities.AXE_SCRAPE || ability == ItemAbilities.AXE_WAX_OFF;
     }
 
-    /**
-     * Whether the tool use will really change the block. The event fires before the block's own answer is known (and
-     * for every ability an axe tries in turn), so, unless another mod already set the result, it is asked for here,
-     * simulated. A path also needs air above, which the shovel checks only afterwards.
-     */
     public static boolean changesBlock(BlockEvent.BlockToolModificationEvent event) {
         BlockState original = event.getState();
         BlockState result = event.getFinalState();

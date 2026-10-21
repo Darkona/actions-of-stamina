@@ -4,7 +4,6 @@ import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderStaminaP
 import net.minecraft.server.level.ServerPlayer;
 import tictim.paraglider.api.stamina.Stamina;
 
-/** Paragliders calls for {@link CompatTests}; loaded only when Paragliders is. */
 final class ParagliderTestHooks {
 
     private ParagliderTestHooks() {

@@ -22,11 +22,6 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
 
-/**
- * The action type registry: every action, Minecraft's, each compat's and another mod's, is a registered type numbered
- * by its id; another mod's action is built, gated and charged like Actions of Stamina's own, finish cost included. On
- * whichever backend is active.
- */
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class ActionRegistryTests {
@@ -54,7 +49,6 @@ public class ActionRegistryTests {
         helper.succeed();
     }
 
-    /** A player built while the other mod's type is on, as on joining a level. */
     private static ServerPlayer playerWithOtherModsAction(GameTestHelper helper) {
         TestActionTypes.enabled = true;
         try {

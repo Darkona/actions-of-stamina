@@ -14,10 +14,8 @@ import yesman.epicfight.skill.modules.HoldableSkill;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
-/** Direct Epic Fight calls; only reached through {@link EpicFightCompat} when Epic Fight is loaded. */
 final class EpicFightBridge {
 
-    // Server thread only: the holdable skill AoS charged in the last consume event, to tell the repeat of a hold start.
     private static int paidPlayer = -1;
     @Nullable private static Skill paidSkill;
     private static long paidTick = Long.MIN_VALUE;
@@ -35,9 +33,6 @@ final class EpicFightBridge {
         return patch != null && patch.isEpicFightMode();
     }
 
-    /**
-     * Server: each swing of the basic attack combo. A swing that can't be paid for doesn't happen.
-     */
     private static void onComboAttack(ComboAttackEvent event) {
         if (!EpicFightCompat.isActive() || !EpicFightConfig.BASIC_ATTACK.enabled()) return;
         Player player = event.getPlayerPatch().getOriginal();
@@ -45,7 +40,6 @@ final class EpicFightBridge {
         if (!PlayerActions.perform(player, EpicFightCompat.BASIC_ATTACK)) event.cancel();
     }
 
-    /** The action a skill of this category is, or null for a category AoS leaves to Epic Fight's own stamina. */
     @Nullable
     private static ActionType typeOf(SkillCategory category) {
         if (category == SkillCategories.DODGE) return EpicFightCompat.DODGE;
@@ -66,8 +60,6 @@ final class EpicFightBridge {
         if (player.level().isClientSide()) {
             paid = PlayerActions.canPerform(player, type);
         } else {
-            // Starting to hold a skill (guard, charged skills), Epic Fight posts the event twice in a row on the
-            // server: once from the resource check, then again to consume. The second one is already paid.
             long tick = player.level().getGameTime();
             boolean repeat = paidSkill == event.getSkill() && paidPlayer == player.getId() && paidTick == tick;
             paidSkill = null;
