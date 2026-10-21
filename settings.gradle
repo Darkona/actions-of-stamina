@@ -9,3 +9,8 @@ plugins {
 }
 
 rootProject.name = 'actionsofstamina'
+
+def jdlibDir = file(providers.gradleProperty('jdlibDir').getOrElse('../JDLib'))
+if (jdlibDir.isDirectory()) {
+    includeBuild(jdlibDir)
+}

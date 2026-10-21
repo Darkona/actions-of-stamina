@@ -33,6 +33,13 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
+modId = "jdlib"
+type = "required"
+versionRange = "${jdlib_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
 modId = "feathers_of_fatigue"
 type = "optional"
 versionRange = "${feathers_of_fatigue_version_range}"

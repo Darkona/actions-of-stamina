@@ -38,8 +38,17 @@ repositories {
     }
 }
 
+sourceSets {
+    gametest {
+        resources.srcDirs = []
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
 neoForge {
     version = project.neo_version
+    addModdingDependenciesTo(sourceSets.gametest)
 
     parchment {
         mappingsVersion = project.parchment_mappings_version
@@ -78,6 +87,7 @@ neoForge {
         }
 
         configureEach {
+            sourceSet = sourceSets.gametest
             systemProperty 'forge.logging.markers', 'REGISTRIES'
             logLevel = org.slf4j.event.Level.DEBUG
         }
@@ -86,8 +96,17 @@ neoForge {
     mods {
         "${mod_id}" {
             sourceSet(sourceSets.main)
+            sourceSet(sourceSets.gametest)
         }
     }
+    unitTest {
+        enable()
+        testedMod = mods."${mod_id}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
 }
 
 // The play pack loads when runPlay is requested (or with -PplayPack).
@@ -97,9 +116,25 @@ def playPack = project.hasProperty('playPack') || gradle.startParameter.taskName
 configurations {
     runtimeClasspath.extendsFrom localRuntime
     localRuntime
+    gametestImplementation.extendsFrom implementation
+    gametestCompileOnly.extendsFrom compileOnly
+    gametestRuntimeOnly.extendsFrom runtimeOnly
+    gametestRuntimeClasspath.extendsFrom localRuntime
 }
 
 dependencies {
+    jarJar(implementation("dev.darkona.jdlib:JDLib")) {
+        version {
+            strictly jdlib_range
+            prefer jdlib_version
+        }
+    }
+
+    testImplementation 'dev.darkona.jdlib:jdlib-testkit'
+    gametestImplementation 'dev.darkona.jdlib:jdlib-testkit'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
     // Feathers of Fatigue is optional: AoS compiles against its API only and falls back to its internal stamina
     // without it. Dev runs load the full mod unless -PwithoutFeathers is given.
     compileOnly "com.darkona.feathersoffatigue:feathers-of-fatigue-api:${feathers_of_fatigue_version}"
@@ -169,6 +204,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_version                : project.version.toString(),
             mod_authors                : mod_authors,
             feathers_of_fatigue_version_range: feathers_of_fatigue_version_range,
+            jdlib_range                : jdlib_range,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
