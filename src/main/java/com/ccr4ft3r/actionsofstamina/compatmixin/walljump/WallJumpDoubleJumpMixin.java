@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin;
+package com.ccr4ft3r.actionsofstamina.compatmixin.walljump;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.jahirtrap.walljump.logic.DoubleJumpLogic;
@@ -9,10 +9,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * Wall-Jump TXF's double jump, client side (applied only when it is loaded): refused when the stamina can't pay for
- * it. The refused press is used up (the key must be pressed again) but the double jump itself isn't.
- */
 @Mixin(DoubleJumpLogic.class)
 public abstract class WallJumpDoubleJumpMixin {
 

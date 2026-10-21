@@ -16,7 +16,22 @@ Actions cost stamina: vanilla actions and other mods' actions (ParCool, Paraglid
 config = "${mod_id}.mixins.json"
 
 [[mixins]]
-config = "${mod_id}.compat.mixins.json"
+config = "${mod_id}.compat.bettercombat.mixins.json"
+
+[[mixins]]
+config = "${mod_id}.compat.combatroll.mixins.json"
+
+[[mixins]]
+config = "${mod_id}.compat.parcool.mixins.json"
+
+[[mixins]]
+config = "${mod_id}.compat.walljump.mixins.json"
+
+[[mixins]]
+config = "${mod_id}.compat.gliders.mixins.json"
+
+[[mixins]]
+config = "${mod_id}.compat.create.mixins.json"
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"

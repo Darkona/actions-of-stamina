@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.ccr4ft3r.actionsofstamina.compatmixin.parcool",
+  "plugin": "com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ParcoolConfigServerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

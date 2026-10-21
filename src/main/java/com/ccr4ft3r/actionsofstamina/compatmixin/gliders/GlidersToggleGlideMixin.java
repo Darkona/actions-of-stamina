@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin;
+package com.ccr4ft3r.actionsofstamina.compatmixin.gliders;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -10,11 +10,6 @@ import net.venturecraft.gliders.network.MessageToggleGlide;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-/**
- * Gliders, server side (applied only when it is loaded): the glider stays folded when the player asks to open it
- * without the stamina to begin. Gliders' toggle handler then goes on as for a closed glider (no opening sound, camera
- * back to first person). Closing is never refused.
- */
 @Mixin(MessageToggleGlide.class)
 public abstract class GlidersToggleGlideMixin {
 

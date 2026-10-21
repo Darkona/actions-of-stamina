@@ -134,6 +134,9 @@ dependencies {
     gametestImplementation 'dev.darkona.jdlib:jdlib-testkit'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation("com.tngtech.archunit:archunit:${archunit_version}") {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
 
     // Feathers of Fatigue is optional: AoS compiles against its API only and falls back to its internal stamina
     // without it. Dev runs load the full mod unless -PwithoutFeathers is given.

@@ -1,0 +1,14 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.ccr4ft3r.actionsofstamina.compatmixin.walljump",
+  "plugin": "com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "WallJumpDoubleJumpMixin",
+    "WallJumpLogicMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

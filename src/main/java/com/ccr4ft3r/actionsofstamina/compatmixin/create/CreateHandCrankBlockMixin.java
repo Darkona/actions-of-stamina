@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin;
+package com.ccr4ft3r.actionsofstamina.compatmixin.create;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;
 import com.simibubi.create.content.kinetics.crank.HandCrankBlock;
@@ -15,10 +15,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * Create, both sides (applied only when it is loaded): each turn of a hand crank is reported to AoS, and a turn the
- * player can't afford doesn't happen (nor does the held item's own use). The valve handle overrides this method.
- */
 @Mixin(HandCrankBlock.class)
 public abstract class CreateHandCrankBlockMixin {
 
