@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin;
+package com.ccr4ft3r.actionsofstamina.compatmixin.bettercombat;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import net.bettercombat.network.Packets;
@@ -11,10 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * Better Combat (applied only when it is loaded, see {@code CompatMixinPlugin}): charges each swing when its attack
- * request reaches the server, and drops a swing that can't be paid.
- */
 @Mixin(ServerNetwork.class)
 public abstract class BetterCombatServerNetworkMixin {
 
@@ -28,8 +24,6 @@ public abstract class BetterCombatServerNetworkMixin {
         } else if (!BetterCombatCompat.chargeSwing(player, combo, true)) {
             ci.cancel();
         } else {
-            // Better Combat receives the request on the network thread and runs the swing on the server thread: the
-            // stamina is charged there too, never from the network thread.
             server.execute(() -> BetterCombatCompat.chargeSwing(player, combo, false));
         }
     }

@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.ccr4ft3r.actionsofstamina.compatmixin.bettercombat",
+  "plugin": "com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BetterCombatServerNetworkMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

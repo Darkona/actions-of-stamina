@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin;
+package com.ccr4ft3r.actionsofstamina.compatmixin.parcool;
 
 import com.alrex.parcool.config.ParCoolConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
@@ -8,15 +8,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-/**
- * ParCool's server config (applied only when ParCool is loaded): AoS's stamina type is the default
- * {@code stamina_type} of a newly written config, and while AoS's ParCool compat is enabled it also stands in for
- * ParCool's own {@code parcool:parcool}, which every existing config holds and which would charge each action twice.
- */
 @Mixin(ParCoolConfig.Server.class)
 public abstract class ParcoolConfigServerMixin {
 
-    /** The only {@code define(String, Object)} in the constructor; the path is checked anyway. Optional: cosmetic. */
     @ModifyArg(method = "<init>", require = 0, index = 1, at = @At(value = "INVOKE",
             target = "Lnet/neoforged/neoforge/common/ModConfigSpec$Builder;define(Ljava/lang/String;Ljava/lang/Object;)Lnet/neoforged/neoforge/common/ModConfigSpec$ConfigValue;"))
     private Object actionsofstamina$defaultStaminaType(String path, Object defaultValue) {

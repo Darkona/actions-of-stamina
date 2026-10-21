@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin;
+package com.ccr4ft3r.actionsofstamina.compatmixin.create;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -14,11 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.function.Function;
 
-/**
- * Create, both sides (applied only when it is loaded): a valve handle turn is reported to AoS when it happens (a handle
- * still turning refuses the click), and a turn the player can't afford doesn't happen (the click is still taken).
- * Dyeing the handle is left alone.
- */
 @Mixin(ValveHandleBlock.class)
 public abstract class CreateValveHandleBlockMixin {
 

@@ -5,27 +5,14 @@ import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
-import com.mojang.authlib.GameProfile;
-import io.netty.channel.embedded.EmbeddedChannel;
+import dev.darkona.jdlib.testkit.TestPlayers;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.network.Connection;
-import net.minecraft.network.PacketSendListener;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ClientInformation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.CommonListenerCookie;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
 
 /**
  * Players for stamina tests. Vanilla's mock server player reports itself as creative, which is exempt by design, so
@@ -40,9 +27,7 @@ final class TestSupport {
     }
 
     static ServerPlayer player(GameTestHelper helper) {
-        ServerPlayer player = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), "aos-test"));
-        player.moveTo(helper.absoluteVec(Vec3.ZERO));
-        return player;
+        return TestPlayers.survival(helper, "aos-test");
     }
 
     /**
@@ -50,37 +35,9 @@ final class TestSupport {
      * level). Its connection swallows every packet. It isn't added to the level.
      */
     static ServerPlayer survivalPlayer(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = new ServerPlayer(level.getServer(), level, new GameProfile(UUID.randomUUID(), "aos-test-player"),
-                ClientInformation.createDefault());
-        new SilentListener(level.getServer(), player);
-        player.moveTo(helper.absoluteVec(new Vec3(0.5, 3, 0.5)));
+        ServerPlayer player = TestPlayers.silent(helper, new Vec3(0.5, 3, 0.5));
         ActionProvider.addEnabledActions(PlayerActions.get(player));
         return player;
-    }
-
-    /**
-     * Sets itself as the player's connection (on an embedded channel, which other mods' networking may inspect) and
-     * sends nothing anywhere.
-     */
-    private static final class SilentListener extends ServerGamePacketListenerImpl {
-        SilentListener(MinecraftServer server, ServerPlayer player) {
-            super(server, embeddedConnection(), player, CommonListenerCookie.createInitial(player.getGameProfile(), false));
-        }
-
-        private static Connection embeddedConnection() {
-            Connection connection = new Connection(PacketFlow.SERVERBOUND);
-            new EmbeddedChannel(connection);
-            return connection;
-        }
-
-        @Override
-        public void send(Packet<?> packet) {
-        }
-
-        @Override
-        public void send(Packet<?> packet, @Nullable PacketSendListener listener) {
-        }
     }
 
     /** Spends in small steps until nothing more can be spent (Feathers of Fatigue: through strain too). */

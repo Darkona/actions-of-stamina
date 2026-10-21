@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin;
+package com.ccr4ft3r.actionsofstamina.compatmixin.combatroll;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
@@ -8,10 +8,6 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-/**
- * Combat Roll, client side (applied only when it is loaded): a roll isn't available while the local player's
- * stamina can't pay for it. The server charges the roll through Combat Roll's own start event.
- */
 @Mixin(RollManager.class)
 public abstract class CombatRollManagerMixin {
 
