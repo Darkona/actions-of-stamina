@@ -25,16 +25,10 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
 
-/**
- * The gates in front of actions, through the real right-click event, on whichever backend is active: an action the
- * player can afford goes ahead, one they can't is refused, exempt players and disabled actions are never refused.
- * Default config (shield, draw and throw on; climb and row off).
- */
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class ActionGateTests {
 
-    /** Whether right-clicking {@code item} in the main hand is refused. */
     private static boolean refused(ServerPlayer player, Item item) {
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item, 16));
         return NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickItem(player, InteractionHand.MAIN_HAND)).isCanceled();
@@ -78,7 +72,6 @@ public class ActionGateTests {
         helper.succeed();
     }
 
-    /** A jump action whose charge goes through or not as the test says, counting the attempts. */
     private static final class ChargeProbe extends Action {
         boolean chargeGoesThrough;
         int attempts;
@@ -95,7 +88,6 @@ public class ActionGateTests {
 
     }
 
-    /** A charge that is due but doesn't go through is tried again on the next use, not after a whole new count. */
     @GameTest(template = "empty")
     public static void aFailedChargeIsTriedAgainNextUse(GameTestHelper helper) {
         ServerPlayer player = survivalPlayer(helper);

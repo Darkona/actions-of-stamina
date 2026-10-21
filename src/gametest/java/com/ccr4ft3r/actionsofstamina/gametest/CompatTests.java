@@ -35,17 +35,12 @@ import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.player;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.tickEvent;
 
-/**
- * Compat hooks against the real mods; each test passes trivially when its mod isn't installed (run them with
- * {@code -PwithCompat}). Foreign classes are only touched through {@code *TestHooks}, loaded only when the mod is.
- */
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class CompatTests {
 
     private static final ResourceLocation TEST = ActionsOfStamina.id("test");
 
-    /** Spends in small steps until nothing more can be spent (Feathers of Fatigue: through strain too). */
     private static String exhaust(StaminaBackend backend, ServerPlayer player) {
         int spends = 0;
         while (spends < 10000 && backend.spend(player, TEST, 50, 0)) spends++;
@@ -113,7 +108,6 @@ public class CompatTests {
         }
         helper.assertTrue(ParcoolTestHooks.staminaTypeRegistered(), "AoS's stamina type is registered with ParCool");
         helper.assertValueEqual(ParcoolTestHooks.defaultStaminaType(), ParcoolCompat.STAMINA_TYPE.toString(), "ParCool's default stamina_type");
-        // The dev run's ParCool config holds ParCool's own "parcool:parcool" (as every existing config does): replaced.
         helper.assertValueEqual(ParcoolCompat.effectiveStaminaType(ParcoolCompat.PARCOOL_STAMINA_TYPE), ParcoolCompat.STAMINA_TYPE, "parcool:parcool is replaced");
         helper.assertValueEqual(ParcoolTestHooks.staminaType(), ParcoolCompat.STAMINA_TYPE, "stamina type ParCool picks");
 
@@ -178,7 +172,6 @@ public class CompatTests {
             helper.assertValueEqual(backend.stamina(player), before - epicFightCosts(category).cost(), "stamina after " + name);
         }
 
-        // Starting to hold a guard, Epic Fight posts the event twice in a row on the server: charged once.
         int beforeHold = backend.stamina(player);
         EpicFightTestHooks.consumeSkill(player, 1);
         EpicFightTestHooks.Consume repeat = EpicFightTestHooks.consumeSkill(player, 1);
@@ -245,7 +238,6 @@ public class CompatTests {
 
         String state = exhaust(backend, player);
         helper.assertFalse(WallJumpCompat.canCling(player), "can't hold on without stamina" + state);
-        // Feathers of Fatigue settles a drain in its own tick, after AoS's: it may take one more tick to refuse it.
         tickEvent(player, 3);
         helper.assertFalse(cling.isPerforming(), "the cling stops when it can't be paid");
         actions.processFlags((short) 0);

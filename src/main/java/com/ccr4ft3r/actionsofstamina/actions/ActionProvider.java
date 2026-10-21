@@ -3,7 +3,6 @@ package com.ccr4ft3r.actionsofstamina.actions;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 
-/** Builds a player's enabled actions, of every registered {@link ActionType}, from the current config (on every level join). */
 public final class ActionProvider {
 
     private ActionProvider() {

@@ -4,14 +4,9 @@ import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-/**
- * {@code [paragliders]}: paragliding drains AoS stamina and Paragliders' own stamina wheel is replaced by the AoS
- * backend. No Paragliders classes here.
- */
 public final class ParagliderConfig {
 
     public static final ModConfigSpec.IntValue FEATHERS_PER_VESSEL;
-    /** {@code enabled} turns the whole integration on; off, Paragliders keeps its own stamina wheel (and its vessels). */
     public static final ActionCostConfig PARAGLIDE;
 
     static {
@@ -31,7 +26,6 @@ public final class ParagliderConfig {
     private ParagliderConfig() {
     }
 
-    /** Called by {@link AoSServerConfig} to define this section in order. */
     public static void init() {
     }
 }

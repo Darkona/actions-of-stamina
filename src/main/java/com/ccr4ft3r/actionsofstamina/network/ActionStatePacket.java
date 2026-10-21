@@ -8,7 +8,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-/** Client → server: the local player's full movement-state flags (see {@code ActionFlags}), sent on change. */
 public record ActionStatePacket(short actionFlags) implements CustomPacketPayload {
 
     public static final Type<ActionStatePacket> TYPE = new Type<>(ActionsOfStamina.id("action_state"));
@@ -21,7 +20,6 @@ public record ActionStatePacket(short actionFlags) implements CustomPacketPayloa
         return TYPE;
     }
 
-    /** Runs on the server main thread (default handler thread). */
     public static void handle(ActionStatePacket packet, IPayloadContext context) {
         var player = context.player();
         if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "Received ActionStatePacket with flags: {}.", packet.actionFlags);

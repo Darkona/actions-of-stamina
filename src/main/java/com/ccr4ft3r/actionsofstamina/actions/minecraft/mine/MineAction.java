@@ -7,18 +7,12 @@ import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.world.entity.player.Player;
 
-/**
- * Mining: breaking a block, charged once every few blocks. With {@code scale_with_hardness}, each block adds the
- * cost times its hardness (stone 1.5, obsidian 50, capped). Mining is never cancelled: without the stamina, the
- * block breaks for free, and with {@code block_when_exhausted} breaking gets slower until the stamina is back.
- */
 public class MineAction extends Action {
 
     private final boolean scaleWithHardness;
     private final double maxHardnessMultiplier;
     private final boolean slowsWhenExhausted;
     private final float exhaustedBreakSpeed;
-    /** Stamina added up by the blocks broken since the last charge. */
     private double pending;
 
     public MineAction(ActionType type) {
@@ -29,7 +23,6 @@ public class MineAction extends Action {
         this.exhaustedBreakSpeed = (float) AoSServerConfig.MINE_EXHAUSTED_BREAK_SPEED.getAsDouble();
     }
 
-    /** Server: a block of {@code hardness} was broken. Every {@code times_performed_to_exhaust} blocks, their added-up cost is charged. */
     public void mined(Player player, float hardness) {
         if (PlayerActions.isExempt(player)) return;
         pending += scaleWithHardness ? cost * Math.min(Math.max(hardness, 0.0), maxHardnessMultiplier) : cost;
@@ -37,14 +30,9 @@ public class MineAction extends Action {
         timesPerformed = 0;
         int amount = (int) Math.round(pending);
         pending = 0;
-        // All or nothing: a player short of it mines on for free (and slower, with block_when_exhausted).
         if (amount > 0) StaminaBackends.of(player).spend(player, source, amount, cooldown);
     }
 
-    /**
-     * Break speed multiplier (both sides, while mining: client and server must agree on the progress): below 1 when
-     * {@code block_when_exhausted} and the player can't afford mining.
-     */
     public float breakSpeedMultiplier(Player player) {
         return slowsWhenExhausted && !canPerform(player) ? exhaustedBreakSpeed : 1.0f;
     }

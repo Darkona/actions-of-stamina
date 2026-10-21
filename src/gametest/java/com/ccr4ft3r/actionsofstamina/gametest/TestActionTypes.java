@@ -11,11 +11,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 
-/**
- * An action type registered the way another mod would, for {@link ActionRegistryTests}; development runs only. It is
- * continuous and costs only when it ends: it borrows ParCool's {@code charge_jump} section (a finish cost, nothing else),
- * which is in the server config whether ParCool is installed or not. Players only get it while a test turns it on.
- */
 @EventBusSubscriber(modid = ActionsOfStamina.MOD_ID)
 final class TestActionTypes {
 

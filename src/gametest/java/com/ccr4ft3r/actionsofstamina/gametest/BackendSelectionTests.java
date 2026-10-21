@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-/** Which backend runs, and that the Feathers of Fatigue one really spends feathers when Feathers of Fatigue is installed. */
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class BackendSelectionTests {
@@ -40,7 +39,6 @@ public class BackendSelectionTests {
         helper.succeed();
     }
 
-    /** With the default {@code backend = auto}. */
     @GameTest(template = "empty")
     public static void activeBackendFollowsTheInstall(GameTestHelper helper) {
         StaminaBackend.Kind expected = StaminaBackends.FEATHERS_LOADED ? StaminaBackend.Kind.FEATHERS : StaminaBackend.Kind.INTERNAL;
@@ -62,7 +60,6 @@ public class BackendSelectionTests {
         helper.succeed();
     }
 
-    /** With Feathers of Fatigue, AoS takes over player actions: its basic exertion is off, so nothing is charged twice. */
     @GameTest(template = "empty")
     public static void feathersLeavesPlayerActionsToAos(GameTestHelper helper) {
         if (!StaminaBackends.FEATHERS_LOADED) {
@@ -73,10 +70,6 @@ public class BackendSelectionTests {
         helper.succeed();
     }
 
-    /**
-     * A configuration listener that only answers {@code hasChannel} (with {@code channel}) and records the tasks it is
-     * told are finished; every other call does nothing.
-     */
     private static ServerConfigurationPacketListener listener(boolean channel, List<Object> finished) {
         return (ServerConfigurationPacketListener) Proxy.newProxyInstance(BackendSelectionTests.class.getClassLoader(),
                 new Class<?>[]{ServerConfigurationPacketListener.class}, (proxy, method, args) -> {
@@ -99,7 +92,6 @@ public class BackendSelectionTests {
                 });
     }
 
-    /** The backend reaches the client in the configuration phase, before it has a player, and the task ends itself. */
     @GameTest(template = "empty")
     public static void backendIsSentWhileConfiguring(GameTestHelper helper) {
         List<Object> finished = new ArrayList<>();

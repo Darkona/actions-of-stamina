@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 
-/** ParCool calls for {@link CompatTests}; loaded only when ParCool is. */
 final class ParcoolTestHooks {
 
     private ParcoolTestHooks() {
@@ -23,7 +22,6 @@ final class ParcoolTestHooks {
         return NeoForge.EVENT_BUS.post(new ParCoolActionEvent.TryToStart(player, parkourability.get(ParCoolActions.DODGE))).isCanceled();
     }
 
-    /** What the server posts when the client's start packet for a dodge arrives. */
     static void postDodgeStarted(ServerPlayer player) {
         Parkourability parkourability = Parkourability.get(player);
         NeoForge.EVENT_BUS.post(new ParCoolActionEvent.Start.Post(player, parkourability.get(ParCoolActions.DODGE)));
@@ -33,25 +31,18 @@ final class ParcoolTestHooks {
         return ParCool.getStaminaTypeRegistry().isRegistered(ParcoolCompat.STAMINA_TYPE);
     }
 
-    /** {@code stamina_type}'s default, as written into a new ParCool server config. */
     static String defaultStaminaType() {
         return ParCool.getConfig().server().staminaType.getDefault();
     }
 
-    /** The stamina type ParCool picks for a player now. */
     static ResourceLocation staminaType() {
         return ParCool.getConfig().server().getStaminaTypeID();
     }
 
-    /** What ParCool creates for the local player; built here for a server player, which reads the server backend. */
     static AbstractLocalStamina newStamina(ServerPlayer player) {
         return ParCool.getStaminaTypeRegistry().getProvider(ParcoolCompat.STAMINA_TYPE).newInstance(player, null);
     }
 
-    /**
-     * Builds AoS's ParCool stamina for {@code player} and checks it mirrors {@code backend} and swallows ParCool's
-     * own spends; null when it does, else what's wrong.
-     */
     @Nullable
     static String checkStaminaMirrorsBackend(ServerPlayer player, StaminaBackend backend) {
         AbstractLocalStamina stamina = newStamina(player);

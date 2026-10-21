@@ -9,7 +9,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 
-/** Client only. Debug HUD listing each enabled action's state; drawn only when debugging is enabled. */
 public final class AoSHudDebugOverlay {
 
     private static final String TITLE = "Actions of Stamina";
@@ -22,7 +21,6 @@ public final class AoSHudDebugOverlay {
     private static void render(GuiGraphics guiGraphics) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        // The player first: the server config behind the switch is only loaded while there is one.
         if (player == null || mc.options.hideGui || !AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean()) return;
 
         PlayerActions playerActions = PlayerActions.get(player);

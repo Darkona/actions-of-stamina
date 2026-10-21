@@ -12,28 +12,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
-/**
- * Throwing an item from {@link #THROWABLES}: snowballs, eggs, ender pearls and splash or lingering potions when used,
- * the trident when released. A throw the player can't afford doesn't happen.
- */
 public class ThrowAction extends Action {
 
-    /** Items whose throw costs stamina; the mod's own tag file holds the vanilla ones, datapacks add others. */
     public static final TagKey<Item> THROWABLES = ItemTags.create(ActionsOfStamina.id("throwables"));
 
     public ThrowAction(ActionType type) {
         super(type);
     }
 
-    /** Whether using the item throws it at once (a trident is only thrown when released). */
     public static boolean throwsOnUse(ItemStack stack, Player player) {
         return stack.is(THROWABLES) && stack.getUseDuration(player) <= 0;
     }
 
-    /**
-     * Whether releasing the item with {@code remainingTicks} of use left throws it. A trident needs a full aim and no Riptide (a
-     * Riptide launch isn't a throw); other throwables used over time throw on every release.
-     */
     public static boolean throwsOnRelease(ItemStack stack, Player player, int remainingTicks) {
         if (!stack.is(THROWABLES)) return false;
         if (!(stack.getItem() instanceof TridentItem)) return true;

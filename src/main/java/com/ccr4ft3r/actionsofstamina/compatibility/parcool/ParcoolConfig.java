@@ -5,16 +5,10 @@ import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * {@code [parcool]}: one subsection per ParCool action. Defaults are ParCool's own costs scaled to a 20-feather bar
- * (ParCool's default bar is 2000 points, so 100 points = 1 feather; its per-tick costs become per-second rates).
- * No ParCool classes here.
- */
 public final class ParcoolConfig {
 
     public static final ModConfigSpec.BooleanValue ENABLED;
 
-    /** A ParCool action by its id path (e.g. {@code fast_run}) with its costs. */
     public record Entry(String name, ActionCostConfig costs) {
     }
 
@@ -58,7 +52,6 @@ public final class ParcoolConfig {
     private ParcoolConfig() {
     }
 
-    /** Called by {@link AoSServerConfig} to define this section in order. */
     public static void init() {
     }
 
@@ -79,12 +72,10 @@ public final class ParcoolConfig {
                 .build());
     }
 
-    /** Every ParCool action's section, in config order. Do not modify. */
     static Entry[] entries() {
         return ENTRIES;
     }
 
-    /** A ParCool action's section by its id path; public for the GameTests, which borrow one for a test action. */
     @Nullable
     public static Entry byName(String name) {
         for (Entry entry : ENTRIES) {

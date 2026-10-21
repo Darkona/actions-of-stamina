@@ -7,17 +7,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.ItemAbilities;
 
-/**
- * Fishing: casting a rod and reeling it in, each charged on use. Rods are found by their cast ability, so modded rods
- * count too. A cast or reel the player can't afford doesn't happen.
- */
 public class FishAction extends Action {
 
     public FishAction(ActionType type) {
         super(type);
     }
 
-    /** Whether using the item casts or reels in a fishing line. */
     public static boolean isRod(ItemStack stack) {
         return stack.canPerformAction(ItemAbilities.FISHING_ROD_CAST);
     }

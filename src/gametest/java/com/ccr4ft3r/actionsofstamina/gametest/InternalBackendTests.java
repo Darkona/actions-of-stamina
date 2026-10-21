@@ -17,10 +17,6 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.player;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.tick;
 
-/**
- * The internal stamina, called directly (whichever backend is active). Default config: 20 feathers, 0.5 feathers
- * per second of regeneration, a 30-tick minimum regen delay after spending, 30% to recover from exhaustion.
- */
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class InternalBackendTests {
@@ -59,7 +55,6 @@ public class InternalBackendTests {
         tick(player, 60);
         helper.assertValueEqual(BACKEND.stamina(player), StaminaUnits.ofFeathers(19), "stamina during the delay");
         tick(player, 20);
-        // 0.5 feathers per second: 19.5 feathers after one second of regeneration (the tick ending the delay doesn't regenerate).
         int stamina = BACKEND.stamina(player);
         helper.assertTrue(stamina >= 19450 && stamina <= 19500, "stamina after one second of regen: " + stamina);
         tick(player, 60);
@@ -75,7 +70,6 @@ public class InternalBackendTests {
         helper.assertFalse(BACKEND.canSpend(player, TEST, 0), "nothing can be spent while exhausted");
         helper.assertFalse(BACKEND.spend(player, TEST, 1, 0), "spending while exhausted");
 
-        // 30 ticks of delay, then 25 stamina a tick up to 30% of the bar (6000): 240 ticks.
         tick(player, 260);
         helper.assertTrue(BACKEND.exhausted(player), "still exhausted below the recovery threshold");
         tick(player, 20);
@@ -91,7 +85,6 @@ public class InternalBackendTests {
             helper.assertTrue(BACKEND.drain(player, TEST, 0.25, true), "drain tick " + i);
             tick(player, 1);
         }
-        // Eight quarter units add up to exactly 2; the drain blocks regeneration, so nothing refills them.
         helper.assertValueEqual(BACKEND.stamina(player), FULL - 2, "stamina after a fractional drain");
         BACKEND.stopDrain(player, TEST);
         tick(player, 1);
@@ -111,7 +104,6 @@ public class InternalBackendTests {
         }
         helper.assertValueEqual(BACKEND.stamina(player), start, "no regeneration while a regen-blocking drain runs");
 
-        // Not refreshed any more: it times out after a few ticks and regeneration resumes.
         tick(player, 30);
         helper.assertTrue(BACKEND.stamina(player) > start, "regeneration after the drain timed out");
         helper.succeed();

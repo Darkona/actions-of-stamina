@@ -15,28 +15,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-/**
- * Per-player action state, stored as a transient NeoForge data attachment ({@link AosAttachments#PLAYER_ACTIONS}).
- * <p>
- * Common code only: the local-player movement detection that feeds {@link #applyClientState} lives in
- * {@code ClientActionTracker}. Actions are kept in an array of one slot per registered action type
- * ({@link ActionTypes}), indexed by {@link Action#id()}, so the per-tick loop allocates nothing and looks nothing up.
- */
 public class PlayerActions {
 
     private final Action[] actions = new Action[ActionTypes.count()];
-    /** The same actions, packed at the front for the tick loop; {@link #tickingCount} of them. */
     private final Action[] ticking = new Action[actions.length];
     private int tickingCount;
 
-    /** Last movement-state flags applied (client: last ones sent; server: last ones received). */
     private short stateFlags;
-    /** Set when {@link #stateFlags} changed and the action states must be re-applied on the next tick. */
     private boolean changed;
 
-    /** Whether stamina wings are worn in a curio slot; cached, see {@link CuriosCompat}. */
     private boolean curioWings;
-    /** Paragliders' vessel container already listened to for this player (a Paragliders object: kept untyped here). */
     @Nullable
     private Object vesselListenerTarget;
 
@@ -50,45 +38,30 @@ public class PlayerActions {
         return player.getData(AosAttachments.PLAYER_ACTIONS);
     }
 
-    /** Whether no action ever costs {@code player} anything: no player, creative, spectator or a fake player. */
     public static boolean isExempt(@Nullable Player player) {
         return player == null || player.isCreative() || player.isSpectator() || player instanceof FakePlayer;
     }
 
-    /**
-     * Whether the player may perform or begin action {@code actionId} now. Never refused for an exempt player or an
-     * action the config leaves off.
-     */
     public static boolean canPerform(Player player, int actionId) {
         if (isExempt(player)) return true;
         Action action = get(player).getAction(actionId);
         return action == null || action.canPerform(player);
     }
 
-    /** {@link #canPerform(Player, int)} by type. */
     public static boolean canPerform(Player player, ActionType type) {
         return canPerform(player, type.index());
     }
 
-    /**
-     * Performs one-off action {@code actionId}, charging it when it is due; false when the player can't afford it.
-     * Never refused for an exempt player or an action the config leaves off.
-     */
     public static boolean perform(Player player, int actionId) {
         if (isExempt(player)) return true;
         Action action = get(player).getAction(actionId);
         return action == null || action.perform(player);
     }
 
-    /** {@link #perform(Player, int)} by type. */
     public static boolean perform(Player player, ActionType type) {
         return perform(player, type.index());
     }
 
-    /**
-     * Client side: record freshly computed movement-state flags. Returns {@code true} when they differ from the
-     * previous ones (the caller then sends them to the server).
-     */
     public boolean applyClientState(int flags) {
         if (flags == stateFlags) return false;
         stateFlags = (short) flags;
@@ -96,7 +69,6 @@ public class PlayerActions {
         return true;
     }
 
-    /** Server side: movement-state flags received from the owning client. */
     public void processFlags(short flags) {
         stateFlags = flags;
         changed = true;
@@ -118,16 +90,12 @@ public class PlayerActions {
             setActionState(VanillaActions.BRUSH, ActionFlags.has(f, ActionFlags.BRUSHING));
             changed = false;
         }
-        // Gliders keeps its glide state on the item, synced to both sides: each side reads it itself.
-        // Nobody glides on the ground: the Curios lookup behind isGliding only runs in the air.
         Action glide = getAction(GlidersCompat.GLIDE);
         if (glide != null) glide.setActionState(!player.onGround() && GlidersCompat.isGliding(player));
 
-        // Each action spends and pauses regeneration through the stamina backend under its own source.
         Action[] ticking = this.ticking;
         for (int i = 0, n = tickingCount; i < n; i++) ticking[i].tick(player, this);
 
-        // Only the client's movement detection reads them (ClientActionTracker).
         if (player.level().isClientSide()) {
             lastX = player.getX();
             lastZ = player.getZ();
@@ -139,7 +107,6 @@ public class PlayerActions {
         return curioWings;
     }
 
-    /** Looks the player's curios up again (allocates: on a change, on join, or at an interval, never every tick). */
     public void refreshCurioWings(Player player) {
         curioWings = CuriosCompat.wearsStaminaWings(player);
     }
@@ -153,7 +120,7 @@ public class PlayerActions {
         vesselListenerTarget = target;
     }
 
-    @SuppressWarnings("unused") // for addons
+    @SuppressWarnings("unused")
     public short getStateFlags() {
         return stateFlags;
     }
@@ -166,12 +133,10 @@ public class PlayerActions {
         return lastZ;
     }
 
-    /** Enabled actions, indexed by {@link Action#id()}; empty slots are {@code null}. Do not modify. */
     public Action[] getActions() {
         return actions;
     }
 
-    /** Drops every action before they are rebuilt from the config; their drains time out by themselves. */
     public void clearActions(Player player) {
         for (int i = 0; i < tickingCount; i++) ticking[i].cleanUp(player);
         Arrays.fill(actions, null);
@@ -186,13 +151,11 @@ public class PlayerActions {
         ticking[tickingCount++] = action;
     }
 
-    /** The action in slot {@code actionId}, or null when the config leaves it off or no type has that slot. */
     @Nullable
     public Action getAction(int actionId) {
         return actionId >= 0 && actionId < actions.length ? actions[actionId] : null;
     }
 
-    /** The player's action of {@code type}, or null when the config leaves it off. */
     @Nullable
     public Action getAction(ActionType type) {
         return actions[type.index()];

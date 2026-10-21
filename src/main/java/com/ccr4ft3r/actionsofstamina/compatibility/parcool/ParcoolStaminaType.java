@@ -14,20 +14,11 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * AoS's ParCool stamina type ({@link ParcoolCompat#STAMINA_TYPE}); only reached through {@link ParcoolCompat} when
- * ParCool is loaded.
- * <p>
- * ParCool posts {@link RegisterParCoolStaminaTypeEvent} on its own mod bus from inside its constructor and freezes
- * the registry right after, so the listener must be on ParCool's bus before ParCool is constructed: AoS orders
- * itself {@code BEFORE} ParCool and adds it from its own constructor.
- */
 final class ParcoolStaminaType {
 
     private ParcoolStaminaType() {
     }
 
-    /** AoS's mod constructor. */
     static void register() {
         IEventBus parcoolBus = ModList.get().getModContainerById(ParcoolCompat.MOD_ID).map(ModContainer::getEventBus).orElse(null);
         if (parcoolBus == null) {
@@ -45,17 +36,9 @@ final class ParcoolStaminaType {
         return ParCool.getStaminaTypeRegistry().isRegistered(ParcoolCompat.STAMINA_TYPE);
     }
 
-    /**
-     * ParCool keeps a stamina instance only for the local player (other players and the server see a read-only copy
-     * it syncs), so this lives on the client. While the compat is enabled it shows the AoS backend's stamina and
-     * swallows ParCool's own spends and regeneration: AoS charges ParCool's actions through their events instead
-     * ({@link ParcoolBridge}), so nothing is charged twice. ParCool's own HUD stays hidden. With the compat disabled
-     * it is ParCool's default stamina.
-     */
     public static final class AoSParcoolStamina extends AbstractLocalStamina {
 
         private final ParCoolStamina fallback;
-        /** Last state ParCool synced to the server: it only needs a packet when one of these changed. */
         private int lastValue = Integer.MIN_VALUE;
         private int lastMax = Integer.MIN_VALUE;
         private boolean lastExhausted;
@@ -84,7 +67,6 @@ final class ParcoolStaminaType {
             return ParcoolCompat.isActive() ? backend().exhausted(owner) : fallback.isExhausted();
         }
 
-        /** AoS exempts creative and spectator players; ParCool's Inexhaustible effect doesn't make AoS costs free. */
         @Override
         public boolean isInfinite() {
             return ParcoolCompat.isActive() ? owner.isCreative() || owner.isSpectator() : fallback.isInfinite();

@@ -11,12 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
-    /**
-     * Climbing up without the stamina for it: the {@code onClimbable()} check that lifts an entity pushing against a
-     * climbable (or jumping in it) says no, so the lift doesn't happen. Everything else about the climbable stays:
-     * the slow fall, and holding on while sneaking. Only asked while pushing or jumping, out of water: a ladder under
-     * water lifts through the water movement, which is left alone.
-     */
     @WrapOperation(method = "handleRelativeFrictionAndCalculateMovement",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;onClimbable()Z"))
     private boolean actionsofstamina$climbUpWithStamina(LivingEntity self, Operation<Boolean> original) {

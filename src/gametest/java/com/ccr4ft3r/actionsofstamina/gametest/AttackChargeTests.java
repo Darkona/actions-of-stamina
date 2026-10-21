@@ -21,17 +21,10 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
 
-/**
- * The attack's charge once every few attacks keeps one count on the server for hits and misses alike: hits through the
- * attack itself, misses through the packet the client sends for a swing at the air. On whichever backend is active;
- * default attack config (1 feather every 3 attacks). Also which attacks WEAKEN weakens, with and without
- * {@code weaken_non_weapons}.
- */
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class AttackChargeTests {
 
-    /** The player's attack action, with a sword in hand so the attacks count. */
     private static AttackAction attack(ServerPlayer player) {
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
         return (AttackAction) PlayerActions.get(player).getAction(VanillaActions.ATTACK);
@@ -70,11 +63,6 @@ public class AttackChargeTests {
         helper.succeed();
     }
 
-    /**
-     * Whether an exhausted player with {@code stack} in hand ends up weakened after the periodic check, with WEAKEN on and
-     * {@code weaken_non_weapons} as given. The action takes the switches directly: writing them to the config would race
-     * with the reload the file watcher does after every save.
-     */
     private static boolean weakenedWith(GameTestHelper helper, ItemStack stack, boolean weakenNonWeapons) {
         ServerPlayer player = survivalPlayer(helper);
         exhaust(StaminaBackends.server(), player);

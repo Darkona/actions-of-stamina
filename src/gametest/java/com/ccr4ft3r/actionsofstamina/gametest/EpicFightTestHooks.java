@@ -12,10 +12,8 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
-/** Epic Fight calls for {@link CompatTests}; loaded only when Epic Fight is. */
 final class EpicFightTestHooks {
 
-    /** The categories AoS charges, in the order of {@link #CATEGORY_NAMES}. */
     static final int CATEGORIES = 4;
     static final String[] CATEGORY_NAMES = {"dodge", "guard", "innate", "mover"};
     private static final SkillCategories[] CATEGORY = {SkillCategories.DODGE, SkillCategories.GUARD,
@@ -42,7 +40,6 @@ final class EpicFightTestHooks {
         return skill == null ? null : skill.getRegistryName().toString();
     }
 
-    /** Result of posting a skill's stamina consumption the way Epic Fight does before a skill runs. */
     record Consume(boolean canceled, boolean switchedToNone) {
     }
 
@@ -54,7 +51,6 @@ final class EpicFightTestHooks {
         return new Consume(event.isCanceled(), event.getResourceType() == Skill.Resource.NONE);
     }
 
-    /** Posts one basic-attack swing; true when it was cancelled. */
     static boolean comboAttackCanceled(ServerPlayer player) {
         ServerPlayerPatch patch = (ServerPlayerPatch) EpicFightCapabilities.getPlayerPatch(player);
         return EpicFightEventHooks.Player.COMBO_ATTACK.post(new ComboAttackEvent(patch)).isCanceled();

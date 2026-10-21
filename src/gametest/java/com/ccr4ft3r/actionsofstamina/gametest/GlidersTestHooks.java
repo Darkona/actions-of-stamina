@@ -9,18 +9,15 @@ import net.venturecraft.gliders.common.item.GliderItem;
 import net.venturecraft.gliders.common.item.ItemRegistry;
 import net.venturecraft.gliders.network.MessageToggleGlide;
 
-/** Gliders calls for {@link CompatTests}; loaded only when Gliders is. */
 final class GlidersTestHooks {
 
     private GlidersTestHooks() {
     }
 
-    /** A folded wooden glider on the chest. */
     static void equipGlider(ServerPlayer player) {
         player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ItemRegistry.PARAGLIDER_WOOD.get()));
     }
 
-    /** What the server does when the player presses Gliders' deploy key: its real toggle handler. */
     static void pressDeployKey(ServerPlayer player) {
         MessageToggleGlide.handle(new PacketContext<>(player, new MessageToggleGlide(), Side.SERVER));
     }

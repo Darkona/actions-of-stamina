@@ -6,7 +6,6 @@ import net.minecraft.world.entity.player.Player;
 import tictim.paraglider.api.movement.Movement;
 import tictim.paraglider.api.vessel.VesselContainer;
 
-/** Direct Paragliders calls; only reached through {@link ParagliderCompat} when Paragliders is loaded. */
 final class ParagliderBridge {
 
     private ParagliderBridge() {
@@ -17,11 +16,6 @@ final class ParagliderBridge {
         return movement != null && movement.state().paragliding();
     }
 
-    /**
-     * Server: listens to the player's vessel container once (it lives as long as the player entity, dimension changes
-     * included) and returns its stamina vessels. Paragliders calls the listener on every real change, commands and
-     * bargains included, never for simulations.
-     */
     static int listenAndCountVessels(ServerPlayer player) {
         VesselContainer vessels = VesselContainer.get(player);
         PlayerActions actions = PlayerActions.get(player);

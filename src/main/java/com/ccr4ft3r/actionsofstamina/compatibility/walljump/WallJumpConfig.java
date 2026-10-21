@@ -4,7 +4,6 @@ import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-/** {@code [walljump]}: Wall-Jump TXF's wall jump, double jump and wall cling. No Wall-Jump TXF classes here. */
 public final class WallJumpConfig {
 
     public static final ModConfigSpec.BooleanValue ENABLED;
@@ -38,7 +37,6 @@ public final class WallJumpConfig {
     private WallJumpConfig() {
     }
 
-    /** Called by {@link AoSServerConfig} to define this section in order. */
     public static void init() {
     }
 }

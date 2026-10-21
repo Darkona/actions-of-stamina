@@ -10,7 +10,6 @@ import net.venturecraft.gliders.data.GliderData;
 import net.venturecraft.gliders.network.MessagePOV;
 import net.venturecraft.gliders.util.GliderUtil;
 
-/** Direct Gliders calls; only reached through {@link GlidersCompat} when Gliders is loaded. */
 final class GlidersBridge {
 
     private GlidersBridge() {
@@ -20,7 +19,6 @@ final class GlidersBridge {
         return GliderUtil.isGlidingWithActiveGlider(player);
     }
 
-    /** What Gliders' own toggle does when it closes the glider: folded, camera back to first person, state synced. */
     static void close(ServerPlayer player) {
         ItemStack glider = CuriosTrinketsUtil.getInstance().getFirstFoundGlider(player);
         if (!(glider.getItem() instanceof GliderItem) || !GliderItem.isGlidingEnabled(glider)) return;
