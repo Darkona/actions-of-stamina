@@ -3,7 +3,6 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions.ActionFlags;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
@@ -44,7 +43,7 @@ public class ActionTickTests {
         tickEvent(player, 1);
         int start = backend.stamina(player);
 
-        actions.processFlags((short) ActionFlags.SPRINTING);
+        actions.processFlags((short) VanillaActions.SPRINT.stateBit());
         tickEvent(player, 20);
         helper.assertTrue(sprint.isPerforming(), "sprinting performs");
         helper.assertTrue(backend.stamina(player) < start, "sprinting drains: " + backend.stamina(player) + " of " + start);
@@ -64,7 +63,7 @@ public class ActionTickTests {
         exhaust(StaminaBackends.server(), player);
         player.setSprinting(true);
         player.setSwimming(true);
-        PlayerActions.get(player).processFlags((short) ActionFlags.SWIMMING);
+        PlayerActions.get(player).processFlags((short) VanillaActions.SWIM.stateBit());
         tickEvent(player, 1);
         helper.assertFalse(player.isSprinting(), "swim refused: the sprint is stopped");
         helper.assertFalse(player.isSwimming(), "swim refused: the pose is dropped");
@@ -78,7 +77,7 @@ public class ActionTickTests {
         Action sprint = actions.getAction(VanillaActions.SPRINT);
         helper.assertTrue(sprint != null, "sprint action exists");
 
-        actions.processFlags((short) ActionFlags.SPRINTING);
+        actions.processFlags((short) VanillaActions.SPRINT.stateBit());
         tickEvent(player, 5);
         helper.assertTrue(sprint.isPerforming(), "sprinting performs");
 

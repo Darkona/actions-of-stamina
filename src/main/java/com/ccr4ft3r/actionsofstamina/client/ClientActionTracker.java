@@ -3,7 +3,7 @@ package com.ccr4ft3r.actionsofstamina.client;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ElytraAction;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions.ActionFlags;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.BrushAction;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.DrawAction;
@@ -21,6 +21,10 @@ public final class ClientActionTracker {
     private static final double CLIMB_EPSILON = 0.01;
 
     private ClientActionTracker() {
+    }
+
+    private static int with(int flags, ActionType type, boolean state) {
+        return state ? flags | type.stateBit() : flags;
     }
 
     public static void update(LocalPlayer player, PlayerActions actions) {
@@ -52,17 +56,17 @@ public final class ClientActionTracker {
         boolean wallClinging = actions.getAction(WallJumpCompat.WALL_CLING) != null && WallJumpCompat.isClinging(player);
 
         int flags = 0;
-        flags = ActionFlags.with(flags, ActionFlags.SPRINTING, sprinting);
-        flags = ActionFlags.with(flags, ActionFlags.CRAWLING, crawling);
-        flags = ActionFlags.with(flags, ActionFlags.ELYTRA, flying);
-        flags = ActionFlags.with(flags, ActionFlags.SWIMMING, swimming);
-        flags = ActionFlags.with(flags, ActionFlags.HOLDING_SHIELD, usingShield);
-        flags = ActionFlags.with(flags, ActionFlags.DRAWING, drawing);
-        flags = ActionFlags.with(flags, ActionFlags.PARAGLIDING, paragliding);
-        flags = ActionFlags.with(flags, ActionFlags.WALL_CLINGING, wallClinging);
-        flags = ActionFlags.with(flags, ActionFlags.CLIMBING, climbingUp);
-        flags = ActionFlags.with(flags, ActionFlags.ROWING, rowing);
-        flags = ActionFlags.with(flags, ActionFlags.BRUSHING, brushing);
+        flags = with(flags, VanillaActions.SPRINT, sprinting);
+        flags = with(flags, VanillaActions.CRAWL, crawling);
+        flags = with(flags, VanillaActions.ELYTRA, flying);
+        flags = with(flags, VanillaActions.SWIM, swimming);
+        flags = with(flags, VanillaActions.SHIELD, usingShield);
+        flags = with(flags, VanillaActions.DRAW, drawing);
+        flags = with(flags, ParagliderCompat.PARAGLIDE, paragliding);
+        flags = with(flags, WallJumpCompat.WALL_CLING, wallClinging);
+        flags = with(flags, VanillaActions.CLIMB, climbingUp);
+        flags = with(flags, VanillaActions.ROW, rowing);
+        flags = with(flags, VanillaActions.BRUSH, brushing);
 
         if (actions.applyClientState(flags)) {
             if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(player, "Change detected! Moving: {}, Sprinting: {}, Crawling: {}, Flying: {}, Swimming: {}, Shield: {}, Drawing: {}, Climbing: {}, Rowing: {}, Brushing: {}",

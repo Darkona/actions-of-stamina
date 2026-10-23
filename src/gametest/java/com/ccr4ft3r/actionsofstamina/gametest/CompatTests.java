@@ -3,7 +3,6 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions.ActionFlags;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
@@ -225,7 +224,7 @@ public class CompatTests {
         Action cling = actions.getAction(WallJumpCompat.WALL_CLING);
         helper.assertTrue(cling != null, "the wall cling action exists");
         helper.assertTrue(WallJumpCompat.canCling(player), "a wall can be grabbed with stamina");
-        actions.processFlags((short) ActionFlags.WALL_CLINGING);
+        actions.processFlags((short) WallJumpCompat.WALL_CLING.stateBit());
         before = backend.stamina(player);
         tickEvent(player, 20);
         helper.assertTrue(cling.isPerforming(), "clinging");

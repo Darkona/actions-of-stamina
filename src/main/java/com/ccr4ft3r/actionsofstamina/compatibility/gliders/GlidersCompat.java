@@ -17,7 +17,7 @@ public final class GlidersCompat {
     }
 
     public static final ActionType GLIDE = ActionType.register(ActionsOfStamina.id("gliders/glide"), MOD_ID, GlidersConfig.GLIDE,
-            GlideAction::new);
+            GlideAction::new).sensed(GlidersCompat::isGliding);
 
     public static boolean isGliding(Player player) {
         return !player.onGround() && !player.isInWater() && GlidersBridge.isGliding(player);

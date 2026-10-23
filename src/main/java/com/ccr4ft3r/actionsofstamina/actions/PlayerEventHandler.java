@@ -4,6 +4,7 @@ import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.BrushAction;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.DrawAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalBackend;
@@ -168,7 +169,7 @@ public final class PlayerEventHandler {
         PlayerActions actions = PlayerActions.get(player);
         actions.clearActions(player);
         PlayerActions.addEnabledActions(actions);
-        actions.refreshCurioWings(player);
+        CuriosCompat.refreshWings(player);
         if (player instanceof ServerPlayer serverPlayer) {
             InternalBackend.data(player).markForSync();
             ParagliderCompat.onJoin(serverPlayer);

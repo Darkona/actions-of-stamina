@@ -32,7 +32,7 @@ public final class ClientGameEvents {
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof LocalPlayer player)) return;
         PlayerActions actions = PlayerActions.get(player);
-        if (CuriosCompat.LOADED && player.tickCount % CuriosCompat.CLIENT_REFRESH_INTERVAL == 0) actions.refreshCurioWings(player);
+        if (CuriosCompat.LOADED && player.tickCount % CuriosCompat.CLIENT_REFRESH_INTERVAL == 0) CuriosCompat.refreshWings(player);
         ClientActionTracker.update(player, actions);
         actions.tick(player);
     }

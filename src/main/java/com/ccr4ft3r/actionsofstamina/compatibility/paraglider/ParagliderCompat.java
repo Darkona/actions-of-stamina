@@ -17,7 +17,7 @@ public final class ParagliderCompat {
     private ParagliderCompat() {
     }
 
-    public static final ActionType PARAGLIDE = ActionType.register(ActionsOfStamina.id("paraglide"), MOD_ID, ParagliderConfig.PARAGLIDE);
+    public static final ActionType PARAGLIDE = ActionType.register(ActionsOfStamina.id("paraglide"), MOD_ID, ParagliderConfig.PARAGLIDE).flag(1 << 7);
 
     public static boolean isParagliding(Player player) {
         return PARAGLIDE.enabled() && ParagliderBridge.isParagliding(player);

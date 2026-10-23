@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public final class ActionType {
@@ -19,6 +21,9 @@ public final class ActionType {
     private final ActionCostConfig config;
     private final BooleanSupplier enabled;
     private final Function<ActionType, ? extends Action> factory;
+    private int stateBit;
+    @Nullable
+    private Predicate<Player> sensor;
     int index = -1;
 
     ActionType(ResourceLocation id, ActionCostConfig config, BooleanSupplier enabled, Function<ActionType, ? extends Action> factory) {
@@ -46,6 +51,30 @@ public final class ActionType {
         return enabled.getAsBoolean();
     }
 
+    public int stateBit() {
+        return stateBit;
+    }
+
+    public boolean senses(Player player) {
+        return sensor != null && sensor.test(player);
+    }
+
+    public synchronized ActionType flag(int bit) {
+        if (frozen != null) throw new IllegalStateException("Action type " + id + " flagged after the action registry froze");
+        if (bit <= 0 || bit > Short.MAX_VALUE || Integer.bitCount(bit) != 1) throw new IllegalArgumentException("Not a bit of the state flags: " + bit);
+        for (ActionType other : BY_ID.values()) {
+            if (other.stateBit == bit) throw new IllegalStateException("State bit " + bit + " of " + id + " is already " + other.id + "'s");
+        }
+        stateBit = bit;
+        return this;
+    }
+
+    public synchronized ActionType sensed(Predicate<Player> sensor) {
+        if (frozen != null) throw new IllegalStateException("Action type " + id + " sensed after the action registry froze");
+        this.sensor = sensor;
+        return this;
+    }
+
     Action create() {
         return factory.apply(this);
     }
@@ -59,6 +88,8 @@ public final class ActionType {
 
     private static final Map<ResourceLocation, ActionType> BY_ID = new LinkedHashMap<>();
     private static volatile ActionType[] frozen;
+    private static ActionType[] flagged;
+    private static ActionType[] sensed;
 
     public static ActionType register(ResourceLocation id, ActionCostConfig config) {
         return register(id, config, Action::new);
@@ -103,6 +134,8 @@ public final class ActionType {
             type.index = i;
             BY_ID.put(type.id, type);
         }
+        flagged = sorted.stream().filter(type -> type.stateBit != 0).toArray(ActionType[]::new);
+        sensed = sorted.stream().filter(type -> type.sensor != null).toArray(ActionType[]::new);
         frozen = sorted.toArray(new ActionType[0]);
         ActionsOfStamina.logger.debug("Action types: {}", sorted);
     }
@@ -111,6 +144,16 @@ public final class ActionType {
         ActionType[] types = frozen;
         if (types == null) throw new IllegalStateException("The action registry has not frozen yet");
         return types;
+    }
+
+    public static ActionType[] flagged() {
+        all();
+        return flagged;
+    }
+
+    public static ActionType[] sensed() {
+        all();
+        return sensed;
     }
 
     public static int count() {

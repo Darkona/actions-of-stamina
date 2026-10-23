@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.curios;
 
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import net.minecraft.world.entity.player.Player;
 import dev.darkona.jdlib.api.compat.Bridges;
 
@@ -14,6 +15,10 @@ public final class CuriosCompat {
 
     public static void init() {
         if (LOADED) CuriosBridge.register();
+    }
+
+    public static void refreshWings(Player player) {
+        PlayerActions.get(player).setCurioWings(wearsStaminaWings(player));
     }
 
     public static boolean wearsStaminaWings(Player player) {

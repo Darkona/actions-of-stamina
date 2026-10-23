@@ -1,7 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.curios;
 
 import com.ccr4ft3r.actionsofstamina.actions.ElytraAction;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import java.util.function.Predicate;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +26,7 @@ final class CuriosBridge {
     private static void onCurioChange(CurioChangeEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         if (event.getFrom().is(ElytraAction.STAMINA_WINGS) || event.getTo().is(ElytraAction.STAMINA_WINGS)) {
-            PlayerActions.get(player).refreshCurioWings(player);
+            CuriosCompat.refreshWings(player);
         }
     }
 }

@@ -1,10 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import java.util.Arrays;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -84,21 +80,13 @@ public class PlayerActions {
     public void tick(Player player) {
         if (changed) {
             int f = stateFlags;
-            setActionState(VanillaActions.SPRINT, ActionFlags.has(f, ActionFlags.SPRINTING));
-            setActionState(VanillaActions.CRAWL, ActionFlags.has(f, ActionFlags.CRAWLING));
-            setActionState(VanillaActions.ELYTRA, ActionFlags.has(f, ActionFlags.ELYTRA));
-            setActionState(VanillaActions.SWIM, ActionFlags.has(f, ActionFlags.SWIMMING));
-            setActionState(VanillaActions.SHIELD, ActionFlags.has(f, ActionFlags.HOLDING_SHIELD));
-            setActionState(VanillaActions.DRAW, ActionFlags.has(f, ActionFlags.DRAWING));
-            setActionState(ParagliderCompat.PARAGLIDE, ActionFlags.has(f, ActionFlags.PARAGLIDING));
-            setActionState(WallJumpCompat.WALL_CLING, ActionFlags.has(f, ActionFlags.WALL_CLINGING));
-            setActionState(VanillaActions.CLIMB, ActionFlags.has(f, ActionFlags.CLIMBING));
-            setActionState(VanillaActions.ROW, ActionFlags.has(f, ActionFlags.ROWING));
-            setActionState(VanillaActions.BRUSH, ActionFlags.has(f, ActionFlags.BRUSHING));
+            for (ActionType type : ActionType.flagged()) setActionState(type, (f & type.stateBit()) != 0);
             changed = false;
         }
-        Action glide = getAction(GlidersCompat.GLIDE);
-        if (glide != null) glide.setActionState(!player.onGround() && GlidersCompat.isGliding(player));
+        for (ActionType type : ActionType.sensed()) {
+            Action sensed = actions[type.index()];
+            if (sensed != null) sensed.setActionState(type.senses(player));
+        }
 
         Action[] ticking = this.ticking;
         for (int i = 0, n = tickingCount; i < n; i++) ticking[i].tick(player, this);
@@ -114,8 +102,8 @@ public class PlayerActions {
         return curioWings;
     }
 
-    public void refreshCurioWings(Player player) {
-        curioWings = CuriosCompat.wearsStaminaWings(player);
+    public void setCurioWings(boolean wearing) {
+        curioWings = wearing;
     }
 
     @Nullable
@@ -177,32 +165,6 @@ public class PlayerActions {
                 continue;
             }
             a.addEnabledAction(action);
-        }
-    }
-
-    public static final class ActionFlags {
-
-        public static final int SPRINTING = 1 << 1;
-        public static final int CRAWLING = 1 << 2;
-        public static final int SWIMMING = 1 << 3;
-        public static final int ELYTRA = 1 << 4;
-        public static final int HOLDING_SHIELD = 1 << 5;
-        public static final int PARAGLIDING = 1 << 7;
-        public static final int WALL_CLINGING = 1 << 8;
-        public static final int DRAWING = 1 << 9;
-        public static final int CLIMBING = 1 << 10;
-        public static final int ROWING = 1 << 11;
-        public static final int BRUSHING = 1 << 12;
-
-        private ActionFlags() {
-        }
-
-        public static boolean has(int flags, int bit) {
-            return (flags & bit) != 0;
-        }
-
-        public static int with(int flags, int bit, boolean state) {
-            return state ? flags | bit : flags & ~bit;
         }
     }
 }
