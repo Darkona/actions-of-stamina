@@ -1,7 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.epicfight;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import dev.darkona.jdlib.api.compat.Bridges;
@@ -22,7 +21,7 @@ public final class EpicFightCompat {
     }
 
     private static ActionType skill(String name, ActionCostConfig costs) {
-        return ActionType.register(ActionsOfStamina.id("epicfight/" + name), costs, () -> isActive() && costs.enabled(), Action::new);
+        return ActionType.register(ActionsOfStamina.id("epicfight/" + name), MOD_ID, EpicFightConfig.ENABLED, costs);
     }
 
     public static boolean isActive() {

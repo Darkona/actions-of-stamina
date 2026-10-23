@@ -17,7 +17,7 @@ final class BetterCombatClientBridge {
     }
 
     private static void onAttackStart(LocalPlayer player, AttackHand hand) {
-        if (!BetterCombatCompat.isActive() || !BetterCombatConfig.BLOCK_WHEN_SHORT.getAsBoolean()) return;
+        if (!BetterCombatCompat.SWING.enabled() || !BetterCombatConfig.BLOCK_WHEN_SHORT.getAsBoolean()) return;
         if (player.isCreative() || player.isSpectator()) return;
         if (BetterCombatBridge.canAffordSwing(player, hand)) return;
         ((MinecraftClient_BetterCombat) Minecraft.getInstance()).cancelUpswing();

@@ -15,6 +15,6 @@ final class CombatRollBridge {
     }
 
     private static void onRoll(ServerPlayer player, Vec3 velocity) {
-        if (CombatRollCompat.isActive()) PlayerActions.perform(player, CombatRollCompat.ROLL);
+        if (CombatRollCompat.ROLL.enabled()) PlayerActions.perform(player, CombatRollCompat.ROLL);
     }
 }

@@ -17,12 +17,8 @@ public final class CreateCompat {
     private CreateCompat() {
     }
 
-    public static final ActionType CRANK = ActionType.register(ActionsOfStamina.id("create/crank"), CreateConfig.CRANK,
-            CreateCompat::isActive, CrankAction::new);
-
-    public static boolean isActive() {
-        return LOADED && CreateConfig.CRANK.enabled();
-    }
+    public static final ActionType CRANK = ActionType.register(ActionsOfStamina.id("create/crank"), MOD_ID, CreateConfig.CRANK,
+            CrankAction::new);
 
     public static boolean turnCrank(Player player, Level level, BlockPos pos) {
         CrankAction crank = PlayerActions.action(player, CRANK, CrankAction.class);

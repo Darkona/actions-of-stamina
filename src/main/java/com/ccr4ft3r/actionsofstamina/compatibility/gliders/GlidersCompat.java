@@ -16,19 +16,15 @@ public final class GlidersCompat {
     private GlidersCompat() {
     }
 
-    public static final ActionType GLIDE = ActionType.register(ActionsOfStamina.id("gliders/glide"), GlidersConfig.GLIDE,
-            GlidersCompat::isActive, GlideAction::new);
-
-    public static boolean isActive() {
-        return LOADED && GlidersConfig.GLIDE.enabled();
-    }
+    public static final ActionType GLIDE = ActionType.register(ActionsOfStamina.id("gliders/glide"), MOD_ID, GlidersConfig.GLIDE,
+            GlideAction::new);
 
     public static boolean isGliding(Player player) {
         return !player.onGround() && !player.isInWater() && GlidersBridge.isGliding(player);
     }
 
     public static boolean canDeploy(ServerPlayer player) {
-        return !isActive() || PlayerActions.canPerform(player, GLIDE);
+        return !GLIDE.enabled() || PlayerActions.canPerform(player, GLIDE);
     }
 
     public static class GlideAction extends Action {

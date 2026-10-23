@@ -1,7 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.combatroll;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import dev.darkona.jdlib.api.compat.Bridges;
@@ -12,14 +11,9 @@ public final class CombatRollCompat {
     public static final String MOD_ID = "combat_roll";
     public static final boolean LOADED = Bridges.isLoaded(MOD_ID);
 
-    public static final ActionType ROLL = ActionType.register(ActionsOfStamina.id("combat_roll/roll"), CombatRollConfig.ROLL,
-            CombatRollCompat::isActive, Action::new);
+    public static final ActionType ROLL = ActionType.register(ActionsOfStamina.id("combat_roll/roll"), MOD_ID, CombatRollConfig.ROLL);
 
     private CombatRollCompat() {
-    }
-
-    public static boolean isActive() {
-        return LOADED && CombatRollConfig.ROLL.enabled();
     }
 
     public static void init() {
@@ -27,6 +21,6 @@ public final class CombatRollCompat {
     }
 
     public static boolean canRoll(Player player) {
-        return !isActive() || PlayerActions.canPerform(player, ROLL);
+        return !ROLL.enabled() || PlayerActions.canPerform(player, ROLL);
     }
 }

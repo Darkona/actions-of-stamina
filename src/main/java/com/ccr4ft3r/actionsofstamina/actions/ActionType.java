@@ -2,6 +2,7 @@ package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import dev.darkona.jdlib.api.compat.Bridges;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -59,8 +60,27 @@ public final class ActionType {
     private static final Map<ResourceLocation, ActionType> BY_ID = new LinkedHashMap<>();
     private static volatile ActionType[] frozen;
 
+    public static ActionType register(ResourceLocation id, ActionCostConfig config) {
+        return register(id, config, Action::new);
+    }
+
     public static ActionType register(ResourceLocation id, ActionCostConfig config, Function<ActionType, ? extends Action> factory) {
         return register(id, config, config::enabled, factory);
+    }
+
+    public static ActionType register(ResourceLocation id, String requiredModId, ActionCostConfig config) {
+        return register(id, requiredModId, config, Action::new);
+    }
+
+    public static ActionType register(ResourceLocation id, String requiredModId, ActionCostConfig config,
+                                      Function<ActionType, ? extends Action> factory) {
+        boolean loaded = Bridges.isLoaded(requiredModId);
+        return register(id, config, () -> loaded && config.enabled(), factory);
+    }
+
+    public static ActionType register(ResourceLocation id, String requiredModId, BooleanSupplier modSwitch, ActionCostConfig config) {
+        boolean loaded = Bridges.isLoaded(requiredModId);
+        return register(id, config, () -> loaded && modSwitch.getAsBoolean() && config.enabled(), Action::new);
     }
 
     public static synchronized ActionType register(ResourceLocation id, ActionCostConfig config, BooleanSupplier enabled,

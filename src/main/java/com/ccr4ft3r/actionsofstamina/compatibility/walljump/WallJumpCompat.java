@@ -1,7 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.walljump;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
@@ -15,12 +14,12 @@ public final class WallJumpCompat {
     public static final String MOD_ID = "walljump";
     public static final boolean LOADED = Bridges.isLoaded(MOD_ID);
 
-    public static final ActionType WALL_JUMP = ActionType.register(ActionsOfStamina.id("walljump/wall_jump"), WallJumpConfig.WALL_JUMP,
-            () -> isActive() && WallJumpConfig.WALL_JUMP.enabled(), Action::new);
-    public static final ActionType DOUBLE_JUMP = ActionType.register(ActionsOfStamina.id("walljump/double_jump"), WallJumpConfig.DOUBLE_JUMP,
-            () -> isActive() && WallJumpConfig.DOUBLE_JUMP.enabled(), Action::new);
-    public static final ActionType WALL_CLING = ActionType.register(ActionsOfStamina.id("walljump/wall_cling"), WallJumpConfig.WALL_CLING,
-            () -> isActive() && WallJumpConfig.WALL_CLING.enabled(), Action::new);
+    public static final ActionType WALL_JUMP = ActionType.register(ActionsOfStamina.id("walljump/wall_jump"), MOD_ID,
+            WallJumpConfig.ENABLED, WallJumpConfig.WALL_JUMP);
+    public static final ActionType DOUBLE_JUMP = ActionType.register(ActionsOfStamina.id("walljump/double_jump"), MOD_ID,
+            WallJumpConfig.ENABLED, WallJumpConfig.DOUBLE_JUMP);
+    public static final ActionType WALL_CLING = ActionType.register(ActionsOfStamina.id("walljump/wall_cling"), MOD_ID,
+            WallJumpConfig.ENABLED, WallJumpConfig.WALL_CLING);
 
     private WallJumpCompat() {
     }
