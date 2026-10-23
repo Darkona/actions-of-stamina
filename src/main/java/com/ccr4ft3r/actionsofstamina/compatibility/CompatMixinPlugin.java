@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility;
 
-import dev.darkona.jdlib.api.mixin.JDMixinPlugin;
+import dev.darkona.jdlib.api.compat.JDMixinPlugin;
 import net.neoforged.fml.loading.LoadingModList;
 import org.jetbrains.annotations.Nullable;
 
