@@ -9,6 +9,7 @@ import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -33,6 +34,7 @@ public final class PlayerEventHandler {
     }
 
     private static <E> void dispatch(@Nullable Player player, ActionType type, E event, Hook<E> hook) {
+        if (event instanceof ICancellableEvent cancellable && cancellable.isCanceled()) return;
         Action action = PlayerActions.action(player, type);
         if (action != null) hook.run(action, player, event);
     }

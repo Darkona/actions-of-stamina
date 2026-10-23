@@ -37,10 +37,16 @@ public class DispatchMatrixTests {
 
     private static final class Recorder extends Action {
         private final List<String> log;
+        private final boolean cancels;
 
         Recorder(ActionType type, List<String> log) {
+            this(type, log, false);
+        }
+
+        Recorder(ActionType type, List<String> log, boolean cancels) {
             super(type);
             this.log = log;
+            this.cancels = cancels;
         }
 
         private void record() {
@@ -55,6 +61,7 @@ public class DispatchMatrixTests {
         @Override
         public void onUseItem(Player player, PlayerInteractEvent.RightClickItem event) {
             record();
+            if (cancels) event.setCanceled(true);
         }
 
         @Override
@@ -65,6 +72,7 @@ public class DispatchMatrixTests {
         @Override
         public void onStopUsing(Player player, LivingEntityUseItemEvent.Stop event) {
             record();
+            if (cancels) event.setCanceled(true);
         }
 
         @Override
@@ -89,11 +97,15 @@ public class DispatchMatrixTests {
     }
 
     private static List<String> install(ServerPlayer player, ActionType... except) {
+        return install(player, List.of(), except);
+    }
+
+    private static List<String> install(ServerPlayer player, List<ActionType> cancelling, ActionType... except) {
         List<String> log = new ArrayList<>();
         List<ActionType> skipped = List.of(except);
         List<Action> recorders = new ArrayList<>();
         for (ActionType type : ActionType.all()) {
-            if (!skipped.contains(type)) recorders.add(new Recorder(type, log));
+            if (!skipped.contains(type)) recorders.add(new Recorder(type, log, cancelling.contains(type)));
         }
         only(player, recorders.toArray(new Action[0]));
         return log;
@@ -175,6 +187,21 @@ public class DispatchMatrixTests {
         EventPosts.breakBlock(player, helper.absolutePos(STONE));
         EventPosts.breakSpeed(player, Blocks.STONE.defaultBlockState(), 1.0F);
         helper.assertTrue(log.isEmpty(), "mining events without the mine action reached " + log);
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void aCancelledEventDoesNotReachTheNextActions(GameTestHelper helper) {
+        ServerPlayer player = survivalPlayer(helper);
+        List<String> log = install(player, List.of(VanillaActions.SHIELD));
+        EventPosts.useItem(player, new ItemStack(Items.STICK));
+        helper.assertValueEqual(log, List.of("shield"), "a shield that cancels stops the bow, the throw, the rod and the rocket");
+        log = install(player, List.of(VanillaActions.THROW));
+        EventPosts.useItem(player, new ItemStack(Items.STICK));
+        helper.assertValueEqual(log, List.of("shield", "draw", "throw"), "a throw that cancels stops the rod and the rocket");
+        log = install(player, List.of(VanillaActions.THROW));
+        EventPosts.release(player, new ItemStack(Items.STICK), 20);
+        helper.assertValueEqual(log, List.of("throw"), "a release that the throw cancels does not reach riptide");
         helper.succeed();
     }
 }
