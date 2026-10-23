@@ -94,16 +94,14 @@ public class AttackAction extends Action {
         if (PlayerActions.isExempt(player) || !(player.getMainHandItem().getItem() instanceof MaceItem) || !MaceItem.canSmashAttack(player)) {
             return perform(player);
         }
-        charged = false;
         if (smashCost <= 0) return true;
-        charged = StaminaBackends.of(player).spend(player, source, smashCost, cooldown);
+        boolean charged = StaminaBackends.of(player).spend(player, type.id(), smashCost, cooldown);
         if (ActionsOfStamina.debugging()) ActionsOfStamina.log("{}::Smash allowed = {}, cost= {}", name(), charged, smashCost);
         return charged;
     }
 
     @Override
     public boolean perform(Player player) {
-        charged = false;
         if (PlayerActions.isExempt(player)) return true;
         if (!isWeapon(player.getItemInHand(InteractionHand.MAIN_HAND)) && !AoSServerConfig.ALSO_FOR_NON_WEAPONS.get()) return true;
         return super.perform(player);

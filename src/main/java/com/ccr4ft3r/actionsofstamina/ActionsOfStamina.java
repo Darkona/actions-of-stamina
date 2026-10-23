@@ -20,7 +20,6 @@ import com.ccr4ft3r.actionsofstamina.network.Packets.BackendSyncTask;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalStamina;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -95,10 +94,5 @@ public class ActionsOfStamina {
             logger.info("\u001B[0;94mCLIENT -> " + message + "\u001B[0m", args);
         else
             logger.info("\u001B[0;91mSERVER -> " + message + "\u001B[0m", args);
-    }
-
-    @SuppressWarnings("unused")
-    public static String getSide(Entity player) {
-        return player.level().isClientSide() ? "Client" : "Server";
     }
 }

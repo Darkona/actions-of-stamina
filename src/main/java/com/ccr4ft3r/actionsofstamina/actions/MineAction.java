@@ -27,7 +27,7 @@ public class MineAction extends Action {
         timesPerformed = 0;
         int amount = (int) Math.round(pending);
         pending = 0;
-        if (amount > 0) StaminaBackends.of(player).spend(player, source, amount, cooldown);
+        if (amount > 0) StaminaBackends.of(player).spend(player, type.id(), amount, cooldown);
     }
 
     public float breakSpeedMultiplier(Player player) {

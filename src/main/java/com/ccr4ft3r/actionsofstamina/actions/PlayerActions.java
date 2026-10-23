@@ -124,11 +124,6 @@ public class PlayerActions {
         vesselListenerTarget = target;
     }
 
-    @SuppressWarnings("unused")
-    public short getStateFlags() {
-        return stateFlags;
-    }
-
     public double getLastX() {
         return lastX;
     }

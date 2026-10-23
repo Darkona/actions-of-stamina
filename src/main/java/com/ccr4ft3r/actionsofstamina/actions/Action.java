@@ -6,13 +6,11 @@ import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 public class Action {
 
     protected final ActionType type;
-    protected final ResourceLocation source;
     protected final int cost;
     protected final int minCost;
     protected final int finishCost;
@@ -26,7 +24,6 @@ public class Action {
     protected boolean prevActionState = false;
     protected int timesPerformed = 0;
     protected final int timesPerformedToExhaust;
-    protected boolean charged;
     private boolean blockingRegen;
 
     protected String debugInfo;
@@ -34,7 +31,6 @@ public class Action {
     public Action(ActionType type) {
         ActionCostConfig config = type.config();
         this.type = type;
-        this.source = type.id();
         this.cost = config.cost();
         this.minCost = config.minStamina();
         this.finishCost = config.finishCost();
@@ -47,7 +43,7 @@ public class Action {
     }
 
     public String name() {
-        return source.toString();
+        return type.id().toString();
     }
 
     public ActionType type() {
@@ -56,10 +52,6 @@ public class Action {
 
     public final int id() {
         return type.index();
-    }
-
-    public ResourceLocation source() {
-        return source;
     }
 
     public String debugString() {
@@ -71,12 +63,12 @@ public class Action {
     }
 
     private boolean canAfford(Player player, int stamina) {
-        return StaminaBackends.of(player).canSpend(player, source, stamina);
+        return StaminaBackends.of(player).canSpend(player, type.id(), stamina);
     }
 
     private boolean drain(Player player, StaminaBackend backend) {
         blockingRegen = regenInhibitor && !backend.keepsRegenWhileActing(player);
-        return backend.drain(player, source, drainPerTick(player), blockingRegen);
+        return backend.drain(player, type.id(), drainPerTick(player), blockingRegen);
     }
 
     protected double drainPerTick(Player player) {
@@ -99,7 +91,7 @@ public class Action {
         if (actionState) {
             StaminaBackend backend = StaminaBackends.of(p);
             if (!wasPerforming) {
-                if (backend.canSpend(p, source, beginCost) && drain(p, backend)) {
+                if (backend.canSpend(p, type.id(), beginCost) && drain(p, backend)) {
                     beginPerforming(p, a);
                     performing = true;
                 }
@@ -142,16 +134,16 @@ public class Action {
     protected void beginPerforming(Player p, PlayerActions a) {
         if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(p, "{}::beginPerforming", name());
         StaminaBackend backend = StaminaBackends.of(p);
-        if (cost > 0) backend.spend(p, source, cost, cooldown);
-        else if (cooldown > 0 && staminaPerTick > 0) backend.blockRegen(p, source, cooldown);
+        if (cost > 0) backend.spend(p, type.id(), cost, cooldown);
+        else if (cooldown > 0 && staminaPerTick > 0) backend.blockRegen(p, type.id(), cooldown);
     }
 
     protected void finishPerforming(Player p, PlayerActions a) {
         if (ActionsOfStamina.debugging()) ActionsOfStamina.sideLog(p, "{}::finishPerforming", name());
         StaminaBackend backend = StaminaBackends.of(p);
-        backend.stopDrain(p, source);
-        if (finishCost > 0 && !PlayerActions.isExempt(p)) backend.spend(p, source, finishCost, cooldown);
-        else if (cooldown > 0 && staminaPerTick > 0 && !backend.keepsRegenWhileActing(p)) backend.blockRegen(p, source, cooldown);
+        backend.stopDrain(p, type.id());
+        if (finishCost > 0 && !PlayerActions.isExempt(p)) backend.spend(p, type.id(), finishCost, cooldown);
+        else if (cooldown > 0 && staminaPerTick > 0 && !backend.keepsRegenWhileActing(p)) backend.blockRegen(p, type.id(), cooldown);
     }
 
     public boolean canBegin(Player player) {
@@ -183,11 +175,10 @@ public class Action {
     }
 
     public boolean pay(Player player, int stamina) {
-        return PlayerActions.isExempt(player) || StaminaBackends.of(player).spend(player, source, stamina, cooldown);
+        return PlayerActions.isExempt(player) || StaminaBackends.of(player).spend(player, type.id(), stamina, cooldown);
     }
 
     public boolean perform(Player player) {
-        charged = false;
         if (PlayerActions.isExempt(player)) return true;
         boolean allow = canPerform(player);
         if (!allow) {
@@ -200,7 +191,6 @@ public class Action {
             allow = charge(player);
             if (allow) timesPerformed = 0;
             else timesPerformed--;
-            charged = allow;
             if (ActionsOfStamina.debugging()) ActionsOfStamina.log("{}::Allowed = {}, cost= {}", name(), allow, cost);
             return allow;
         }
@@ -208,21 +198,11 @@ public class Action {
     }
 
     public boolean charge(Player player) {
-        return StaminaBackends.of(player).spend(player, source, cost, cooldown);
-    }
-
-    @SuppressWarnings("unused")
-    public boolean hasJustCharged() {
-        return charged;
+        return StaminaBackends.of(player).spend(player, type.id(), cost, cooldown);
     }
 
     public boolean isPerforming() {
         return wasPerforming;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean isRegenInhibitor() {
-        return regenInhibitor;
     }
 
     public void setActionState(boolean state) {
