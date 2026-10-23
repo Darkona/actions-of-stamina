@@ -80,7 +80,7 @@ final class FeathersBackend implements StaminaBackend {
             maxFeathers.removeModifier(source);
             return;
         }
-        double feathers = stamina / (double) StaminaUnits.PER_FEATHER;
+        double feathers = stamina / (double) StaminaBackends.PER_FEATHER;
         AttributeModifier current = maxFeathers.getModifier(source);
         if (current != null && current.amount() == feathers) return;
         maxFeathers.addOrUpdateTransientModifier(new AttributeModifier(source, feathers, AttributeModifier.Operation.ADD_VALUE));

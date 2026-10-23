@@ -5,7 +5,7 @@ import com.ccr4ft3r.actionsofstamina.actions.AttackAction;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
+import com.ccr4ft3r.actionsofstamina.network.Packets.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.gametest.framework.GameTest;

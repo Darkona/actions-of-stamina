@@ -1,27 +1,26 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.network.BackendSyncPacket;
-import com.ccr4ft3r.actionsofstamina.network.BackendSyncTask;
-import com.ccr4ft3r.actionsofstamina.stamina.BackendMode;
+import com.ccr4ft3r.actionsofstamina.network.Packets.BackendSyncPacket;
+import com.ccr4ft3r.actionsofstamina.network.Packets.BackendSyncTask;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
-import net.minecraft.gametest.framework.GameTest;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.protocol.configuration.ServerConfigurationPacketListener;
-import net.minecraft.server.network.ConfigurationTask;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
-import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
-
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends.BackendMode;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.protocol.configuration.ServerConfigurationPacketListener;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ConfigurationTask;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
+
 
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -55,8 +54,8 @@ public class BackendSelectionTests {
         StaminaBackend feathers = StaminaBackends.byKind(StaminaBackend.Kind.FEATHERS);
         ServerPlayer player = TestSupport.player(helper);
         int before = feathers.stamina(player);
-        helper.assertTrue(feathers.spend(player, TEST, StaminaUnits.ofFeathers(2), 0), "spend 2 feathers");
-        helper.assertValueEqual(feathers.stamina(player), before - StaminaUnits.ofFeathers(2), "feathers after spending 2");
+        helper.assertTrue(feathers.spend(player, TEST, StaminaBackends.ofFeathers(2), 0), "spend 2 feathers");
+        helper.assertValueEqual(feathers.stamina(player), before - StaminaBackends.ofFeathers(2), "feathers after spending 2");
         helper.succeed();
     }
 

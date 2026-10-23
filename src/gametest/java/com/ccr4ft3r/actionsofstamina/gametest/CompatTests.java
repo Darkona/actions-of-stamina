@@ -17,10 +17,9 @@ import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
+import com.ccr4ft3r.actionsofstamina.network.Packets.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -58,7 +57,7 @@ public class CompatTests {
         int before = backend.stamina(player);
         helper.assertFalse(ParcoolTestHooks.dodgeStartCancelled(player), "dodge may start with a full bar");
         ParcoolTestHooks.postDodgeStarted(player);
-        helper.assertValueEqual(backend.stamina(player), before - StaminaUnits.ofFeathers(0.5), "stamina after a dodge");
+        helper.assertValueEqual(backend.stamina(player), before - StaminaBackends.ofFeathers(0.5), "stamina after a dodge");
 
         String state = exhaust(backend, player);
         helper.assertTrue(ParcoolTestHooks.dodgeStartCancelled(player), "dodge can't start when exhausted" + state);
@@ -93,7 +92,7 @@ public class CompatTests {
         }
         ServerPlayer player = player(helper);
         StaminaBackend backend = StaminaBackends.server();
-        backend.spend(player, TEST, StaminaUnits.ofFeathers(3), 0);
+        backend.spend(player, TEST, StaminaBackends.ofFeathers(3), 0);
         helper.assertTrue(ParagliderTestHooks.usesAoSStamina(player), "Paragliders' stamina is AoS's");
         helper.assertValueEqual((int) ParagliderTestHooks.stamina(player), backend.availableStamina(player), "Paragliders reads the backend");
         helper.succeed();
@@ -112,7 +111,7 @@ public class CompatTests {
 
         ServerPlayer player = player(helper);
         StaminaBackend backend = StaminaBackends.server();
-        backend.spend(player, TEST, StaminaUnits.ofFeathers(3), 0);
+        backend.spend(player, TEST, StaminaBackends.ofFeathers(3), 0);
         String problem = ParcoolTestHooks.checkStaminaMirrorsBackend(player, backend);
         helper.assertTrue(problem == null, "ParCool stamina: " + problem);
         exhaust(backend, player);

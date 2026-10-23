@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.stamina.internal;
+package com.ccr4ft3r.actionsofstamina.stamina;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import io.netty.buffer.ByteBuf;

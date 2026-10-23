@@ -2,8 +2,8 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.stamina.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import dev.darkona.jdlib.testkit.TestPlayers;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;

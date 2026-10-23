@@ -1,8 +1,6 @@
-package com.ccr4ft3r.actionsofstamina.stamina.internal;
+package com.ccr4ft3r.actionsofstamina.stamina;
 
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +26,7 @@ public final class InternalBackend implements StaminaBackend {
     }
 
     static int configMaxStamina() {
-        return AoSServerConfig.INTERNAL_MAX_FEATHERS.getAsInt() * StaminaUnits.PER_FEATHER;
+        return AoSServerConfig.INTERNAL_MAX_FEATHERS.getAsInt() * StaminaBackends.PER_FEATHER;
     }
 
     private static int serverMax(InternalStamina s) {
@@ -163,7 +161,7 @@ public final class InternalBackend implements StaminaBackend {
         if (s.regenDelay > 0) {
             s.regenDelay--;
         } else if (!s.drains.anyBlocksRegen() && stamina < max) {
-            stamina = Math.min(max, stamina + s.regenCarry.add(StaminaUnits.perTick(AoSServerConfig.INTERNAL_REGEN_PER_SECOND.getAsDouble())));
+            stamina = Math.min(max, stamina + s.regenCarry.add(StaminaBackends.perTick(AoSServerConfig.INTERNAL_REGEN_PER_SECOND.getAsDouble())));
         }
         if (stamina >= max) s.regenCarry.reset();
         s.stamina = stamina;

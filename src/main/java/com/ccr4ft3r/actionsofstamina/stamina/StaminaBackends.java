@@ -2,9 +2,8 @@ package com.ccr4ft3r.actionsofstamina.stamina;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
-import net.minecraft.world.entity.player.Player;
 import dev.darkona.jdlib.api.compat.Bridges;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 public final class StaminaBackends {
@@ -77,5 +76,22 @@ public final class StaminaBackends {
     public static void clearClient() {
         client = null;
         if (ServerLifecycleHooks.getCurrentServer() == null) server = null;
+    }
+
+    public static final int PER_FEATHER = 1000;
+
+
+    public static int ofFeathers(double feathers) {
+        return (int) Math.round(feathers * PER_FEATHER);
+    }
+
+    public static double perTick(double feathersPerSecond) {
+        return feathersPerSecond * PER_FEATHER / 20.0;
+    }
+
+    public enum BackendMode {
+        AUTO,
+        FEATHERS,
+        INTERNAL
     }
 }

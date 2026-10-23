@@ -3,7 +3,6 @@ package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
 import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,6 +38,6 @@ public final class ParagliderCompat {
 
     static void applyVessels(ServerPlayer player, int vessels) {
         int feathers = isActive() ? vessels * ParagliderConfig.FEATHERS_PER_VESSEL.getAsInt() : 0;
-        StaminaBackends.server().setMaxBonus(player, VESSELS, feathers * StaminaUnits.PER_FEATHER);
+        StaminaBackends.server().setMaxBonus(player, VESSELS, feathers * StaminaBackends.PER_FEATHER);
     }
 }
