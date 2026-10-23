@@ -21,9 +21,6 @@ public final class BetterCombatCompat {
     private BetterCombatCompat() {
     }
 
-    public static void registerActions() {
-    }
-
     public static boolean isActive() {
         return LOADED && BetterCombatConfig.SWING.enabled();
     }

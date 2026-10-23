@@ -19,9 +19,6 @@ public final class GlidersCompat {
     public static final ActionType GLIDE = ActionType.register(ActionsOfStamina.id("gliders/glide"), GlidersConfig.GLIDE,
             GlidersCompat::isActive, GlideAction::new);
 
-    public static void registerActions() {
-    }
-
     public static boolean isActive() {
         return LOADED && GlidersConfig.GLIDE.enabled();
     }

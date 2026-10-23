@@ -40,9 +40,6 @@ public final class VanillaActions {
     private VanillaActions() {
     }
 
-    public static void register() {
-    }
-
     public static boolean mayClimbUp(Player player) {
         return player.level().isClientSide() && !player.isLocalPlayer() || PlayerActions.canPerform(player, CLIMB);
     }

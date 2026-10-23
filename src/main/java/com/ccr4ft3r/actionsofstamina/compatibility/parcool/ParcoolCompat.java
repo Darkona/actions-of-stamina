@@ -32,9 +32,6 @@ public final class ParcoolCompat {
     private ParcoolCompat() {
     }
 
-    public static void registerActions() {
-    }
-
     @Nullable
     static ActionType typeOf(String name) {
         ParcoolConfig.Entry[] entries = ParcoolConfig.entries();

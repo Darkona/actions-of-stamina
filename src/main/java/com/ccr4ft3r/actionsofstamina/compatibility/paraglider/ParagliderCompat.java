@@ -21,9 +21,6 @@ public final class ParagliderCompat {
     public static final ActionType PARAGLIDE = ActionType.register(ActionsOfStamina.id("paraglide"), ParagliderConfig.PARAGLIDE,
             ParagliderCompat::isActive, Action::new);
 
-    public static void registerActions() {
-    }
-
     public static boolean isActive() {
         return LOADED && ParagliderConfig.PARAGLIDE.enabled();
     }

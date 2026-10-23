@@ -18,9 +18,6 @@ public final class CombatRollCompat {
     private CombatRollCompat() {
     }
 
-    public static void registerActions() {
-    }
-
     public static boolean isActive() {
         return LOADED && CombatRollConfig.ROLL.enabled();
     }

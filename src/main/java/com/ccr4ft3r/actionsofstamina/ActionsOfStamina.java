@@ -19,6 +19,7 @@ import com.ccr4ft3r.actionsofstamina.network.Packets;
 import com.ccr4ft3r.actionsofstamina.network.Packets.BackendSyncTask;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalStamina;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import java.util.List;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
@@ -40,18 +41,14 @@ public class ActionsOfStamina {
     public static final String MOD_ID = "actionsofstamina";
     public static final Logger logger = LogManager.getLogger(MOD_ID);
 
+    private static final List<Class<?>> ACTION_OWNERS = List.of(VanillaActions.class, ParcoolCompat.class, ParagliderCompat.class,
+            BetterCombatCompat.class, CombatRollCompat.class, EpicFightCompat.class, WallJumpCompat.class, GlidersCompat.class,
+            CreateCompat.class);
+
     public ActionsOfStamina(IEventBus modBus, ModContainer container) {
         container.registerConfig(ModConfig.Type.SERVER, AoSServerConfig.SPEC);
         container.registerConfig(ModConfig.Type.CLIENT, AoSClientConfig.SPEC);
-        VanillaActions.register();
-        ParcoolCompat.registerActions();
-        ParagliderCompat.registerActions();
-        BetterCombatCompat.registerActions();
-        CombatRollCompat.registerActions();
-        EpicFightCompat.registerActions();
-        WallJumpCompat.registerActions();
-        GlidersCompat.registerActions();
-        CreateCompat.registerActions();
+        ACTION_OWNERS.forEach(ActionType::initialize);
         PlayerActions.ATTACHMENT_TYPES.register(modBus);
         InternalStamina.ATTACHMENT_TYPES.register(modBus);
         modBus.addListener(Packets::register);

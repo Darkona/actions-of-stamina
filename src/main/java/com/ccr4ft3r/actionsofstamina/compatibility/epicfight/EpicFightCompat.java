@@ -25,9 +25,6 @@ public final class EpicFightCompat {
         return ActionType.register(ActionsOfStamina.id("epicfight/" + name), costs, () -> isActive() && costs.enabled(), Action::new);
     }
 
-    public static void registerActions() {
-    }
-
     public static boolean isActive() {
         return LOADED && EpicFightConfig.ENABLED.getAsBoolean();
     }

@@ -25,9 +25,6 @@ public final class WallJumpCompat {
     private WallJumpCompat() {
     }
 
-    public static void registerActions() {
-    }
-
     public static boolean isActive() {
         return LOADED && WallJumpConfig.ENABLED.getAsBoolean();
     }

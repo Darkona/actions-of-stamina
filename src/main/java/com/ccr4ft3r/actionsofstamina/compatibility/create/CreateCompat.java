@@ -20,9 +20,6 @@ public final class CreateCompat {
     public static final ActionType CRANK = ActionType.register(ActionsOfStamina.id("create/crank"), CreateConfig.CRANK,
             CreateCompat::isActive, CrankAction::new);
 
-    public static void registerActions() {
-    }
-
     public static boolean isActive() {
         return LOADED && CreateConfig.CRANK.enabled();
     }
