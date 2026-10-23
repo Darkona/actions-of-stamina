@@ -20,7 +20,7 @@ public final class WallJumpCompat {
     public static final ActionType DOUBLE_JUMP = ActionType.register(ActionsOfStamina.id("walljump/double_jump"), WallJumpConfig.DOUBLE_JUMP,
             () -> isActive() && WallJumpConfig.DOUBLE_JUMP.enabled(), Action::new);
     public static final ActionType WALL_CLING = ActionType.register(ActionsOfStamina.id("walljump/wall_cling"), WallJumpConfig.WALL_CLING,
-            () -> isActive() && WallJumpConfig.WALL_CLING.enabled(), WallClingAction::new);
+            () -> isActive() && WallJumpConfig.WALL_CLING.enabled(), Action::new);
 
     private WallJumpCompat() {
     }

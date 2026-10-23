@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin.parcool;
+package com.ccr4ft3r.actionsofstamina.compatibility.mixin;
 
 import com.alrex.parcool.config.ParCoolConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;

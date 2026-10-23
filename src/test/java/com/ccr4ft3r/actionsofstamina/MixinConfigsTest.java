@@ -1,20 +1,13 @@
 package com.ccr4ft3r.actionsofstamina;
 
 import dev.darkona.jdlib.testkit.MixinConfigCheck;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
+import org.junit.jupiter.api.Test;
 
 class MixinConfigsTest {
 
     private static final MixinConfigCheck CHECK = new MixinConfigCheck("actionsofstamina", "com.ccr4ft3r.actionsofstamina",
-            List.of("actionsofstamina.mixins.json",
-                    "actionsofstamina.compat.bettercombat.mixins.json",
-                    "actionsofstamina.compat.combatroll.mixins.json",
-                    "actionsofstamina.compat.parcool.mixins.json",
-                    "actionsofstamina.compat.walljump.mixins.json",
-                    "actionsofstamina.compat.gliders.mixins.json",
-                    "actionsofstamina.compat.create.mixins.json"));
+            List.of("actionsofstamina.mixins.json", "actionsofstamina.compat.mixins.json"));
 
     @Test
     void mixinConfigsMatchTheClassesAndTheModsToml() {

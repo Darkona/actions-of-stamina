@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin.combatroll;
+package com.ccr4ft3r.actionsofstamina.compatibility.mixin;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;

@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin.gliders;
+package com.ccr4ft3r.actionsofstamina.compatibility.mixin;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

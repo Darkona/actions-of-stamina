@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.gliders;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import dev.darkona.jdlib.api.compat.Bridges;
@@ -33,7 +34,15 @@ public final class GlidersCompat {
         return !isActive() || PlayerActions.canPerform(player, GLIDE);
     }
 
-    static void close(ServerPlayer player) {
-        GlidersBridge.close(player);
+    public static class GlideAction extends Action {
+
+        public GlideAction(ActionType type) {
+            super(type);
+        }
+
+        @Override
+        public void notPerformingEffects(Player player, PlayerActions a) {
+            if (player instanceof ServerPlayer serverPlayer) GlidersBridge.close(serverPlayer);
+        }
     }
 }

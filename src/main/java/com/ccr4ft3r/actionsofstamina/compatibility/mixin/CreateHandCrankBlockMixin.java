@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin.create;
+package com.ccr4ft3r.actionsofstamina.compatibility.mixin;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;
 import com.simibubi.create.content.kinetics.crank.HandCrankBlock;

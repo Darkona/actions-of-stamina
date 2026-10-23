@@ -35,7 +35,7 @@ public class CrankAction extends Action {
 
     @Override
     public void notPerformingEffects(Player player, PlayerActions a) {
-        if (crank != null) CreateCompat.stop(crank);
+        if (crank != null) CreateBridge.stop(crank);
         crank = null;
         lastTurnTick = NEVER;
     }

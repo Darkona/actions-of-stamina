@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin.bettercombat;
+package com.ccr4ft3r.actionsofstamina.compatibility.mixin;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import net.bettercombat.network.Packets;

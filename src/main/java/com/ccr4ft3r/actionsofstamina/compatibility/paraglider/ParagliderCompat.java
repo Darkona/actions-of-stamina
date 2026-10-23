@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import dev.darkona.jdlib.api.compat.Bridges;
@@ -18,7 +19,7 @@ public final class ParagliderCompat {
     }
 
     public static final ActionType PARAGLIDE = ActionType.register(ActionsOfStamina.id("paraglide"), ParagliderConfig.PARAGLIDE,
-            ParagliderCompat::isActive, ParaglideAction::new);
+            ParagliderCompat::isActive, Action::new);
 
     public static void registerActions() {
     }

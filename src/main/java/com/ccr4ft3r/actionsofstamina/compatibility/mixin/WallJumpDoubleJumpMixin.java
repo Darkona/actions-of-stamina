@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.compatmixin.walljump;
+package com.ccr4ft3r.actionsofstamina.compatibility.mixin;
 
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.jahirtrap.walljump.logic.DoubleJumpLogic;

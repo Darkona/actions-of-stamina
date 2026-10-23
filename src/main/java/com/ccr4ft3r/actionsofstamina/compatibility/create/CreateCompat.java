@@ -7,7 +7,6 @@ import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public final class CreateCompat {
@@ -48,9 +47,5 @@ public final class CreateCompat {
     private static CrankAction valveAction(Player player) {
         if (PlayerActions.isExempt(player) || !CreateConfig.VALVE_HANDLES.getAsBoolean()) return null;
         return PlayerActions.get(player).getAction(CRANK) instanceof CrankAction crank ? crank : null;
-    }
-
-    static void stop(BlockEntity crank) {
-        CreateBridge.stop(crank);
     }
 }
