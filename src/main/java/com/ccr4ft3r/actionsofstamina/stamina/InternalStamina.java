@@ -9,8 +9,6 @@ import dev.darkona.jdlib.core.stat.SourcedDrains;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public final class InternalStamina {
 
@@ -19,10 +17,8 @@ public final class InternalStamina {
             Codec.BOOL.fieldOf("exhausted").forGetter(s -> s.exhausted)
     ).apply(i, InternalStamina::new));
 
-    public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
-            DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, ActionsOfStamina.MOD_ID);
     static final DeferredHolder<AttachmentType<?>, AttachmentType<InternalStamina>> ATTACHMENT =
-            ATTACHMENT_TYPES.register("internal_stamina", () -> AttachmentType.builder(InternalStamina::new).serialize(CODEC).build());
+            ActionsOfStamina.ATTACHMENT_TYPES.register("internal_stamina", () -> AttachmentType.builder(InternalStamina::new).serialize(CODEC).build());
 
     static final int UNSET = -1;
 

@@ -93,14 +93,6 @@ public final class ActionType {
         return type;
     }
 
-    public static void initialize(Class<?> owner) {
-        try {
-            Class.forName(owner.getName(), true, owner.getClassLoader());
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     public static synchronized void freeze() {
         if (frozen != null) return;
         List<ActionType> sorted = new ArrayList<>(BY_ID.values());

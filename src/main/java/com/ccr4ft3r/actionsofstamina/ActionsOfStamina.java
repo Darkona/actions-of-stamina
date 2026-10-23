@@ -31,7 +31,10 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,16 +44,17 @@ public class ActionsOfStamina {
     public static final String MOD_ID = "actionsofstamina";
     public static final Logger logger = LogManager.getLogger(MOD_ID);
 
-    private static final List<Class<?>> ACTION_OWNERS = List.of(VanillaActions.class, ParcoolCompat.class, ParagliderCompat.class,
+    public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MOD_ID);
+
+    private static final List<Class<?>> REGISTERING_CLASSES = List.of(VanillaActions.class, ParcoolCompat.class, ParagliderCompat.class,
             BetterCombatCompat.class, CombatRollCompat.class, EpicFightCompat.class, WallJumpCompat.class, GlidersCompat.class,
-            CreateCompat.class);
+            CreateCompat.class, PlayerActions.class, InternalStamina.class);
 
     public ActionsOfStamina(IEventBus modBus, ModContainer container) {
         container.registerConfig(ModConfig.Type.SERVER, AoSServerConfig.SPEC);
         container.registerConfig(ModConfig.Type.CLIENT, AoSClientConfig.SPEC);
-        ACTION_OWNERS.forEach(ActionType::initialize);
-        PlayerActions.ATTACHMENT_TYPES.register(modBus);
-        InternalStamina.ATTACHMENT_TYPES.register(modBus);
+        REGISTERING_CLASSES.forEach(ActionsOfStamina::initialize);
+        ATTACHMENT_TYPES.register(modBus);
         modBus.addListener(Packets::register);
         modBus.addListener(BackendSyncTask::register);
         modBus.addListener(ActionsOfStamina::commonSetup);
@@ -70,6 +74,14 @@ public class ActionsOfStamina {
             EpicFightCompat.init();
             CuriosCompat.init();
         });
+    }
+
+    private static void initialize(Class<?> registering) {
+        try {
+            Class.forName(registering.getName(), true, registering.getClassLoader());
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public static ResourceLocation id(String path) {
