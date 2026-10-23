@@ -59,7 +59,7 @@ public final class WallJumpCompat {
         ActionCostConfig costs = move.config();
         if (!costs.enabled() || costs.cost() <= 0) return true;
         if (!PlayerActions.canPerform(player, move)) return false;
-        PacketDistributor.sendToServer(new ActionPerformedPacket((byte) move.index()));
+        PacketDistributor.sendToServer(ActionPerformedPacket.of(move));
         return true;
     }
 

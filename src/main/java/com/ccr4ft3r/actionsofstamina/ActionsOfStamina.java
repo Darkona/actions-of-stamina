@@ -84,12 +84,11 @@ public class ActionsOfStamina {
     }
 
     public static void log(String message, Object... args) {
-        if (AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean())
-            logger.info(message, args);
+        if (debugging()) logger.info(message, args);
     }
 
     public static void sideLog(Player p, String message, Object... args) {
-        if (!AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean()) return;
+        if (!debugging()) return;
         if (p.level().isClientSide())
             logger.info("\u001B[0;94mCLIENT -> " + message + "\u001B[0m", args);
         else

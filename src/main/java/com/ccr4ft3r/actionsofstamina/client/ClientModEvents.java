@@ -4,7 +4,6 @@ import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import dev.darkona.jdlib.api.debug.DebugLines;
 import dev.darkona.jdlib.api.hud.JDDebugOverlay;
 import net.minecraft.client.player.LocalPlayer;
@@ -31,7 +30,7 @@ public final class ClientModEvents {
     @SubscribeEvent
     public static void registerGuiLayers(RegisterGuiLayersEvent event) {
         JDDebugOverlay.register(event, ActionsOfStamina.id("debug"), new JDDebugOverlay.Spec(JDDebugOverlay.Side.RIGHT, DEBUG_TOP,
-                DEBUG_TITLE, AoSServerConfig.ENABLE_DEBUGGING::getAsBoolean, ClientModEvents::describeActions));
+                DEBUG_TITLE, ActionsOfStamina::debugging, ClientModEvents::describeActions));
     }
 
     private static void describeActions(LocalPlayer player, DebugLines lines) {

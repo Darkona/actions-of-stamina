@@ -5,7 +5,6 @@ import com.ccr4ft3r.actionsofstamina.actions.AttackAction;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.network.Packets.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.gametest.framework.GameTest;
@@ -37,8 +36,8 @@ public class AttackChargeTests {
         StaminaBackend backend = StaminaBackends.server();
         int cost = AoSServerConfig.ATTACK.cost();
         int start = backend.stamina(player);
-        ActionPerformedPacket.apply(player, VanillaActions.ATTACK.index());
-        ActionPerformedPacket.apply(player, VanillaActions.ATTACK.index());
+        PlayerActions.perform(player, VanillaActions.ATTACK);
+        PlayerActions.perform(player, VanillaActions.ATTACK);
         helper.assertValueEqual(backend.stamina(player), start, "two misses charge nothing yet");
         attack.performHit(player);
         helper.assertValueEqual(backend.stamina(player), start - cost, "the third attack, a hit, is charged");
@@ -55,7 +54,7 @@ public class AttackChargeTests {
         int start = backend.stamina(player);
         attack.performHit(player);
         attack.performHit(player);
-        ActionPerformedPacket.apply(player, VanillaActions.ATTACK.index());
+        PlayerActions.perform(player, VanillaActions.ATTACK);
         helper.assertValueEqual(backend.stamina(player), start - cost, "the third attack, a miss, is charged");
         attack.performHit(player);
         helper.assertValueEqual(backend.stamina(player), start - cost, "the fourth attack, a hit, starts a new count");

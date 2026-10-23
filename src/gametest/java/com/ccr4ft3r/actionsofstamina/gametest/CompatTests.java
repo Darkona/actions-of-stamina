@@ -17,7 +17,6 @@ import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.network.Packets.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.gametest.framework.GameTest;
@@ -216,10 +215,10 @@ public class CompatTests {
         ServerPlayer player = survivalPlayer(helper);
         StaminaBackend backend = StaminaBackends.server();
         int before = backend.stamina(player);
-        ActionPerformedPacket.apply(player, WallJumpCompat.WALL_JUMP.index());
+        PlayerActions.perform(player, WallJumpCompat.WALL_JUMP);
         helper.assertValueEqual(backend.stamina(player), before - WallJumpConfig.WALL_JUMP.cost(), "stamina after a wall jump");
         before = backend.stamina(player);
-        ActionPerformedPacket.apply(player, WallJumpCompat.DOUBLE_JUMP.index());
+        PlayerActions.perform(player, WallJumpCompat.DOUBLE_JUMP);
         helper.assertValueEqual(backend.stamina(player), before - WallJumpConfig.DOUBLE_JUMP.cost(), "stamina after a double jump");
 
         PlayerActions actions = PlayerActions.get(player);

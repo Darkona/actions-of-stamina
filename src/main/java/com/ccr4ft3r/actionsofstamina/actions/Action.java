@@ -3,7 +3,6 @@ package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.world.entity.player.Player;
@@ -114,7 +113,7 @@ public class Action {
 
         boolean changeDetected = wasPerforming != performing || actionState != prevActionState;
 
-        if (AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean() && (debugInfo == null || changeDetected))
+        if (ActionsOfStamina.debugging() && (debugInfo == null || changeDetected))
             debugInfo = String.format("%s: WasPerforming: %s, Performing: %s, ActionState: %s, Allow: %s, Inhibiting regen: %s", name(), wasPerforming, performing, actionState, canPerform(p), performing && blockingRegen);
 
         prevActionState = actionState;

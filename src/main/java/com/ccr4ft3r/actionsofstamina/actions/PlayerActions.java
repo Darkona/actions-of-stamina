@@ -46,6 +46,13 @@ public class PlayerActions {
         return player == null || player.isCreative() || player.isSpectator() || player instanceof FakePlayer;
     }
 
+    @Nullable
+    public static <A extends Action> A action(Player player, ActionType type, Class<A> kind) {
+        if (isExempt(player)) return null;
+        Action action = get(player).getAction(type);
+        return kind.isInstance(action) ? kind.cast(action) : null;
+    }
+
     public static boolean canPerform(Player player, int actionId) {
         if (isExempt(player)) return true;
         Action action = get(player).getAction(actionId);

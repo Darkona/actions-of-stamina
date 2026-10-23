@@ -42,18 +42,18 @@ public final class ClientGameEvents {
         if (!event.isAttack()) return;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (PlayerActions.isExempt(player)) return;
 
         HitResult hitResult = mc.hitResult;
         boolean isEntityHit = hitResult != null && hitResult.getType() == HitResult.Type.ENTITY;
         boolean isMissHit = hitResult != null && hitResult.getType() == HitResult.Type.MISS;
 
-        if (!(PlayerActions.get(player).getAction(VanillaActions.ATTACK) instanceof AttackAction attack)) return;
+        AttackAction attack = PlayerActions.action(player, VanillaActions.ATTACK, AttackAction.class);
+        if (attack == null) return;
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem())) return;
         if (EpicFightCompat.inBattleMode(player)) return;
         if (!isEntityHit && !(isMissHit && !AoSServerConfig.ONLY_FOR_HITS.get())) return;
         if (isEntityHit ? attack.performHit(player) : attack.perform(player)) {
-            if (!isEntityHit) PacketDistributor.sendToServer(new ActionPerformedPacket((byte) VanillaActions.ATTACK.index()));
+            if (!isEntityHit) PacketDistributor.sendToServer(ActionPerformedPacket.of(VanillaActions.ATTACK));
         } else if (!attack.weakens()) {
             event.setCanceled(true);
             event.setSwingHand(false);

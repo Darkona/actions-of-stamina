@@ -1,6 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalStaminaPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
@@ -12,7 +13,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.configuration.ServerConfigurationPacketListener;
 import net.minecraft.server.network.ConfigurationTask;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -26,7 +26,7 @@ public final class Packets {
 
     public record ActionStatePacket(short actionFlags) implements CustomPacketPayload {
 
-        public static final Type<ActionStatePacket> TYPE = new Type<>(ActionsOfStamina.id("action_state"));
+        public static final Type<ActionStatePacket> TYPE = new Type<>(id("action_state"));
 
         public static final StreamCodec<ByteBuf, ActionStatePacket> STREAM_CODEC =
                 ByteBufCodecs.SHORT.map(ActionStatePacket::new, ActionStatePacket::actionFlags);
@@ -55,18 +55,18 @@ public final class Packets {
             return TYPE;
         }
 
-        public static void handle(ActionPerformedPacket packet, IPayloadContext context) {
-            apply(context.player(), packet.actionId);
+        public static ActionPerformedPacket of(ActionType type) {
+            return new ActionPerformedPacket((byte) type.index());
         }
 
-        public static void apply(Player player, int actionId) {
-            PlayerActions.perform(player, actionId);
+        public static void handle(ActionPerformedPacket packet, IPayloadContext context) {
+            PlayerActions.perform(context.player(), packet.actionId);
         }
     }
 
     public record BackendSyncPacket(byte kind) implements CustomPacketPayload {
 
-        public static final Type<BackendSyncPacket> TYPE = new Type<>(ActionsOfStamina.id("backend"));
+        public static final Type<BackendSyncPacket> TYPE = new Type<>(id("backend"));
 
         public static final StreamCodec<ByteBuf, BackendSyncPacket> STREAM_CODEC =
                 ByteBufCodecs.BYTE.map(BackendSyncPacket::new, BackendSyncPacket::kind);
@@ -87,7 +87,7 @@ public final class Packets {
 
     public record BackendSyncTask(ServerConfigurationPacketListener listener) implements ICustomConfigurationTask {
 
-        public static final ConfigurationTask.Type TYPE = new ConfigurationTask.Type(ActionsOfStamina.id("backend"));
+        public static final ConfigurationTask.Type TYPE = new ConfigurationTask.Type(id("backend"));
 
         public static void register(RegisterConfigurationTasksEvent event) {
             if (event.getListener().hasChannel(BackendSyncPacket.TYPE)) event.register(new BackendSyncTask(event.getListener()));

@@ -28,9 +28,8 @@ public final class CreateCompat {
     }
 
     public static boolean turnCrank(Player player, Level level, BlockPos pos) {
-        if (PlayerActions.isExempt(player)) return true;
-        if (!(PlayerActions.get(player).getAction(CRANK) instanceof CrankAction crank)) return true;
-        return crank.turn(player, level.getBlockEntity(pos));
+        CrankAction crank = PlayerActions.action(player, CRANK, CrankAction.class);
+        return crank == null || crank.turn(player, level.getBlockEntity(pos));
     }
 
     public static boolean mayTurnValve(Player player) {
@@ -45,7 +44,6 @@ public final class CreateCompat {
 
     @Nullable
     private static CrankAction valveAction(Player player) {
-        if (PlayerActions.isExempt(player) || !CreateConfig.VALVE_HANDLES.getAsBoolean()) return null;
-        return PlayerActions.get(player).getAction(CRANK) instanceof CrankAction crank ? crank : null;
+        return CreateConfig.VALVE_HANDLES.getAsBoolean() ? PlayerActions.action(player, CRANK, CrankAction.class) : null;
     }
 }

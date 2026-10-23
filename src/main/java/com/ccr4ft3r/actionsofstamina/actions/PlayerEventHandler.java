@@ -58,8 +58,9 @@ public final class PlayerEventHandler {
 
     @SubscribeEvent
     public static void onAttackEntity(AttackEntityEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isExempt(player)) return;
-        if (!(PlayerActions.get(player).getAction(VanillaActions.ATTACK) instanceof AttackAction attack)) return;
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        AttackAction attack = PlayerActions.action(player, VanillaActions.ATTACK, AttackAction.class);
+        if (attack == null) return;
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()) || EpicFightCompat.inBattleMode(player)) return;
         if (attack.weakens()) attack.refreshWeakened(player);
         if (attack.performHit(player)) return;
@@ -91,10 +92,7 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void throwOnUse(PlayerInteractEvent.RightClickItem event) {
         Player player = event.getEntity();
-        if (throwsOnUse(event.getItemStack(), player) && !PlayerActions.perform(player, VanillaActions.THROW)) {
-            event.setCancellationResult(InteractionResult.FAIL);
-            event.setCanceled(true);
-        }
+        if (throwsOnUse(event.getItemStack(), player) && !PlayerActions.perform(player, VanillaActions.THROW)) deny(event);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -115,18 +113,14 @@ public final class PlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void fishOnUse(PlayerInteractEvent.RightClickItem event) {
-        if (isRod(event.getItemStack()) && !PlayerActions.perform(event.getEntity(), VanillaActions.FISH)) {
-            event.setCancellationResult(InteractionResult.FAIL);
-            event.setCanceled(true);
-        }
+        if (isRod(event.getItemStack()) && !PlayerActions.perform(event.getEntity(), VanillaActions.FISH)) deny(event);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
         if (event.isSimulated() || !tillCharges(event.getItemAbility())) return;
         Player player = event.getPlayer();
-        if (PlayerActions.isExempt(player)) return;
-        Action till = PlayerActions.get(player).getAction(VanillaActions.TILL);
+        Action till = PlayerActions.action(player, VanillaActions.TILL, Action.class);
         if (till == null || !tillChangesBlock(event)) return;
         if (player.level().isClientSide() ? !till.canPerform(player) : !till.perform(player)) event.setCanceled(true);
     }
@@ -134,16 +128,15 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void blockBroken(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
-        if (player.level().isClientSide() || PlayerActions.isExempt(player)) return;
-        if (PlayerActions.get(player).getAction(VanillaActions.MINE) instanceof MineAction mine) {
-            mine.mined(player, event.getState().getDestroySpeed(event.getLevel(), event.getPos()));
-        }
+        if (player.level().isClientSide()) return;
+        MineAction mine = PlayerActions.action(player, VanillaActions.MINE, MineAction.class);
+        if (mine != null) mine.mined(player, event.getState().getDestroySpeed(event.getLevel(), event.getPos()));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void blockPlaced(BlockEvent.EntityPlaceEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player) || PlayerActions.isExempt(player)) return;
-        Action build = PlayerActions.get(player).getAction(VanillaActions.BUILD);
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        Action build = PlayerActions.action(player, VanillaActions.BUILD, Action.class);
         if (build == null) return;
         Item placed = event.getPlacedBlock().getBlock().asItem();
         if (placed == Items.AIR || !player.getMainHandItem().is(placed) && !player.getOffhandItem().is(placed)) return;
@@ -153,19 +146,19 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void breakSpeed(PlayerEvent.BreakSpeed event) {
         Player player = event.getEntity();
-        if (PlayerActions.isExempt(player)) return;
-        if (PlayerActions.get(player).getAction(VanillaActions.MINE) instanceof MineAction mine) {
-            float multiplier = mine.breakSpeedMultiplier(player);
-            if (multiplier < 1.0f) event.setNewSpeed(event.getNewSpeed() * multiplier);
-        }
+        MineAction mine = PlayerActions.action(player, VanillaActions.MINE, MineAction.class);
+        if (mine == null) return;
+        float multiplier = mine.breakSpeedMultiplier(player);
+        if (multiplier < 1.0f) event.setNewSpeed(event.getNewSpeed() * multiplier);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void rocketBoost(PlayerInteractEvent.RightClickItem event) {
         if (!(event.getItemStack().getItem() instanceof FireworkRocketItem)) return;
         Player player = event.getEntity();
-        if (!player.isFallFlying() || PlayerActions.isExempt(player)) return;
-        if (PlayerActions.get(player).getAction(VanillaActions.ELYTRA) instanceof ElytraAction elytra) elytra.boost(player, event.getItemStack());
+        if (!player.isFallFlying()) return;
+        ElytraAction elytra = PlayerActions.action(player, VanillaActions.ELYTRA, ElytraAction.class);
+        if (elytra != null) elytra.boost(player, event.getItemStack());
     }
 
     @SubscribeEvent
@@ -180,6 +173,11 @@ public final class PlayerEventHandler {
             InternalBackend.data(player).markForSync();
             ParagliderCompat.onJoin(serverPlayer);
         }
+    }
+
+    private static void deny(PlayerInteractEvent.RightClickItem event) {
+        event.setCancellationResult(InteractionResult.FAIL);
+        event.setCanceled(true);
     }
 
     private static boolean throwsOnUse(ItemStack stack, Player player) {

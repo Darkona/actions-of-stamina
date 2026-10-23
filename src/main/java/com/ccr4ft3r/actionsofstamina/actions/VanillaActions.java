@@ -123,15 +123,16 @@ public final class VanillaActions {
             super(type);
         }
 
+        private static boolean isDrawAnim(UseAnim anim) {
+            return anim == UseAnim.BOW || anim == UseAnim.SPEAR || anim == UseAnim.CROSSBOW;
+        }
+
         public static boolean draws(ItemStack stack) {
-            UseAnim anim = stack.getUseAnimation();
-            return (anim == UseAnim.BOW || anim == UseAnim.SPEAR || anim == UseAnim.CROSSBOW) && !CrossbowItem.isCharged(stack);
+            return isDrawAnim(stack.getUseAnimation()) && !CrossbowItem.isCharged(stack);
         }
 
         public static boolean isDrawing(Player player) {
-            if (!player.isUsingItem()) return false;
-            UseAnim anim = player.getUseItem().getUseAnimation();
-            return anim == UseAnim.BOW || anim == UseAnim.SPEAR || anim == UseAnim.CROSSBOW;
+            return player.isUsingItem() && isDrawAnim(player.getUseItem().getUseAnimation());
         }
 
         @Override
