@@ -5,16 +5,16 @@
   "plugin": "com.ccr4ft3r.actionsofstamina.compatibility.CompatMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "BetterCombatServerNetworkMixin",
-    "CreateHandCrankBlockMixin",
-    "CreateValveHandleBlockMixin",
-    "GlidersToggleGlideMixin",
-    "ParcoolConfigServerMixin"
+    "bettercombat.BetterCombatServerNetworkMixin",
+    "create.CreateHandCrankBlockMixin",
+    "create.CreateValveHandleBlockMixin",
+    "vc_gliders.GlidersToggleGlideMixin",
+    "parcool.ParcoolConfigServerMixin"
   ],
   "client": [
-    "CombatRollManagerMixin",
-    "WallJumpDoubleJumpMixin",
-    "WallJumpLogicMixin"
+    "combat_roll.CombatRollManagerMixin",
+    "walljump.WallJumpDoubleJumpMixin",
+    "walljump.WallJumpLogicMixin"
   ],
   "injectors": {
     "defaultRequire": 1
