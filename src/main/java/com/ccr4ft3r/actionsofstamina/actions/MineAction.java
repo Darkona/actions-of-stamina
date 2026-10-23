@@ -3,6 +3,8 @@ package com.ccr4ft3r.actionsofstamina.actions;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 public class MineAction extends Action {
 
@@ -18,6 +20,17 @@ public class MineAction extends Action {
         this.maxHardnessMultiplier = AoSServerConfig.MINE_MAX_HARDNESS_MULTIPLIER.getAsDouble();
         this.slowsWhenExhausted = AoSServerConfig.MINE_BLOCK_WHEN_EXHAUSTED.getAsBoolean();
         this.exhaustedBreakSpeed = (float) AoSServerConfig.MINE_EXHAUSTED_BREAK_SPEED.getAsDouble();
+    }
+
+    @Override
+    public void onBlockBroken(Player player, BlockEvent.BreakEvent event) {
+        mined(player, event.getState().getDestroySpeed(event.getLevel(), event.getPos()));
+    }
+
+    @Override
+    public void onBreakSpeed(Player player, PlayerEvent.BreakSpeed event) {
+        float multiplier = breakSpeedMultiplier(player);
+        if (multiplier < 1.0f) event.setNewSpeed(event.getNewSpeed() * multiplier);
     }
 
     public void mined(Player player, float hardness) {

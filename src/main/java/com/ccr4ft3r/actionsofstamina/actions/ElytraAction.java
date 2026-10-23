@@ -7,9 +7,11 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Fireworks;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 public class ElytraAction extends Action {
 
@@ -34,6 +36,11 @@ public class ElytraAction extends Action {
         Fireworks fireworks = rocket.get(DataComponents.FIREWORKS);
         int flight = fireworks == null ? 0 : fireworks.flightDuration();
         boostEndTick = player.tickCount + 10 * (1 + flight) + ROCKET_LIFETIME_SPREAD;
+    }
+
+    @Override
+    public void onUseItem(Player player, PlayerInteractEvent.RightClickItem event) {
+        if (event.getItemStack().getItem() instanceof FireworkRocketItem && player.isFallFlying()) boost(player, event.getItemStack());
     }
 
     @Override

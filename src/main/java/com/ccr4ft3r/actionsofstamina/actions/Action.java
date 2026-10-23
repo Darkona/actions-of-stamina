@@ -6,6 +6,11 @@ import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 public class Action {
 
@@ -206,5 +211,29 @@ public class Action {
 
     public void setActionState(boolean state) {
         actionState = state;
+    }
+
+    public void onAttack(Player player, AttackEntityEvent event) {
+    }
+
+    public void onUseItem(Player player, PlayerInteractEvent.RightClickItem event) {
+    }
+
+    public void onUseBlock(Player player, PlayerInteractEvent.RightClickBlock event) {
+    }
+
+    public void onStopUsing(Player player, LivingEntityUseItemEvent.Stop event) {
+    }
+
+    public void onToolModification(Player player, BlockEvent.BlockToolModificationEvent event) {
+    }
+
+    public void onBlockBroken(Player player, BlockEvent.BreakEvent event) {
+    }
+
+    public void onBlockPlaced(Player player, BlockEvent.EntityPlaceEvent event) {
+    }
+
+    public void onBreakSpeed(Player player, PlayerEvent.BreakSpeed event) {
     }
 }

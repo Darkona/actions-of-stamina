@@ -39,9 +39,13 @@ public class PlayerActions {
     }
 
     @Nullable
+    public static Action action(@Nullable Player player, ActionType type) {
+        return isExempt(player) ? null : get(player).getAction(type);
+    }
+
+    @Nullable
     public static <A extends Action> A action(Player player, ActionType type, Class<A> kind) {
-        if (isExempt(player)) return null;
-        Action action = get(player).getAction(type);
+        Action action = action(player, type);
         return kind.isInstance(action) ? kind.cast(action) : null;
     }
 

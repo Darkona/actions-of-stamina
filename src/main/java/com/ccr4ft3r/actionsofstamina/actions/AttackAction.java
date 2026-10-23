@@ -1,6 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
+import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import java.util.List;
@@ -14,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 
 public class AttackAction extends Action {
 
@@ -42,6 +45,15 @@ public class AttackAction extends Action {
 
     public boolean weakens() {
         return weakens;
+    }
+
+    @Override
+    public void onAttack(Player player, AttackEntityEvent event) {
+        if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()) || EpicFightCompat.inBattleMode(player)) return;
+        if (weakens) refreshWeakened(player);
+        if (performHit(player)) return;
+        if (weakens) weaken(player);
+        else event.setCanceled(true);
     }
 
     @Override

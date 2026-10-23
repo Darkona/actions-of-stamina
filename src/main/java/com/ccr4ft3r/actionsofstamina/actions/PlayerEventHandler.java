@@ -1,33 +1,16 @@
 package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.BrushAction;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.DrawAction;
-import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.FireworkRocketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TridentItem;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.ItemAbilities;
-import net.neoforged.neoforge.common.ItemAbility;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
@@ -36,13 +19,22 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = ActionsOfStamina.MOD_ID)
 public final class PlayerEventHandler {
 
-    private static final TagKey<Item> THROWABLES = ItemTags.create(ActionsOfStamina.id("throwables"));
-
     private PlayerEventHandler() {
+    }
+
+    @FunctionalInterface
+    private interface Hook<E> {
+        void run(Action action, Player player, E event);
+    }
+
+    private static <E> void dispatch(@Nullable Player player, ActionType type, E event, Hook<E> hook) {
+        Action action = PlayerActions.action(player, type);
+        if (action != null) hook.run(action, player, event);
     }
 
     @SubscribeEvent
@@ -59,107 +51,54 @@ public final class PlayerEventHandler {
 
     @SubscribeEvent
     public static void onAttackEntity(AttackEntityEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        AttackAction attack = PlayerActions.action(player, VanillaActions.ATTACK, AttackAction.class);
-        if (attack == null) return;
-        if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem()) || EpicFightCompat.inBattleMode(player)) return;
-        if (attack.weakens()) attack.refreshWeakened(player);
-        if (attack.performHit(player)) return;
-        if (attack.weakens()) attack.weaken(player);
-        else event.setCanceled(true);
+        if (event.getEntity() instanceof ServerPlayer player) dispatch(player, VanillaActions.ATTACK, event, Action::onAttack);
     }
 
     @SubscribeEvent
-    public static void shieldUsage(PlayerInteractEvent.RightClickItem event) {
-        if (event.getItemStack().canPerformAction(ItemAbilities.SHIELD_BLOCK) && !PlayerActions.canPerform(event.getEntity(), VanillaActions.SHIELD)) {
-            event.setCanceled(true);
-        }
+    public static void onUseItem(PlayerInteractEvent.RightClickItem event) {
+        Player player = event.getEntity();
+        dispatch(player, VanillaActions.SHIELD, event, Action::onUseItem);
+        dispatch(player, VanillaActions.DRAW, event, Action::onUseItem);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onUseItemLate(PlayerInteractEvent.RightClickItem event) {
+        Player player = event.getEntity();
+        dispatch(player, VanillaActions.THROW, event, Action::onUseItem);
+        dispatch(player, VanillaActions.FISH, event, Action::onUseItem);
+        dispatch(player, VanillaActions.ELYTRA, event, Action::onUseItem);
     }
 
     @SubscribeEvent
-    public static void drawUsage(PlayerInteractEvent.RightClickItem event) {
-        if (DrawAction.draws(event.getItemStack()) && !PlayerActions.canPerform(event.getEntity(), VanillaActions.DRAW)) {
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
-    public static void brushUsage(PlayerInteractEvent.RightClickBlock event) {
-        if (BrushAction.brushes(event.getItemStack()) && !PlayerActions.canPerform(event.getEntity(), VanillaActions.BRUSH)) {
-            event.setUseItem(TriState.FALSE);
-        }
+    public static void onUseBlock(PlayerInteractEvent.RightClickBlock event) {
+        dispatch(event.getEntity(), VanillaActions.BRUSH, event, Action::onUseBlock);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void throwOnUse(PlayerInteractEvent.RightClickItem event) {
-        Player player = event.getEntity();
-        if (throwsOnUse(event.getItemStack(), player) && !PlayerActions.perform(player, VanillaActions.THROW)) deny(event);
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void throwOnRelease(LivingEntityUseItemEvent.Stop event) {
-        if (event.getEntity() instanceof Player player && throwsOnRelease(event.getItem(), player, event.getDuration())
-                && !PlayerActions.perform(player, VanillaActions.THROW)) {
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void riptideOnRelease(LivingEntityUseItemEvent.Stop event) {
-        if (event.getEntity() instanceof Player player && launchesRiptide(event.getItem(), player, event.getDuration())
-                && !PlayerActions.perform(player, VanillaActions.RIPTIDE)) {
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void fishOnUse(PlayerInteractEvent.RightClickItem event) {
-        if (isRod(event.getItemStack()) && !PlayerActions.perform(event.getEntity(), VanillaActions.FISH)) deny(event);
+    public static void onStopUsing(LivingEntityUseItemEvent.Stop event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        dispatch(player, VanillaActions.THROW, event, Action::onStopUsing);
+        dispatch(player, VanillaActions.RIPTIDE, event, Action::onStopUsing);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
-        if (event.isSimulated() || !tillCharges(event.getItemAbility())) return;
-        Player player = event.getPlayer();
-        Action till = PlayerActions.action(player, VanillaActions.TILL, Action.class);
-        if (till == null || !tillChangesBlock(event)) return;
-        if (player.level().isClientSide() ? !till.canPerform(player) : !till.perform(player)) event.setCanceled(true);
+    public static void onToolModification(BlockEvent.BlockToolModificationEvent event) {
+        dispatch(event.getPlayer(), VanillaActions.TILL, event, Action::onToolModification);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void blockBroken(BlockEvent.BreakEvent event) {
-        Player player = event.getPlayer();
-        if (player.level().isClientSide()) return;
-        MineAction mine = PlayerActions.action(player, VanillaActions.MINE, MineAction.class);
-        if (mine != null) mine.mined(player, event.getState().getDestroySpeed(event.getLevel(), event.getPos()));
+    public static void onBlockBroken(BlockEvent.BreakEvent event) {
+        if (!event.getPlayer().level().isClientSide()) dispatch(event.getPlayer(), VanillaActions.MINE, event, Action::onBlockBroken);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void blockPlaced(BlockEvent.EntityPlaceEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        Action build = PlayerActions.action(player, VanillaActions.BUILD, Action.class);
-        if (build == null) return;
-        Item placed = event.getPlacedBlock().getBlock().asItem();
-        if (placed == Items.AIR || !player.getMainHandItem().is(placed) && !player.getOffhandItem().is(placed)) return;
-        build.perform(player);
+    public static void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) dispatch(player, VanillaActions.BUILD, event, Action::onBlockPlaced);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void breakSpeed(PlayerEvent.BreakSpeed event) {
-        Player player = event.getEntity();
-        MineAction mine = PlayerActions.action(player, VanillaActions.MINE, MineAction.class);
-        if (mine == null) return;
-        float multiplier = mine.breakSpeedMultiplier(player);
-        if (multiplier < 1.0f) event.setNewSpeed(event.getNewSpeed() * multiplier);
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void rocketBoost(PlayerInteractEvent.RightClickItem event) {
-        if (!(event.getItemStack().getItem() instanceof FireworkRocketItem)) return;
-        Player player = event.getEntity();
-        if (!player.isFallFlying()) return;
-        ElytraAction elytra = PlayerActions.action(player, VanillaActions.ELYTRA, ElytraAction.class);
-        if (elytra != null) elytra.boost(player, event.getItemStack());
+    public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
+        dispatch(event.getEntity(), VanillaActions.MINE, event, Action::onBreakSpeed);
     }
 
     @SubscribeEvent
@@ -174,44 +113,5 @@ public final class PlayerEventHandler {
             InternalBackend.data(player).markForSync();
             ParagliderCompat.onJoin(serverPlayer);
         }
-    }
-
-    private static void deny(PlayerInteractEvent.RightClickItem event) {
-        event.setCancellationResult(InteractionResult.FAIL);
-        event.setCanceled(true);
-    }
-
-    private static boolean throwsOnUse(ItemStack stack, Player player) {
-        return stack.is(THROWABLES) && stack.getUseDuration(player) <= 0;
-    }
-
-    private static boolean throwsOnRelease(ItemStack stack, Player player, int remainingTicks) {
-        if (!stack.is(THROWABLES)) return false;
-        if (!(stack.getItem() instanceof TridentItem)) return true;
-        return stack.getUseDuration(player) - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME && EnchantmentHelper.getTridentSpinAttackStrength(stack, player) <= 0;
-    }
-
-    private static boolean launchesRiptide(ItemStack stack, Player player, int remainingTicks) {
-        if (!(stack.getItem() instanceof TridentItem)) return false;
-        return stack.getUseDuration(player) - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME
-                && EnchantmentHelper.getTridentSpinAttackStrength(stack, player) > 0 && player.isInWaterOrRain()
-                && stack.getDamageValue() < stack.getMaxDamage() - 1;
-    }
-
-    private static boolean isRod(ItemStack stack) {
-        return stack.canPerformAction(ItemAbilities.FISHING_ROD_CAST);
-    }
-
-    private static boolean tillCharges(ItemAbility ability) {
-        return ability == ItemAbilities.HOE_TILL || ability == ItemAbilities.SHOVEL_FLATTEN || ability == ItemAbilities.AXE_STRIP
-                || ability == ItemAbilities.AXE_SCRAPE || ability == ItemAbilities.AXE_WAX_OFF;
-    }
-
-    private static boolean tillChangesBlock(BlockEvent.BlockToolModificationEvent event) {
-        BlockState original = event.getState();
-        BlockState result = event.getFinalState();
-        if (result == original) result = original.getBlock().getToolModifiedState(original, event.getContext(), event.getItemAbility(), true);
-        if (result == null || result == original) return false;
-        return event.getItemAbility() != ItemAbilities.SHOVEL_FLATTEN || event.getLevel().getBlockState(event.getPos().above()).isAir();
     }
 }
