@@ -5,7 +5,7 @@ import com.ccr4ft3r.actionsofstamina.network.Packets.BackendSyncPacket;
 import com.ccr4ft3r.actionsofstamina.network.Packets.BackendSyncTask;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends.BackendMode;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend.BackendMode;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +54,8 @@ public class BackendSelectionTests {
         StaminaBackend feathers = StaminaBackends.byKind(StaminaBackend.Kind.FEATHERS);
         ServerPlayer player = TestSupport.player(helper);
         int before = feathers.stamina(player);
-        helper.assertTrue(feathers.spend(player, TEST, StaminaBackends.ofFeathers(2), 0), "spend 2 feathers");
-        helper.assertValueEqual(feathers.stamina(player), before - StaminaBackends.ofFeathers(2), "feathers after spending 2");
+        helper.assertTrue(feathers.spend(player, TEST, StaminaBackend.ofFeathers(2), 0), "spend 2 feathers");
+        helper.assertValueEqual(feathers.stamina(player), before - StaminaBackend.ofFeathers(2), "feathers after spending 2");
         helper.succeed();
     }
 

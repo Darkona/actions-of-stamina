@@ -55,7 +55,7 @@ public class CompatTests {
         int before = backend.stamina(player);
         helper.assertFalse(ParcoolTestHooks.dodgeStartCancelled(player), "dodge may start with a full bar");
         ParcoolTestHooks.postDodgeStarted(player);
-        helper.assertValueEqual(backend.stamina(player), before - StaminaBackends.ofFeathers(0.5), "stamina after a dodge");
+        helper.assertValueEqual(backend.stamina(player), before - StaminaBackend.ofFeathers(0.5), "stamina after a dodge");
 
         String state = exhaust(backend, player);
         helper.assertTrue(ParcoolTestHooks.dodgeStartCancelled(player), "dodge can't start when exhausted" + state);
@@ -90,7 +90,7 @@ public class CompatTests {
         }
         ServerPlayer player = player(helper);
         StaminaBackend backend = StaminaBackends.server();
-        backend.spend(player, TEST, StaminaBackends.ofFeathers(3), 0);
+        backend.spend(player, TEST, StaminaBackend.ofFeathers(3), 0);
         helper.assertTrue(ParagliderTestHooks.usesAoSStamina(player), "Paragliders' stamina is AoS's");
         helper.assertValueEqual((int) ParagliderTestHooks.stamina(player), backend.availableStamina(player), "Paragliders reads the backend");
         helper.succeed();
@@ -109,7 +109,7 @@ public class CompatTests {
 
         ServerPlayer player = player(helper);
         StaminaBackend backend = StaminaBackends.server();
-        backend.spend(player, TEST, StaminaBackends.ofFeathers(3), 0);
+        backend.spend(player, TEST, StaminaBackend.ofFeathers(3), 0);
         String problem = ParcoolTestHooks.checkStaminaMirrorsBackend(player, backend);
         helper.assertTrue(problem == null, "ParCool stamina: " + problem);
         exhaust(backend, player);

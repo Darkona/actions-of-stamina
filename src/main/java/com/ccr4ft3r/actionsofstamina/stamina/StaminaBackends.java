@@ -2,6 +2,7 @@ package com.ccr4ft3r.actionsofstamina.stamina;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend.BackendMode;
 import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -24,7 +25,7 @@ public final class StaminaBackends {
 
     public static StaminaBackend server() {
         StaminaBackend backend = server;
-        return backend != null ? backend : (server = byKind(resolve(configuredMode(), FEATHERS_LOADED)));
+        return backend != null ? backend : (server = computeServer());
     }
 
     public static StaminaBackend client() {
@@ -53,16 +54,19 @@ public final class StaminaBackends {
         return feathers;
     }
 
+    private static StaminaBackend computeServer() {
+        return byKind(resolve(configuredMode(), FEATHERS_LOADED));
+    }
+
     private static BackendMode configuredMode() {
         return AoSServerConfig.SPEC.isLoaded() ? AoSServerConfig.BACKEND.get() : BackendMode.AUTO;
     }
 
     public static void onServerStarting() {
-        BackendMode mode = configuredMode();
-        if (mode == BackendMode.FEATHERS && !FEATHERS_LOADED) {
+        if (configuredMode() == BackendMode.FEATHERS && !FEATHERS_LOADED) {
             ActionsOfStamina.logger.warn("backend = feathers but Feathers of Fatigue isn't installed: using the internal stamina");
         }
-        server = byKind(resolve(mode, FEATHERS_LOADED));
+        server = computeServer();
         ActionsOfStamina.logger.info("Stamina backend: {}", server.kind());
     }
 
@@ -78,20 +82,4 @@ public final class StaminaBackends {
         if (ServerLifecycleHooks.getCurrentServer() == null) server = null;
     }
 
-    public static final int PER_FEATHER = 1000;
-
-
-    public static int ofFeathers(double feathers) {
-        return (int) Math.round(feathers * PER_FEATHER);
-    }
-
-    public static double perTick(double feathersPerSecond) {
-        return feathersPerSecond * PER_FEATHER / 20.0;
-    }
-
-    public enum BackendMode {
-        AUTO,
-        FEATHERS,
-        INTERNAL
-    }
 }

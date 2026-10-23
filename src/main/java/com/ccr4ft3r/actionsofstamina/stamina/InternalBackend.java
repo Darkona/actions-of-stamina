@@ -26,7 +26,7 @@ public final class InternalBackend implements StaminaBackend {
     }
 
     static int configMaxStamina() {
-        return AoSServerConfig.INTERNAL_MAX_FEATHERS.getAsInt() * StaminaBackends.PER_FEATHER;
+        return StaminaBackend.ofFeathers(AoSServerConfig.INTERNAL_MAX_FEATHERS.getAsInt());
     }
 
     private static int serverMax(InternalStamina s) {
@@ -161,7 +161,7 @@ public final class InternalBackend implements StaminaBackend {
         if (s.regenDelay > 0) {
             s.regenDelay--;
         } else if (!s.drains.anyBlocksRegen() && stamina < max) {
-            stamina = Math.min(max, stamina + s.regenCarry.add(StaminaBackends.perTick(AoSServerConfig.INTERNAL_REGEN_PER_SECOND.getAsDouble())));
+            stamina = Math.min(max, stamina + s.regenCarry.add(StaminaBackend.perTick(AoSServerConfig.INTERNAL_REGEN_PER_SECOND.getAsDouble())));
         }
         if (stamina >= max) s.regenCarry.reset();
         s.stamina = stamina;

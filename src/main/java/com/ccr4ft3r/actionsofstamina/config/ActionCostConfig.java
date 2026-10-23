@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.config;
 
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,15 +37,15 @@ public final class ActionCostConfig {
     }
 
     public int cost() {
-        return cost == null ? 0 : StaminaBackends.ofFeathers(cost.getAsDouble());
+        return cost == null ? 0 : StaminaBackend.ofFeathers(cost.getAsDouble());
     }
 
     public int minStamina() {
-        return Math.max(cost(), minStamina == null ? 0 : StaminaBackends.ofFeathers(minStamina.getAsDouble()));
+        return Math.max(cost(), minStamina == null ? 0 : StaminaBackend.ofFeathers(minStamina.getAsDouble()));
     }
 
     public double perTick() {
-        return perSecond == null ? 0 : StaminaBackends.perTick(perSecond.getAsDouble());
+        return perSecond == null ? 0 : StaminaBackend.perTick(perSecond.getAsDouble());
     }
 
     @SuppressWarnings("unused")
@@ -54,7 +54,7 @@ public final class ActionCostConfig {
     }
 
     public int finishCost() {
-        return finishCost == null ? 0 : StaminaBackends.ofFeathers(finishCost.getAsDouble());
+        return finishCost == null ? 0 : StaminaBackend.ofFeathers(finishCost.getAsDouble());
     }
 
     public int regenDelay() {

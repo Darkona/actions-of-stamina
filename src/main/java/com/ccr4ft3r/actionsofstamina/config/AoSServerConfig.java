@@ -9,7 +9,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends.BackendMode;
+import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend.BackendMode;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public final class AoSServerConfig {

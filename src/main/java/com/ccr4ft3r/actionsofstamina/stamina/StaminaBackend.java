@@ -5,6 +5,22 @@ import net.minecraft.world.entity.player.Player;
 
 public interface StaminaBackend {
 
+    int PER_FEATHER = 1000;
+
+    static int ofFeathers(double feathers) {
+        return (int) Math.round(feathers * PER_FEATHER);
+    }
+
+    static double perTick(double feathersPerSecond) {
+        return feathersPerSecond * PER_FEATHER / 20.0;
+    }
+
+    enum BackendMode {
+        AUTO,
+        FEATHERS,
+        INTERNAL
+    }
+
     enum Kind {
         FEATHERS,
         INTERNAL;
