@@ -1,35 +1,31 @@
-package com.ccr4ft3r.actionsofstamina.events;
+package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.attack.AttackAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.brush.BrushAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.fish.FishAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.mine.MineAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.riptide.RiptideAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.throwing.ThrowAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.till.TillAction;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.BrushAction;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.DrawAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
@@ -42,6 +38,8 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @EventBusSubscriber(modid = ActionsOfStamina.MOD_ID)
 public final class PlayerEventHandler {
+
+    private static final TagKey<Item> THROWABLES = ItemTags.create(ActionsOfStamina.id("throwables"));
 
     private PlayerEventHandler() {
     }
@@ -93,7 +91,7 @@ public final class PlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void throwOnUse(PlayerInteractEvent.RightClickItem event) {
         Player player = event.getEntity();
-        if (ThrowAction.throwsOnUse(event.getItemStack(), player) && !PlayerActions.perform(player, VanillaActions.THROW)) {
+        if (throwsOnUse(event.getItemStack(), player) && !PlayerActions.perform(player, VanillaActions.THROW)) {
             event.setCancellationResult(InteractionResult.FAIL);
             event.setCanceled(true);
         }
@@ -101,7 +99,7 @@ public final class PlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void throwOnRelease(LivingEntityUseItemEvent.Stop event) {
-        if (event.getEntity() instanceof Player player && ThrowAction.throwsOnRelease(event.getItem(), player, event.getDuration())
+        if (event.getEntity() instanceof Player player && throwsOnRelease(event.getItem(), player, event.getDuration())
                 && !PlayerActions.perform(player, VanillaActions.THROW)) {
             event.setCanceled(true);
         }
@@ -109,7 +107,7 @@ public final class PlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void riptideOnRelease(LivingEntityUseItemEvent.Stop event) {
-        if (event.getEntity() instanceof Player player && RiptideAction.launchesOnRelease(event.getItem(), player, event.getDuration())
+        if (event.getEntity() instanceof Player player && launchesRiptide(event.getItem(), player, event.getDuration())
                 && !PlayerActions.perform(player, VanillaActions.RIPTIDE)) {
             event.setCanceled(true);
         }
@@ -117,7 +115,7 @@ public final class PlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void fishOnUse(PlayerInteractEvent.RightClickItem event) {
-        if (FishAction.isRod(event.getItemStack()) && !PlayerActions.perform(event.getEntity(), VanillaActions.FISH)) {
+        if (isRod(event.getItemStack()) && !PlayerActions.perform(event.getEntity(), VanillaActions.FISH)) {
             event.setCancellationResult(InteractionResult.FAIL);
             event.setCanceled(true);
         }
@@ -125,11 +123,11 @@ public final class PlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
-        if (event.isSimulated() || !TillAction.charges(event.getItemAbility())) return;
+        if (event.isSimulated() || !tillCharges(event.getItemAbility())) return;
         Player player = event.getPlayer();
         if (PlayerActions.isExempt(player)) return;
         Action till = PlayerActions.get(player).getAction(VanillaActions.TILL);
-        if (till == null || !TillAction.changesBlock(event)) return;
+        if (till == null || !tillChangesBlock(event)) return;
         if (player.level().isClientSide() ? !till.canPerform(player) : !till.perform(player)) event.setCanceled(true);
     }
 
@@ -176,11 +174,45 @@ public final class PlayerEventHandler {
         if (player.level().isClientSide() && !player.isLocalPlayer()) return;
         PlayerActions actions = PlayerActions.get(player);
         actions.clearActions(player);
-        ActionProvider.addEnabledActions(actions);
+        PlayerActions.addEnabledActions(actions);
         actions.refreshCurioWings(player);
         if (player instanceof ServerPlayer serverPlayer) {
             InternalBackend.data(player).markForSync();
             ParagliderCompat.onJoin(serverPlayer);
         }
+    }
+
+    private static boolean throwsOnUse(ItemStack stack, Player player) {
+        return stack.is(THROWABLES) && stack.getUseDuration(player) <= 0;
+    }
+
+    private static boolean throwsOnRelease(ItemStack stack, Player player, int remainingTicks) {
+        if (!stack.is(THROWABLES)) return false;
+        if (!(stack.getItem() instanceof TridentItem)) return true;
+        return stack.getUseDuration(player) - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME && EnchantmentHelper.getTridentSpinAttackStrength(stack, player) <= 0;
+    }
+
+    private static boolean launchesRiptide(ItemStack stack, Player player, int remainingTicks) {
+        if (!(stack.getItem() instanceof TridentItem)) return false;
+        return stack.getUseDuration(player) - remainingTicks >= TridentItem.THROW_THRESHOLD_TIME
+                && EnchantmentHelper.getTridentSpinAttackStrength(stack, player) > 0 && player.isInWaterOrRain()
+                && stack.getDamageValue() < stack.getMaxDamage() - 1;
+    }
+
+    private static boolean isRod(ItemStack stack) {
+        return stack.canPerformAction(ItemAbilities.FISHING_ROD_CAST);
+    }
+
+    private static boolean tillCharges(ItemAbility ability) {
+        return ability == ItemAbilities.HOE_TILL || ability == ItemAbilities.SHOVEL_FLATTEN || ability == ItemAbilities.AXE_STRIP
+                || ability == ItemAbilities.AXE_SCRAPE || ability == ItemAbilities.AXE_WAX_OFF;
+    }
+
+    private static boolean tillChangesBlock(BlockEvent.BlockToolModificationEvent event) {
+        BlockState original = event.getState();
+        BlockState result = event.getFinalState();
+        if (result == original) result = original.getBlock().getToolModifiedState(original, event.getContext(), event.getItemAbility(), true);
+        if (result == null || result == original) return false;
+        return event.getItemAbility() != ItemAbilities.SHOVEL_FLATTEN || event.getLevel().getBlockState(event.getPos().above()).isAir();
     }
 }

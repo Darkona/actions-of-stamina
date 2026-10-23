@@ -1,10 +1,7 @@
-package com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra;
+package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -42,11 +39,6 @@ public class ElytraAction extends Action {
     @Override
     protected double drainPerTick(Player player) {
         return player.tickCount < boostEndTick ? 0 : staminaPerTick;
-    }
-
-    @Override
-    protected void performingEffects(Player p, PlayerActions a) {
-
     }
 
     @Override

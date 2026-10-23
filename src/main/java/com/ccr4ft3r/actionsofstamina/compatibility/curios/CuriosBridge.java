@@ -1,14 +1,13 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.curios;
 
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.actions.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
+import java.util.function.Predicate;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
-
-import java.util.function.Predicate;
 
 final class CuriosBridge {
 

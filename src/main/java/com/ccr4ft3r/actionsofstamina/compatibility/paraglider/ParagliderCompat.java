@@ -2,13 +2,12 @@ package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
+import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import dev.darkona.jdlib.api.compat.Bridges;
 
 public final class ParagliderCompat {
 
@@ -19,7 +18,7 @@ public final class ParagliderCompat {
     private ParagliderCompat() {
     }
 
-    public static final ActionType PARAGLIDE = ActionTypes.register(ActionsOfStamina.id("paraglide"), ParagliderConfig.PARAGLIDE,
+    public static final ActionType PARAGLIDE = ActionType.register(ActionsOfStamina.id("paraglide"), ParagliderConfig.PARAGLIDE,
             ParagliderCompat::isActive, ParaglideAction::new);
 
     public static void registerActions() {

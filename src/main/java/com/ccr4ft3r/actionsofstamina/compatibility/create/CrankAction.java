@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.compatibility.create;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -31,10 +31,6 @@ public class CrankAction extends Action {
     public void tick(Player p, PlayerActions a) {
         setActionState(p.tickCount - lastTurnTick <= TURN_WINDOW);
         super.tick(p, a);
-    }
-
-    @Override
-    protected void performingEffects(Player p, PlayerActions a) {
     }
 
     @Override

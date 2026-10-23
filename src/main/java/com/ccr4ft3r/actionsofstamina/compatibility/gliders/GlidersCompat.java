@@ -2,11 +2,10 @@ package com.ccr4ft3r.actionsofstamina.compatibility.gliders;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
+import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import dev.darkona.jdlib.api.compat.Bridges;
 
 public final class GlidersCompat {
 
@@ -16,7 +15,7 @@ public final class GlidersCompat {
     private GlidersCompat() {
     }
 
-    public static final ActionType GLIDE = ActionTypes.register(ActionsOfStamina.id("gliders/glide"), GlidersConfig.GLIDE,
+    public static final ActionType GLIDE = ActionType.register(ActionsOfStamina.id("gliders/glide"), GlidersConfig.GLIDE,
             GlidersCompat::isActive, GlideAction::new);
 
     public static void registerActions() {

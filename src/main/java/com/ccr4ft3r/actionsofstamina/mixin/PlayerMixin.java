@@ -1,9 +1,9 @@
 package com.ccr4ft3r.actionsofstamina.mixin;
 
+import com.ccr4ft3r.actionsofstamina.actions.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

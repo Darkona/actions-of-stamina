@@ -1,7 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.stamina.internal;
 
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.data.AosAttachments;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +20,7 @@ public final class InternalBackend implements StaminaBackend {
     }
 
     public static InternalStamina data(Player player) {
-        return player.getData(AosAttachments.INTERNAL_STAMINA);
+        return player.getData(InternalStamina.ATTACHMENT);
     }
 
     public static boolean enabled() {

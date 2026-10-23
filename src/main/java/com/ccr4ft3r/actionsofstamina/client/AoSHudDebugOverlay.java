@@ -1,8 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.client;
 
 import com.ccr4ft3r.actionsofstamina.actions.Action;
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import dev.darkona.jdlib.api.debug.DebugLines;
 import dev.darkona.jdlib.api.hud.JDDebugOverlay;
 import net.minecraft.client.player.LocalPlayer;

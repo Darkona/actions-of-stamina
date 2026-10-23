@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
 
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import tictim.paraglider.api.movement.Movement;

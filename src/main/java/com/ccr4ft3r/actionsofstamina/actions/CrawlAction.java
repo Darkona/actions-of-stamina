@@ -1,9 +1,6 @@
-package com.ccr4ft3r.actionsofstamina.actions.minecraft.crawl;
+package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;

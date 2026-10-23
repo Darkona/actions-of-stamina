@@ -1,8 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.ActionProvider;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.internal.InternalBackend;
 import dev.darkona.jdlib.testkit.TestPlayers;
@@ -27,7 +26,7 @@ final class TestSupport {
 
     static ServerPlayer survivalPlayer(GameTestHelper helper) {
         ServerPlayer player = TestPlayers.silent(helper, new Vec3(0.5, 3, 0.5));
-        ActionProvider.addEnabledActions(PlayerActions.get(player));
+        PlayerActions.addEnabledActions(PlayerActions.get(player));
         return player;
     }
 

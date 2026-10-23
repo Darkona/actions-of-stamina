@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.mixin;
 
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.row.RowAction;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ public abstract class BoatMixin {
     @Inject(method = "controlBoat", at = @At("HEAD"), cancellable = true)
     private void actionsofstamina$rowWithStamina(CallbackInfo ci) {
         Boat self = (Boat) (Object) this;
-        if (self.getControllingPassenger() instanceof Player player && RowAction.isRowed(self) && !RowAction.mayRow(player)) {
+        if (self.getControllingPassenger() instanceof Player player && VanillaActions.isRowed(self) && !VanillaActions.mayRow(player)) {
             self.setPaddleState(false, false);
             ci.cancel();
         }

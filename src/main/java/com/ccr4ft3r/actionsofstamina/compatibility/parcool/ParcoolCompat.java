@@ -3,12 +3,11 @@ package com.ccr4ft3r.actionsofstamina.compatibility.parcool;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import dev.darkona.jdlib.api.compat.Bridges;
 import org.jetbrains.annotations.Nullable;
 
 public final class ParcoolCompat {
@@ -25,7 +24,7 @@ public final class ParcoolCompat {
         TYPES = new ActionType[entries.length];
         for (int i = 0; i < entries.length; i++) {
             ActionCostConfig costs = entries[i].costs();
-            TYPES[i] = ActionTypes.register(ActionsOfStamina.id("parcool/" + entries[i].name()), costs,
+            TYPES[i] = ActionType.register(ActionsOfStamina.id("parcool/" + entries[i].name()), costs,
                     () -> isActive() && costs.enabled() && costs.costsAnything(), Action::new);
         }
     }

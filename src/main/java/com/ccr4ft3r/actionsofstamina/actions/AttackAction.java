@@ -1,11 +1,9 @@
-package com.ccr4ft3r.actionsofstamina.actions.minecraft.attack;
+package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import java.util.List;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,8 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-
-import java.util.List;
 
 public class AttackAction extends Action {
 
@@ -84,16 +80,6 @@ public class AttackAction extends Action {
         if (speed != null) speed.removeModifier(WEAKEN_ID);
     }
 
-    @Override
-    protected void performingEffects(Player p, PlayerActions a) {
-
-    }
-
-    @Override
-    public void notPerformingEffects(Player player, PlayerActions a) {
-
-    }
-
     private static boolean isWeapon(ItemStack stack) {
         if (stack.isEmpty()) return false;
         List<ItemAttributeModifiers.Entry> entries = stack.getAttributeModifiers().modifiers();
@@ -123,4 +109,8 @@ public class AttackAction extends Action {
         return super.perform(player);
     }
 
+    public enum ExhaustedAttackMode {
+        CANCEL,
+        WEAKEN
+    }
 }

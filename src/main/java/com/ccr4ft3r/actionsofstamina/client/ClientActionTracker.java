@@ -1,16 +1,16 @@
 package com.ccr4ft3r.actionsofstamina.client;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.brush.BrushAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.draw.DrawAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.elytra.ElytraAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.row.RowAction;
+import com.ccr4ft3r.actionsofstamina.actions.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions.ActionFlags;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.BrushAction;
+import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.DrawAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.network.ActionStatePacket;
-import com.ccr4ft3r.actionsofstamina.util.ActionFlags;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Pose;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -37,7 +37,7 @@ public final class ClientActionTracker {
         boolean onVehicle = player.getVehicle() != null;
         boolean climbingUp = onClimbable && player.getY() - player.yo > CLIMB_EPSILON && !onVehicle && !player.isFallFlying();
         boolean rowing = onVehicle && (player.input.up || player.input.down || player.input.left || player.input.right)
-                && RowAction.drivesRowedBoat(player, player.getVehicle());
+                && VanillaActions.drivesRowedBoat(player, player.getVehicle());
         boolean swimming = player.isSwimming() && player.getPose() == Pose.SWIMMING && inFluid && !climbing && !onVehicle;
         boolean sprinting = player.isSprinting() && moving && !onVehicle && player.onGround();
         boolean flying = player.getPose() == Pose.FALL_FLYING && player.isFallFlying() && ElytraAction.wearsStaminaWings(player);

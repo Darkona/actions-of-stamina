@@ -1,9 +1,6 @@
-package com.ccr4ft3r.actionsofstamina.actions.minecraft.mine;
+package com.ccr4ft3r.actionsofstamina.actions;
 
-import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.data.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.world.entity.player.Player;
 
@@ -37,13 +34,4 @@ public class MineAction extends Action {
         return slowsWhenExhausted && !canPerform(player) ? exhaustedBreakSpeed : 1.0f;
     }
 
-    @Override
-    protected void performingEffects(Player p, PlayerActions a) {
-
-    }
-
-    @Override
-    public void notPerformingEffects(Player player, PlayerActions a) {
-
-    }
 }

@@ -3,10 +3,9 @@ package com.ccr4ft3r.actionsofstamina.compatibility.epicfight;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import net.minecraft.world.entity.player.Player;
 import dev.darkona.jdlib.api.compat.Bridges;
+import net.minecraft.world.entity.player.Player;
 
 public final class EpicFightCompat {
 
@@ -23,7 +22,7 @@ public final class EpicFightCompat {
     }
 
     private static ActionType skill(String name, ActionCostConfig costs) {
-        return ActionTypes.register(ActionsOfStamina.id("epicfight/" + name), costs, () -> isActive() && costs.enabled(), Action::new);
+        return ActionType.register(ActionsOfStamina.id("epicfight/" + name), costs, () -> isActive() && costs.enabled(), Action::new);
     }
 
     public static void registerActions() {

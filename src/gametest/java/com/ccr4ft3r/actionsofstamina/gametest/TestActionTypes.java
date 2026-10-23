@@ -3,7 +3,6 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.ActionTypes;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,7 +23,7 @@ final class TestActionTypes {
     @SubscribeEvent
     static void register(FMLCommonSetupEvent event) {
         if (!FMLEnvironment.production) {
-            finishing = ActionTypes.register(FINISHING_ID, ParcoolConfig.byName("charge_jump").costs(), () -> enabled, Action::new);
+            finishing = ActionType.register(FINISHING_ID, ParcoolConfig.byName("charge_jump").costs(), () -> enabled, Action::new);
         }
     }
 }

@@ -3,8 +3,6 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.climb.ClimbAction;
-import com.ccr4ft3r.actionsofstamina.actions.minecraft.row.RowAction;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
@@ -21,7 +19,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
-
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
 import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
 
@@ -43,8 +40,8 @@ public class ActionGateTests {
         int before = backend.stamina(player);
         helper.assertFalse(refused(player, Items.SNOWBALL), "throwing a snowball");
         helper.assertTrue(backend.stamina(player) < before, "the throw is charged");
-        helper.assertTrue(ClimbAction.mayClimbUp(player), "climbing (disabled)");
-        helper.assertTrue(RowAction.mayRow(player), "rowing (disabled)");
+        helper.assertTrue(VanillaActions.mayClimbUp(player), "climbing (disabled)");
+        helper.assertTrue(VanillaActions.mayRow(player), "rowing (disabled)");
         helper.succeed();
     }
 
@@ -56,8 +53,8 @@ public class ActionGateTests {
         helper.assertTrue(refused(player, Items.BOW), "drawing a bow");
         helper.assertTrue(refused(player, Items.SNOWBALL), "throwing a snowball");
         helper.assertFalse(refused(player, Items.STICK), "using an item no action charges");
-        helper.assertTrue(ClimbAction.mayClimbUp(player), "climbing (disabled)");
-        helper.assertTrue(RowAction.mayRow(player), "rowing (disabled)");
+        helper.assertTrue(VanillaActions.mayClimbUp(player), "climbing (disabled)");
+        helper.assertTrue(VanillaActions.mayRow(player), "rowing (disabled)");
         helper.succeed();
     }
 
