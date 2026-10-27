@@ -1,5 +1,6 @@
-package com.ccr4ft3r.actionsofstamina.stamina;
+package com.ccr4ft3r.actionsofstamina.network;
 
+import com.ccr4ft3r.actionsofstamina.stamina.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.VarInt;
@@ -25,9 +26,6 @@ public record InternalStaminaPacket(int stamina, int maxStamina, boolean exhaust
     }
 
     public static void handle(InternalStaminaPacket packet, IPayloadContext context) {
-        InternalStamina s = InternalBackend.data(context.player());
-        s.stamina = packet.stamina;
-        s.maxStamina = packet.maxStamina;
-        s.exhausted = packet.exhausted;
+        InternalBackend.data(context.player()).receive(packet.stamina, packet.maxStamina, packet.exhausted);
     }
 }

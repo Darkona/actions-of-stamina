@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.stamina.BackendSyncPacket;
+import com.ccr4ft3r.actionsofstamina.network.BackendSyncPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend.BackendMode;

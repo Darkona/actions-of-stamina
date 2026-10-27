@@ -55,6 +55,12 @@ public final class InternalStamina {
         return exhausted;
     }
 
+    public void receive(int stamina, int maxStamina, boolean exhausted) {
+        this.stamina = stamina;
+        this.maxStamina = maxStamina;
+        this.exhausted = exhausted;
+    }
+
     @SuppressWarnings("unused")
     public int regenDelay() {
         return regenDelay;

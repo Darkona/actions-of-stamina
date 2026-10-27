@@ -1,5 +1,6 @@
-package com.ccr4ft3r.actionsofstamina.actions;
+package com.ccr4ft3r.actionsofstamina.network;
 
+import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

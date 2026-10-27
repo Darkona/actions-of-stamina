@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.InternalStaminaPacket;
+import com.ccr4ft3r.actionsofstamina.network.InternalStaminaPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

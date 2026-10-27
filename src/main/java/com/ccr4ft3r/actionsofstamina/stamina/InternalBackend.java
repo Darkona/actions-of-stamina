@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.stamina;
 
+import com.ccr4ft3r.actionsofstamina.network.InternalStaminaPacket;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

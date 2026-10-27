@@ -10,7 +10,7 @@ import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.DrawAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
-import com.ccr4ft3r.actionsofstamina.actions.ActionStatePacket;
+import com.ccr4ft3r.actionsofstamina.network.ActionStatePacket;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Pose;
 import net.neoforged.neoforge.common.ItemAbilities;
