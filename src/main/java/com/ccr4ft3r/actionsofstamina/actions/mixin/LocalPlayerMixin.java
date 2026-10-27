@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.mixin;
+package com.ccr4ft3r.actionsofstamina.actions.mixin;
 
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;

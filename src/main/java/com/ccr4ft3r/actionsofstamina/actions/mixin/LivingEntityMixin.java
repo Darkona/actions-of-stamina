@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.mixin;
+package com.ccr4ft3r.actionsofstamina.actions.mixin;
 
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
