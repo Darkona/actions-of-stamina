@@ -1,15 +1,16 @@
-package com.ccr4ft3r.actionsofstamina.actions.client;
+package com.ccr4ft3r.actionsofstamina.foundation.events;
 
+import com.ccr4ft3r.actionsofstamina.content.actions.ClientActionTracker;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.AttackAction;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.AttackAction;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.HitResult;
@@ -23,9 +24,9 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = ActionsOfStamina.MOD_ID, value = Dist.CLIENT)
-public final class ClientGameEvents {
+public final class ClientEvents {
 
-    private ClientGameEvents() {
+    private ClientEvents() {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

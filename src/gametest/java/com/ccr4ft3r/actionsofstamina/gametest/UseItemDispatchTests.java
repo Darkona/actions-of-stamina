@@ -1,11 +1,11 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.ElytraAction;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;

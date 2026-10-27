@@ -1,8 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.bettercombat;
 
 import com.ccr4ft3r.actionsofstamina.config.compat.BetterCombatConfig;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.Action;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleOpenHashMap;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.CombatFlags;

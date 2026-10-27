@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.config;
 
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 

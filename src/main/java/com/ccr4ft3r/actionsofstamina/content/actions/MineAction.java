@@ -1,7 +1,7 @@
-package com.ccr4ft3r.actionsofstamina.actions;
+package com.ccr4ft3r.actionsofstamina.content.actions;
 
 import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;

@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.actions.mixin;
 
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import org.spongepowered.asm.mixin.Mixin;

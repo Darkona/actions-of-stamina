@@ -1,5 +1,7 @@
-package com.ccr4ft3r.actionsofstamina.actions;
+package com.ccr4ft3r.actionsofstamina.foundation.events;
 
+import com.ccr4ft3r.actionsofstamina.foundation.events.CommonEvents;
+import com.ccr4ft3r.actionsofstamina.content.actions.Action;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,11 +26,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PlayerEventHandlerTest {
+class CommonEventsTest {
 
     private static Map<String, List<EventPriority>> subscriptions() {
         Map<String, List<EventPriority>> byEvent = new TreeMap<>();
-        for (Method method : PlayerEventHandler.class.getDeclaredMethods()) {
+        for (Method method : CommonEvents.class.getDeclaredMethods()) {
             SubscribeEvent subscribe = method.getAnnotation(SubscribeEvent.class);
             if (subscribe == null) continue;
             byEvent.computeIfAbsent(method.getParameterTypes()[0].getName(), name -> new ArrayList<>()).add(subscribe.priority());

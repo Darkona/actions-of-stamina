@@ -1,5 +1,6 @@
-package com.ccr4ft3r.actionsofstamina.stamina;
+package com.ccr4ft3r.actionsofstamina.compat.feathers;
 
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.darkona.feathersoffatigue.api.DrainOptions;
 import com.darkona.feathersoffatigue.api.FeathersAPI;
@@ -11,7 +12,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 
-final class FeathersBackend implements StaminaBackend {
+public final class FeathersBackend implements StaminaBackend {
 
     private static final SpendOptions SIMULATED = SpendOptions.DEFAULT.simulated();
     private static final DrainOptions DRAIN_BLOCKING_REGEN = DrainOptions.DEFAULT;
@@ -22,11 +23,11 @@ final class FeathersBackend implements StaminaBackend {
     private FeathersBackend() {
     }
 
-    static StaminaBackend create() {
+    public static StaminaBackend create() {
         return new FeathersBackend();
     }
 
-    static void takeOverPlayerActions() {
+    public static void takeOverPlayerActions() {
         FeathersAPI.takeOverPlayerActions(ActionsOfStamina.MOD_ID);
     }
 

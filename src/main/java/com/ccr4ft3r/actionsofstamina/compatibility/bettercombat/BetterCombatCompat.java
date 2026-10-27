@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.compatibility.bettercombat;
 
 import com.ccr4ft3r.actionsofstamina.config.compat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.content.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.server.level.ServerPlayer;

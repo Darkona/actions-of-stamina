@@ -1,11 +1,11 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.content.actions.Action;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;

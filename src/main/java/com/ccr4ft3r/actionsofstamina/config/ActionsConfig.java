@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.config;
 
-import com.ccr4ft3r.actionsofstamina.actions.AttackAction.ExhaustedAttackMode;
+import com.ccr4ft3r.actionsofstamina.content.actions.AttackAction.ExhaustedAttackMode;
 import com.ccr4ft3r.actionsofstamina.config.compat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.config.compat.CombatRollConfig;
 import com.ccr4ft3r.actionsofstamina.config.compat.CreateConfig;
@@ -9,7 +9,7 @@ import com.ccr4ft3r.actionsofstamina.config.compat.GlidersConfig;
 import com.ccr4ft3r.actionsofstamina.config.compat.ParagliderConfig;
 import com.ccr4ft3r.actionsofstamina.config.compat.ParcoolConfig;
 import com.ccr4ft3r.actionsofstamina.config.compat.WallJumpConfig;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend.BackendMode;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend.BackendMode;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;

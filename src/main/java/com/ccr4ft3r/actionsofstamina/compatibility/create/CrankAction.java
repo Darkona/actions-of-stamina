@@ -1,8 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.create;
 
-import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.Action;
+import com.ccr4ft3r.actionsofstamina.content.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;

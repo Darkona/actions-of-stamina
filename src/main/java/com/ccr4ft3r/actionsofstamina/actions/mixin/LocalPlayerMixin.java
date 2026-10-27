@@ -1,8 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.actions.mixin;
 
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;

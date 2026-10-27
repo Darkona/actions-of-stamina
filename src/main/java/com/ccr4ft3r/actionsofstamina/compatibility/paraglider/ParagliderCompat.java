@@ -2,9 +2,9 @@ package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
 
 import com.ccr4ft3r.actionsofstamina.config.compat.ParagliderConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.content.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
 import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

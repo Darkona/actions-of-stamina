@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

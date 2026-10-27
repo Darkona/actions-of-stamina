@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.combatroll;
 
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
 import net.combat_roll.api.event.ServerSideRollEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;

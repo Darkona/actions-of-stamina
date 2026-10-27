@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
 import io.netty.buffer.ByteBuf;
 import java.util.function.Consumer;
 import net.minecraft.network.codec.ByteBufCodecs;

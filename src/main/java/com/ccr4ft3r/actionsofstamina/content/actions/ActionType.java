@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.actions;
+package com.ccr4ft3r.actionsofstamina.content.actions;
 
 import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;

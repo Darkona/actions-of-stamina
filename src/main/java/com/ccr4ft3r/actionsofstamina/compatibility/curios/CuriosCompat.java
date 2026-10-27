@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.curios;
 
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
 import net.minecraft.world.entity.player.Player;
 import dev.darkona.jdlib.api.compat.Bridges;
 

@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.stamina;
+package com.ccr4ft3r.actionsofstamina.content.stamina;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.mojang.serialization.Codec;

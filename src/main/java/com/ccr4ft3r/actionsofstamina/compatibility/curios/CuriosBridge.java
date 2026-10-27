@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.curios;
 
-import com.ccr4ft3r.actionsofstamina.actions.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.content.actions.ElytraAction;
 import java.util.function.Predicate;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

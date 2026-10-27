@@ -1,8 +1,9 @@
-package com.ccr4ft3r.actionsofstamina.stamina;
+package com.ccr4ft3r.actionsofstamina.content.stamina;
 
+import com.ccr4ft3r.actionsofstamina.compat.feathers.FeathersBackend;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend.BackendMode;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend.BackendMode;
 import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;

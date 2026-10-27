@@ -1,9 +1,8 @@
 package com.ccr4ft3r.actionsofstamina;
 
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.stamina.client.InternalStaminaHud;
+import com.ccr4ft3r.actionsofstamina.content.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;
@@ -15,19 +14,17 @@ import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.network.ActionsPackets;
-import com.ccr4ft3r.actionsofstamina.stamina.InternalStamina;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.content.stamina.InternalStamina;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
 import java.util.List;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -59,7 +56,6 @@ public class ActionsOfStamina {
         modBus.addListener(ModConfigEvent.Reloading.class, BetterCombatCompat::onConfigLoad);
         NeoForge.EVENT_BUS.addListener(BetterCombatCompat::onTagsUpdated);
         ParcoolCompat.registerStaminaType();
-        if (FMLEnvironment.dist == Dist.CLIENT) InternalStaminaHud.register();
     }
 
     private static void commonSetup(FMLCommonSetupEvent event) {

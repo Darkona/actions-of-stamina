@@ -1,9 +1,9 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.stamina.InternalBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.network.InternalStaminaPacket;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.gametest.framework.GameTest;

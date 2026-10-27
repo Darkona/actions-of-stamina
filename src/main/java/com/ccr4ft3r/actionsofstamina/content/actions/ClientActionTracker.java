@@ -1,12 +1,8 @@
-package com.ccr4ft3r.actionsofstamina.actions.client;
+package com.ccr4ft3r.actionsofstamina.content.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.ElytraAction;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.BrushAction;
-import com.ccr4ft3r.actionsofstamina.actions.VanillaActions.DrawAction;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions.BrushAction;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions.DrawAction;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;

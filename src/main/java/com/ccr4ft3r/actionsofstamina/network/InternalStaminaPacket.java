@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
-import com.ccr4ft3r.actionsofstamina.stamina.InternalBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.VarInt;

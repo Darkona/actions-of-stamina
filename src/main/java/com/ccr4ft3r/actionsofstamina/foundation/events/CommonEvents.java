@@ -1,11 +1,15 @@
-package com.ccr4ft3r.actionsofstamina.actions;
+package com.ccr4ft3r.actionsofstamina.foundation.events;
 
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.content.actions.Action;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
-import com.ccr4ft3r.actionsofstamina.stamina.InternalBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.content.stamina.InternalBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.EventPriority;
@@ -23,9 +27,9 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = ActionsOfStamina.MOD_ID)
-public final class PlayerEventHandler {
+public final class CommonEvents {
 
-    private PlayerEventHandler() {
+    private CommonEvents() {
     }
 
     @FunctionalInterface

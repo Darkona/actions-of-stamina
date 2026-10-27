@@ -2,9 +2,9 @@ package com.ccr4ft3r.actionsofstamina.compatibility.gliders;
 
 import com.ccr4ft3r.actionsofstamina.config.compat.GlidersConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.actions.Action;
-import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.Action;
+import com.ccr4ft3r.actionsofstamina.content.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
 import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
