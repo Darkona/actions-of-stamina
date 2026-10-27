@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.gliders;
 
-import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 
 public final class GlidersConfig {

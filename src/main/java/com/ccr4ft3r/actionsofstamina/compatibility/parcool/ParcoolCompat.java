@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.compatibility.parcool;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
 import dev.darkona.jdlib.api.compat.Bridges;
 import java.util.HashMap;

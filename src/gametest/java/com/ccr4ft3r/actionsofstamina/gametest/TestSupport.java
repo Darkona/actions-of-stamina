@@ -4,7 +4,7 @@ import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;

@@ -15,7 +15,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
-import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.gametest.framework.GameTest;

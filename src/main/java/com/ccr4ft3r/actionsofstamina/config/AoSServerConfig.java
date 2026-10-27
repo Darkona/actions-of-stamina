@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.config;
 
+import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.actions.AttackAction.ExhaustedAttackMode;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollConfig;

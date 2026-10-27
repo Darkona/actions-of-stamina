@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.config;
+package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import net.neoforged.neoforge.common.ModConfigSpec;
