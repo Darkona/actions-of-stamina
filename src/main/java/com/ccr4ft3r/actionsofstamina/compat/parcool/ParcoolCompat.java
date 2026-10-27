@@ -38,7 +38,7 @@ public final class ParcoolCompat {
     }
 
     private static boolean modSwitchOn() {
-        return ActionsConfig.SPEC.isLoaded() && ParcoolConfig.ENABLED.getAsBoolean();
+        return ActionsConfig.loaded() && ParcoolConfig.ENABLED.getAsBoolean();
     }
 
     public static boolean isActive() {
@@ -50,7 +50,7 @@ public final class ParcoolCompat {
     }
 
     public static ResourceLocation effectiveStaminaType(ResourceLocation configured) {
-        return PARCOOL_STAMINA_TYPE.equals(configured) && ActionsConfig.SPEC.isLoaded() && isActive() ? STAMINA_TYPE : configured;
+        return PARCOOL_STAMINA_TYPE.equals(configured) && ActionsConfig.loaded() && isActive() ? STAMINA_TYPE : configured;
     }
 
     public static void init() {

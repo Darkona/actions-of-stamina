@@ -243,6 +243,10 @@ public final class ActionsConfig {
     private ActionsConfig() {
     }
 
+    public static boolean loaded() {
+        return SPEC.isLoaded();
+    }
+
     public static void register(ModContainer container) {
         container.registerConfig(ModConfig.Type.SERVER, SPEC);
         container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);

@@ -3,6 +3,7 @@ package com.ccr4ft3r.actionsofstamina;
 import com.ccr4ft3r.actionsofstamina.content.actions.Action;
 import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.content.stamina.InternalStaminaHud;
+import com.ccr4ft3r.actionsofstamina.compat.bettercombat.BetterCombatClientBridge;
 import com.ccr4ft3r.actionsofstamina.compat.bettercombat.BetterCombatCompat;
 import dev.darkona.jdlib.api.debug.DebugLines;
 import dev.darkona.jdlib.api.hud.JDDebugOverlay;
@@ -26,7 +27,9 @@ public final class ActionsOfStaminaClient {
     }
 
     private static void clientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(BetterCombatCompat::initClient);
+        event.enqueueWork(() -> {
+            if (BetterCombatCompat.LOADED) BetterCombatClientBridge.register();
+        });
     }
 
     private static void registerGuiLayers(RegisterGuiLayersEvent event) {

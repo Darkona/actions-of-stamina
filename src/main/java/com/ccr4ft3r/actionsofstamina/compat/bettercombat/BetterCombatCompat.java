@@ -30,10 +30,6 @@ public final class BetterCombatCompat {
         if (LOADED) BetterCombatBridge.clearCategoryCache();
     }
 
-    public static void initClient() {
-        if (LOADED) BetterCombatClientBridge.register();
-    }
-
     public static boolean handlesAttacksWith(ItemStack stack) {
         return SWING.enabled() && BetterCombatBridge.hasAttacks(stack);
     }

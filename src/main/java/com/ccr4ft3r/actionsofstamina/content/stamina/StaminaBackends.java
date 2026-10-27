@@ -60,7 +60,7 @@ public final class StaminaBackends {
     }
 
     private static BackendMode configuredMode() {
-        return ActionsConfig.SPEC.isLoaded() ? ActionsConfig.BACKEND.get() : BackendMode.AUTO;
+        return ActionsConfig.loaded() ? ActionsConfig.BACKEND.get() : BackendMode.AUTO;
     }
 
     public static void onServerStarting() {

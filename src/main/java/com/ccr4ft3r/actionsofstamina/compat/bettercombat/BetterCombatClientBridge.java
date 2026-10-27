@@ -8,12 +8,12 @@ import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 
-final class BetterCombatClientBridge {
+public final class BetterCombatClientBridge {
 
     private BetterCombatClientBridge() {
     }
 
-    static void register() {
+    public static void register() {
         BetterCombatClientEvents.ATTACK_START.register(BetterCombatClientBridge::onAttackStart);
     }
 
