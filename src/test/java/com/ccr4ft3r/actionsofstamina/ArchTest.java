@@ -51,6 +51,14 @@ class ArchTest {
     }
 
     @Test
+    void theClientCodeOfAFeatureLivesInItsClientSubpackage() {
+        classes().that().resideInAnyPackage(MOD + ".content..", MOD + ".core..").and(USES_CLIENT)
+                .should().resideInAPackage("..client..")
+                .because("HUDs, trackers of the client and client event handlers go in the client subpackage of the feature, next to what they draw")
+                .check(CLASSES);
+    }
+
+    @Test
     void serverCodeNeverNamesClientCode() {
         noClasses().that(DescribedPredicate.not(USES_CLIENT)).and().doNotHaveSimpleName("ActionsOfStaminaClient")
                 .should().dependOnClassesThat(USES_CLIENT.and(resideInAnyPackage(MOD + "..")))

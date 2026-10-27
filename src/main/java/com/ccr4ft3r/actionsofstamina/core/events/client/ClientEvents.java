@@ -1,6 +1,6 @@
-package com.ccr4ft3r.actionsofstamina.core.events;
+package com.ccr4ft3r.actionsofstamina.core.events.client;
 
-import com.ccr4ft3r.actionsofstamina.content.actions.ClientActionTracker;
+import com.ccr4ft3r.actionsofstamina.content.actions.client.ClientActionTracker;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.content.actions.AttackAction;
 import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;

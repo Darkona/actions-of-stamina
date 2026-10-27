@@ -1,5 +1,9 @@
-package com.ccr4ft3r.actionsofstamina.content.stamina;
+package com.ccr4ft3r.actionsofstamina.content.stamina.client;
 
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.InternalBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.content.stamina.InternalStamina;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.config.ClientConfig;
 import dev.darkona.jdlib.api.hud.HudFrame;

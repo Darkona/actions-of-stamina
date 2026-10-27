@@ -1,5 +1,9 @@
-package com.ccr4ft3r.actionsofstamina.content.actions;
+package com.ccr4ft3r.actionsofstamina.content.actions.client;
 
+import com.ccr4ft3r.actionsofstamina.content.actions.ElytraAction;
+import com.ccr4ft3r.actionsofstamina.content.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions.BrushAction;
 import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions.DrawAction;

@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina;
 
 import com.ccr4ft3r.actionsofstamina.content.actions.Action;
 import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.content.stamina.InternalStaminaHud;
+import com.ccr4ft3r.actionsofstamina.content.stamina.client.InternalStaminaHud;
 import com.ccr4ft3r.actionsofstamina.compat.bettercombat.BetterCombatClientBridge;
 import com.ccr4ft3r.actionsofstamina.compat.bettercombat.BetterCombatCompat;
 import dev.darkona.jdlib.api.debug.DebugLines;
