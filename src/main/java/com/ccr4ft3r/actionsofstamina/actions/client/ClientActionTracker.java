@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.client;
+package com.ccr4ft3r.actionsofstamina.actions.client;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ElytraAction;

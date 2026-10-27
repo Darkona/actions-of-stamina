@@ -5,7 +5,7 @@ import com.ccr4ft3r.actionsofstamina.actions.ActionStatePacket;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.client.InternalStaminaHud;
+import com.ccr4ft3r.actionsofstamina.stamina.client.InternalStaminaHud;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;

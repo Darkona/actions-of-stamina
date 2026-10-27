@@ -1,5 +1,6 @@
-package com.ccr4ft3r.actionsofstamina.client;
+package com.ccr4ft3r.actionsofstamina.stamina.client;
 
+import com.ccr4ft3r.actionsofstamina.stamina.client.InternalStaminaHud;
 import dev.darkona.jdlib.api.hud.HudSide;
 import dev.darkona.jdlib.api.hud.JDHudBars;
 import dev.darkona.jdlib.api.hud.StackMath;
