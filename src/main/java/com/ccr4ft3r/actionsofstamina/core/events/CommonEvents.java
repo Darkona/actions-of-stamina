@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.foundation.events;
+package com.ccr4ft3r.actionsofstamina.core.events;
 
 import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;

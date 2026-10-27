@@ -1,6 +1,6 @@
-package com.ccr4ft3r.actionsofstamina.foundation.events;
+package com.ccr4ft3r.actionsofstamina.core.events;
 
-import com.ccr4ft3r.actionsofstamina.foundation.events.CommonEvents;
+import com.ccr4ft3r.actionsofstamina.core.events.CommonEvents;
 import com.ccr4ft3r.actionsofstamina.content.actions.Action;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
