@@ -4,7 +4,7 @@ import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.gametest.framework.GameTest;
@@ -40,7 +40,7 @@ public class JoinDispatchTests {
     private static boolean hasVesselBonus(ServerPlayer player) {
         StaminaBackend backend = StaminaBackends.server();
         if (backend.kind() == StaminaBackend.Kind.FEATHERS) return FeathersTestHooks.hasMaxFeathersModifier(player, ParagliderCompat.VESSELS);
-        return backend.maxStamina(player) > StaminaBackend.ofFeathers(AoSServerConfig.INTERNAL_MAX_FEATHERS.getAsInt());
+        return backend.maxStamina(player) > StaminaBackend.ofFeathers(ActionsConfig.INTERNAL_MAX_FEATHERS.getAsInt());
     }
 
     private static void assertJoinResetsTheVesselBonus(GameTestHelper helper, boolean glidingEnabled) {

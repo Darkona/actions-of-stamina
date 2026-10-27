@@ -1,7 +1,7 @@
-package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
+package com.ccr4ft3r.actionsofstamina.config.compat;
 
-import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public final class ParagliderConfig {
@@ -10,7 +10,7 @@ public final class ParagliderConfig {
     public static final ActionCostConfig PARAGLIDE;
 
     static {
-        ActionCostConfig.Builder paraglide = ActionCostConfig.builder(AoSServerConfig.BUILDER, "paragliders",
+        ActionCostConfig.Builder paraglide = ActionCostConfig.builder(ActionsConfig.BUILDER, "paragliders",
                         "Paragliders: paragliding costs AoS stamina and Paragliders reads its stamina from AoS (only when Paragliders is installed)", true)
                 .cost(0.0, "Cost to open the paraglider")
                 .minStamina(1.0)

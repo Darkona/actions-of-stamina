@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.parcool;
 
+import com.ccr4ft3r.actionsofstamina.config.compat.ParcoolConfig;
 import com.alrex.parcool.ParCool;
 import com.alrex.parcool.api.action.ActionEntry;
 import com.alrex.parcool.api.action.ContinuableAction;

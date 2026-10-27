@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.combatroll;
 
+import com.ccr4ft3r.actionsofstamina.config.compat.CombatRollConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;

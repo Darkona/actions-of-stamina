@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.stamina;
 
 import com.ccr4ft3r.actionsofstamina.network.InternalStaminaPacket;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -23,11 +23,11 @@ public final class InternalBackend implements StaminaBackend {
     }
 
     public static boolean enabled() {
-        return AoSServerConfig.INTERNAL_ENABLED.getAsBoolean();
+        return ActionsConfig.INTERNAL_ENABLED.getAsBoolean();
     }
 
     static int configMaxStamina() {
-        return StaminaBackend.ofFeathers(AoSServerConfig.INTERNAL_MAX_FEATHERS.getAsInt());
+        return StaminaBackend.ofFeathers(ActionsConfig.INTERNAL_MAX_FEATHERS.getAsInt());
     }
 
     private static int serverMax(InternalStamina s) {
@@ -66,7 +66,7 @@ public final class InternalBackend implements StaminaBackend {
 
         s.stamina = current - stamina;
         if (stamina > 0 || regenDelayTicks > 0) {
-            int delay = Math.max(regenDelayTicks, AoSServerConfig.INTERNAL_REGEN_DELAY.getAsInt());
+            int delay = Math.max(regenDelayTicks, ActionsConfig.INTERNAL_REGEN_DELAY.getAsInt());
             if (delay > s.regenDelay) s.regenDelay = delay;
         }
         if (stamina > 0 && s.stamina == 0) s.exhausted = true;
@@ -162,12 +162,12 @@ public final class InternalBackend implements StaminaBackend {
         if (s.regenDelay > 0) {
             s.regenDelay--;
         } else if (!s.drains.anyBlocksRegen() && stamina < max) {
-            stamina = Math.min(max, stamina + s.regenCarry.add(StaminaBackend.perTick(AoSServerConfig.INTERNAL_REGEN_PER_SECOND.getAsDouble())));
+            stamina = Math.min(max, stamina + s.regenCarry.add(StaminaBackend.perTick(ActionsConfig.INTERNAL_REGEN_PER_SECOND.getAsDouble())));
         }
         if (stamina >= max) s.regenCarry.reset();
         s.stamina = stamina;
 
-        if (s.exhausted && stamina >= AoSServerConfig.INTERNAL_RECOVERY.getAsDouble() * max) s.exhausted = false;
+        if (s.exhausted && stamina >= ActionsConfig.INTERNAL_RECOVERY.getAsDouble() * max) s.exhausted = false;
 
         sync(player, s);
     }

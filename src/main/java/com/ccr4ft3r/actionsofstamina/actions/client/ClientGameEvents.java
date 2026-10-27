@@ -7,7 +7,7 @@ import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.client.Minecraft;
@@ -51,7 +51,7 @@ public final class ClientGameEvents {
         if (attack == null) return;
         if (BetterCombatCompat.handlesAttacksWith(player.getMainHandItem())) return;
         if (EpicFightCompat.inBattleMode(player)) return;
-        if (!isEntityHit && !(isMissHit && !AoSServerConfig.ONLY_FOR_HITS.get())) return;
+        if (!isEntityHit && !(isMissHit && !ActionsConfig.ONLY_FOR_HITS.get())) return;
         if (isEntityHit ? attack.performHit(player) : attack.perform(player)) {
             if (!isEntityHit) PacketDistributor.sendToServer(ActionPerformedPacket.of(VanillaActions.ATTACK));
         } else if (!attack.weakens()) {

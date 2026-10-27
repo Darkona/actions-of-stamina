@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.actions;
 
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -16,10 +16,10 @@ public class MineAction extends Action {
 
     public MineAction(ActionType type) {
         super(type);
-        this.scaleWithHardness = AoSServerConfig.MINE_SCALE_WITH_HARDNESS.getAsBoolean();
-        this.maxHardnessMultiplier = AoSServerConfig.MINE_MAX_HARDNESS_MULTIPLIER.getAsDouble();
-        this.slowsWhenExhausted = AoSServerConfig.MINE_BLOCK_WHEN_EXHAUSTED.getAsBoolean();
-        this.exhaustedBreakSpeed = (float) AoSServerConfig.MINE_EXHAUSTED_BREAK_SPEED.getAsDouble();
+        this.scaleWithHardness = ActionsConfig.MINE_SCALE_WITH_HARDNESS.getAsBoolean();
+        this.maxHardnessMultiplier = ActionsConfig.MINE_MAX_HARDNESS_MULTIPLIER.getAsDouble();
+        this.slowsWhenExhausted = ActionsConfig.MINE_BLOCK_WHEN_EXHAUSTED.getAsBoolean();
+        this.exhaustedBreakSpeed = (float) ActionsConfig.MINE_EXHAUSTED_BREAK_SPEED.getAsDouble();
     }
 
     @Override

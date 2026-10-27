@@ -5,9 +5,9 @@ import com.ccr4ft3r.actionsofstamina.actions.AttackAction;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatConfig;
+import com.ccr4ft3r.actionsofstamina.config.compat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.AfterBatch;
@@ -74,14 +74,14 @@ public class AttackDispatchTests {
     public static void everyThirdSwordAttackIsChargedOnce(GameTestHelper helper) {
         ServerPlayer player = meleePlayer(helper);
         Entity target = target(helper);
-        int times = AoSServerConfig.ATTACK.timesPerformedToExhaust();
+        int times = ActionsConfig.ATTACK.timesPerformedToExhaust();
         int start = stamina(player);
         for (int i = 1; i < times; i++) {
             helper.assertFalse(EventPosts.attack(player, new ItemStack(Items.IRON_SWORD), target).isCanceled(), "attack " + i);
             helper.assertValueEqual(stamina(player), start, "attack " + i + " is not due yet");
         }
         helper.assertFalse(EventPosts.attack(player, new ItemStack(Items.IRON_SWORD), target).isCanceled(), "the due attack goes ahead");
-        helper.assertValueEqual(stamina(player), start - AoSServerConfig.ATTACK.cost(), "the due attack is charged once");
+        helper.assertValueEqual(stamina(player), start - ActionsConfig.ATTACK.cost(), "the due attack is charged once");
         helper.succeed();
     }
 
@@ -104,7 +104,7 @@ public class AttackDispatchTests {
     @GameTest(template = "empty", batch = VANILLA_MELEE)
     public static void bareHandsAreFreeUnlessConfiguredToCost(GameTestHelper helper) {
         ServerPlayer player = exhaustedWith(helper, false);
-        boolean costs = AoSServerConfig.ALSO_FOR_NON_WEAPONS.getAsBoolean();
+        boolean costs = ActionsConfig.ALSO_FOR_NON_WEAPONS.getAsBoolean();
         helper.assertValueEqual(EventPosts.attack(player, ItemStack.EMPTY, target(helper)).isCanceled(), costs, "bare hands cancelled only when they cost");
         helper.succeed();
     }
@@ -135,7 +135,7 @@ public class AttackDispatchTests {
     public static void aMaceSmashIsChargedOnTheFirstEvent(GameTestHelper helper) {
         ServerPlayer player = meleePlayer(helper);
         player.fallDistance = 5.0F;
-        int smash = (int) Math.round(AoSServerConfig.ATTACK.cost() * AoSServerConfig.MACE_SMASH_MULTIPLIER.getAsDouble());
+        int smash = (int) Math.round(ActionsConfig.ATTACK.cost() * ActionsConfig.MACE_SMASH_MULTIPLIER.getAsDouble());
         int start = stamina(player);
         helper.assertFalse(EventPosts.attack(player, new ItemStack(Items.MACE), target(helper)).isCanceled(), "the smash goes ahead");
         helper.assertValueEqual(stamina(player), start - smash, "the smash is charged on the spot");

@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -63,10 +63,10 @@ public class ToolDispatchTests {
         BlockPos pos = helper.absolutePos(BLOCK);
         ItemStack axe = new ItemStack(Items.IRON_AXE);
         int start = stamina(player);
-        for (int i = 0; i < AoSServerConfig.TILL.timesPerformedToExhaust(); i++) {
+        for (int i = 0; i < ActionsConfig.TILL.timesPerformedToExhaust(); i++) {
             helper.assertFalse(EventPosts.toolOn(player, axe, pos, ItemAbilities.AXE_STRIP, false).isCanceled(), "stripping with stamina");
         }
-        helper.assertValueEqual(stamina(player), start - AoSServerConfig.TILL.cost(), "stripping is charged");
+        helper.assertValueEqual(stamina(player), start - ActionsConfig.TILL.cost(), "stripping is charged");
         exhausted(player);
         helper.assertTrue(EventPosts.toolOn(player, axe, pos, ItemAbilities.AXE_STRIP, false).isCanceled(), "stripping without stamina is cancelled");
         helper.assertFalse(EventPosts.toolOn(player, axe, pos, ItemAbilities.AXE_STRIP, true).isCanceled(), "a simulated strip is never refused");

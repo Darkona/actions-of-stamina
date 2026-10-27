@@ -3,7 +3,7 @@ package com.ccr4ft3r.actionsofstamina.actions;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import java.util.List;
 import net.minecraft.resources.ResourceLocation;
@@ -30,17 +30,17 @@ public class AttackAction extends Action {
     private final AttributeModifier speedModifier;
 
     public AttackAction(ActionType type) {
-        this(type, AoSServerConfig.EXHAUSTED_MODE.get() == ExhaustedAttackMode.WEAKEN,
-                AoSServerConfig.WEAKEN_NON_WEAPONS.getAsBoolean() || AoSServerConfig.ALSO_FOR_NON_WEAPONS.getAsBoolean());
+        this(type, ActionsConfig.EXHAUSTED_MODE.get() == ExhaustedAttackMode.WEAKEN,
+                ActionsConfig.WEAKEN_NON_WEAPONS.getAsBoolean() || ActionsConfig.ALSO_FOR_NON_WEAPONS.getAsBoolean());
     }
 
     public AttackAction(ActionType type, boolean weakens, boolean weakensFreeAttacks) {
         super(type);
         this.weakens = weakens;
         this.weakensFreeAttacks = weakensFreeAttacks;
-        this.smashCost = (int) Math.round(cost * AoSServerConfig.MACE_SMASH_MULTIPLIER.getAsDouble());
-        this.damageModifier = new AttributeModifier(WEAKEN_ID, AoSServerConfig.WEAKEN_DAMAGE.get() - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-        this.speedModifier = new AttributeModifier(WEAKEN_ID, AoSServerConfig.WEAKEN_SPEED.get() - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        this.smashCost = (int) Math.round(cost * ActionsConfig.MACE_SMASH_MULTIPLIER.getAsDouble());
+        this.damageModifier = new AttributeModifier(WEAKEN_ID, ActionsConfig.WEAKEN_DAMAGE.get() - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        this.speedModifier = new AttributeModifier(WEAKEN_ID, ActionsConfig.WEAKEN_SPEED.get() - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     public boolean weakens() {
@@ -115,7 +115,7 @@ public class AttackAction extends Action {
     @Override
     public boolean perform(Player player) {
         if (PlayerActions.isExempt(player)) return true;
-        if (!isWeapon(player.getItemInHand(InteractionHand.MAIN_HAND)) && !AoSServerConfig.ALSO_FOR_NON_WEAPONS.get()) return true;
+        if (!isWeapon(player.getItemInHand(InteractionHand.MAIN_HAND)) && !ActionsConfig.ALSO_FOR_NON_WEAPONS.get()) return true;
         return super.perform(player);
     }
 

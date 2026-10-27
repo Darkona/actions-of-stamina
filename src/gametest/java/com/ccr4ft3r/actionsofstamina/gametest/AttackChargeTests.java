@@ -4,7 +4,7 @@ import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.AttackAction;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.gametest.framework.GameTest;
@@ -34,7 +34,7 @@ public class AttackChargeTests {
         AttackAction attack = attack(player);
         helper.assertTrue(attack != null, "attack action exists");
         StaminaBackend backend = StaminaBackends.server();
-        int cost = AoSServerConfig.ATTACK.cost();
+        int cost = ActionsConfig.ATTACK.cost();
         int start = backend.stamina(player);
         PlayerActions.perform(player, VanillaActions.ATTACK);
         PlayerActions.perform(player, VanillaActions.ATTACK);
@@ -50,7 +50,7 @@ public class AttackChargeTests {
         AttackAction attack = attack(player);
         helper.assertTrue(attack != null, "attack action exists");
         StaminaBackend backend = StaminaBackends.server();
-        int cost = AoSServerConfig.ATTACK.cost();
+        int cost = ActionsConfig.ATTACK.cost();
         int start = backend.stamina(player);
         attack.performHit(player);
         attack.performHit(player);

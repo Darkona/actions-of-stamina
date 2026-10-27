@@ -1,9 +1,10 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.parcool;
 
+import com.ccr4ft3r.actionsofstamina.config.compat.ParcoolConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import dev.darkona.jdlib.api.compat.Bridges;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +38,7 @@ public final class ParcoolCompat {
     }
 
     private static boolean modSwitchOn() {
-        return AoSServerConfig.SPEC.isLoaded() && ParcoolConfig.ENABLED.getAsBoolean();
+        return ActionsConfig.SPEC.isLoaded() && ParcoolConfig.ENABLED.getAsBoolean();
     }
 
     public static boolean isActive() {
@@ -49,7 +50,7 @@ public final class ParcoolCompat {
     }
 
     public static ResourceLocation effectiveStaminaType(ResourceLocation configured) {
-        return PARCOOL_STAMINA_TYPE.equals(configured) && AoSServerConfig.SPEC.isLoaded() && isActive() ? STAMINA_TYPE : configured;
+        return PARCOOL_STAMINA_TYPE.equals(configured) && ActionsConfig.SPEC.isLoaded() && isActive() ? STAMINA_TYPE : configured;
     }
 
     public static void init() {

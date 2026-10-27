@@ -1,7 +1,7 @@
-package com.ccr4ft3r.actionsofstamina.compatibility.parcool;
+package com.ccr4ft3r.actionsofstamina.config.compat;
 
-import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +15,7 @@ public final class ParcoolConfig {
     private static final Entry[] ENTRIES;
 
     static {
-        ModConfigSpec.Builder b = AoSServerConfig.BUILDER;
+        ModConfigSpec.Builder b = ActionsConfig.BUILDER;
         b.comment("ParCool (parkour) actions. AoS charges them server side and blocks starting or continuing them",
                 " when stamina runs short. ParCool's stamina is AoS's own stamina type, \"actionsofstamina:stamina\",",
                 " which replaces ParCool's default \"parcool:parcool\" while this is enabled.").push("parcool");
@@ -72,7 +72,7 @@ public final class ParcoolConfig {
                 .build());
     }
 
-    static Entry[] entries() {
+    public static Entry[] entries() {
         return ENTRIES;
     }
 

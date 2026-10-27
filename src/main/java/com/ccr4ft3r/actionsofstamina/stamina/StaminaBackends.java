@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.stamina;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend.BackendMode;
 import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.world.entity.player.Player;
@@ -59,7 +59,7 @@ public final class StaminaBackends {
     }
 
     private static BackendMode configuredMode() {
-        return AoSServerConfig.SPEC.isLoaded() ? AoSServerConfig.BACKEND.get() : BackendMode.AUTO;
+        return ActionsConfig.SPEC.isLoaded() ? ActionsConfig.BACKEND.get() : BackendMode.AUTO;
     }
 
     public static void onServerStarting() {

@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.paraglider;
 
+import com.ccr4ft3r.actionsofstamina.config.compat.ParagliderConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;

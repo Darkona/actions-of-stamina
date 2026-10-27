@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -24,7 +24,7 @@ public class ElytraAction extends Action {
 
     public ElytraAction(ActionType type) {
         super(type);
-        this.rocketBoostCosts = AoSServerConfig.ROCKET_BOOST_COSTS.getAsBoolean();
+        this.rocketBoostCosts = ActionsConfig.ROCKET_BOOST_COSTS.getAsBoolean();
     }
 
     public static boolean wearsStaminaWings(Player player) {

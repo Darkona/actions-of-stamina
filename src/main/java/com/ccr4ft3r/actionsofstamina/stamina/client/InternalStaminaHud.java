@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.stamina.client;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
+import com.ccr4ft3r.actionsofstamina.config.ClientConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalStamina;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
@@ -25,7 +25,7 @@ public final class InternalStaminaHud {
     private static final int FILL_EXHAUSTED = 0xFFC44A4A;
     private static final int FILL_EDGE = 0xFF8BE884;
 
-    private static final HudGate GATE = HudGate.standard().and(mc -> AoSClientConfig.SHOW_HUD.getAsBoolean()
+    private static final HudGate GATE = HudGate.standard().and(mc -> ClientConfig.SHOW_HUD.getAsBoolean()
             && InternalBackend.enabled() && StaminaBackends.client().kind() == StaminaBackend.Kind.INTERNAL);
 
     private InternalStaminaHud() {
@@ -37,7 +37,7 @@ public final class InternalStaminaHud {
 
     static JDHudBars.Spec spec() {
         return new JDHudBars.Spec(ActionsOfStamina.id("internal_stamina"), VanillaLayer.FOOD_LEVEL, JDHudBars.Order.ABOVE,
-                HudSide.RIGHT, 0, GATE, () -> true, AoSClientConfig.HUD_X_OFFSET::getAsInt, AoSClientConfig.HUD_Y_OFFSET::getAsInt,
+                HudSide.RIGHT, 0, GATE, () -> true, ClientConfig.HUD_X_OFFSET::getAsInt, ClientConfig.HUD_Y_OFFSET::getAsInt,
                 0, InternalStaminaHud::paint);
     }
 

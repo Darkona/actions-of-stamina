@@ -13,8 +13,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
-import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.network.ActionsPackets;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalStamina;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
@@ -25,7 +24,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
@@ -50,8 +48,7 @@ public class ActionsOfStamina {
             CreateCompat.class, PlayerActions.class, InternalStamina.class);
 
     public ActionsOfStamina(IEventBus modBus, ModContainer container) {
-        container.registerConfig(ModConfig.Type.SERVER, AoSServerConfig.SPEC);
-        container.registerConfig(ModConfig.Type.CLIENT, AoSClientConfig.SPEC);
+        ActionsConfig.register(container);
         REGISTERING_CLASSES.forEach(ActionsOfStamina::initialize);
         ATTACHMENT_TYPES.register(modBus);
         ActionsPackets.register(modBus);
@@ -87,7 +84,7 @@ public class ActionsOfStamina {
     }
 
     public static boolean debugging() {
-        return AoSServerConfig.ENABLE_DEBUGGING.getAsBoolean();
+        return ActionsConfig.ENABLE_DEBUGGING.getAsBoolean();
     }
 
     public static void log(String message, Object... args) {

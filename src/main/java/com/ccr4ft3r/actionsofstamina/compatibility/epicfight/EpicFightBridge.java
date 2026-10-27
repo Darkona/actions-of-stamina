@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.epicfight;
 
+import com.ccr4ft3r.actionsofstamina.config.compat.EpicFightConfig;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import net.minecraft.world.entity.player.Player;

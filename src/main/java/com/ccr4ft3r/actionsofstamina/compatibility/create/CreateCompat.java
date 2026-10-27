@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.create;
 
+import com.ccr4ft3r.actionsofstamina.config.compat.CreateConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;

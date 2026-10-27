@@ -1,8 +1,9 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.bettercombat;
 
+import com.ccr4ft3r.actionsofstamina.config.compat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +21,7 @@ public final class BetterCombatCompat {
     }
 
     public static void onConfigLoad(ModConfigEvent event) {
-        if (event.getConfig().getSpec() != AoSServerConfig.SPEC) return;
+        if (event.getConfig().getSpec() != ActionsConfig.SPEC) return;
         BetterCombatConfig.reloadCategories();
         if (LOADED) BetterCombatBridge.clearCategoryCache();
     }

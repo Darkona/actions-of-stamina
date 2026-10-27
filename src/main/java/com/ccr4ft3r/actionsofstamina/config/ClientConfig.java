@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public final class AoSClientConfig {
+public final class ClientConfig {
 
     public static final ModConfigSpec.BooleanValue SHOW_HUD;
     public static final ModConfigSpec.IntValue HUD_X_OFFSET;
@@ -20,6 +20,6 @@ public final class AoSClientConfig {
         SPEC = b.build();
     }
 
-    private AoSClientConfig() {
+    private ClientConfig() {
     }
 }

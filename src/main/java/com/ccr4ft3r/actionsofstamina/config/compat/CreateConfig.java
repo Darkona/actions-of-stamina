@@ -1,7 +1,7 @@
-package com.ccr4ft3r.actionsofstamina.compatibility.create;
+package com.ccr4ft3r.actionsofstamina.config.compat;
 
-import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public final class CreateConfig {
@@ -10,7 +10,7 @@ public final class CreateConfig {
     public static final ModConfigSpec.BooleanValue VALVE_HANDLES;
 
     static {
-        ModConfigSpec.Builder b = AoSServerConfig.BUILDER;
+        ModConfigSpec.Builder b = ActionsConfig.BUILDER;
         b.comment("Create (only when it is installed)").push("create");
         ActionCostConfig.Builder crank = ActionCostConfig.builder(b, "crank",
                         "Turning a hand crank (holding the use key on it). Without the stamina it doesn't turn, and it stops when the stamina runs out", true)

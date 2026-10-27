@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -34,12 +34,12 @@ public class BlockDispatchTests {
     }
 
     private static ServerPlayer slowedWhenExhausted(GameTestHelper helper) {
-        boolean before = AoSServerConfig.MINE_BLOCK_WHEN_EXHAUSTED.getAsBoolean();
-        AoSServerConfig.MINE_BLOCK_WHEN_EXHAUSTED.set(true);
+        boolean before = ActionsConfig.MINE_BLOCK_WHEN_EXHAUSTED.getAsBoolean();
+        ActionsConfig.MINE_BLOCK_WHEN_EXHAUSTED.set(true);
         try {
             return survivalPlayerWith(helper, VanillaActions.MINE);
         } finally {
-            AoSServerConfig.MINE_BLOCK_WHEN_EXHAUSTED.set(before);
+            ActionsConfig.MINE_BLOCK_WHEN_EXHAUSTED.set(before);
         }
     }
 
@@ -48,15 +48,15 @@ public class BlockDispatchTests {
         ServerPlayer player = survivalPlayerWith(helper, VanillaActions.MINE);
         helper.setBlock(BLOCK, Blocks.STONE);
         BlockPos pos = helper.absolutePos(BLOCK);
-        int times = AoSServerConfig.MINE.timesPerformedToExhaust();
-        double hardness = AoSServerConfig.MINE_SCALE_WITH_HARDNESS.getAsBoolean() ? Math.min(STONE_HARDNESS, AoSServerConfig.MINE_MAX_HARDNESS_MULTIPLIER.getAsDouble()) : 1.0;
+        int times = ActionsConfig.MINE.timesPerformedToExhaust();
+        double hardness = ActionsConfig.MINE_SCALE_WITH_HARDNESS.getAsBoolean() ? Math.min(STONE_HARDNESS, ActionsConfig.MINE_MAX_HARDNESS_MULTIPLIER.getAsDouble()) : 1.0;
         int start = stamina(player);
         for (int i = 1; i < times; i++) {
             helper.assertFalse(EventPosts.breakBlock(player, pos).isCanceled(), "block " + i + " is never cancelled");
             helper.assertValueEqual(stamina(player), start, "block " + i + " is not charged yet");
         }
         EventPosts.breakBlock(player, pos);
-        helper.assertValueEqual(stamina(player), start - (int) Math.round(AoSServerConfig.MINE.cost() * hardness * times), "the batch is charged");
+        helper.assertValueEqual(stamina(player), start - (int) Math.round(ActionsConfig.MINE.cost() * hardness * times), "the batch is charged");
         helper.succeed();
     }
 
@@ -66,13 +66,13 @@ public class BlockDispatchTests {
         BlockPos pos = helper.absolutePos(BLOCK);
         ServerPlayer disabled = survivalPlayer(helper);
         int start = stamina(disabled);
-        for (int i = 0; i < 2 * AoSServerConfig.MINE.timesPerformedToExhaust(); i++) EventPosts.breakBlock(disabled, pos);
+        for (int i = 0; i < 2 * ActionsConfig.MINE.timesPerformedToExhaust(); i++) EventPosts.breakBlock(disabled, pos);
         helper.assertValueEqual(stamina(disabled), start, "mining disabled");
         for (GameType mode : new GameType[]{GameType.CREATIVE, GameType.SPECTATOR}) {
             ServerPlayer player = survivalPlayerWith(helper, VanillaActions.MINE);
             player.setGameMode(mode);
             int before = stamina(player);
-            for (int i = 0; i < 2 * AoSServerConfig.MINE.timesPerformedToExhaust(); i++) EventPosts.breakBlock(player, pos);
+            for (int i = 0; i < 2 * ActionsConfig.MINE.timesPerformedToExhaust(); i++) EventPosts.breakBlock(player, pos);
             helper.assertValueEqual(stamina(player), before, mode + " pays nothing");
         }
         helper.succeed();
@@ -84,7 +84,7 @@ public class BlockDispatchTests {
         ServerPlayer slowed = slowedWhenExhausted(helper);
         helper.assertValueEqual(EventPosts.breakSpeed(slowed, stone, BASE_SPEED).getNewSpeed(), BASE_SPEED, "with stamina");
         exhausted(slowed);
-        float cut = BASE_SPEED * (float) AoSServerConfig.MINE_EXHAUSTED_BREAK_SPEED.getAsDouble();
+        float cut = BASE_SPEED * (float) ActionsConfig.MINE_EXHAUSTED_BREAK_SPEED.getAsDouble();
         helper.assertValueEqual(EventPosts.breakSpeed(slowed, stone, BASE_SPEED).getNewSpeed(), cut, "without stamina");
 
         ServerPlayer unconfigured = exhausted(survivalPlayerWith(helper, VanillaActions.MINE));
@@ -101,15 +101,15 @@ public class BlockDispatchTests {
         ServerPlayer player = survivalPlayerWith(helper, VanillaActions.BUILD);
         helper.setBlock(BLOCK, Blocks.STONE);
         BlockPos pos = helper.absolutePos(BLOCK);
-        int times = AoSServerConfig.BUILD.timesPerformedToExhaust();
-        helper.assertTrue(AoSServerConfig.BUILD.cost() > 0, "building costs something");
+        int times = ActionsConfig.BUILD.timesPerformedToExhaust();
+        helper.assertTrue(ActionsConfig.BUILD.cost() > 0, "building costs something");
         int start = stamina(player);
         for (int i = 1; i < times; i++) {
             helper.assertFalse(EventPosts.placeBlock(player, new ItemStack(Items.STONE, 64), pos).isCanceled(), "block " + i);
             helper.assertValueEqual(stamina(player), start, "block " + i + " is not charged yet");
         }
         EventPosts.placeBlock(player, new ItemStack(Items.STONE, 64), pos);
-        helper.assertValueEqual(stamina(player), start - AoSServerConfig.BUILD.cost(), "the batch is charged");
+        helper.assertValueEqual(stamina(player), start - ActionsConfig.BUILD.cost(), "the batch is charged");
         exhausted(player);
         helper.assertFalse(EventPosts.placeBlock(player, new ItemStack(Items.STONE, 64), pos).isCanceled(), "placing is never refused");
         helper.succeed();
@@ -121,7 +121,7 @@ public class BlockDispatchTests {
         helper.setBlock(BLOCK, Blocks.STONE);
         BlockPos pos = helper.absolutePos(BLOCK);
         int start = stamina(player);
-        for (int i = 0; i < 2 * AoSServerConfig.BUILD.timesPerformedToExhaust(); i++) {
+        for (int i = 0; i < 2 * ActionsConfig.BUILD.timesPerformedToExhaust(); i++) {
             EventPosts.placeBlock(player, new ItemStack(Items.DIRT, 64), pos);
             EventPosts.placeBlock(player, ItemStack.EMPTY, pos);
         }
@@ -135,13 +135,13 @@ public class BlockDispatchTests {
         BlockPos pos = helper.absolutePos(BLOCK);
         ServerPlayer disabled = survivalPlayer(helper);
         int start = stamina(disabled);
-        for (int i = 0; i < 2 * AoSServerConfig.BUILD.timesPerformedToExhaust(); i++) EventPosts.placeBlock(disabled, new ItemStack(Items.STONE, 64), pos);
+        for (int i = 0; i < 2 * ActionsConfig.BUILD.timesPerformedToExhaust(); i++) EventPosts.placeBlock(disabled, new ItemStack(Items.STONE, 64), pos);
         helper.assertValueEqual(stamina(disabled), start, "building disabled");
         for (GameType mode : new GameType[]{GameType.CREATIVE, GameType.SPECTATOR}) {
             ServerPlayer player = survivalPlayerWith(helper, VanillaActions.BUILD);
             player.setGameMode(mode);
             int before = stamina(player);
-            for (int i = 0; i < 2 * AoSServerConfig.BUILD.timesPerformedToExhaust(); i++) EventPosts.placeBlock(player, new ItemStack(Items.STONE, 64), pos);
+            for (int i = 0; i < 2 * ActionsConfig.BUILD.timesPerformedToExhaust(); i++) EventPosts.placeBlock(player, new ItemStack(Items.STONE, 64), pos);
             helper.assertValueEqual(stamina(player), before, mode + " pays nothing");
         }
         helper.succeed();

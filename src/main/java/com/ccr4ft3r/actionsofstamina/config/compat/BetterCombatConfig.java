@@ -1,7 +1,7 @@
-package com.ccr4ft3r.actionsofstamina.compatibility.bettercombat;
+package com.ccr4ft3r.actionsofstamina.config.compat;
 
-import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +22,7 @@ public final class BetterCombatConfig {
     private static volatile Object2DoubleOpenHashMap<String> categories = categoryMap();
 
     static {
-        ActionCostConfig.Builder swing = ActionCostConfig.builder(AoSServerConfig.BUILDER, "bettercombat",
+        ActionCostConfig.Builder swing = ActionCostConfig.builder(ActionsConfig.BUILDER, "bettercombat",
                         "Better Combat: weapon swings cost stamina (only when Better Combat is installed). Swings of weapons with"
                                 + " Better Combat attributes replace the vanilla attack cost.", true)
                 .cost(0.4, "Cost of one swing")
@@ -57,7 +57,7 @@ public final class BetterCombatConfig {
         return category == null ? 1.0 : categories.getDouble(category.toLowerCase(Locale.ROOT));
     }
 
-    static void reloadCategories() {
+    public static void reloadCategories() {
         Object2DoubleOpenHashMap<String> parsed = categoryMap();
         for (String entry : CATEGORY_MULTIPLIERS.get()) {
             int eq = entry.indexOf('=');

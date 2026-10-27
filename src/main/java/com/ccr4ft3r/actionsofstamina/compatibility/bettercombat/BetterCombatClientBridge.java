@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.bettercombat;
 
+import com.ccr4ft3r.actionsofstamina.config.compat.BetterCombatConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.MinecraftClient_BetterCombat;

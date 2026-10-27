@@ -2,7 +2,7 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -49,7 +49,7 @@ public class ReleaseDispatchTests {
         helper.assertFalse(EventPosts.release(player, new ItemStack(Items.TRIDENT), TOO_SHORT).isCanceled(), "released too early");
         helper.assertValueEqual(stamina(player), start, "a trident that is not thrown costs nothing");
         helper.assertFalse(EventPosts.release(player, new ItemStack(Items.TRIDENT), FULL_CHARGE).isCanceled(), "thrown with stamina");
-        helper.assertValueEqual(stamina(player), start - AoSServerConfig.THROW.cost(), "the throw is charged");
+        helper.assertValueEqual(stamina(player), start - ActionsConfig.THROW.cost(), "the throw is charged");
         exhaust(StaminaBackends.server(), player);
         helper.assertTrue(EventPosts.release(player, new ItemStack(Items.TRIDENT), FULL_CHARGE).isCanceled(), "the throw is cancelled without stamina");
         helper.succeed();
@@ -60,10 +60,10 @@ public class ReleaseDispatchTests {
         ServerPlayer player = swimmerWith(helper, true);
         helper.assertTrue(player.isInWaterOrRain(), "the player is in water");
         int start = stamina(player);
-        for (int i = 0; i < AoSServerConfig.RIPTIDE.timesPerformedToExhaust(); i++) {
+        for (int i = 0; i < ActionsConfig.RIPTIDE.timesPerformedToExhaust(); i++) {
             helper.assertFalse(EventPosts.release(player, riptideTrident(player), FULL_CHARGE).isCanceled(), "launched with stamina");
         }
-        helper.assertValueEqual(stamina(player), start - AoSServerConfig.RIPTIDE.cost(), "only the riptide is charged");
+        helper.assertValueEqual(stamina(player), start - ActionsConfig.RIPTIDE.cost(), "only the riptide is charged");
         exhaust(StaminaBackends.server(), player);
         helper.assertTrue(EventPosts.release(player, riptideTrident(player), FULL_CHARGE).isCanceled(), "the launch is cancelled without stamina");
         helper.succeed();

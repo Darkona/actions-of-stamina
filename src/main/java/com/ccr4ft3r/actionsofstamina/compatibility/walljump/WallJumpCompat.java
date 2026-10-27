@@ -1,9 +1,10 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.walljump;
 
+import com.ccr4ft3r.actionsofstamina.config.compat.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
-import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.network.ActionPerformedPacket;
 import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.world.entity.player.Player;

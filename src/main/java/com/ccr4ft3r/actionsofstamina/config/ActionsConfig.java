@@ -1,19 +1,20 @@
 package com.ccr4ft3r.actionsofstamina.config;
 
-import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.actions.AttackAction.ExhaustedAttackMode;
-import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.gliders.GlidersConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolConfig;
-import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpConfig;
+import com.ccr4ft3r.actionsofstamina.config.compat.BetterCombatConfig;
+import com.ccr4ft3r.actionsofstamina.config.compat.CombatRollConfig;
+import com.ccr4ft3r.actionsofstamina.config.compat.CreateConfig;
+import com.ccr4ft3r.actionsofstamina.config.compat.EpicFightConfig;
+import com.ccr4ft3r.actionsofstamina.config.compat.GlidersConfig;
+import com.ccr4ft3r.actionsofstamina.config.compat.ParagliderConfig;
+import com.ccr4ft3r.actionsofstamina.config.compat.ParcoolConfig;
+import com.ccr4ft3r.actionsofstamina.config.compat.WallJumpConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend.BackendMode;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public final class AoSServerConfig {
+public final class ActionsConfig {
 
     public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -239,6 +240,11 @@ public final class AoSServerConfig {
         SPEC = b.build();
     }
 
-    private AoSServerConfig() {
+    private ActionsConfig() {
+    }
+
+    public static void register(ModContainer container) {
+        container.registerConfig(ModConfig.Type.SERVER, SPEC);
+        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
     }
 }

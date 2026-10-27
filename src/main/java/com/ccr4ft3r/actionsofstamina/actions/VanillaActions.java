@@ -1,7 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -29,23 +29,23 @@ import static com.ccr4ft3r.actionsofstamina.ActionsOfStamina.id;
 
 public final class VanillaActions {
 
-    public static final ActionType ATTACK = ActionType.register(id("attack"), AoSServerConfig.ATTACK, AttackAction::new);
-    public static final ActionType JUMP = ActionType.register(id("jump"), AoSServerConfig.JUMP);
-    public static final ActionType SPRINT = ActionType.register(id("sprint"), AoSServerConfig.SPRINT, SprintAction::new).flag(1 << 1);
-    public static final ActionType SWIM = ActionType.register(id("swim"), AoSServerConfig.SWIM, SwimAction::new).flag(1 << 3);
-    public static final ActionType ELYTRA = ActionType.register(id("elytra"), AoSServerConfig.ELYTRA, ElytraAction::new).flag(1 << 4);
-    public static final ActionType CRAWL = ActionType.register(id("crawl"), AoSServerConfig.CRAWL, CrawlAction::new).flag(1 << 2);
-    public static final ActionType SHIELD = ActionType.register(id("shield"), AoSServerConfig.SHIELD, ShieldAction::new).flag(1 << 5);
-    public static final ActionType DRAW = ActionType.register(id("draw"), AoSServerConfig.DRAW, DrawAction::new).flag(1 << 9);
-    public static final ActionType THROW = ActionType.register(id("throw"), AoSServerConfig.THROW, ThrowAction::new);
-    public static final ActionType MINE = ActionType.register(id("mine"), AoSServerConfig.MINE, MineAction::new);
-    public static final ActionType BUILD = ActionType.register(id("build"), AoSServerConfig.BUILD, BuildAction::new);
-    public static final ActionType CLIMB = ActionType.register(id("climb"), AoSServerConfig.CLIMB).flag(1 << 10);
-    public static final ActionType ROW = ActionType.register(id("row"), AoSServerConfig.ROW).flag(1 << 11);
-    public static final ActionType RIPTIDE = ActionType.register(id("riptide"), AoSServerConfig.RIPTIDE, RiptideAction::new);
-    public static final ActionType FISH = ActionType.register(id("fish"), AoSServerConfig.FISH, FishAction::new);
-    public static final ActionType TILL = ActionType.register(id("till"), AoSServerConfig.TILL, TillAction::new);
-    public static final ActionType BRUSH = ActionType.register(id("brush"), AoSServerConfig.BRUSH, BrushAction::new).flag(1 << 12);
+    public static final ActionType ATTACK = ActionType.register(id("attack"), ActionsConfig.ATTACK, AttackAction::new);
+    public static final ActionType JUMP = ActionType.register(id("jump"), ActionsConfig.JUMP);
+    public static final ActionType SPRINT = ActionType.register(id("sprint"), ActionsConfig.SPRINT, SprintAction::new).flag(1 << 1);
+    public static final ActionType SWIM = ActionType.register(id("swim"), ActionsConfig.SWIM, SwimAction::new).flag(1 << 3);
+    public static final ActionType ELYTRA = ActionType.register(id("elytra"), ActionsConfig.ELYTRA, ElytraAction::new).flag(1 << 4);
+    public static final ActionType CRAWL = ActionType.register(id("crawl"), ActionsConfig.CRAWL, CrawlAction::new).flag(1 << 2);
+    public static final ActionType SHIELD = ActionType.register(id("shield"), ActionsConfig.SHIELD, ShieldAction::new).flag(1 << 5);
+    public static final ActionType DRAW = ActionType.register(id("draw"), ActionsConfig.DRAW, DrawAction::new).flag(1 << 9);
+    public static final ActionType THROW = ActionType.register(id("throw"), ActionsConfig.THROW, ThrowAction::new);
+    public static final ActionType MINE = ActionType.register(id("mine"), ActionsConfig.MINE, MineAction::new);
+    public static final ActionType BUILD = ActionType.register(id("build"), ActionsConfig.BUILD, BuildAction::new);
+    public static final ActionType CLIMB = ActionType.register(id("climb"), ActionsConfig.CLIMB).flag(1 << 10);
+    public static final ActionType ROW = ActionType.register(id("row"), ActionsConfig.ROW).flag(1 << 11);
+    public static final ActionType RIPTIDE = ActionType.register(id("riptide"), ActionsConfig.RIPTIDE, RiptideAction::new);
+    public static final ActionType FISH = ActionType.register(id("fish"), ActionsConfig.FISH, FishAction::new);
+    public static final ActionType TILL = ActionType.register(id("till"), ActionsConfig.TILL, TillAction::new);
+    public static final ActionType BRUSH = ActionType.register(id("brush"), ActionsConfig.BRUSH, BrushAction::new).flag(1 << 12);
 
     public static final TagKey<EntityType<?>> ROWED_BOATS = TagKey.create(Registries.ENTITY_TYPE, ActionsOfStamina.id("rowed_boats"));
 

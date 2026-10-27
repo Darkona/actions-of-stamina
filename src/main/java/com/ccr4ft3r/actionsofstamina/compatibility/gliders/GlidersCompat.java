@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.compatibility.gliders;
 
+import com.ccr4ft3r.actionsofstamina.config.compat.GlidersConfig;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.Action;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;

@@ -7,9 +7,9 @@ import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
 import com.ccr4ft3r.actionsofstamina.compatibility.combatroll.CombatRollCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.create.CreateCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolConfig;
+import com.ccr4ft3r.actionsofstamina.config.compat.ParcoolConfig;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.gametest.framework.GameTest;
@@ -39,7 +39,7 @@ public class ActionRegistryTests {
         helper.assertValueEqual(ActionType.byId(TestActionTypes.FINISHING_ID), TestActionTypes.finishing, "another mod's type by id");
         boolean refused = false;
         try {
-            ActionType.register(ActionsOfStamina.id("test/late"), AoSServerConfig.JUMP, Action::new);
+            ActionType.register(ActionsOfStamina.id("test/late"), ActionsConfig.JUMP, Action::new);
         } catch (IllegalStateException e) {
             refused = true;
         }

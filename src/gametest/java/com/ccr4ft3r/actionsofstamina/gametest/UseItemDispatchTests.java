@@ -3,8 +3,8 @@ package com.ccr4ft3r.actionsofstamina.gametest;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ElytraAction;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
-import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
+import com.ccr4ft3r.actionsofstamina.config.ActionCostConfig;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTest;
@@ -69,7 +69,7 @@ public class UseItemDispatchTests {
         ServerPlayer player = survivalPlayer(helper);
         int start = stamina(player);
         helper.assertFalse(EventPosts.useItem(player, new ItemStack(Items.SNOWBALL, 16)).isCanceled(), "throw with stamina");
-        helper.assertValueEqual(stamina(player), start - AoSServerConfig.THROW.cost(), "one click, one charge");
+        helper.assertValueEqual(stamina(player), start - ActionsConfig.THROW.cost(), "one click, one charge");
         PlayerInteractEvent.RightClickItem refused = EventPosts.useItem(exhausted(player), new ItemStack(Items.SNOWBALL, 16));
         helper.assertTrue(refused.isCanceled(), "refused without stamina");
         helper.assertValueEqual(refused.getCancellationResult(), InteractionResult.FAIL, "result of a refused throw");
@@ -81,8 +81,8 @@ public class UseItemDispatchTests {
     public static void castingARodIsChargedAndRefusedWithFail(GameTestHelper helper) {
         ServerPlayer player = survivalPlayerWith(helper, VanillaActions.FISH);
         int start = stamina(player);
-        clickTimes(player, new ItemStack(Items.FISHING_ROD), AoSServerConfig.FISH);
-        helper.assertValueEqual(stamina(player), start - AoSServerConfig.FISH.cost(), "the cast is charged");
+        clickTimes(player, new ItemStack(Items.FISHING_ROD), ActionsConfig.FISH);
+        helper.assertValueEqual(stamina(player), start - ActionsConfig.FISH.cost(), "the cast is charged");
         PlayerInteractEvent.RightClickItem refused = EventPosts.useItem(exhausted(player), new ItemStack(Items.FISHING_ROD));
         helper.assertTrue(refused.isCanceled(), "refused without stamina");
         helper.assertValueEqual(refused.getCancellationResult(), InteractionResult.FAIL, "result of a refused cast");
@@ -148,7 +148,7 @@ public class UseItemDispatchTests {
         helper.assertTrue(probe.idleDrain() > 0, "gliding drains by default");
         helper.assertValueEqual(probe.drain(player), probe.idleDrain(), "drain before the rocket");
         helper.assertFalse(EventPosts.useItem(player, new ItemStack(Items.FIREWORK_ROCKET)).isCanceled(), "a rocket is never refused");
-        double boosted = AoSServerConfig.ROCKET_BOOST_COSTS.getAsBoolean() ? probe.idleDrain() : 0;
+        double boosted = ActionsConfig.ROCKET_BOOST_COSTS.getAsBoolean() ? probe.idleDrain() : 0;
         helper.assertValueEqual(probe.drain(player), boosted, "drain after the rocket");
         helper.succeed();
     }
