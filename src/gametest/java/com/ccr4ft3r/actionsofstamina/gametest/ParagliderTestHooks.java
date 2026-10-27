@@ -1,6 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
-import com.ccr4ft3r.actionsofstamina.compatibility.paraglider.ParagliderStaminaPlugin;
+import com.ccr4ft3r.actionsofstamina.compat.paraglider.ParagliderStaminaPlugin;
 import net.minecraft.server.level.ServerPlayer;
 import tictim.paraglider.api.stamina.Stamina;
 

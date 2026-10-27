@@ -3,7 +3,7 @@ package com.ccr4ft3r.actionsofstamina;
 import com.ccr4ft3r.actionsofstamina.content.actions.Action;
 import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.content.stamina.InternalStaminaHud;
-import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
+import com.ccr4ft3r.actionsofstamina.compat.bettercombat.BetterCombatCompat;
 import dev.darkona.jdlib.api.debug.DebugLines;
 import dev.darkona.jdlib.api.hud.JDDebugOverlay;
 import net.minecraft.client.player.LocalPlayer;

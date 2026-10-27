@@ -1,8 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.content.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatCompat;
-import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
+import com.ccr4ft3r.actionsofstamina.compat.bettercombat.BetterCombatCompat;
+import com.ccr4ft3r.actionsofstamina.compat.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
 import java.util.List;
