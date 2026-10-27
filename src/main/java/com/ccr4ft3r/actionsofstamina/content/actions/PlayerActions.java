@@ -1,17 +1,13 @@
 package com.ccr4ft3r.actionsofstamina.content.actions;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.index.ActionsAttachmentTypes;
 import java.util.Arrays;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 
 public class PlayerActions {
-
-    private static final DeferredHolder<AttachmentType<?>, AttachmentType<PlayerActions>> ATTACHMENT =
-            ActionsOfStamina.ATTACHMENT_TYPES.register("player_actions", () -> AttachmentType.builder(PlayerActions::new).build());
 
     private final Action[] actions = new Action[ActionType.count()];
     private final Action[] ticking = new Action[actions.length];
@@ -31,7 +27,7 @@ public class PlayerActions {
     }
 
     public static PlayerActions get(Player player) {
-        return player.getData(ATTACHMENT);
+        return player.getData(ActionsAttachmentTypes.PLAYER_ACTIONS);
     }
 
     public static boolean isExempt(@Nullable Player player) {
@@ -100,7 +96,6 @@ public class PlayerActions {
             lastZ = player.getZ();
         }
     }
-
 
     public boolean wearsCurioWings() {
         return curioWings;

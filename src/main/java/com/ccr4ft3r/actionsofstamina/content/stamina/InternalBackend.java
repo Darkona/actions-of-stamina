@@ -1,7 +1,8 @@
 package com.ccr4ft3r.actionsofstamina.content.stamina;
 
-import com.ccr4ft3r.actionsofstamina.network.InternalStaminaPacket;
 import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
+import com.ccr4ft3r.actionsofstamina.index.ActionsAttachmentTypes;
+import com.ccr4ft3r.actionsofstamina.network.InternalStaminaPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +20,7 @@ public final class InternalBackend implements StaminaBackend {
     }
 
     public static InternalStamina data(Player player) {
-        return player.getData(InternalStamina.ATTACHMENT);
+        return player.getData(ActionsAttachmentTypes.INTERNAL_STAMINA);
     }
 
     public static boolean enabled() {
