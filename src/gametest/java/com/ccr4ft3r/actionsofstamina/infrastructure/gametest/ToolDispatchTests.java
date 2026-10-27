@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.gametest;
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
@@ -16,10 +16,10 @@ import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.stamina;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayerWith;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.exhaust;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.stamina;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.survivalPlayer;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.survivalPlayerWith;
 
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)

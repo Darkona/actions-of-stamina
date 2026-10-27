@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.gametest;
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
 
 import com.alrex.parcool.ParCool;
 import com.alrex.parcool.api.action.ParCoolActionEvent;

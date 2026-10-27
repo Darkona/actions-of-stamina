@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.gametest;
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

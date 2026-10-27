@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.gametest;
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.content.actions.AttackAction;
@@ -24,12 +24,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.exhaust;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.only;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.stamina;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayerWithout;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.switchEnabled;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.exhaust;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.only;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.stamina;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.survivalPlayer;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.survivalPlayerWithout;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.switchEnabled;
 
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)

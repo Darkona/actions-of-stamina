@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.gametest;
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.content.stamina.InternalBackend;
@@ -13,8 +13,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.player;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.tick;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.player;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.tick;
 
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)

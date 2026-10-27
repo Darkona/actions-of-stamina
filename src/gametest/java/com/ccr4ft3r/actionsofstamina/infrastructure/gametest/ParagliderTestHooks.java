@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.gametest;
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
 
 import com.ccr4ft3r.actionsofstamina.compat.paraglider.ParagliderStaminaPlugin;
 import net.minecraft.server.level.ServerPlayer;

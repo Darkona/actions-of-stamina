@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.gametest;
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.content.actions.Action;
@@ -25,9 +25,9 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.only;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.player;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.only;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.player;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.survivalPlayer;
 
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)

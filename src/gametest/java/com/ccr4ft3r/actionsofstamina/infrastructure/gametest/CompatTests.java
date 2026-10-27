@@ -1,4 +1,4 @@
-package com.ccr4ft3r.actionsofstamina.gametest;
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.content.actions.Action;
@@ -27,9 +27,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.player;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.survivalPlayer;
-import static com.ccr4ft3r.actionsofstamina.gametest.TestSupport.tickEvent;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.player;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.survivalPlayer;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.tickEvent;
 
 @GameTestHolder(ActionsOfStamina.MOD_ID)
 @PrefixGameTestTemplate(false)
