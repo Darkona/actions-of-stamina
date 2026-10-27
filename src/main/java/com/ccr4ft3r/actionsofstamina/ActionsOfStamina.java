@@ -1,5 +1,7 @@
 package com.ccr4ft3r.actionsofstamina;
 
+import com.ccr4ft3r.actionsofstamina.actions.ActionPerformedPacket;
+import com.ccr4ft3r.actionsofstamina.actions.ActionStatePacket;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.actions.VanillaActions;
@@ -15,9 +17,9 @@ import com.ccr4ft3r.actionsofstamina.compatibility.parcool.ParcoolCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.walljump.WallJumpCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSClientConfig;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.network.Packets;
-import com.ccr4ft3r.actionsofstamina.network.Packets.BackendSyncTask;
+import com.ccr4ft3r.actionsofstamina.stamina.BackendSyncPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.InternalStamina;
+import com.ccr4ft3r.actionsofstamina.stamina.InternalStaminaPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import java.util.List;
 import net.minecraft.resources.ResourceLocation;
@@ -33,6 +35,7 @@ import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.apache.logging.log4j.LogManager;
@@ -50,13 +53,15 @@ public class ActionsOfStamina {
             BetterCombatCompat.class, CombatRollCompat.class, EpicFightCompat.class, WallJumpCompat.class, GlidersCompat.class,
             CreateCompat.class, PlayerActions.class, InternalStamina.class);
 
+    private static final String PROTOCOL_VERSION = "7";
+
     public ActionsOfStamina(IEventBus modBus, ModContainer container) {
         container.registerConfig(ModConfig.Type.SERVER, AoSServerConfig.SPEC);
         container.registerConfig(ModConfig.Type.CLIENT, AoSClientConfig.SPEC);
         REGISTERING_CLASSES.forEach(ActionsOfStamina::initialize);
         ATTACHMENT_TYPES.register(modBus);
-        modBus.addListener(Packets::register);
-        modBus.addListener(BackendSyncTask::register);
+        modBus.addListener(ActionsOfStamina::registerPayloads);
+        modBus.addListener(BackendSyncPacket.Task::register);
         modBus.addListener(ActionsOfStamina::commonSetup);
         StaminaBackends.takeOverPlayerActions();
         modBus.addListener(FMLLoadCompleteEvent.class, event -> ActionType.freeze());
@@ -65,6 +70,14 @@ public class ActionsOfStamina {
         NeoForge.EVENT_BUS.addListener(BetterCombatCompat::onTagsUpdated);
         ParcoolCompat.registerStaminaType();
         if (FMLEnvironment.dist == Dist.CLIENT) InternalStaminaHud.register();
+    }
+
+    private static void registerPayloads(RegisterPayloadHandlersEvent event) {
+        event.registrar(PROTOCOL_VERSION)
+             .playToServer(ActionStatePacket.TYPE, ActionStatePacket.STREAM_CODEC, ActionStatePacket::handle)
+             .playToServer(ActionPerformedPacket.TYPE, ActionPerformedPacket.STREAM_CODEC, ActionPerformedPacket::handle)
+             .configurationToClient(BackendSyncPacket.TYPE, BackendSyncPacket.STREAM_CODEC, BackendSyncPacket::handle)
+             .playToClient(InternalStaminaPacket.TYPE, InternalStaminaPacket.STREAM_CODEC, InternalStaminaPacket::handle);
     }
 
     private static void commonSetup(FMLCommonSetupEvent event) {

@@ -1,8 +1,7 @@
 package com.ccr4ft3r.actionsofstamina.gametest;
 
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
-import com.ccr4ft3r.actionsofstamina.network.Packets.BackendSyncPacket;
-import com.ccr4ft3r.actionsofstamina.network.Packets.BackendSyncTask;
+import com.ccr4ft3r.actionsofstamina.stamina.BackendSyncPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend.BackendMode;
@@ -95,18 +94,18 @@ public class BackendSelectionTests {
     public static void backendIsSentWhileConfiguring(GameTestHelper helper) {
         List<Object> finished = new ArrayList<>();
         RegisterConfigurationTasksEvent event = new RegisterConfigurationTasksEvent(listener(true, finished));
-        BackendSyncTask.register(event);
+        BackendSyncPacket.Task.register(event);
         Queue<ConfigurationTask> tasks = event.getConfigurationTasks();
         helper.assertValueEqual(tasks.size(), 1, "configuration tasks");
         List<CustomPacketPayload> sent = new ArrayList<>();
-        ((BackendSyncTask) tasks.peek()).run(sent::add);
+        ((BackendSyncPacket.Task) tasks.peek()).run(sent::add);
         helper.assertValueEqual(sent.size(), 1, "payloads sent");
         helper.assertTrue(sent.get(0) instanceof BackendSyncPacket packet && packet.kind() == StaminaBackends.server().kind().ordinal(),
                 "the payload names the server's backend");
-        helper.assertValueEqual(finished, List.<Object>of(BackendSyncTask.TYPE), "finished tasks");
+        helper.assertValueEqual(finished, List.<Object>of(BackendSyncPacket.Task.TYPE), "finished tasks");
 
         RegisterConfigurationTasksEvent deaf = new RegisterConfigurationTasksEvent(listener(false, finished));
-        BackendSyncTask.register(deaf);
+        BackendSyncPacket.Task.register(deaf);
         helper.assertTrue(deaf.getConfigurationTasks().isEmpty(), "no task for a client without the channel");
         helper.succeed();
     }

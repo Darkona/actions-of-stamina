@@ -4,7 +4,7 @@ import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
 import com.ccr4ft3r.actionsofstamina.actions.ActionType;
 import com.ccr4ft3r.actionsofstamina.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.actions.ActionCostConfig;
-import com.ccr4ft3r.actionsofstamina.network.Packets.ActionPerformedPacket;
+import com.ccr4ft3r.actionsofstamina.actions.ActionPerformedPacket;
 import dev.darkona.jdlib.api.compat.Bridges;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;

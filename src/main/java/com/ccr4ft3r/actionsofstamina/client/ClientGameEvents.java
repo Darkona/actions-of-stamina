@@ -8,7 +8,7 @@ import com.ccr4ft3r.actionsofstamina.compatibility.bettercombat.BetterCombatComp
 import com.ccr4ft3r.actionsofstamina.compatibility.curios.CuriosCompat;
 import com.ccr4ft3r.actionsofstamina.compatibility.epicfight.EpicFightCompat;
 import com.ccr4ft3r.actionsofstamina.config.AoSServerConfig;
-import com.ccr4ft3r.actionsofstamina.network.Packets.ActionPerformedPacket;
+import com.ccr4ft3r.actionsofstamina.actions.ActionPerformedPacket;
 import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
