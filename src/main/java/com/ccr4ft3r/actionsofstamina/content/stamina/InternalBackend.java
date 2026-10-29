@@ -3,6 +3,7 @@ package com.ccr4ft3r.actionsofstamina.content.stamina;
 import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
 import com.ccr4ft3r.actionsofstamina.index.ActionsAttachmentTypes;
 import com.ccr4ft3r.actionsofstamina.network.InternalStaminaPacket;
+import dev.darkona.jdlib.core.stat.Resource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -86,7 +87,7 @@ public final class InternalBackend implements StaminaBackend {
         }
 
         int current = current(s);
-        s.drains.refresh(source, staminaPerTick, DRAIN_TIMEOUT, false, blocksRegen, player.tickCount);
+        s.drains.refresh(source, Resource.perTick(staminaPerTick), DRAIN_TIMEOUT, false, blocksRegen, player.tickCount);
         int whole = s.drains.advance(s.drains.indexOf(source));
         if (whole <= 0) {
             s.stamina = current;
