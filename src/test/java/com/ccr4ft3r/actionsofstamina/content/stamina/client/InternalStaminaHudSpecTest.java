@@ -1,9 +1,9 @@
 package com.ccr4ft3r.actionsofstamina.content.stamina.client;
 
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import dev.darkona.jdlib.api.hud.HudSide;
 import dev.darkona.jdlib.api.hud.JDHudBars;
 import dev.darkona.jdlib.api.hud.StackMath;
-import dev.darkona.jdlib.api.hud.VanillaLayer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +25,7 @@ class InternalStaminaHudSpecTest {
     @Test
     void theSpecSitsAboveTheFoodRowOnTheRight() {
         JDHudBars.Spec spec = InternalStaminaHud.spec();
-        assertEquals(VanillaLayer.FOOD_LEVEL, spec.anchor());
+        assertEquals(VanillaGuiLayers.FOOD_LEVEL, spec.anchor());
         assertEquals(JDHudBars.Order.ABOVE, spec.order());
         assertEquals(HudSide.RIGHT, spec.side());
         assertEquals(true, spec.stacks().getAsBoolean());

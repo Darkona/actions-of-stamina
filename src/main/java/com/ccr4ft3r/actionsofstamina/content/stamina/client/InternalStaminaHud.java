@@ -1,5 +1,6 @@
 package com.ccr4ft3r.actionsofstamina.content.stamina.client;
 
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
 import com.ccr4ft3r.actionsofstamina.content.stamina.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
@@ -10,7 +11,6 @@ import dev.darkona.jdlib.api.hud.HudFrame;
 import dev.darkona.jdlib.api.hud.HudGate;
 import dev.darkona.jdlib.api.hud.HudSide;
 import dev.darkona.jdlib.api.hud.JDHudBars;
-import dev.darkona.jdlib.api.hud.VanillaLayer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 
@@ -36,7 +36,7 @@ public final class InternalStaminaHud {
     }
 
     static JDHudBars.Spec spec() {
-        return new JDHudBars.Spec(ActionsOfStamina.id("internal_stamina"), VanillaLayer.FOOD_LEVEL, JDHudBars.Order.ABOVE,
+        return new JDHudBars.Spec(ActionsOfStamina.id("internal_stamina"), VanillaGuiLayers.FOOD_LEVEL, JDHudBars.Order.ABOVE,
                 HudSide.RIGHT, 0, GATE, () -> true, ClientConfig.HUD_X_OFFSET::getAsInt, ClientConfig.HUD_Y_OFFSET::getAsInt,
                 0, InternalStaminaHud::paint);
     }
