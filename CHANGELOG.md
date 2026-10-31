@@ -4,6 +4,11 @@ Changes by feature, newest version first.
 
 ## Unreleased
 
+### Internal stamina
+
+- The client runs the same stamina code as the server: spends, drains, regeneration and the regeneration delay move the bar right away. The server sends the bar only when something changes, not on every step of it.
+- Client and server must run the same version: the network protocol changed.
+
 ### Feathers of Fatigue
 
 - Needs Feathers of Fatigue 1.21.1-1.1.0 or later (the accepted range is now `[1.21.1-1.1.0,1.21.1-2)`).

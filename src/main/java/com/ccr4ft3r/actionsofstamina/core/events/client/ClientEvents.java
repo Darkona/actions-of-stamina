@@ -2,6 +2,8 @@ package com.ccr4ft3r.actionsofstamina.core.events.client;
 
 import com.ccr4ft3r.actionsofstamina.content.actions.client.ClientActionTracker;
 import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.InternalBackend;
 import com.ccr4ft3r.actionsofstamina.content.actions.AttackAction;
 import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
 import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
@@ -36,6 +38,7 @@ public final class ClientEvents {
         if (CuriosCompat.LOADED && player.tickCount % CuriosCompat.CLIENT_REFRESH_INTERVAL == 0) CuriosCompat.refreshWings(player);
         ClientActionTracker.update(player, actions);
         actions.tick(player);
+        if (StaminaBackends.client().kind() == StaminaBackend.Kind.INTERNAL) InternalBackend.INSTANCE.tick(player);
     }
 
     @SubscribeEvent

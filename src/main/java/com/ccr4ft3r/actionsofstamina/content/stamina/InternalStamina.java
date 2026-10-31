@@ -49,10 +49,11 @@ public final class InternalStamina {
         return exhausted;
     }
 
-    public void receive(int stamina, int maxStamina, boolean exhausted) {
+    public void receive(int stamina, int maxStamina, boolean exhausted, int regenDelay) {
         this.stamina = stamina;
         this.maxStamina = maxStamina;
         this.exhausted = exhausted;
+        this.regenDelay = regenDelay;
     }
 
     @SuppressWarnings("unused")
@@ -64,5 +65,5 @@ public final class InternalStamina {
         shown.resendNext();
     }
 
-    enum Shown { BUCKET, MAX, EXHAUSTED }
+    enum Shown { MAX, EXHAUSTED }
 }

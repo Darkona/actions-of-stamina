@@ -131,7 +131,7 @@ public class InternalBackendTests {
     public static void staminaPacketRoundTrips(GameTestHelper helper) {
         ByteBuf buf = Unpooled.buffer();
         try {
-            InternalStaminaPacket sent = new InternalStaminaPacket(12345, FULL, true);
+            InternalStaminaPacket sent = new InternalStaminaPacket(12345, FULL, true, 30);
             InternalStaminaPacket.STREAM_CODEC.encode(buf, sent);
             helper.assertValueEqual(InternalStaminaPacket.STREAM_CODEC.decode(buf), sent, "decoded packet");
             helper.assertValueEqual(buf.readableBytes(), 0, "bytes left over");

@@ -15,7 +15,6 @@ public final class InternalBackend implements StaminaBackend {
     public static final InternalBackend INSTANCE = new InternalBackend();
 
     static final int DRAIN_TIMEOUT = 5;
-    static final int SYNC_STEP = 250;
 
     private InternalBackend() {
     }
@@ -64,13 +63,9 @@ public final class InternalBackend implements StaminaBackend {
         InternalStamina s = data(player);
         int current = current(s);
         if (s.exhausted || stamina > current) return false;
-        if (player.level().isClientSide()) return true;
 
         s.stamina = current - stamina;
-        if (stamina > 0 || regenDelayTicks > 0) {
-            int delay = Math.max(regenDelayTicks, ActionsConfig.INTERNAL_REGEN_DELAY.getAsInt());
-            if (delay > s.regenDelay) s.regenDelay = delay;
-        }
+        if (stamina > 0 || regenDelayTicks > 0) raiseRegenDelay(s, Math.max(regenDelayTicks, ActionsConfig.INTERNAL_REGEN_DELAY.getAsInt()));
         if (stamina > 0 && s.stamina == 0) s.exhausted = true;
         if (stamina > 0) s.markForSync();
         return true;
@@ -80,7 +75,6 @@ public final class InternalBackend implements StaminaBackend {
     public boolean drain(Player player, ResourceLocation source, double staminaPerTick, boolean blocksRegen) {
         if (exempt(player)) return true;
         InternalStamina s = data(player);
-        if (player.level().isClientSide()) return !s.exhausted && current(s) > 0;
         if (s.exhausted) {
             stopDrain(player, source);
             return false;
@@ -106,15 +100,19 @@ public final class InternalBackend implements StaminaBackend {
 
     @Override
     public void stopDrain(Player player, ResourceLocation source) {
-        if (player.level().isClientSide()) return;
-        data(player).drains.remove(source);
+        InternalStamina s = data(player);
+        if (s.drains.remove(source)) s.markForSync();
     }
 
     @Override
     public void blockRegen(Player player, ResourceLocation source, int ticks) {
-        if (player.level().isClientSide() || exempt(player)) return;
-        InternalStamina s = data(player);
-        if (ticks > s.regenDelay) s.regenDelay = ticks;
+        if (!exempt(player)) raiseRegenDelay(data(player), ticks);
+    }
+
+    private static void raiseRegenDelay(InternalStamina s, int ticks) {
+        if (ticks <= s.regenDelay) return;
+        s.regenDelay = ticks;
+        s.markForSync();
     }
 
     @Override
@@ -149,16 +147,20 @@ public final class InternalBackend implements StaminaBackend {
         return data(player).exhausted;
     }
 
-    public void tick(ServerPlayer player) {
+    public void tick(Player player) {
         InternalStamina s = data(player);
-        int max = serverMax(s);
+        boolean client = player.level().isClientSide();
+        int max = client ? maxStamina(player) : serverMax(s);
         s.maxStamina = max;
         int stamina = current(s);
         if (stamina > max) stamina = max;
 
         long now = player.tickCount;
         for (int i = s.drains.size() - 1; i >= 0; i--) {
-            if (s.drains.timedOut(i, now)) s.drains.removeAt(i);
+            if (s.drains.timedOut(i, now)) {
+                s.drains.removeAt(i);
+                s.markForSync();
+            }
         }
 
         if (s.regenDelay > 0) {
@@ -171,15 +173,14 @@ public final class InternalBackend implements StaminaBackend {
 
         if (s.exhausted && stamina >= ActionsConfig.INTERNAL_RECOVERY.getAsDouble() * max) s.exhausted = false;
 
-        sync(player, s);
+        if (player instanceof ServerPlayer serverPlayer) sync(serverPlayer, s);
     }
 
     private static void sync(ServerPlayer player, InternalStamina s) {
         if (player instanceof FakePlayer) return;
-        s.shown.show(InternalStamina.Shown.BUCKET, s.stamina >= s.maxStamina ? Integer.MAX_VALUE : s.stamina / SYNC_STEP);
         s.shown.show(InternalStamina.Shown.MAX, s.maxStamina);
         s.shown.show(InternalStamina.Shown.EXHAUSTED, s.exhausted);
         if (!s.shown.shouldSend()) return;
-        PacketDistributor.sendToPlayer(player, new InternalStaminaPacket(s.stamina, s.maxStamina, s.exhausted));
+        PacketDistributor.sendToPlayer(player, new InternalStaminaPacket(s.stamina, s.maxStamina, s.exhausted, s.regenDelay));
     }
 }

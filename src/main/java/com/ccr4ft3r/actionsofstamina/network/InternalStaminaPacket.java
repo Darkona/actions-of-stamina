@@ -8,7 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record InternalStaminaPacket(int stamina, int maxStamina, boolean exhausted) implements CustomPacketPayload {
+public record InternalStaminaPacket(int stamina, int maxStamina, boolean exhausted, int regenDelay) implements CustomPacketPayload {
 
     public static final Type<InternalStaminaPacket> TYPE = new Type<>(ActionsOfStamina.id("internal_stamina"));
 
@@ -17,8 +17,9 @@ public record InternalStaminaPacket(int stamina, int maxStamina, boolean exhaust
                 VarInt.write(buf, packet.stamina);
                 VarInt.write(buf, packet.maxStamina);
                 buf.writeBoolean(packet.exhausted);
+                VarInt.write(buf, packet.regenDelay);
             },
-            buf -> new InternalStaminaPacket(VarInt.read(buf), VarInt.read(buf), buf.readBoolean()));
+            buf -> new InternalStaminaPacket(VarInt.read(buf), VarInt.read(buf), buf.readBoolean(), VarInt.read(buf)));
 
     @Override
     public Type<InternalStaminaPacket> type() {
@@ -26,6 +27,6 @@ public record InternalStaminaPacket(int stamina, int maxStamina, boolean exhaust
     }
 
     public static void handle(InternalStaminaPacket packet, IPayloadContext context) {
-        InternalBackend.data(context.player()).receive(packet.stamina, packet.maxStamina, packet.exhausted);
+        InternalBackend.data(context.player()).receive(packet.stamina, packet.maxStamina, packet.exhausted, packet.regenDelay);
     }
 }
