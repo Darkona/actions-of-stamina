@@ -15,7 +15,7 @@ This wiki describes the newest version of Actions of Stamina, for **Minecraft 26
 
 Each build is named `<minecraft>-<mod>`, for example `1.21.1-1.0.0`, and the [releases](https://github.com/Darkona/actions-of-stamina/releases) have one jar for each Minecraft version. The 26.3 builds are betas (`26.3-1.0.0-beta.2`), because NeoForge 26.3 is in beta. The 26.1.2 builds start at `26.1.2-1.0.1`, the same mod as `26.1-1.0.0` with the full Minecraft version in its name, so the newest is `26.1.2-1.0.2`.
 
-Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) for the same Minecraft version, 1.0.1 or later (for example `1.21.1-1.0.1` on Minecraft 1.21.1, `26.1.2-1.0.2` on 26.1.2, `26.3-1.0.0-beta.2` on 26.3). Through its API, AoS turns off the basic exertion of Feathers of Fatigue (see [Stamina Backends](Stamina-Backends)). The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers. From 1.0.0 on, the mod does not support it.
+Each version works with the [Feathers of Fatigue](https://github.com/Darkona/feathers-of-fatigue) for the same Minecraft version, 1.0.1 or later (for example `1.21.1-1.1.0` on Minecraft 1.21.1, `26.1.2-1.0.2` on 26.1.2, `26.3-1.0.0-beta.2` on 26.3). Through its API, AoS turns off the basic exertion of Feathers of Fatigue (see [Stamina Backends](Stamina-Backends)). The 0.5 versions for 1.18.2 and 1.19.2 needed Elenai's Feathers. From 1.0.0 on, the mod does not support it.
 
 ## 26.3 (NeoForge 26.3.0.36-beta)
 
