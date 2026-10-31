@@ -67,6 +67,18 @@ neoForge {
             gameDirectory = project.file('run-play')
         }
 
+        // Normal clients with a full pack, each in its own game dir so neither touches the other's worlds or the play worlds.
+        // Epic Fight and Better Combat cannot share a game, so there is one pack for each.
+        fullEpicFight {
+            client()
+            gameDirectory = project.file('run-full-epicfight')
+        }
+
+        fullBetterCombat {
+            client()
+            gameDirectory = project.file('run-full-bettercombat')
+        }
+
         // Headless client straight into run/saves/aosboot: `xvfb-run -a ./gradlew runBootCheck`.
         bootCheck {
             client()
@@ -111,6 +123,10 @@ tasks.named('test') {
 
 // The play pack loads when runPlay is requested (or with -PplayPack).
 def playPack = project.hasProperty('playPack') || gradle.startParameter.taskNames.any { it.toLowerCase().contains('runplay') }
+
+// A full pack loads when its run is requested (or with -PfullPack=epicfight or -PfullPack=bettercombat).
+def fullEpicFight = project.findProperty('fullPack') == 'epicfight' || gradle.startParameter.taskNames.any { it.toLowerCase().contains('runfullepicfight') }
+def fullBetterCombat = project.findProperty('fullPack') == 'bettercombat' || gradle.startParameter.taskNames.any { it.toLowerCase().contains('runfullbettercombat') }
 
 // 'localRuntime': present when running the game from the dev environment, never published as a dependency.
 configurations {
@@ -158,12 +174,16 @@ dependencies {
     compileOnly "maven.modrinth:create:${create_version}"
 
     // -PwithCompat: boot dev runs with the compat targets and their required libraries.
-    if (project.hasProperty('withCompat')) {
+    if (project.hasProperty('withCompat') || fullEpicFight || fullBetterCombat) {
         localRuntime "maven.modrinth:paragliders:${paragliders_version}"
         localRuntime "maven.modrinth:parcool:${parcool_version}"
-        localRuntime "maven.modrinth:better-combat:${bettercombat_version}"
+        if (!fullEpicFight) {
+            localRuntime "maven.modrinth:better-combat:${bettercombat_version}"
+        }
         localRuntime "maven.modrinth:combat-roll:${combatroll_version}"
-        localRuntime "maven.modrinth:epic-fight:${epicfight_version}"
+        if (!fullBetterCombat) {
+            localRuntime "maven.modrinth:epic-fight:${epicfight_version}"
+        }
         localRuntime "maven.modrinth:wall-jump-txf:${walljump_version}"
         localRuntime "maven.modrinth:gliders:${gliders_version}"
         localRuntime "maven.modrinth:common-network:${commonnetwork_version}"
@@ -173,6 +193,14 @@ dependencies {
         localRuntime "maven.modrinth:curios:${curios_version}"
         // Create carries its libraries (Flywheel, Ponder, Registrate) inside its own jar.
         localRuntime "maven.modrinth:create:${create_version}"
+    }
+
+    // `./gradlew runFullEpicFight` or `runFullBetterCombat`: every compat target that fits, plus the survival mods Feathers
+    // of Fatigue hooks into.
+    // Droplets of Thirst comes from mavenLocal: `./gradlew publishToMavenLocal` in its repository.
+    if (fullEpicFight || fullBetterCombat) {
+        localRuntime "maven.modrinth:cold-sweat:${cold_sweat_version}"
+        localRuntime "com.darkona.dropletsofthirst:droplets-of-thirst:${droplets_of_thirst_version}"
     }
 
     // `./gradlew runPlay`: a pack to play with by hand. Feathers of Fatigue with its season and thirst compats, and the
