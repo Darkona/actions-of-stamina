@@ -2,6 +2,12 @@
 
 Changes by feature, newest version first.
 
+## Unreleased
+
+### Feathers of Fatigue
+
+- Needs Feathers of Fatigue 1.21.1-1.1.0 or later (the accepted range is now `[1.21.1-1.1.0,1.21.1-2)`).
+
 ## 1.21.1-1.0.1 (NeoForge), 2026-10-01
 
 Same as 1.21.1-1.0.0 below, except for what this section lists.
