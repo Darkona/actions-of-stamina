@@ -1,0 +1,45 @@
+package com.ccr4ft3r.actionsofstamina.network;
+
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
+
+public final class ActionsPackets {
+
+    private static final String PROTOCOL_VERSION = "7";
+
+    private static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(ActionsOfStamina.id("main"), () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
+
+    private ActionsPackets() {
+    }
+
+    public static void register() {
+        int id = 0;
+        CHANNEL.messageBuilder(ActionStatePacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
+               .encoder(ActionStatePacket::encode).decoder(ActionStatePacket::decode)
+               .consumerMainThread(ActionStatePacket::handle).add();
+        CHANNEL.messageBuilder(ActionPerformedPacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
+               .encoder(ActionPerformedPacket::encode).decoder(ActionPerformedPacket::decode)
+               .consumerMainThread(ActionPerformedPacket::handle).add();
+        CHANNEL.messageBuilder(BackendSyncPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+               .encoder(BackendSyncPacket::encode).decoder(BackendSyncPacket::decode)
+               .consumerMainThread(BackendSyncPacket::handle).add();
+        CHANNEL.messageBuilder(InternalStaminaPacket.class, id, NetworkDirection.PLAY_TO_CLIENT)
+               .encoder(InternalStaminaPacket::encode).decoder(InternalStaminaPacket::decode)
+               .consumerMainThread(InternalStaminaPacket::handle).add();
+    }
+
+    public static void sendToServer(Object packet) {
+        CHANNEL.sendToServer(packet);
+    }
+
+    public static void sendToPlayer(ServerPlayer player, Object packet) {
+        if (player instanceof FakePlayer || player.connection == null || !CHANNEL.isRemotePresent(player.connection.connection)) return;
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
+    }
+}

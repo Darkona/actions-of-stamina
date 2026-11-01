@@ -1,13 +1,11 @@
 package com.ccr4ft3r.actionsofstamina.network;
 
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackend;
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaBackends;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
+import java.util.function.Supplier;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
-
-/** Server → client on login: which stamina backend the server uses, so the client checks against the same one. */
 public record BackendSyncPacket(byte kind) {
 
     public BackendSyncPacket(StaminaBackend.Kind kind) {
@@ -22,7 +20,6 @@ public record BackendSyncPacket(byte kind) {
         return new BackendSyncPacket(buf.readByte());
     }
 
-    /** Runs on the client main thread; common code only. */
     static void handle(BackendSyncPacket packet, Supplier<NetworkEvent.Context> context) {
         StaminaBackends.setClient(StaminaBackend.Kind.byId(packet.kind));
     }

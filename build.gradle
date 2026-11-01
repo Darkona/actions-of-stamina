@@ -43,6 +43,14 @@ repositories {
     }
 }
 
+sourceSets {
+    gametest {
+        resources.srcDirs = []
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
 legacyForge {
     enable {
         forgeVersion = "${minecraft_version}-${forge_version}"
@@ -50,6 +58,8 @@ legacyForge {
         // subclasses of Minecraft classes (variable o is already defined). Recompile everywhere, as on a dev machine.
         disableRecompilation = false
     }
+    addModdingDependenciesTo(sourceSets.gametest)
+    addModdingDependenciesTo(sourceSets.test)
 
     parchment {
         mappingsVersion = project.parchment_mappings_version
@@ -82,6 +92,7 @@ legacyForge {
         }
 
         configureEach {
+            sourceSet = sourceSets.gametest
             systemProperty 'forge.logging.markers', 'REGISTRIES'
             systemProperty 'mixin.env.remapRefMap', 'true'
             logLevel = org.slf4j.event.Level.DEBUG
@@ -91,8 +102,13 @@ legacyForge {
     mods {
         "${mod_id}" {
             sourceSet(sourceSets.main)
+            sourceSet(sourceSets.gametest)
         }
     }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
 }
 
 mixin {
@@ -105,6 +121,11 @@ mixin {
 configurations {
     localRuntime
     runtimeClasspath.extendsFrom localRuntime
+    gametestImplementation.extendsFrom implementation
+    gametestCompileOnly.extendsFrom compileOnly
+    gametestRuntimeOnly.extendsFrom runtimeOnly
+    gametestRuntimeClasspath.extendsFrom localRuntime
+    testCompileOnly.extendsFrom compileOnly
 }
 
 obfuscation {
@@ -114,6 +135,11 @@ obfuscation {
 
 dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation("com.tngtech.archunit:archunit:${archunit_version}") {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
     // Forge 47 doesn't ship MixinExtras: bundled in the jar.
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixinextras_version}"))
@@ -137,28 +163,19 @@ dependencies {
     modCompileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
 
     // -PwithCompat: boot dev runs with the compat targets and their required libraries.
-    // Curios only with -PwithCurios, and then without Epic Fight: ParCool 4.0.0.5's traceur gloves read their attribute
-    // modifiers while Forge builds their capabilities (only with Curios), and Epic Fight 20.14.17 asks for the item's
-    // capabilities from the attribute modifier event. Together they recurse until the stack overflows on the first
-    // tooltip (the creative search tree, on joining a world).
-    def withCurios = project.hasProperty('withCurios')
     if (project.hasProperty('withCompat')) {
         modLocalRuntime "maven.modrinth:paragliders:${paragliders_version}"
         modLocalRuntime "maven.modrinth:parcool:${parcool_version}"
         modLocalRuntime "maven.modrinth:better-combat:${bettercombat_version}"
         modLocalRuntime "maven.modrinth:combat-roll:${combatroll_version}"
-        if (!withCurios) {
-            modLocalRuntime "maven.modrinth:epic-fight:${epicfight_version}"
-        }
+        modLocalRuntime "maven.modrinth:epic-fight:${epicfight_version}"
         modLocalRuntime "maven.modrinth:wall-jump-txf:${walljump_version}"
         modLocalRuntime "maven.modrinth:gliders:${gliders_version}"
         modLocalRuntime "maven.modrinth:playeranimator:${playeranimator_version}"
         modLocalRuntime "maven.modrinth:cloth-config:${clothconfig_version}"
+        modLocalRuntime "top.theillusivec4.curios:curios-forge:${curios_version}"
         // Create carries its libraries (Flywheel, Ponder, Registrate) inside its own jar.
         modLocalRuntime "maven.modrinth:create:${create_version}"
-    }
-    if (withCurios) {
-        modLocalRuntime "top.theillusivec4.curios:curios-forge:${curios_version}"
     }
 }
 

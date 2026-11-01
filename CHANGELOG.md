@@ -2,6 +2,35 @@
 
 Changes by feature, newest version first.
 
+## Unreleased
+
+### Internal stamina
+
+- The client runs the same stamina code as the server: spends, drains, regeneration and the regeneration delay move the bar right away. The server sends the bar only when something changes, not on every step of it.
+- Client and server must run the same version: the network protocol changed.
+
+### Feathers of Fatigue
+
+- Needs Feathers of Fatigue 1.20.1-1.1.0 or later (the accepted range is now `[1.20.1-1.1.0,1.20.1-2)`).
+
+### Actions
+
+- A right-click or other use that one action refuses no longer reaches the next action, so it isn't charged as well.
+
+### Compatibility
+
+- **ParCool:** works with ParCool 4.0.1.5, the latest 1.20.1 build. It still needs Forge 47.4.23 or later.
+- ParCool 4.0.1.5, Curios 5.14.1 and Epic Fight 20.14.17 load together: the known issue of ParCool 4.0.0.5 listed under 1.20.1-1.0.0 no longer shows up.
+
+### Addon API
+
+- The classes moved to the package layout of the 1.21.1 version: actions and `ActionType` are in `content.actions`, backends in `content.stamina`, and what `ActionTypes` offered is now static on `ActionType`. Addons must be rebuilt.
+
+### Not in this version
+
+- **Mace smash:** Minecraft 1.20.1 has no mace, so there is no `[vanilla.attack] mace_smash_multiplier` option.
+- **Wind charges:** Minecraft 1.20.1 has no wind charge, so it isn't in the `actionsofstamina:throwables` tag.
+
 ## 1.20.1-1.0.1 (Forge 47), 2026-10-01
 
 Same as 1.20.1-1.0.0 below, except for what this section lists.

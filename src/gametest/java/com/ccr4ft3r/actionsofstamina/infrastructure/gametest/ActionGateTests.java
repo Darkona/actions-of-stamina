@@ -1,0 +1,102 @@
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
+
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.content.actions.Action;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameType;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.gametest.GameTestHolder;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.exhaust;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.survivalPlayer;
+
+@GameTestHolder(ActionsOfStamina.MOD_ID)
+@PrefixGameTestTemplate(false)
+public class ActionGateTests {
+
+    private static boolean refused(ServerPlayer player, Item item) {
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item, 16));
+        return MinecraftForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickItem(player, InteractionHand.MAIN_HAND));
+    }
+
+    @GameTest(template = "empty")
+    public static void affordableActionsGoAhead(GameTestHelper helper) {
+        ServerPlayer player = survivalPlayer(helper);
+        StaminaBackend backend = StaminaBackends.server();
+        helper.assertFalse(refused(player, Items.SHIELD), "raising a shield");
+        helper.assertFalse(refused(player, Items.BOW), "drawing a bow");
+        int before = backend.stamina(player);
+        helper.assertFalse(refused(player, Items.SNOWBALL), "throwing a snowball");
+        helper.assertTrue(backend.stamina(player) < before, "the throw is charged");
+        helper.assertTrue(VanillaActions.mayClimbUp(player), "climbing (disabled)");
+        helper.assertTrue(VanillaActions.mayRow(player), "rowing (disabled)");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void unaffordableActionsAreRefused(GameTestHelper helper) {
+        ServerPlayer player = survivalPlayer(helper);
+        exhaust(StaminaBackends.server(), player);
+        helper.assertTrue(refused(player, Items.SHIELD), "raising a shield");
+        helper.assertTrue(refused(player, Items.BOW), "drawing a bow");
+        helper.assertTrue(refused(player, Items.SNOWBALL), "throwing a snowball");
+        helper.assertFalse(refused(player, Items.STICK), "using an item no action charges");
+        helper.assertTrue(VanillaActions.mayClimbUp(player), "climbing (disabled)");
+        helper.assertTrue(VanillaActions.mayRow(player), "rowing (disabled)");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void exemptPlayersAreNeverRefused(GameTestHelper helper) {
+        ServerPlayer player = survivalPlayer(helper);
+        exhaust(StaminaBackends.server(), player);
+        player.setGameMode(GameType.CREATIVE);
+        helper.assertFalse(refused(player, Items.SHIELD), "raising a shield");
+        helper.assertFalse(refused(player, Items.BOW), "drawing a bow");
+        helper.assertFalse(refused(player, Items.SNOWBALL), "throwing a snowball");
+        helper.succeed();
+    }
+
+    private static final class ChargeProbe extends Action {
+        boolean chargeGoesThrough;
+        int attempts;
+
+        ChargeProbe() {
+            super(VanillaActions.JUMP);
+        }
+
+        @Override
+        public boolean charge(Player player) {
+            attempts++;
+            return chargeGoesThrough;
+        }
+
+    }
+
+    @GameTest(template = "empty")
+    public static void aFailedChargeIsTriedAgainNextUse(GameTestHelper helper) {
+        ServerPlayer player = survivalPlayer(helper);
+        ChargeProbe probe = new ChargeProbe();
+        int times = ActionsConfig.JUMP.timesPerformedToExhaust();
+        for (int i = 1; i < times; i++) helper.assertTrue(probe.perform(player), "use " + i + " before the charge is due");
+        helper.assertFalse(probe.perform(player), "the due use, whose charge fails, is refused");
+        probe.chargeGoesThrough = true;
+        helper.assertTrue(probe.perform(player), "the next use goes ahead");
+        TestSupport.assertValueEqual(helper, probe.attempts, 2, "charge attempts");
+        for (int i = 1; i < times; i++) probe.perform(player);
+        TestSupport.assertValueEqual(helper, probe.attempts, 2, "a charge that went through starts a new count");
+        helper.succeed();
+    }
+}

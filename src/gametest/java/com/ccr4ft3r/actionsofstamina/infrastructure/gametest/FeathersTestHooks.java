@@ -1,0 +1,24 @@
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
+
+import com.darkona.feathersoffatigue.api.FeathersAPI;
+import com.darkona.feathersoffatigue.api.registry.FeathersAttributes;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Set;
+import java.util.UUID;
+
+final class FeathersTestHooks {
+
+    private FeathersTestHooks() {
+    }
+
+    static Set<String> playerActionOwners() {
+        return FeathersAPI.getPlayerActionOwners();
+    }
+
+    static boolean hasMaxFeathersModifier(ServerPlayer player, ResourceLocation id) {
+        return player.getAttribute(FeathersAttributes.MAX_FEATHERS.get()).getModifier(UUID.nameUUIDFromBytes(id.toString().getBytes(StandardCharsets.UTF_8))) != null;
+    }
+}

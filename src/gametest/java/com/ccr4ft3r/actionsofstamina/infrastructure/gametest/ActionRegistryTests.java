@@ -1,0 +1,93 @@
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
+
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.content.actions.Action;
+import com.ccr4ft3r.actionsofstamina.content.actions.ActionType;
+import com.ccr4ft3r.actionsofstamina.content.actions.PlayerActions;
+import com.ccr4ft3r.actionsofstamina.content.actions.VanillaActions;
+import com.ccr4ft3r.actionsofstamina.compat.combatroll.CombatRollCompat;
+import com.ccr4ft3r.actionsofstamina.compat.create.CreateCompat;
+import com.ccr4ft3r.actionsofstamina.config.compat.ParcoolConfig;
+import com.ccr4ft3r.actionsofstamina.compat.walljump.WallJumpCompat;
+import com.ccr4ft3r.actionsofstamina.config.ActionsConfig;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackends;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.gametest.GameTestHolder;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.exhaust;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.survivalPlayer;
+
+@GameTestHolder(ActionsOfStamina.MOD_ID)
+@PrefixGameTestTemplate(false)
+public class ActionRegistryTests {
+
+    @GameTest(template = "empty")
+    public static void everyActionIsARegisteredType(GameTestHelper helper) {
+        ActionType[] types = ActionType.all();
+        for (int i = 0; i < types.length; i++) {
+            TestSupport.assertValueEqual(helper, types[i].index(), i, types[i] + " slot");
+            if (i > 0) helper.assertTrue(types[i - 1].id().compareTo(types[i].id()) < 0, "types sorted by id at " + types[i]);
+        }
+        TestSupport.assertValueEqual(helper, VanillaActions.ATTACK.id(), ActionsOfStamina.id("attack"), "attack id");
+        TestSupport.assertValueEqual(helper, CreateCompat.CRANK.id(), ActionsOfStamina.id("create/crank"), "crank id");
+        TestSupport.assertValueEqual(helper, CombatRollCompat.ROLL.id(), ActionsOfStamina.id("combat_roll/roll"), "roll id");
+        TestSupport.assertValueEqual(helper, WallJumpCompat.DOUBLE_JUMP.id(), ActionsOfStamina.id("walljump/double_jump"), "double jump id");
+        helper.assertTrue(ActionType.byId(ActionsOfStamina.id("parcool/dodge")) != null, "a ParCool action is a type");
+        TestSupport.assertValueEqual(helper, ActionType.byId(TestActionTypes.FINISHING_ID), TestActionTypes.finishing, "another mod's type by id");
+        boolean refused = false;
+        try {
+            ActionType.register(ActionsOfStamina.id("test/late"), ActionsConfig.JUMP, Action::new);
+        } catch (IllegalStateException e) {
+            refused = true;
+        }
+        helper.assertTrue(refused, "registering after the registry froze");
+        helper.succeed();
+    }
+
+    private static ServerPlayer playerWithOtherModsAction(GameTestHelper helper) {
+        TestActionTypes.enabled = true;
+        try {
+            return survivalPlayer(helper);
+        } finally {
+            TestActionTypes.enabled = false;
+        }
+    }
+
+    @GameTest(template = "empty")
+    public static void otherModsActionChargesItsFinishCost(GameTestHelper helper) {
+        ServerPlayer player = playerWithOtherModsAction(helper);
+        int slot = TestActionTypes.finishing.index();
+        PlayerActions actions = PlayerActions.get(player);
+        Action action = actions.getAction(slot);
+        helper.assertTrue(action != null && action.type() == TestActionTypes.finishing, "the other mod's action is built");
+        StaminaBackend backend = StaminaBackends.server();
+        int finishCost = ParcoolConfig.byName("charge_jump").costs().finishCost();
+        int start = backend.stamina(player);
+        actions.setActionState(TestActionTypes.finishing, true);
+        action.tick(player, actions);
+        helper.assertTrue(action.isPerforming(), "it begins");
+        TestSupport.assertValueEqual(helper, backend.stamina(player), start, "beginning is free");
+        actions.setActionState(TestActionTypes.finishing, false);
+        action.tick(player, actions);
+        helper.assertFalse(action.isPerforming(), "it ends");
+        TestSupport.assertValueEqual(helper, backend.stamina(player), start - finishCost, "ending charges the finish cost");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void otherModsActionNeedsItsFinishCostToBegin(GameTestHelper helper) {
+        ServerPlayer player = playerWithOtherModsAction(helper);
+        exhaust(StaminaBackends.server(), player);
+        int slot = TestActionTypes.finishing.index();
+        helper.assertFalse(PlayerActions.canPerform(player, slot), "an exhausted player can't begin it");
+        PlayerActions actions = PlayerActions.get(player);
+        actions.setActionState(TestActionTypes.finishing, true);
+        actions.getAction(slot).tick(player, actions);
+        helper.assertFalse(actions.getAction(slot).isPerforming(), "it doesn't begin");
+        helper.assertTrue(PlayerActions.canPerform(player, ActionType.count() + 5), "a slot no type has is never refused");
+        helper.succeed();
+    }
+}

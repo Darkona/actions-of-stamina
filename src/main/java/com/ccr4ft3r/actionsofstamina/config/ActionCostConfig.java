@@ -1,14 +1,9 @@
 package com.ccr4ft3r.actionsofstamina.config;
 
-import com.ccr4ft3r.actionsofstamina.stamina.StaminaUnits;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * The config subsection of one stamina-costing action: a toggle plus whichever costs apply to it. Costs are in
- * feathers (a 20-feather bar by default), delays in ticks. Getters return stamina units and read cached config
- * values, so they are cheap enough for per-tick use.
- */
 public final class ActionCostConfig {
 
     public static final double MAX_FEATHERS = 1000.0;
@@ -33,7 +28,6 @@ public final class ActionCostConfig {
         this.timesPerformedToExhaust = b.timesPerformedToExhaust;
     }
 
-    /** Pushes {@code path}; define the fields in order, then {@link Builder#build()} pops it. */
     public static Builder builder(ForgeConfigSpec.Builder spec, String path, String description, boolean enabledByDefault) {
         return new Builder(spec, path, description, enabledByDefault);
     }
@@ -42,27 +36,25 @@ public final class ActionCostConfig {
         return enabled.get();
     }
 
-    /** One-off cost: per use, or when a continuous action starts. */
     public int cost() {
-        return cost == null ? 0 : StaminaUnits.ofFeathers(cost.get());
+        return cost == null ? 0 : StaminaBackend.ofFeathers(cost.get());
     }
 
-    /** Stamina needed to begin; at least the one-off cost. */
     public int minStamina() {
-        return Math.max(cost(), minStamina == null ? 0 : StaminaUnits.ofFeathers(minStamina.get()));
+        return Math.max(cost(), minStamina == null ? 0 : StaminaBackend.ofFeathers(minStamina.get()));
     }
 
     public double perTick() {
-        return perSecond == null ? 0 : StaminaUnits.perTick(perSecond.get());
+        return perSecond == null ? 0 : StaminaBackend.perTick(perSecond.get());
     }
 
-    @SuppressWarnings("unused") // for addons
+    @SuppressWarnings("unused")
     public double perSecondFeathers() {
         return perSecond == null ? 0 : perSecond.get();
     }
 
     public int finishCost() {
-        return finishCost == null ? 0 : StaminaUnits.ofFeathers(finishCost.get());
+        return finishCost == null ? 0 : StaminaBackend.ofFeathers(finishCost.get());
     }
 
     public int regenDelay() {
@@ -77,7 +69,6 @@ public final class ActionCostConfig {
         return timesPerformedToExhaust == null ? 1 : timesPerformedToExhaust.get();
     }
 
-    /** Whether this action costs anything at all. */
     public boolean costsAnything() {
         return cost() > 0 || perTick() > 0 || finishCost() > 0;
     }
@@ -140,7 +131,6 @@ public final class ActionCostConfig {
             return this;
         }
 
-        /** Room for action-specific options before {@link #build()}. */
         public ForgeConfigSpec.Builder spec() {
             return spec;
         }

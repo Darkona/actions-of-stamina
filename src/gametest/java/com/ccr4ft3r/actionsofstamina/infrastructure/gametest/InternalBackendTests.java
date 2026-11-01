@@ -1,0 +1,143 @@
+package com.ccr4ft3r.actionsofstamina.infrastructure.gametest;
+
+import com.ccr4ft3r.actionsofstamina.ActionsOfStamina;
+import com.ccr4ft3r.actionsofstamina.content.stamina.InternalBackend;
+import com.ccr4ft3r.actionsofstamina.network.InternalStaminaPacket;
+import com.ccr4ft3r.actionsofstamina.content.stamina.StaminaBackend;
+import io.netty.buffer.Unpooled;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.GameType;
+import net.minecraftforge.gametest.GameTestHolder;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.player;
+import static com.ccr4ft3r.actionsofstamina.infrastructure.gametest.TestSupport.tick;
+
+@GameTestHolder(ActionsOfStamina.MOD_ID)
+@PrefixGameTestTemplate(false)
+public class InternalBackendTests {
+
+    private static final ResourceLocation TEST = ActionsOfStamina.id("test");
+    private static final InternalBackend BACKEND = InternalBackend.INSTANCE;
+    private static final int FULL = StaminaBackend.ofFeathers(20);
+
+    @GameTest(template = "empty")
+    public static void newPlayersStartFull(GameTestHelper helper) {
+        ServerPlayer player = player(helper);
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), FULL, "stamina before the first tick");
+        tick(player, 1);
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), FULL, "stamina");
+        TestSupport.assertValueEqual(helper, BACKEND.maxStamina(player), FULL, "max stamina");
+        helper.assertFalse(BACKEND.exhausted(player), "exhausted");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void spendsAreAllOrNothing(GameTestHelper helper) {
+        ServerPlayer player = player(helper);
+        helper.assertFalse(BACKEND.spend(player, TEST, StaminaBackend.ofFeathers(25), 0), "spend beyond the bar");
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), FULL, "stamina after a refused spend");
+        helper.assertTrue(BACKEND.canSpend(player, TEST, StaminaBackend.ofFeathers(5)), "can spend 5");
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), FULL, "checking spends nothing");
+        helper.assertTrue(BACKEND.spend(player, TEST, StaminaBackend.ofFeathers(5), 0), "spend 5");
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), StaminaBackend.ofFeathers(15), "stamina after spending 5");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void regenerationWaitsForTheDelay(GameTestHelper helper) {
+        ServerPlayer player = player(helper);
+        BACKEND.spend(player, TEST, StaminaBackend.ofFeathers(1), 60);
+        tick(player, 60);
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), StaminaBackend.ofFeathers(19), "stamina during the delay");
+        tick(player, 20);
+        int stamina = BACKEND.stamina(player);
+        helper.assertTrue(stamina >= 19450 && stamina <= 19500, "stamina after one second of regen: " + stamina);
+        tick(player, 60);
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), FULL, "regeneration stops at the max");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void spendingEverythingExhausts(GameTestHelper helper) {
+        ServerPlayer player = player(helper);
+        helper.assertTrue(BACKEND.spend(player, TEST, FULL, 0), "spend the whole bar");
+        helper.assertTrue(BACKEND.exhausted(player), "exhausted with an empty bar");
+        helper.assertFalse(BACKEND.canSpend(player, TEST, 0), "nothing can be spent while exhausted");
+        helper.assertFalse(BACKEND.spend(player, TEST, 1, 0), "spending while exhausted");
+
+        tick(player, 260);
+        helper.assertTrue(BACKEND.exhausted(player), "still exhausted below the recovery threshold");
+        tick(player, 20);
+        helper.assertFalse(BACKEND.exhausted(player), "recovered at 30%");
+        helper.assertTrue(BACKEND.canSpend(player, TEST, StaminaBackend.ofFeathers(1)), "can act again");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void drainsCarryFractions(GameTestHelper helper) {
+        ServerPlayer player = player(helper);
+        for (int i = 0; i < 8; i++) {
+            helper.assertTrue(BACKEND.drain(player, TEST, 0.25, true), "drain tick " + i);
+            tick(player, 1);
+        }
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), FULL - 2, "stamina after a fractional drain");
+        BACKEND.stopDrain(player, TEST);
+        tick(player, 1);
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), FULL, "regenerates once stopped");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void drainsBlockRegenerationUntilTheyStop(GameTestHelper helper) {
+        ServerPlayer player = player(helper);
+        BACKEND.spend(player, TEST, StaminaBackend.ofFeathers(5), 0);
+        tick(player, 30);
+        int start = BACKEND.stamina(player);
+        for (int i = 0; i < 20; i++) {
+            BACKEND.drain(player, TEST, 0, true);
+            tick(player, 1);
+        }
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), start, "no regeneration while a regen-blocking drain runs");
+
+        tick(player, 30);
+        helper.assertTrue(BACKEND.stamina(player) > start, "regeneration after the drain timed out");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void drainingPastEmptyExhausts(GameTestHelper helper) {
+        ServerPlayer player = player(helper);
+        helper.assertTrue(BACKEND.drain(player, TEST, StaminaBackend.ofFeathers(15), true), "first drain tick");
+        helper.assertFalse(BACKEND.drain(player, TEST, StaminaBackend.ofFeathers(15), true), "second drain tick can't be paid");
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), 0, "stamina");
+        helper.assertTrue(BACKEND.exhausted(player), "exhausted");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void creativePlayersAreExempt(GameTestHelper helper) {
+        ServerPlayer player = player(helper);
+        player.setGameMode(GameType.CREATIVE);
+        helper.assertTrue(BACKEND.spend(player, TEST, StaminaBackend.ofFeathers(50), 0), "creative spend");
+        TestSupport.assertValueEqual(helper, BACKEND.stamina(player), FULL, "creative stamina");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void staminaPacketRoundTrips(GameTestHelper helper) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        try {
+            InternalStaminaPacket sent = new InternalStaminaPacket(12345, FULL, true, 30);
+            sent.encode(buf);
+            TestSupport.assertValueEqual(helper, InternalStaminaPacket.decode(buf), sent, "decoded packet");
+            TestSupport.assertValueEqual(helper, buf.readableBytes(), 0, "bytes left over");
+        } finally {
+            buf.release();
+        }
+        helper.succeed();
+    }
+}
