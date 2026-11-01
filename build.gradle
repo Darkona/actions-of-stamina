@@ -202,6 +202,12 @@ dependencies {
         localRuntime "maven.modrinth:cold-sweat:${cold_sweat_version}"
         localRuntime "com.darkona.dropletsofthirst:droplets-of-thirst:${droplets_of_thirst_version}"
     }
+    if (fullBetterCombat) {
+        localRuntime "maven.modrinth:jade:${jade_version}"
+        localRuntime "maven.modrinth:emi:${emi_version}"
+        localRuntime "maven.modrinth:farmers-delight:1.21.1-1.3.4"
+        localRuntime files('../minecarts-of-mayhem/build/libs/minecarts-of-mayhem-1.21.1-0.1.0.jar')
+    }
 
     // `./gradlew runPlay`: a pack to play with by hand. Feathers of Fatigue with its season and thirst compats, and the
     // action mods that sit well together (no ParCool, Epic Fight or Paragliders: they replace too much of the game).
