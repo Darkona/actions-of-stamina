@@ -8,7 +8,7 @@
 | Crawling | Drain while you move in the crawl pose on land. You move slower when you cannot pay | 0.1 feathers/s |
 | Holding up a shield | A cost to raise it, then a drain | 1 feather, then 0.2/s |
 | Jumping | One charge every few jumps | 1 feather every 4 jumps |
-| Attacking, spear stabs included | One charge every few attacks | 1 feather every 3 attacks |
+| Attacking | One charge every few attacks | 1 feather every 3 attacks |
 | Drawing a bow, loading a crossbow, aiming a trident | A cost to start, then a drain while drawn | 0.5 feathers, then 0.5/s |
 | Throwing (snowball, egg, ender pearl, splash or lingering potion, wind charge, trident) | One charge per throw | 0.5 feathers |
 | Mining (off by default) | One charge every few blocks, scaled by the hardness of the block | 0.1 feathers × hardness every 4 blocks |
@@ -29,15 +29,13 @@ Without the stamina for an attack, the mod cancels it: no swing, no hit (`exhaus
 
 **Girl mode** (`weaken_non_weapons`, on by default): WEAKEN also weakens attacks with non-weapons, such as bare hands, while your stamina is short. This applies even though those attacks cost nothing. Turn it off and only the attacks that cost stamina get weaker. An empty hand or a tool without attack damage then hits at full strength.
 
-A spear stab is an attack. The mod charges it once per stab, however many creatures it pierces, and counts it with the other attacks. A stab that reaches nothing is a swing at the air. Without the stamina for it, a stab hits nothing, or lands weakened with `WEAKEN`. To hold a spear ready to charge at a target is free.
-
 A mace smash is a mace hit while you fall. It does not count with the other attacks. The mod charges it alone, at once, at the `cost` of the attack times `mace_smash_multiplier` (2 by default, so 2 feathers). Without the stamina for it, the smash is cancelled or lands weakened, as `exhausted_mode` says. A swing at the air is never a smash.
 
 ## Bows, crossbows and throwables
 
 The draw action counts each item used with the bow, crossbow or trident animation: a bow you draw, a crossbow you load, a trident you aim, and modded items with the same animations. To fire a loaded crossbow is free. You cannot start to draw without the stamina to begin. When the stamina runs out mid-draw, the draw drops without a shot.
 
-Throws cost for the items in the item tag `actionsofstamina:throwables`: snowballs, eggs (`#minecraft:eggs`: white, blue and brown), ender pearls, splash and lingering potions, wind charges, and the trident. Datapacks can add other items. The mod charges a snowball, egg, pearl, potion or wind charge when you throw it. It charges a trident when you release it after a full aim (a Riptide launch is not a throw). A throw you cannot afford does not happen.
+Throws cost for the items in the item tag `actionsofstamina:throwables`: snowballs, eggs, ender pearls, splash and lingering potions, wind charges, and the trident. Datapacks can add other items. The mod charges a snowball, egg, pearl, potion or wind charge when you throw it. It charges a trident when you release it after a full aim (a Riptide launch is not a throw). A throw you cannot afford does not happen.
 
 A Riptide launch is an action of its own, off by default (`[vanilla.riptide]`, `enabled = true` to turn it on). The mod charges it when you release the trident and the trident would launch you: a full aim, in water or rain, while you ride nothing. A launch you cannot afford does not happen. The aim only ends.
 
@@ -55,7 +53,7 @@ When the stamina runs out, you cannot go up. You stay on the climbable block: sn
 
 ## Rowing
 
-Off by default (`[vanilla.row]`, `enabled = true` to turn it on). Only boats in the entity tag `actionsofstamina:rowed_boats` cost stamina, and only for the player who drives. The tag of the mod holds all vanilla boats and rafts (`#minecraft:boat`) and all chest boats and chest rafts. Sail or motor boats from other mods move for free unless a datapack adds them to the tag.
+Off by default (`[vanilla.row]`, `enabled = true` to turn it on). Only boats in the entity tag `actionsofstamina:rowed_boats` cost stamina, and only for the player who drives. The tag of the mod holds `minecraft:boat` and `minecraft:chest_boat`, which cover all wood types and the bamboo raft. Sail or motor boats from other mods move for free unless a datapack adds them to the tag.
 
 The drain runs while you paddle forward or back, or turn. When the stamina runs out, the paddles stop and the boat drifts. It does not speed up or turn until you have the stamina to start again.
 
@@ -65,7 +63,7 @@ Off by default (`[vanilla.fish]`, `enabled = true` to turn it on). The mod charg
 
 ## Farming tools
 
-Off by default (`[vanilla.till]`, `enabled = true` to turn it on). Work on a block with a tool costs stamina: tilling with a hoe, a path with a shovel, a stripped log, scraped or unwaxed copper with an axe. Any item whose block transformer changes the block counts, so modded tools and blocks count too. The block transformer is the `minecraft:block_transformer` component, or one that a data map adds. To douse a campfire is free. The mod charges once every `times_performed_to_exhaust` blocks. A block you cannot afford stays as it is.
+Off by default (`[vanilla.till]`, `enabled = true` to turn it on). Work on a block with a tool costs stamina: tilling with a hoe, a path with a shovel, a stripped log, scraped or unwaxed copper with an axe. Any tool whose NeoForge item ability (tilling, flattening, stripping, scraping or unwaxing) changes the block counts, so modded tools and blocks count too. To douse a campfire is free. The mod charges once every `times_performed_to_exhaust` blocks. A block you cannot afford stays as it is.
 
 ## Brushing
 
