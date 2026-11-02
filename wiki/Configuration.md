@@ -546,13 +546,13 @@ The mod builds the actions of a player from the config each time that player joi
 		blocks_regen = true
 ```
 
-## Sections only on older Minecraft versions
+## Sections of other mods
 
-These mods have no build for Minecraft 26.3. Their sections exist only in the server config of Actions of Stamina for older versions (see [Minecraft Versions](Minecraft-Versions)):
+These mods have their own sections in the server config, which apply only when the mod is installed (see [Compatibility](Compatibility)):
 
-- **Paragliders:** Minecraft 26.2 and older.
-- **ParCool:** Minecraft 1.21.11 and older.
-- **Epic Fight, Gliders and Create:** Minecraft 1.21.1 and older.
+- **Paragliders**
+- **ParCool**
+- **Epic Fight, Gliders and Create**
 
 ```toml
 #Paragliders: paragliding costs AoS stamina and Paragliders reads its stamina from AoS (only when Paragliders is installed)

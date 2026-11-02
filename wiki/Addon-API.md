@@ -2,7 +2,7 @@
 
 *For mod developers.* Another mod can add its own stamina-costing actions to Actions of Stamina. Each one gets a config section like the built-in actions and spends through the active stamina backend (Feathers of Fatigue or the own bar). The same code that gates, drains and charges sprinting or attacking does it for these actions too. The own actions of Actions of Stamina, the vanilla ones and those of each supported mod, use the same registration.
 
-All the classes on this page are in `com.ccr4ft3r.actionsofstamina` (Minecraft 26.3, NeoForge). On Minecraft 1.21.1, ids are `ResourceLocation` where this page says `Identifier`.
+The classes on this page are in `com.ccr4ft3r.actionsofstamina`: `ActionType`, `Action`, `PlayerActions` and `VanillaActions` in `content.actions`, and `ActionCostConfig` in `config`.
 
 ## Asking whether a player can do something
 
@@ -12,7 +12,7 @@ The types of the Minecraft actions are in `VanillaActions` (`VanillaActions.ATTA
 
 ## Adding an action
 
-An action has a config section and a type registered in `ActionTypes`, and optionally an `Action` subclass for effects of its own.
+An action has a config section and a type registered with `ActionType.register`, and optionally an `Action` subclass for effects of its own.
 
 The config section is an `ActionCostConfig`, built on your own config spec. Register that spec as a **server** config, so that the costs of the server reach all clients:
 
@@ -31,7 +31,7 @@ The builder has `cost`, `minStamina`, `perSecond`, `finishCost`, `regenDelay`, `
 Register the type while your mod is constructed, or in `FMLCommonSetupEvent`:
 
 ```java
-public static final ActionType DASH = ActionTypes.register(Identifier.fromNamespaceAndPath("mymod", "dash"), DASH_COSTS, Action::new);
+public static final ActionType DASH = ActionType.register(ResourceLocation.fromNamespaceAndPath("mymod", "dash"), DASH_COSTS, Action::new);
 
 public MyMod(IEventBus modBus, ModContainer container) {
     container.registerConfig(ModConfig.Type.SERVER, SPEC);
@@ -52,7 +52,7 @@ For a use whose cost changes each time (a swing multiplied by its weapon), ask t
 
 A continuous action (gliding, channelling) drains stamina while it lasts. You can drive one in two ways.
 
-**By state.** On each tick, on both sides, tell Actions of Stamina whether the action is in progress, with `PlayerActions.get(player).setActionState(type, doing)`. Use state that both sides know (synced data, an item component). The action then runs by itself:
+**By state.** On each tick, on both sides, tell Actions of Stamina whether the action is in progress, with `PlayerActions.action(player, type).setActionState(doing)` (the action is null when its config section is off). Use state that both sides know (synced data, an item component). The action then runs by itself:
 
 - It begins when the player has the stamina to begin (`min_stamina`, else one drain tick, else the finish cost), and charges `cost` at the start.
 - It drains `per_second` while it lasts, and pauses regeneration if `blocks_regen` is set.
@@ -60,7 +60,7 @@ A continuous action (gliding, channelling) drains stamina while it lasts. You ca
 
 A subclass of `Action` can add effects. `performingEffects` runs on each tick that the action is in progress and paid for. `notPerformingEffects` runs on each tick that the state is on but the stamina cannot pay. Stop the action there: fold the glider, drop the channel. Override `cleanUp` to remove anything that the action leaves on the player, such as attribute modifiers. It runs when the action ends for an exempt player and when the mod builds the actions again.
 
-**By events.** Another mod can already tell you when the action starts, ticks and ends (the ParCool compat of Minecraft 1.21.1 works this way). In that case, call the action of the player at each point and do not set its state:
+**By events.** Another mod can already tell you when the action starts, ticks and ends (the ParCool compat works this way). In that case, call the action of the player at each point and do not set its state:
 
 1. Before it starts, call `canBegin(player)`. When it returns false, refuse the start.
 2. When it starts, call `begin(player)`.
