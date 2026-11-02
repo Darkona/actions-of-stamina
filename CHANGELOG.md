@@ -4,6 +4,10 @@ Changes by feature, newest version first.
 
 ## Unreleased
 
+### Supported versions
+
+- Only Minecraft 1.21.1 and 1.20.1 are supported.
+
 ### Internal stamina
 
 - The client runs the same stamina code as the server: spends, drains, regeneration and the regeneration delay move the bar right away. The server sends the bar only when something changes, not on every step of it.

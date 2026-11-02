@@ -24,11 +24,11 @@ Wall jumps and double jumps cost stamina. To cling to a wall, and to slide down 
 
 Wings from other mods cost stamina only when a datapack adds them to the item tag `actionsofstamina:stamina_wings`. The tag holds the vanilla elytra. Mechanical or propelled wings are free by default, because the tag is for wings that you flap or glide with yourself. Tagged wings cost when you wear them in the chest slot or, with Curios installed, in any curio slot (for mods that give the elytra its own slot).
 
-Shields from other mods cost like the vanilla shield when they block like one. That is the `minecraft:blocks_attacks` component, which all items that block attacks have. They count in either hand.
+Shields from other mods cost like the vanilla shield when they block like one. That is the NeoForge `shield_block` item ability. They count in either hand.
 
-Bows, crossbows and tridents from other mods cost like the vanilla ones when they use the same animation (a bow you draw, a crossbow you load, a trident you aim). Spears do not draw. To hold one ready is free, and its stabs cost like any attack. Throwables from other mods cost only when a datapack adds them to the item tag `actionsofstamina:throwables`.
+Bows, crossbows and tridents from other mods cost like the vanilla ones when they use the same animation (a bow you draw, a crossbow you load, a trident you aim). Throwables from other mods cost only when a datapack adds them to the item tag `actionsofstamina:throwables`.
 
-With `vanilla.attack.also_for_non_weapons = false`, an item is a weapon when it adds attack damage in the main hand. The source of that damage does not matter: the attribute modifiers of the item, modifiers calculated for that stack, or modifiers that other mods add through the attribute modifier event of NeoForge. Modular weapons that build their damage from their parts (as the weapons of Tetra do) count as weapons.
+With `vanilla.attack.also_for_non_weapons = false`, an item is a weapon when its attribute modifiers add attack damage in the main hand.
 
 ## Curios
 
@@ -36,19 +36,24 @@ Stamina wings (the item tag `actionsofstamina:stamina_wings`) in a curio slot co
 
 ## Versions
 
-Actions of Stamina calls these mods directly. It accepts the versions it was tested with, up to the next major version. With a version outside that range, the game stops at load and names the mod and the range, in place of a crash later in the middle of play.
+Actions of Stamina calls these mods directly. Each one has a lowest version that it accepts. With an older version, the game stops at load and names the mod and the range, in place of a crash later in the middle of play. All of them are optional.
 
-| Mod | Accepted versions (26.3) |
+| Mod | Accepted versions (1.21.1) |
 |---|---|
-| Better Combat | 3.2 up to 4 |
-| Combat Roll | 3.0 up to 4 |
-| Wall-Jump TXF | 26.3-1.3 up to 26.4 |
-| Curios | 17.0.0-beta.2 up to 18 |
-| Feathers of Fatigue | 26.3-1.0.0-beta.2 up to 26.3-2 |
+| Better Combat | 2.4 or later |
+| Combat Roll | 2.0 or later |
+| Wall-Jump TXF | 1.21.1-1.3 or later |
+| Curios | 9.0 or later |
+| Paragliders | 21.1 or later |
+| ParCool | 4.0 or later |
+| Epic Fight | 21.17 or later |
+| Gliders | 1.1 or later |
+| Create | 6.0 or later |
+| Feathers of Fatigue | 1.21.1-1.1.0 up to 1.21.1-2 |
 
-## On older Minecraft versions
+On 1.20.1, Feathers of Fatigue is `1.20.1-1.1.0` up to `1.20.1-2`. [Minecraft Versions](Minecraft-Versions) lists the versions that each one was tested with and what is different on 1.20.1.
 
-These mods have no build for Minecraft 26.3. Their compats exist only in Actions of Stamina for older versions: Paragliders on Minecraft 26.2 and older, ParCool on Minecraft 1.21.11 and older, and Epic Fight, Gliders and Create on Minecraft 1.21.1 and older. [Minecraft Versions](Minecraft-Versions) lists what each version supports and the versions it was tested with.
+## More mods
 
 ### Paragliders
 
